@@ -1,7 +1,6 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
-
-class Characteristic {
+open class Characteristic {
     companion object Factory {
         const val SAMISIGARI = 0
         const val IJIPPARI = 1
@@ -28,6 +27,10 @@ class Characteristic {
         const val SUNAO = 22
         const val KIMAGURE = 23
         const val MAJIME = 24
+
+        fun characteristicList (): Array<Array<out Any>> {
+            return CHARACTERISTIC_TABLE
+        }
 
         val CHARACTERISTIC_TABLE = arrayOf(
                 arrayOf(1.1f,0.9f,1,1,1),

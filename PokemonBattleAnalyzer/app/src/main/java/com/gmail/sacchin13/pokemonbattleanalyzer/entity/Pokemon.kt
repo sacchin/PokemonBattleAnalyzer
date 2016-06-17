@@ -2,7 +2,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
 import java.util.ArrayList
 
-class Pokemon (val no: String, val jname: String, val ename: String, val h: Int, val a: Int, val b: Int, val c: Int, val d: Int, val s: Int,
+open class Pokemon (val no: String, val jname: String, val ename: String, val h: Int, val a: Int, val b: Int, val c: Int, val d: Int, val s: Int,
                val ability1: String, val ability2: String, val abilityd: String, val type1: Type.TypeCode, val type2: Type.TypeCode, val weight: Float) {
     var mega: MutableList<Pokemon>? = null
 

@@ -3,7 +3,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 object Type {
 
     enum class TypeCode {
-        NORMAL, FIRE, WATER, ELECTRIC, GRASS, ICE, FIGHTING, POISON, GROUND, FLYING, PSYCHIC, BUG, ROCK, GHOST, DRAGON, DARK, STEEL, FAIRY
+        NORMAL, FIRE, WATER, ELECTRIC, GRASS, ICE, FIGHTING, POISON, GROUND, FLYING, PSYCHIC, BUG, ROCK, GHOST, DRAGON, DARK, STEEL, FAIRY, UNKNOWN
     }
 
     var AFFINITY_TABLE = arrayOf(
@@ -71,7 +71,7 @@ object Type {
             Type.TypeCode.DARK -> return "あく"
             Type.TypeCode.STEEL -> return "はがね"
             Type.TypeCode.FAIRY -> return "フェアリー"
-            else -> return "エラー"
+            else -> return "UNKNOWN"
         }
     }
 
@@ -102,7 +102,7 @@ object Type {
         }
     }
 
-    fun convertNoToTypeCode(type: Int): TypeCode? {
+    fun convertNoToTypeCode(type: Int): TypeCode {
         when (type) {
             0 -> return TypeCode.NORMAL
             1 -> return TypeCode.FIRE
@@ -122,7 +122,7 @@ object Type {
             15 -> return TypeCode.DARK
             16 -> return TypeCode.STEEL
             17 -> return TypeCode.FAIRY
-            else -> return null
+            else -> return TypeCode.UNKNOWN
         }
     }
 
