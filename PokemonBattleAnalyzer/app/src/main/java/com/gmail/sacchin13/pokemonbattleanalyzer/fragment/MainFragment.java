@@ -196,7 +196,7 @@ public class MainFragment extends PGLFragment implements AddToListInterface {
     }
 
     public void addPokemonToList(PBAPokemon pokemon){
-        IndividualPBAPokemon ip = new IndividualPBAPokemon(pokemon, 0, new Timestamp(System.currentTimeMillis()), "", "", "", "", "", "", "");
+        IndividualPBAPokemon ip = new IndividualPBAPokemon(pokemon);//, 0, new Timestamp(System.currentTimeMillis()), "", "", "", "", "", "", "");
         int index = party.setMember(ip);
         if(index == -1){
             Snackbar.make(partyLayout, "すでに6体選択しています。", Snackbar.LENGTH_SHORT).show();
@@ -217,7 +217,7 @@ public class MainFragment extends PGLFragment implements AddToListInterface {
 
     public void removePokemonFromList(IndividualPBAPokemon pokemon){
         try {
-            int index = party.removeMember(pokemon);
+            int index = party.removeMember(pokemon.getMaster());
             if(-1 < index){
                 partyLayout.removeViewAt(index + 1);
             }else{
@@ -256,7 +256,7 @@ public class MainFragment extends PGLFragment implements AddToListInterface {
             Snackbar.make(partyLayout, "ポケモンが選択されていません。", Snackbar.LENGTH_SHORT).show();
             return;
         }
-        ((MainActivity)getActivity()).startAffinityActivity(party.getMember().get(0));
+        ((MainActivity)getActivity()).startAffinityActivity(party.getMember().get(0).getMaster());
     }
 
     @Override

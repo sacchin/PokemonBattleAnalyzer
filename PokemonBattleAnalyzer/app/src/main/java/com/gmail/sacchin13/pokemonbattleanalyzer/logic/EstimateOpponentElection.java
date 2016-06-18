@@ -44,12 +44,12 @@ public class EstimateOpponentElection {
     }
 
     public void calc(IndividualPBAPokemon mine, IndividualPBAPokemon opponent){
-        if(opponent.getTrend() != null){
-            List<PokemonCharacteristic> c = opponent.getTrend().getCharacteristicList();
-
-            for(PokemonCharacteristic h : c){
-                Log.v("createAllPattern", h.getName() + ":" + h.getUsageRate() );
-            }
-        }
+//        if(opponent.getTrend() != null){
+//            List<PokemonCharacteristic> c = opponent.getTrend().getCharacteristicList();
+//
+//            for(PokemonCharacteristic h : c){
+//                Log.v("createAllPattern", h.getName() + ":" + h.getUsageRate() );
+//            }
+//        }
     }
 }

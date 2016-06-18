@@ -1,25 +1,39 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
-import java.util.ArrayList
+import io.realm.RealmList
+import io.realm.RealmObject
+import io.realm.annotations.RealmClass
 
-open class Pokemon (val no: String, val jname: String, val ename: String, val h: Int, val a: Int, val b: Int, val c: Int, val d: Int, val s: Int,
-               val ability1: String, val ability2: String, val abilityd: String, val type1: Type.TypeCode, val type2: Type.TypeCode, val weight: Float) {
-    var mega: MutableList<Pokemon>? = null
+@RealmClass
+public open class Pokemon (
+        public open var no: String = "none",
+        public open var jname: String = "none",
+        public open var ename: String = "none",
+        public open var h: Int = -1,
+        public open var a: Int = -1,
+        public open var b: Int = -1,
+        public open var c: Int = -1,
+        public open var d: Int = -1,
+        public open var s: Int = -1,
+        public open var ability1: String = "none",
+        public open var ability2: String = "none",
+        public open var abilityd: String = "none",
+        public open var type1: Int = -1,
+        public open var type2: Int = -1,
+        public open var weight: Float = -1f,
+        public open var mega: RealmList<Pokemon>? = null
+): RealmObject()  {
 
     init {
         /**
          * nnn-mm
          */
-        this.mega = ArrayList<Pokemon>()
+        this.mega = RealmList<Pokemon>()
     }
 
-    /**
-
-     * @param mega
-     */
     fun addMega(mega: Pokemon) {
         if (this.mega == null) {
-            this.mega = ArrayList<Pokemon>()
+            this.mega = RealmList<Pokemon>()
         }
         this.mega!!.add(mega)
     }
@@ -32,7 +46,7 @@ open class Pokemon (val no: String, val jname: String, val ename: String, val h:
         return ((a * 2 + iv + ev / 4) / 2 + 5).toInt()
     }
 
-    fun getDeffenceValue(iv: Int, ev: Int): Int {
+    fun getDefenseValue(iv: Int, ev: Int): Int {
         return ((b * 2 + iv + ev / 4) / 2 + 5).toInt()
     }
 
@@ -40,7 +54,7 @@ open class Pokemon (val no: String, val jname: String, val ename: String, val h:
         return ((c * 2 + iv + ev / 4) / 2 + 5).toInt()
     }
 
-    fun getSpecialDeffenceValue(iv: Int, ev: Int): Int {
+    fun getSpecialDefenseValue(iv: Int, ev: Int): Int {
         return ((d * 2 + iv + ev / 4) / 2 + 5).toInt()
     }
 

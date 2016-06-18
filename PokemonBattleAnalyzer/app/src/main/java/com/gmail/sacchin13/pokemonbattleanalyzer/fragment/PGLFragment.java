@@ -47,10 +47,10 @@ public abstract class PGLFragment extends Fragment {
         final Handler handler = new Handler();
         for(int i = 0 ; i < party.getMember().size() ; i++){
             IndividualPBAPokemon p = party.getMember().get(i);
-            String pokemonNo = p.getNo();
+            String pokemonNo = p.getMaster().getMasterRecord().getNo();
             if(!pokemonNo.contains("-")){
                 try {
-                    pokemonNo = String.valueOf(Integer.parseInt(p.getNo())) + "-0";
+                    pokemonNo = String.valueOf(Integer.parseInt(p.getMaster().getMasterRecord().getNo())) + "-0";
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
@@ -68,7 +68,7 @@ public abstract class PGLFragment extends Fragment {
         if(party == null || party.getMember() == null || party.getMember().size() < index){
             return;
         }
-        party.getMember().get(index).setTrend(trend);
+        //party.getMember().get(index).getMaster().getMasterRecord().setTrend(trend);
     }
 
     public abstract void finishAllDownload();

@@ -634,7 +634,7 @@ class Util {
         fun createImage(p: PBAPokemon, scale: Float, resource: Resources): Bitmap? {
             var image: Bitmap? = BitmapFactory.decodeResource(resource, p.resourceId)
             if (image == null) {
-                Log.e("createImage", p.jname + " - " + p.resourceId)
+                Log.e("createImage", p.masterRecord.jname + " - " + p.resourceId)
                 return null
             }
             val matrix = Matrix()

@@ -12,11 +12,18 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.gmail.sacchin13.pokemonbattleanalyzer.insert.ItemInsertHandler
+import com.gmail.sacchin13.pokemonbattleanalyzer.insert.MegaPokemonInsertHandler
+import com.gmail.sacchin13.pokemonbattleanalyzer.insert.PokemonInsertHandler
+import com.gmail.sacchin13.pokemonbattleanalyzer.insert.SkillInsertHandler
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     val SELECT_ACTIVITY_CODE = 0
@@ -28,7 +35,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     val executorService: ExecutorService = Executors.newCachedThreadPool()
 
-//    var databaseHelper: PartyDatabaseHelper? = null
+    //var databaseHelper: PartyDatabaseHelper? = null
+    var databaseHelper: DatabaseHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,13 +57,15 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
 
+
+
 //        tool_bar.setTitle("Pokemon Battle Tool")
 //        tool_bar.setTitleTextColor(Color.WHITE)
 //        setSupportActionBar(tool_bar)
 //        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 //        supportActionBar!!.setHomeButtonEnabled(true)
 
-//        databaseHelper = PartyDatabaseHelper(this)
+        databaseHelper = DatabaseHelper(this)
 //        executorService.execute(
 //                PokemonRankingDownloader(databaseHelper));
         firstLaunch();
@@ -80,6 +90,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
+            for(temp in databaseHelper!!.selectAllPBAPokemon()){
+                Log.v("test", temp.masterRecord.no + "," + temp.masterRecord.jname)
+            }
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -111,14 +124,15 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun firstLaunch() {
         if(serviceStatePreferences!!.getBoolean("isFirst", true)){
+            val temp = PokemonInsertHandler(databaseHelper)
+            temp.run()
+
 //            executorService.execute(
-//                    new PokemonInsertHandler(databaseHelper));
+//                    ItemInsertHandler(databaseHelper));
 //            executorService.execute(
-//                    new ItemInsertHandler(databaseHelper));
+//                    SkillInsertHandler(databaseHelper));
 //            executorService.execute(
-//                    new SkillInsertHandler(databaseHelper));
-//            executorService.execute(
-//                    new MegaPokemonInsertHandler(databaseHelper));
+//                    MegaPokemonInsertHandler(databaseHelper));
 
             val editor = serviceStatePreferences!!.edit()
             editor.putBoolean("isFirst", false);

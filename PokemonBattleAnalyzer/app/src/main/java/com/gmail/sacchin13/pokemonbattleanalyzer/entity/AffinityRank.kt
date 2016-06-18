@@ -29,10 +29,10 @@ class AffinityRank(point: Int, val pokemon: PBAPokemon) {
     }
 
     val type1Name: String
-        get() = Type.convertTypeCodeToName(pokemon.type1)
+        get() = Type.convertTypeCodeToName(Type.convertNoToTypeCode(pokemon.masterRecord.type1))
 
     val type2Name: String
-        get() = Type.convertTypeCodeToName(pokemon.type2)
+        get() = Type.convertTypeCodeToName(Type.convertNoToTypeCode(pokemon.masterRecord.type2))
 
     override fun toString(): String {
         return point.toString() + " - " + type1Name + "," + type2Name

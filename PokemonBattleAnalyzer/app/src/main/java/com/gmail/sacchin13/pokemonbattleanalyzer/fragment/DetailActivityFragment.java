@@ -72,7 +72,7 @@ public class DetailActivityFragment extends PGLFragment {
         if(party != null && party.getMember() != null){
             for(IndividualPBAPokemon p : party.getMember()){
                 if(p.getId() == this.id){
-                    iv.setImageResource(p.getResourceId());
+                    iv.setImageResource(p.getMaster().getResourceId());
                     break;
                 }
             }
@@ -85,7 +85,7 @@ public class DetailActivityFragment extends PGLFragment {
             if(p.getId() == this.id){
                 setTrend(p);
                 setMainView(p);
-                toolbar.setTitle(p.getJname());
+                toolbar.setTitle(p.getMaster().getMasterRecord().getJname());
                 break;
             }
         }
@@ -100,7 +100,7 @@ public class DetailActivityFragment extends PGLFragment {
         itemtl.removeAllViews();
         abilitytl.removeAllViews();
 
-        RankingPokemonTrend trend = p.getTrend();
+        RankingPokemonTrend trend = new RankingPokemonTrend(null, null, null, null);//p.getTrend();
         if(trend == null){
             String nullText[] = {"-", "-"};
             skilltl.addView(createTableRow(nullText, 0, Color.TRANSPARENT, Color.BLACK, 12));
@@ -181,21 +181,24 @@ public class DetailActivityFragment extends PGLFragment {
     public void setMainView(IndividualPBAPokemon p) {
         mainView.removeAllViews();
 
-        createPBAPokemonStatus(p);
-        if(p.getMega() != null){
-            for(Pokemon mega : p.getMega()){
-                createPBAPokemonStatus((PBAPokemon)mega);
+        createPBAPokemonStatus(p.getMaster());
+        if(p.getMaster().getMasterRecord().getMega() != null){
+            for(Pokemon mega : p.getMaster().getMasterRecord().getMega()){
+                //createPBAPokemonStatus(mega);
             }
         }
     }
 
-    private void createPBAPokemonStatus(PBAPokemon p) {
+    private void createPBAPokemonStatus(PBAPokemon po) {
+
+        Pokemon p = po.getMasterRecord();
+
         Log.e("createPBAPokemonStatus", p.getJname());
         LinearLayout sss = new LinearLayout(getActivity());
         sss.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         sss.setOrientation(LinearLayout.HORIZONTAL);
 
-        Bitmap temp = Util.Companion.createImage(p, 150f, getResources());
+        Bitmap temp = Util.Companion.createImage(po, 150f, getResources());
         ImageView imageView = new ImageView(getActivity());
         imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
         imageView.setImageBitmap(temp);

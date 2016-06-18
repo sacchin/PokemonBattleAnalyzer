@@ -5,28 +5,18 @@ import java.util.*
 open class PBAPokemon(
         var resourceId:Int = 0,
         var rowId:Int = 0,
-        no: String,
-        jname: String,
-        ename: String,
-        h: Int, a: Int, b: Int, c: Int, d: Int, s: Int,
-        ability1: String,
-        ability2: String,
-        abilityd: String,
-        type1: Type.TypeCode,
-        type2: Type.TypeCode,
-        weight: Float,
-        val ranking: Int) : Pokemon(no, jname, ename, h, a, b, c, d, s, ability1, ability2, abilityd, type1, type2, weight) {
-
+        val masterRecord :Pokemon,
+        val ranking: Int) {
 
     val abilities: List<String>
         get() {
             val temp = ArrayList<String>()
-            temp.add(ability1)
-            if (ability2 != "-") {
-                temp.add(ability2)
+            temp.add(masterRecord.ability1)
+            if (masterRecord.ability2 != "-") {
+                temp.add(masterRecord.ability2)
             }
-            if (abilityd != "-") {
-                temp.add(abilityd)
+            if (masterRecord.abilityd != "-") {
+                temp.add(masterRecord.abilityd)
             }
             return temp
         }
@@ -47,7 +37,7 @@ open class PBAPokemon(
                 }
             } else {
                 val scaleByAbility = Ability.calcTypeScale(ability, type)
-                result = (scaleByAbility * Type.calcurateAffinity(type, this) * 100f).toInt()
+                result = (scaleByAbility * Type.calcurateAffinity(type, masterRecord) * 100f).toInt()
                 scaleMap.put(ability, result)
             }
         }

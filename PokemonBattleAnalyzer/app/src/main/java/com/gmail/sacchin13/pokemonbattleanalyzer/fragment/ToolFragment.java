@@ -92,7 +92,7 @@ public class ToolFragment extends PGLFragment {
         if(party != null){
             for (int i = 0; i < party.getMember().size(); i++) {
                 IndividualPBAPokemon p = party.getMember().get(i);
-                FrameLayout frame = createFrameLayout(p, 210f);
+                FrameLayout frame = createFrameLayout(p.getMaster(), 210f);
                 frame.setOnClickListener(new OnClickIndividualPokemon(this, i, (ImageView)frame.getChildAt(0)));
                 partyLayout.addView(frame);
             }
@@ -108,7 +108,7 @@ public class ToolFragment extends PGLFragment {
         if(choiced != null){
             for (int i = 0; i < choiced.getMember().size(); i++) {
                 IndividualPBAPokemon p = choiced.getMember().get(i);
-                FrameLayout frame = createFrameLayout(p, 280f);
+                FrameLayout frame = createFrameLayout(p.getMaster(), 280f);
                 frame.setOnClickListener(new OnClickChoicedPokemon(this, i));
                 choicedLayout.addView(frame);
             }
@@ -208,13 +208,13 @@ public class ToolFragment extends PGLFragment {
 
     public void setMainView(int index){
         IndividualPBAPokemon tapped = choiced.getMember().get(index);
-        selected.setImageBitmap(Util.Companion.createImage(tapped.getResourceId(), 210f, getResources()));
+        selected.setImageBitmap(Util.Companion.createImage(tapped.getMaster(), 210f, getResources()));
 
         String headers[] = {"", "H", "A", "B", "C", "D", "S"};
         status.addView(createTableRow(headers, 0, Color.TRANSPARENT, Color.GRAY, 12));
 
-        String base[] = {"種族", String.valueOf(tapped.getH()), String.valueOf(tapped.getA()), String.valueOf(tapped.getB()),
-                String.valueOf(tapped.getC()), String.valueOf(tapped.getD()), String.valueOf(tapped.getS())};
+        String base[] = {"種族", String.valueOf(tapped.getMaster().getMasterRecord().getH()), String.valueOf(tapped.getMaster().getMasterRecord().getA()), String.valueOf(tapped.getMaster().getMasterRecord().getB()),
+                String.valueOf(tapped.getMaster().getMasterRecord().getC()), String.valueOf(tapped.getMaster().getMasterRecord().getD()), String.valueOf(tapped.getMaster().getMasterRecord().getS())};
         status.addView(createTableRow(base, 0, Color.TRANSPARENT, Color.BLACK, 18));
 
         String effort[] = {"努力", String.valueOf(tapped.getHpEffortValue()), String.valueOf(tapped.getAttackEffortValue()),

@@ -28,7 +28,7 @@ class Party (time: Timestamp, member1: IndividualPBAPokemon?, member2: Individua
         var index = -1
         if (this.member != null && PBAPokemon != null) {
             for (i in this.member!!.indices) {
-                if (PBAPokemon.no == this.member!![i].no) {
+                if (PBAPokemon.masterRecord.no == this.member!![i].master!!.masterRecord.no) {
                     index = i
                 }
             }

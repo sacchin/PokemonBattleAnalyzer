@@ -8,9 +8,6 @@ import java.util.ArrayList
 import org.json.JSONException
 import org.json.JSONObject
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingPokemonIn
 
 import android.content.ContentValues
@@ -23,7 +20,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.Util
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Type
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 
 class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDatabaseHelper.DB_FILE, null, 1) {
     private val DATABASE_TABLE_NAMES: Array<String>
@@ -154,7 +151,7 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
             values.put("evc", 0)
             values.put("evd", 0)
             values.put("evs", 0)
-            values.put("pokemonNo", p!!.rowId)
+//            values.put("pokemonNo", p!!.rowId)
 
             return db.insert(POKEMON_INDIVIDUAL_TABLE_NAME, null, values)
         } catch (e: IllegalStateException) {
@@ -220,7 +217,7 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
                 val p = createPBAPokemon(cur)
                 p.rowId = cur.getInt(0)
 
-                val id = util.pokemonImageResource!!.get(p.no.toString()) ?: continue
+                val id = util.pokemonImageResource!!.get(p.masterRecord.no.toString()) ?: continue
                 p.resourceId = id
                 list.add(p)
             }
@@ -241,7 +238,7 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
                 val p = createPBAPokemon(cur)
                 p.rowId = cur.getInt(0)
 
-                val id = util.pokemonImageResource!!.get(p.no.toString())
+                val id = util.pokemonImageResource!!.get(p.masterRecord.no.toString())
                 if (id != null) {
                     p.resourceId = id
                 }
@@ -313,9 +310,16 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
                 individualCur.close()
 
                 val p = createPBAPokemon(rowNo)
-                val result = IndividualPBAPokemon(p, id, time, item,
-                        "", characteristic, skillNo1, skillNo2, skillNo3, skillNo4)
-                result.rowId = Integer.parseInt(rowNo)
+                val result = IndividualPBAPokemon(p)
+                result.id = id
+                result.item = item
+                result.ability = ""
+                result.characteristic = characteristic
+                result.skillNo1 = skillNo1
+                result.skillNo2 = skillNo2
+                result.skillNo3 = skillNo3
+                result.skillNo4 = skillNo4
+
                 result.hpEffortValue = evh
                 result.attackEffortValue = eva
                 result.deffenceEffortValue = evb
@@ -323,9 +327,9 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
                 result.specialDeffenceEffortValue = evd
                 result.speedEffortValue = evs
 
-                val resourceId = util.pokemonImageResource!!.get(result.no)
+                val resourceId = util.pokemonImageResource!!.get(result.master!!.masterRecord.no)
                 if (resourceId != null) {
-                    result.resourceId = resourceId
+                    result.master.resourceId = resourceId
                 }
                 Log.v("selectIndividualPBAPok", result.toString())
 
@@ -348,6 +352,8 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
 
         var result: PBAPokemon? = null
         while (cur.moveToNext()) {
+            val p = Pokemon()
+
             if (result == null) {
                 val no = cur.getString(1)
                 val jname = cur.getString(2)
@@ -362,19 +368,20 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
                 val ability2 = cur.getString(11)
                 val abilityd = cur.getString(12)
 
-                result = PBAPokemon(0, 0, no, jname, ename, h, a, b, c, d, s,
-                        ability1, ability2, abilityd, Type.TypeCode.UNKNOWN, Type.TypeCode.UNKNOWN, 0f, 0)
+
+                result = PBAPokemon(0, 0, p, 0)
             }
             if (0 < cur.getInt(17)) {
-                val mega = PBAPokemon(0, 0, result!!.no, "メガ" + result!!.jname, "Mega " + result!!.ename,
-                        cur.getInt(19), cur.getInt(20), cur.getInt(21), cur.getInt(22), cur.getInt(23), cur.getInt(24), cur.getString(25),
-                        "", "", Type.TypeCode.UNKNOWN, Type.TypeCode.UNKNOWN, 0f, 0)
+                val mega = PBAPokemon(0, 0, p, 0)
+//                        result!!.masterRecord.no, "メガ" + result!!.masterRecord.jname, "Mega " + result!!.masterRecord.ename,
+//                        cur.getInt(19), cur.getInt(20), cur.getInt(21), cur.getInt(22), cur.getInt(23), cur.getInt(24), cur.getString(25),
+//                        "", "", Type.TypeCode.UNKNOWN, Type.TypeCode.UNKNOWN, 0f, 0)
 
-                val resouceId = util.pokemonImageResource!!.get(result!!.no + "m" + cur.getString(26))
+                val resouceId = util.pokemonImageResource!!.get(result!!.masterRecord.no + "m" + cur.getString(26))
                 if (resouceId != null) {
                     mega.resourceId = resouceId
                 }
-                result!!.addMega(mega)
+//                result!!.masterRecord.addMega(mega)
             }
         }
         cur.close()
@@ -658,8 +665,10 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
     }
 
     fun createPBAPokemon(cur: Cursor): PBAPokemon {
-        return PBAPokemon(0, 0, cur.getString(1), cur.getString(2), cur.getString(3), cur.getInt(4), cur.getInt(5), cur.getInt(6), cur.getInt(7), cur.getInt(8),
-                cur.getInt(9), cur.getString(10), cur.getString(11), cur.getString(12), Type.convertNoToTypeCode(cur.getInt(13)), Type.convertNoToTypeCode(cur.getInt(14)), cur.getFloat(15), cur.getInt(16))
+        return PBAPokemon(0, 0, Pokemon(), 0)
+
+//                cur.getString(1), cur.getString(2), cur.getString(3), cur.getInt(4), cur.getInt(5), cur.getInt(6), cur.getInt(7), cur.getInt(8),
+//                cur.getInt(9), cur.getString(10), cur.getString(11), cur.getString(12), Type.convertNoToTypeCode(cur.getInt(13)), Type.convertNoToTypeCode(cur.getInt(14)), cur.getFloat(15), cur.getInt(16))
     }
 
     override fun onUpgrade(arg0: SQLiteDatabase, arg1: Int, arg2: Int) {

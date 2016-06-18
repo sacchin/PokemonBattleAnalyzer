@@ -117,7 +117,7 @@ public class SelectFragment extends PGLFragment implements AddToListInterface {
             if (party != null) {
                 for (int i = 0; i < party.getMember().size(); i++) {
                     IndividualPBAPokemon p = party.getMember().get(i);
-                    Bitmap image = Util.Companion.createImage(p, 250f, getResources());
+                    Bitmap image = Util.Companion.createImage(p.getMaster(), 250f, getResources());
                     opponentParty[i].setImageBitmap(image);
                 }
             }
@@ -126,9 +126,9 @@ public class SelectFragment extends PGLFragment implements AddToListInterface {
             if (mine != null) {
                 for (int i = 0; i < mine.getMember().size(); i++) {
                     IndividualPBAPokemon p = mine.getMember().get(i);
-                    Bitmap image = Util.Companion.createImage(p, 250f, getResources());
+                    Bitmap image = Util.Companion.createImage(p.getMaster(), 250f, getResources());
                     myParty[i].setImageBitmap(image);
-                    myParty[i].setOnClickListener(new OnClickFromList(this, p));
+                    myParty[i].setOnClickListener(new OnClickFromList(this, p.getMaster()));
                 }
             }
         } catch (IOException e) {
@@ -142,13 +142,12 @@ public class SelectFragment extends PGLFragment implements AddToListInterface {
 //        for(IndividualPBAPokemon[] p : estimated){
 //            addPokemonToOpponentParty(p);
 //        }
-        addPokemonToOpponentParty(estimated[0]);
+//        addPokemonToOpponentParty(estimated[0]);
     }
 
     @Override
     public void addPokemonToList(PBAPokemon pokemon) {
-        IndividualPBAPokemon ip = (IndividualPBAPokemon)pokemon;
-        ip.setTime(new Timestamp(System.currentTimeMillis()));
+        IndividualPBAPokemon ip = new IndividualPBAPokemon(pokemon);
         if (choicedPokemon == null) {
             choicedPokemon = new Party(null, null, null, null, null, null, null, "", "");
             choicedPokemon.setUserName("choiced");
@@ -176,7 +175,7 @@ public class SelectFragment extends PGLFragment implements AddToListInterface {
 //        });
 
         for(PBAPokemon p : pokemons){
-            IndividualPBAPokemon ip = new IndividualPBAPokemon(p, 0, new Timestamp(System.currentTimeMillis()), "", "", "", "", "", "", "");
+            IndividualPBAPokemon ip = new IndividualPBAPokemon(p);//, 0, new Timestamp(System.currentTimeMillis()), "", "", "", "", "", "", "");
 
             Bitmap temp = Util.Companion.createImage(p, 120f, getResources());
             ImageView localView = new ImageView(getActivity());

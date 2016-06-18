@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void firstLaunch() {
         if(serviceStatePreferences.getBoolean("isFirst", true)){
-            executorService.execute(
-                    new PokemonInsertHandler(databaseHelper));
+//            executorService.execute(
+//                    new PokemonInsertHandler(databaseHelper));
             executorService.execute(
                     new ItemInsertHandler(databaseHelper));
             executorService.execute(

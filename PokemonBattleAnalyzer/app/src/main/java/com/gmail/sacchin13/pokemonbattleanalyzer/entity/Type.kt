@@ -139,14 +139,14 @@ object Type {
         if (p.type1 == null && p.type2 == null) {
             return -1f
         } else if (p.type1 != null && p.type2 == null) {
-            val type1No = convertTypeCodeToNo(p.type1)
+            val type1No = p.type1
             return AFFINITY_TABLE[attackNo][type1No]
         } else if (p.type1 == null && p.type2 != null) {
-            val type2No = convertTypeCodeToNo(p.type2)
+            val type2No = p.type2
             return AFFINITY_TABLE[attackNo][type2No]
         } else {
-            val type1No = convertTypeCodeToNo(p.type1)
-            val type2No = convertTypeCodeToNo(p.type2)
+            val type1No = p.type1
+            val type2No = p.type2
             return AFFINITY_TABLE[attackNo][type1No] * AFFINITY_TABLE[attackNo][type2No]
         }
     }

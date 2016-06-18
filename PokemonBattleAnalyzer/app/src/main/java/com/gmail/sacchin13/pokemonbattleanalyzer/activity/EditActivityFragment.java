@@ -98,7 +98,7 @@ public class EditActivityFragment extends Fragment {
         bloack.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         bloack.setOrientation(LinearLayout.HORIZONTAL);
 
-        Bitmap image = Util.Companion.createImage(pokemon, 250f, getResources());
+        Bitmap image = Util.Companion.createImage(pokemon.getMaster(), 250f, getResources());
         ImageView iv = new ImageView(getActivity());
         iv.setImageBitmap(image);
         bloack.addView(iv);

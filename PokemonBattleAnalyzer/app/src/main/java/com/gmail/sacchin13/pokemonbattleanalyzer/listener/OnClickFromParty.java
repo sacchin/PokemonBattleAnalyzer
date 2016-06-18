@@ -17,7 +17,7 @@ public class OnClickFromParty implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		someFragment.removePokemonFromList(pokemon);
+		someFragment.removePokemonFromList(pokemon.getMaster());
 	}
 
 }
