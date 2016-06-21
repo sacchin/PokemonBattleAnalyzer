@@ -64,26 +64,26 @@ public class SelectFragment extends PGLFragment implements AddToListInterface {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_select, container, false);
-        selected = (LinearLayout) rootView.findViewById(R.id.selected);
-        estimate = (LinearLayout) rootView.findViewById(R.id.opponent);
-
-        initPartyList(rootView);
-
-        databaseHelper = new PartyDatabaseHelper(getActivity());
-
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.first_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(choicedPokemon == null || choicedPokemon.getMember().size() != 3){
-                    Snackbar.make(estimate, "3体選択して下さい。", Snackbar.LENGTH_SHORT).show();
-                }else{
-                    choicedPokemon.setTime(new Timestamp(System.currentTimeMillis()));
-                    executorService.execute(new PartyInsertHandler(databaseHelper, choicedPokemon, false));
-                    ((SelectActivity)getActivity()).startToolActivity();
-                }
-            }
-        });
+//        selected = (LinearLayout) rootView.findViewById(R.id.selected);
+//        estimate = (LinearLayout) rootView.findViewById(R.id.opponent);
+//
+//        initPartyList(rootView);
+//
+//        databaseHelper = new PartyDatabaseHelper(getActivity());
+//
+//        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.first_fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(choicedPokemon == null || choicedPokemon.getMember().size() != 3){
+//                    Snackbar.make(estimate, "3体選択して下さい。", Snackbar.LENGTH_SHORT).show();
+//                }else{
+//                    choicedPokemon.setTime(new Timestamp(System.currentTimeMillis()));
+//                    executorService.execute(new PartyInsertHandler(databaseHelper, choicedPokemon, false));
+//                    ((SelectActivity)getActivity()).startToolActivity();
+//                }
+//            }
+//        });
 
         return rootView;
     }
@@ -97,43 +97,43 @@ public class SelectFragment extends PGLFragment implements AddToListInterface {
 
     private void initPartyList(View rootView) {
         myParty = new ImageView[6];
-        myParty[0] = (ImageView) rootView.findViewById(R.id.my_party1);
-        myParty[1] = (ImageView) rootView.findViewById(R.id.my_party2);
-        myParty[2] = (ImageView) rootView.findViewById(R.id.my_party3);
-        myParty[3] = (ImageView) rootView.findViewById(R.id.my_party4);
-        myParty[4] = (ImageView) rootView.findViewById(R.id.my_party5);
-        myParty[5] = (ImageView) rootView.findViewById(R.id.my_party6);
-        opponentParty = new ImageView[6];
-        opponentParty[0] = (ImageView) rootView.findViewById(R.id.opponent_party1);
-        opponentParty[1] = (ImageView) rootView.findViewById(R.id.opponent_party2);
-        opponentParty[2] = (ImageView) rootView.findViewById(R.id.opponent_party3);
-        opponentParty[3] = (ImageView) rootView.findViewById(R.id.opponent_party4);
-        opponentParty[4] = (ImageView) rootView.findViewById(R.id.opponent_party5);
-        opponentParty[5] = (ImageView) rootView.findViewById(R.id.opponent_party6);
+//        myParty[0] = (ImageView) rootView.findViewById(R.id.my_party1);
+//        myParty[1] = (ImageView) rootView.findViewById(R.id.my_party2);
+//        myParty[2] = (ImageView) rootView.findViewById(R.id.my_party3);
+//        myParty[3] = (ImageView) rootView.findViewById(R.id.my_party4);
+//        myParty[4] = (ImageView) rootView.findViewById(R.id.my_party5);
+//        myParty[5] = (ImageView) rootView.findViewById(R.id.my_party6);
+//        opponentParty = new ImageView[6];
+//        opponentParty[0] = (ImageView) rootView.findViewById(R.id.opponent_party1);
+//        opponentParty[1] = (ImageView) rootView.findViewById(R.id.opponent_party2);
+//        opponentParty[2] = (ImageView) rootView.findViewById(R.id.opponent_party3);
+//        opponentParty[3] = (ImageView) rootView.findViewById(R.id.opponent_party4);
+//        opponentParty[4] = (ImageView) rootView.findViewById(R.id.opponent_party5);
+//        opponentParty[5] = (ImageView) rootView.findViewById(R.id.opponent_party6);
     }
 
     private void createPartyList() {
-        try {
-            if (party != null) {
-                for (int i = 0; i < party.getMember().size(); i++) {
-                    IndividualPBAPokemon p = party.getMember().get(i);
-                    Bitmap image = Util.Companion.createImage(p.getMaster(), 250f, getResources());
-                    opponentParty[i].setImageBitmap(image);
-                }
-            }
-
-            mine = databaseHelper.selectMyParty();
-            if (mine != null) {
-                for (int i = 0; i < mine.getMember().size(); i++) {
-                    IndividualPBAPokemon p = mine.getMember().get(i);
-                    Bitmap image = Util.Companion.createImage(p.getMaster(), 250f, getResources());
-                    myParty[i].setImageBitmap(image);
-                    myParty[i].setOnClickListener(new OnClickFromList(this, p.getMaster()));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if (party != null) {
+//                for (int i = 0; i < party.getMember().size(); i++) {
+//                    IndividualPBAPokemon p = party.getMember().get(i);
+//                    Bitmap image = Util.Companion.createImage(p.getMaster(), 250f, getResources());
+//                    opponentParty[i].setImageBitmap(image);
+//                }
+//            }
+//
+//            mine = databaseHelper.selectMyParty();
+//            if (mine != null) {
+//                for (int i = 0; i < mine.getMember().size(); i++) {
+//                    IndividualPBAPokemon p = mine.getMember().get(i);
+//                    Bitmap image = Util.Companion.createImage(p.getMaster(), 250f, getResources());
+//                    myParty[i].setImageBitmap(image);
+//                    myParty[i].setOnClickListener(new OnClickFromList(this, p.getMaster()));
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void determineOpponent(){
@@ -147,20 +147,20 @@ public class SelectFragment extends PGLFragment implements AddToListInterface {
 
     @Override
     public void addPokemonToList(PBAPokemon pokemon) {
-        IndividualPBAPokemon ip = new IndividualPBAPokemon(pokemon);
-        if (choicedPokemon == null) {
-            choicedPokemon = new Party(null, null, null, null, null, null, null, "", "");
-            choicedPokemon.setUserName("choiced");
-        } else if (choicedPokemon.getMember().size() == 3) {
-            Snackbar.make(estimate, "すでに3体選択しています。", Snackbar.LENGTH_SHORT).show();
-            return;
-        }
-        choicedPokemon.getMember().add(ip);
-
-        Bitmap temp = Util.Companion.createImage(pokemon, 120f, getResources());
-        ImageView localView = new ImageView(getActivity());
-        localView.setImageBitmap(temp);
-        selected.addView(localView);
+//        IndividualPBAPokemon ip = new IndividualPBAPokemon(pokemon);
+//        if (choicedPokemon == null) {
+//            choicedPokemon = new Party(null, null, null, null, null, null, null, "", "");
+//            choicedPokemon.setUserName("choiced");
+//        } else if (choicedPokemon.getMember().size() == 3) {
+//            Snackbar.make(estimate, "すでに3体選択しています。", Snackbar.LENGTH_SHORT).show();
+//            return;
+//        }
+//        choicedPokemon.getMember().add(ip);
+//
+//        Bitmap temp = Util.Companion.createImage(pokemon, 120f, getResources());
+//        ImageView localView = new ImageView(getActivity());
+//        localView.setImageBitmap(temp);
+//        selected.addView(localView);
     }
 
     public void addPokemonToOpponentParty(final PBAPokemon[] pokemons) {

@@ -15,17 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.PartyDatabaseHelper;
 import com.gmail.sacchin13.pokemonbattleanalyzer.R;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon;
-import com.gmail.sacchin13.pokemonbattleanalyzer.fragment.MainFragment;
 import com.gmail.sacchin13.pokemonbattleanalyzer.http.PokemonRankingDownloader;
-import com.gmail.sacchin13.pokemonbattleanalyzer.insert.ItemInsertHandler;
-import com.gmail.sacchin13.pokemonbattleanalyzer.insert.MegaPokemonInsertHandler;
-import com.gmail.sacchin13.pokemonbattleanalyzer.insert.PokemonInsertHandler;
-import com.gmail.sacchin13.pokemonbattleanalyzer.insert.SkillInsertHandler;
 
 public class MainActivity extends AppCompatActivity {
     private static final int SELECT_ACTIVITY_CODE = 0;
@@ -42,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_select);
 
         serviceStatePreferences = getSharedPreferences("pokemon", MODE_PRIVATE);
 
@@ -69,14 +63,14 @@ public class MainActivity extends AppCompatActivity {
         if(serviceStatePreferences.getBoolean("isFirst", true)){
 //            executorService.execute(
 //                    new PokemonInsertHandler(databaseHelper));
-            executorService.execute(
-                    new ItemInsertHandler(databaseHelper));
-            executorService.execute(
-                    new SkillInsertHandler(databaseHelper));
+//            executorService.execute(
+//                    new ItemInsertHandler(databaseHelper));
+//            executorService.execute(
+//                    new SkillInsertHandler(databaseHelper));
 //                executorService.execute(new PartyInsertHandler(databaseHelper, null, true, this));
 //                executorService.execute(new IndividualPokemonInsertHandler(databaseHelper, this));
-            executorService.execute(
-                    new MegaPokemonInsertHandler(databaseHelper));
+//            executorService.execute(
+//                    new MegaPokemonInsertHandler(databaseHelper));
 
             Editor editor = serviceStatePreferences.edit();
             editor.putBoolean("isFirst", false);

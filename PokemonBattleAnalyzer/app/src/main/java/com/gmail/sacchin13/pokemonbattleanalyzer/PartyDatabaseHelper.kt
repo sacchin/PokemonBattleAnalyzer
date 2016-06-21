@@ -352,7 +352,7 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
 
         var result: PBAPokemon? = null
         while (cur.moveToNext()) {
-            val p = Pokemon()
+            val p = PokemonMasterData()
 
             if (result == null) {
                 val no = cur.getString(1)
@@ -406,10 +406,10 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
             values.put("userName", party!!.userName)
             values.put("memo", "")
 
-            for (i in 0..party!!.member!!.size - 1) {
-                val id = this.insertIndividualPBAPokemonData(party.member!!.get(i), party!!.time)
-                values.put("member" + (i + 1), id)
-            }
+//            for (i in 0..party!!.member!!.size - 1) {
+//                val id = this.insertIndividualPBAPokemonData(party.member!!.get(i), party!!.time)
+//                values.put("member" + (i + 1), id)
+//            }
 
             db.insert(PARTY_TABLE_NAME, null, values)
         } catch (e: IllegalStateException) {
@@ -501,8 +501,8 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
                 val member5 = selectIndividualPBAPokemonByID(cur.getLong(6))
                 val member6 = selectIndividualPBAPokemonByID(cur.getLong(7))
 
-                return Party(Timestamp(cur.getLong(0)),
-                        member1, member2, member3, member4, member5, member6,
+                return Party(//Timestamp(cur.getLong(0)),
+                        //member1, member2, member3, member4, member5, member6,
                         cur.getString(8), cur.getString(1))
 
             }
@@ -529,8 +529,8 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
                 val member5 = selectIndividualPBAPokemonByID(cur.getLong(6))
                 val member6 = selectIndividualPBAPokemonByID(cur.getLong(7))
 
-                return Party(Timestamp(cur.getLong(0)),
-                        member1, member2, member3, member4, member5, member6,
+                return Party(//Timestamp(cur.getLong(0)),
+                        //member1, member2, member3, member4, member5, member6,
                         cur.getString(8), cur.getString(1))
             } else {
                 Log.e("selectPBAPokemonByNo", "not found")
@@ -555,8 +555,8 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
                 val member2 = selectIndividualPBAPokemonByID(cur.getLong(3))
                 val member3 = selectIndividualPBAPokemonByID(cur.getLong(4))
 
-                return Party(Timestamp(cur.getLong(0)),
-                        member1, member2, member3, null, null, null,
+                return Party(//Timestamp(cur.getLong(0)),
+                        //member1, member2, member3, null, null, null,
                         "", cur.getString(1))
 
             }
@@ -665,7 +665,7 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
     }
 
     fun createPBAPokemon(cur: Cursor): PBAPokemon {
-        return PBAPokemon(0, 0, Pokemon(), 0)
+        return PBAPokemon(0, 0, PokemonMasterData(), 0)
 
 //                cur.getString(1), cur.getString(2), cur.getString(3), cur.getInt(4), cur.getInt(5), cur.getInt(6), cur.getInt(7), cur.getInt(8),
 //                cur.getInt(9), cur.getString(10), cur.getString(11), cur.getString(12), Type.convertNoToTypeCode(cur.getInt(13)), Type.convertNoToTypeCode(cur.getInt(14)), cur.getFloat(15), cur.getInt(16))

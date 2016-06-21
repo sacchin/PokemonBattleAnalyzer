@@ -66,14 +66,14 @@ class JSONParser {
             return result
         }
 
-        fun createItemList(itemInfo: JSONArray?): List<Item> {
-            val result = ArrayList<Item>()
+        fun createItemList(itemInfo: JSONArray?): List<PBAItem> {
+            val result = ArrayList<PBAItem>()
             if (itemInfo == null || itemInfo.length() == 0) {
                 return result
             }
             for (i in 0..itemInfo.length() - 1) {
                 try {
-                    val temp = Item.createItem(itemInfo.getJSONObject(i))
+                    val temp = PBAItem.createItem(itemInfo.getJSONObject(i))
                     if (temp != null && 2 < temp.usageRate) {
                         result.add(temp)
                     }

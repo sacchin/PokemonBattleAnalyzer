@@ -1,7 +1,7 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Characteristic
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Pokemon
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Type
 import org.junit.Test as Test
 

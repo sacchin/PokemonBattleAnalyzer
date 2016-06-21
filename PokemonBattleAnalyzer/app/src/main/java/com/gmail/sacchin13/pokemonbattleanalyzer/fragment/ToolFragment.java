@@ -89,14 +89,14 @@ public class ToolFragment extends PGLFragment {
             partyLayout.removeAllViews();
         }
 
-        if(party != null){
-            for (int i = 0; i < party.getMember().size(); i++) {
-                IndividualPBAPokemon p = party.getMember().get(i);
-                FrameLayout frame = createFrameLayout(p.getMaster(), 210f);
-                frame.setOnClickListener(new OnClickIndividualPokemon(this, i, (ImageView)frame.getChildAt(0)));
-                partyLayout.addView(frame);
-            }
-        }
+//        if(party != null){
+//            for (int i = 0; i < party.getMember().size(); i++) {
+//                IndividualPBAPokemon p = party.getMember().get(i);
+//                FrameLayout frame = createFrameLayout(p.getMaster(), 210f);
+//                frame.setOnClickListener(new OnClickIndividualPokemon(this, i, (ImageView)frame.getChildAt(0)));
+//                partyLayout.addView(frame);
+//            }
+//        }
 
         if(choicedLayout == null){
             Log.e("choicedLayout", "null!");
@@ -105,14 +105,14 @@ public class ToolFragment extends PGLFragment {
             choicedLayout.removeAllViews();
         }
 
-        if(choiced != null){
-            for (int i = 0; i < choiced.getMember().size(); i++) {
-                IndividualPBAPokemon p = choiced.getMember().get(i);
-                FrameLayout frame = createFrameLayout(p.getMaster(), 280f);
-                frame.setOnClickListener(new OnClickChoicedPokemon(this, i));
-                choicedLayout.addView(frame);
-            }
-        }
+//        if(choiced != null){
+//            for (int i = 0; i < choiced.getMember().size(); i++) {
+//                IndividualPBAPokemon p = choiced.getMember().get(i);
+//                FrameLayout frame = createFrameLayout(p.getMaster(), 280f);
+//                frame.setOnClickListener(new OnClickChoicedPokemon(this, i));
+//                choicedLayout.addView(frame);
+//            }
+//        }
     }
 
     public FrameLayout createFrameLayout(PBAPokemon p, float size){
@@ -128,7 +128,7 @@ public class ToolFragment extends PGLFragment {
     }
 
     public IndividualPBAPokemon getIndividualPBAPokemon(int index){
-        return party.getMember().get(index);
+        return null;//party.getMember().get(index);
     }
 
     @Override
@@ -146,36 +146,36 @@ public class ToolFragment extends PGLFragment {
     }
 
     public void setAlert(int index){
-        IndividualPBAPokemon tapped = choiced.getMember().get(index);
-        if(party != null){
-            for (int i = 0; i < party.getMember().size(); i++) {
-                IndividualPBAPokemon p = party.getMember().get(i);
-                FrameLayout frame = (FrameLayout)partyLayout.getChildAt(i);
-                if(1 < frame.getChildCount()){
-                    frame.removeViewAt(frame.getChildCount() - 1);
-                }
-                Bitmap over = null;
-                ImageView overView = new ImageView(getActivity());
-                switch (BattleCalculator.getAttackOrder(tapped, p)){
-                    case SAFE:
-                        //set no frame
-                        break;
-                    case LGTM:
-                        over = Util.Companion.createImage(R.drawable.safe, 210f, getResources());
-                        break;
-                    case FATAL:
-                        over = Util.Companion.createImage(R.drawable.caution, 210f, getResources());
-                        break;
-                    default:
-                        over = Util.Companion.createImage(R.drawable.alert, 210f, getResources());
-                        break;
-                }
-                if(over != null){
-                    overView.setImageBitmap(over);
-                }
-                frame.addView(overView);
-            }
-        }
+//        IndividualPBAPokemon tapped = choiced.getMember().get(index);
+//        if(party != null){
+//            for (int i = 0; i < party.getMember().size(); i++) {
+//                IndividualPBAPokemon p = party.getMember().get(i);
+//                FrameLayout frame = (FrameLayout)partyLayout.getChildAt(i);
+//                if(1 < frame.getChildCount()){
+//                    frame.removeViewAt(frame.getChildCount() - 1);
+//                }
+//                Bitmap over = null;
+//                ImageView overView = new ImageView(getActivity());
+//                switch (BattleCalculator.getAttackOrder(tapped, p)){
+//                    case SAFE:
+//                        //set no frame
+//                        break;
+//                    case LGTM:
+//                        over = Util.Companion.createImage(R.drawable.safe, 210f, getResources());
+//                        break;
+//                    case FATAL:
+//                        over = Util.Companion.createImage(R.drawable.caution, 210f, getResources());
+//                        break;
+//                    default:
+//                        over = Util.Companion.createImage(R.drawable.alert, 210f, getResources());
+//                        break;
+//                }
+//                if(over != null){
+//                    overView.setImageBitmap(over);
+//                }
+//                frame.addView(overView);
+//            }
+//        }
     }
 
     public TableRow createTableRow(String[] texts, int layoutSpan, int bgColor, int txtColor, int txtSize){
@@ -207,24 +207,24 @@ public class ToolFragment extends PGLFragment {
     }
 
     public void setMainView(int index){
-        IndividualPBAPokemon tapped = choiced.getMember().get(index);
-        selected.setImageBitmap(Util.Companion.createImage(tapped.getMaster(), 210f, getResources()));
-
-        String headers[] = {"", "H", "A", "B", "C", "D", "S"};
-        status.addView(createTableRow(headers, 0, Color.TRANSPARENT, Color.GRAY, 12));
-
-        String base[] = {"種族", String.valueOf(tapped.getMaster().getMasterRecord().getH()), String.valueOf(tapped.getMaster().getMasterRecord().getA()), String.valueOf(tapped.getMaster().getMasterRecord().getB()),
-                String.valueOf(tapped.getMaster().getMasterRecord().getC()), String.valueOf(tapped.getMaster().getMasterRecord().getD()), String.valueOf(tapped.getMaster().getMasterRecord().getS())};
-        status.addView(createTableRow(base, 0, Color.TRANSPARENT, Color.BLACK, 18));
-
-        String effort[] = {"努力", String.valueOf(tapped.getHpEffortValue()), String.valueOf(tapped.getAttackEffortValue()),
-                String.valueOf(tapped.getDeffenceEffortValue()), String.valueOf(tapped.getSpecialAttackEffortValue()),
-                String.valueOf(tapped.getSpecialDeffenceEffortValue()), String.valueOf(tapped.getSpeedEffortValue())};
-        status.addView(createTableRow(effort, 0, Color.TRANSPARENT, Color.BLACK, 18));
-
-        String actual[] = {"実数", String.valueOf(tapped.getHpEffortValue()), String.valueOf(tapped.getAttackValue()), String.valueOf(tapped.getDeffenceValue()),
-                String.valueOf(tapped.getSpecialAttackValue()), String.valueOf(tapped.getSpecialDeffenceValue()), String.valueOf(tapped.getSpeedValue())};
-        status.addView(createTableRow(actual, 0, Color.TRANSPARENT, Color.BLACK, 18));
+//        IndividualPBAPokemon tapped = choiced.getMember().get(index);
+//        selected.setImageBitmap(Util.Companion.createImage(tapped.getMaster(), 210f, getResources()));
+//
+//        String headers[] = {"", "H", "A", "B", "C", "D", "S"};
+//        status.addView(createTableRow(headers, 0, Color.TRANSPARENT, Color.GRAY, 12));
+//
+//        String base[] = {"種族", String.valueOf(tapped.getMaster().getMasterRecord().getH()), String.valueOf(tapped.getMaster().getMasterRecord().getA()), String.valueOf(tapped.getMaster().getMasterRecord().getB()),
+//                String.valueOf(tapped.getMaster().getMasterRecord().getC()), String.valueOf(tapped.getMaster().getMasterRecord().getD()), String.valueOf(tapped.getMaster().getMasterRecord().getS())};
+//        status.addView(createTableRow(base, 0, Color.TRANSPARENT, Color.BLACK, 18));
+//
+//        String effort[] = {"努力", String.valueOf(tapped.getHpEffortValue()), String.valueOf(tapped.getAttackEffortValue()),
+//                String.valueOf(tapped.getDeffenceEffortValue()), String.valueOf(tapped.getSpecialAttackEffortValue()),
+//                String.valueOf(tapped.getSpecialDeffenceEffortValue()), String.valueOf(tapped.getSpeedEffortValue())};
+//        status.addView(createTableRow(effort, 0, Color.TRANSPARENT, Color.BLACK, 18));
+//
+//        String actual[] = {"実数", String.valueOf(tapped.getHpEffortValue()), String.valueOf(tapped.getAttackValue()), String.valueOf(tapped.getDeffenceValue()),
+//                String.valueOf(tapped.getSpecialAttackValue()), String.valueOf(tapped.getSpecialDeffenceValue()), String.valueOf(tapped.getSpeedValue())};
+//        status.addView(createTableRow(actual, 0, Color.TRANSPARENT, Color.BLACK, 18));
 
 
 //        if(party != null){

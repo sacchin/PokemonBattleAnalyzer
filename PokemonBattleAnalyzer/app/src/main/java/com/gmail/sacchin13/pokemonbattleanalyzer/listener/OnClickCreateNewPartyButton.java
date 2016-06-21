@@ -1,25 +1,25 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.listener;
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.fragment.MainFragment;
+import com.gmail.sacchin13.pokemonbattleanalyzer.activity.HomeActivity;
 
 import android.view.View;
 import android.view.View.OnClickListener;
 
 public class OnClickCreateNewPartyButton implements OnClickListener{
-	private MainFragment fragment = null;
+	private HomeActivity activity = null;
 	private boolean mine;
 
-	public OnClickCreateNewPartyButton(MainFragment fragment, boolean mine){
-		this.fragment = fragment;
+	public OnClickCreateNewPartyButton(HomeActivity activity, boolean mine){
+		this.activity = activity;
 		this.mine = mine;
 	}
 
 	@Override
 	public void onClick(View v) {
 		if(mine){
-			fragment.createMyParty();
+			activity.createMyParty();
 		}else{
-			fragment.createOpponentParty();
+			activity.createOpponentParty();
 		}
 	}
 }

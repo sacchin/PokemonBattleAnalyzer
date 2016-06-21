@@ -130,7 +130,7 @@ object Type {
         return TypeCode.values()
     }
 
-    fun calcurateAffinity(attackType: TypeCode?, p: Pokemon): Float {
+    fun calcurateAffinity(attackType: TypeCode?, p: PokemonMasterData): Float {
         if (attackType == null) {
             return -1f
         }

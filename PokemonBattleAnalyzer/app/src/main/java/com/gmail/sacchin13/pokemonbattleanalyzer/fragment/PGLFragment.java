@@ -44,30 +44,30 @@ public abstract class PGLFragment extends Fragment {
     }
 
     private void downloadTrend() {
-        final Handler handler = new Handler();
-        for(int i = 0 ; i < party.getMember().size() ; i++){
-            IndividualPBAPokemon p = party.getMember().get(i);
-            String pokemonNo = p.getMaster().getMasterRecord().getNo();
-            if(!pokemonNo.contains("-")){
-                try {
-                    pokemonNo = String.valueOf(Integer.parseInt(p.getMaster().getMasterRecord().getNo())) + "-0";
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-            }
-            executorService.execute(
-                    new PokemonTrendDownloader(pokemonNo, this, i, handler));
-        }
+//        final Handler handler = new Handler();
+//        for(int i = 0 ; i < party.getMember().size() ; i++){
+//            IndividualPBAPokemon p = party.getMember().get(i);
+//            String pokemonNo = p.getMaster().getMasterRecord().getNo();
+//            if(!pokemonNo.contains("-")){
+//                try {
+//                    pokemonNo = String.valueOf(Integer.parseInt(p.getMaster().getMasterRecord().getNo())) + "-0";
+//                } catch (NumberFormatException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            executorService.execute(
+//                    new PokemonTrendDownloader(pokemonNo, this, i, handler));
+//        }
     }
 
     public IndividualPBAPokemon getIndividualPBAPokemon(int index){
-        return party.getMember().get(index);
+        return null;//party.getMember().get(index);
     }
 
     public void finishDownload(int index, RankingPokemonTrend trend){
-        if(party == null || party.getMember() == null || party.getMember().size() < index){
-            return;
-        }
+//        if(party == null || party.getMember() == null || party.getMember().size() < index){
+//            return;
+//        }
         //party.getMember().get(index).getMaster().getMasterRecord().setTrend(trend);
     }
 

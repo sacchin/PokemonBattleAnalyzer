@@ -1,6 +1,5 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Ability;
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Item;
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.ItemMasterData;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.JSONParser;
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAItem;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonCharacteristic;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonSkill;
 
@@ -26,7 +26,7 @@ public class RankingPokemonTrend {
 	private List<PokemonSkill> skillList = null;
 	private List<Ability> abilityList = null;
 	private List<PokemonCharacteristic> characteristicList = null;
-	private List<Item> itemList = null;
+	private List<PBAItem> itemList = null;
 
 
 	public static RankingPokemonTrend createRankingPokemonTrend(JSONObject rankingPokemonTrend){
@@ -61,19 +61,19 @@ public class RankingPokemonTrend {
 		return characteristicList;
 	}
 
-	public List<Item> getItemList() {
+	public List<PBAItem> getItemList() {
 		return itemList;
 	}
 
 	public TreeMap<String, String[]> createSkillMap(){
 		HashMap<String, String[]> result = new HashMap<String, String[]>();
 		for(PokemonSkill pokemonSkill : skillList){
-			if(pokemonSkill.getJname() == null || pokemonSkill.getJname().isEmpty()){
+			if(pokemonSkill.getMaster().getJname() == null || pokemonSkill.getMaster().getJname().isEmpty()){
 				continue;
 			}
 
 			String[] temp = new String[2];
-			temp[0] = pokemonSkill.getJname();
+			temp[0] = pokemonSkill.getMaster().getJname();
 			temp[1] = String.valueOf((int) pokemonSkill.getUsageRate());
 			result.put(String.valueOf(pokemonSkill.getSequenceNumber()), temp);
 		}
@@ -119,12 +119,12 @@ public class RankingPokemonTrend {
 	}
 	public TreeMap<String, String[]> createItemMap(){
 		HashMap<String, String[]> result = new HashMap<String, String[]>();
-		for(Item item : itemList){
-			if(item.getName() == null || item.getName().isEmpty()){
-				continue;
-			}
+		for(PBAItem item : itemList){
+//			if(item.getName() == null || item.getName().isEmpty()){
+//				continue;
+//			}
 			String[] temp = new String[2];
-			temp[0] = item.getName();
+			temp[0] = item.getName().getName();
 			temp[1] = String.valueOf((int)item.getUsageRate());
 			result.put(String.valueOf(item.getSequenceNumber()), temp);
 		}

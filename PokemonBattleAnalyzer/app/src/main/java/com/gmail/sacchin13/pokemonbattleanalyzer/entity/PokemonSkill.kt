@@ -4,10 +4,16 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class PokemonSkill(no: Int, name: String, ename: String, type: Type.TypeCode, power: Int,
-                   accuracy: Int, category: Int, pp: Int) : Skill(no, name, ename, type, power, accuracy, category, pp) {
+                   accuracy: Int, category: Int, pp: Int){
+
+    var master: Skill
     var usageRate = 0.0
     var ranking = 0
     var sequenceNumber = 0
+
+    init{
+        master = Skill(no, name, ename, Type.convertTypeCodeToNo(type), power, accuracy, category, pp)
+    }
 
     companion object {
 

@@ -37,7 +37,7 @@ public class EstimateOpponentElection {
         IndividualPBAPokemon[][] estimated = new IndividualPBAPokemon[20][3];
         for(int i = 0 ; i < 20 ; i++){
             for(int j = 0 ; j < 3 ; j++){
-                estimated[i][j] = opponent.getMember().get(kumiawase[i][j] - 1);
+                //estimated[i][j] = opponent.getMember().get(kumiawase[i][j] - 1);
             }
         }
         return estimated;

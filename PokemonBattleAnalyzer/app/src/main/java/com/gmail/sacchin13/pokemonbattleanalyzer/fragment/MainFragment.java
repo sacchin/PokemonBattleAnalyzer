@@ -77,10 +77,10 @@ public class MainFragment extends PGLFragment implements AddToListInterface {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
         partyLayout = (LinearLayout) rootView.findViewById(R.id.party);
         scrollView = (ScrollView)rootView.findViewById(R.id.scrollView);
-        party = new Party(null, null, null, null, null, null, null, "", "");
+        party = new Party();
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.first_fab);
-        fab.setOnClickListener(new OnClickCreateNewPartyButton(this, false));
+        //fab.setOnClickListener(new OnClickCreateNewPartyButton(this, false));
 
         return rootView;
     }
@@ -93,7 +93,7 @@ public class MainFragment extends PGLFragment implements AddToListInterface {
             Button createMyParty = new Button(getActivity());
             createMyParty.setText("My Party");
             createMyParty.setTextSize(10);
-            createMyParty.setOnClickListener(new OnClickCreateNewPartyButton(this, true));
+            //createMyParty.setOnClickListener(new OnClickCreateNewPartyButton(this, true));
 
             Button showAffinity = new Button(getActivity());
             showAffinity.setText("Show Affinity Complete");
@@ -196,18 +196,18 @@ public class MainFragment extends PGLFragment implements AddToListInterface {
     }
 
     public void addPokemonToList(PBAPokemon pokemon){
-        IndividualPBAPokemon ip = new IndividualPBAPokemon(pokemon);//, 0, new Timestamp(System.currentTimeMillis()), "", "", "", "", "", "", "");
-        int index = party.setMember(ip);
-        if(index == -1){
-            Snackbar.make(partyLayout, "すでに6体選択しています。", Snackbar.LENGTH_SHORT).show();
-        }else {
-            Bitmap temp = Util.Companion.createImage(pokemon, 120f, getResources());
-            ImageView localView = new ImageView(getActivity());
-            localView.setImageBitmap(temp);
-            localView.setOnClickListener(new OnClickFromParty(this, ip));
-
-            partyLayout.addView(localView);
-        }
+//        IndividualPBAPokemon ip = new IndividualPBAPokemon(pokemon);//, 0, new Timestamp(System.currentTimeMillis()), "", "", "", "", "", "", "");
+//        int index = party.setMember(ip);
+//        if(index == -1){
+//            Snackbar.make(partyLayout, "すでに6体選択しています。", Snackbar.LENGTH_SHORT).show();
+//        }else {
+//            Bitmap temp = Util.Companion.createImage(pokemon, 120f, getResources());
+//            ImageView localView = new ImageView(getActivity());
+//            localView.setImageBitmap(temp);
+//            localView.setOnClickListener(new OnClickFromParty(this, ip));
+//
+//            partyLayout.addView(localView);
+//        }
     }
 
     @Override
@@ -216,47 +216,47 @@ public class MainFragment extends PGLFragment implements AddToListInterface {
     }
 
     public void removePokemonFromList(IndividualPBAPokemon pokemon){
-        try {
-            int index = party.removeMember(pokemon.getMaster());
-            if(-1 < index){
-                partyLayout.removeViewAt(index + 1);
-            }else{
-                party.setMember(pokemon);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            int index = party.removeMember(pokemon.getMaster());
+//            if(-1 < index){
+//                partyLayout.removeViewAt(index + 1);
+//            }else{
+//                party.setMember(pokemon);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void createOpponentParty(){
-        if(party.getMember() == null || party.getMember().size() < 1){
-            Snackbar.make(partyLayout, "ポケモンが選択されていません。", Snackbar.LENGTH_SHORT).show();
-            return;
-        }
-        party.setTime(new Timestamp(System.currentTimeMillis()));
-        party.setUserName("opponent");
-        executorService.execute(new PartyInsertHandler(databaseHelper, party, false));
-        ((MainActivity)getActivity()).startSelectActivity();
+//        if(party.getMember() == null || party.getMember().size() < 1){
+//            Snackbar.make(partyLayout, "ポケモンが選択されていません。", Snackbar.LENGTH_SHORT).show();
+//            return;
+//        }
+//        party.setTime(new Timestamp(System.currentTimeMillis()));
+//        party.setUserName("opponent");
+//        executorService.execute(new PartyInsertHandler(databaseHelper, party, false));
+//        ((MainActivity)getActivity()).startSelectActivity();
     }
 
     public void createMyParty(){
-        if(party.getMember() == null || party.getMember().size() < 1){
-            Snackbar.make(partyLayout, "ポケモンが選択されていません。", Snackbar.LENGTH_SHORT).show();
-
-            return;
-        }
-        party.setTime(new Timestamp(System.currentTimeMillis()));
-        party.setUserName("mine");
-        executorService.execute(new PartyInsertHandler(databaseHelper, party, false));
-        Snackbar.make(partyLayout, "登録しました。", Snackbar.LENGTH_SHORT).show();
+//        if(party.getMember() == null || party.getMember().size() < 1){
+//            Snackbar.make(partyLayout, "ポケモンが選択されていません。", Snackbar.LENGTH_SHORT).show();
+//
+//            return;
+//        }
+//        party.setTime(new Timestamp(System.currentTimeMillis()));
+//        party.setUserName("mine");
+//        executorService.execute(new PartyInsertHandler(databaseHelper, party, false));
+//        Snackbar.make(partyLayout, "登録しました。", Snackbar.LENGTH_SHORT).show();
     }
 
     public void showAffinity(){
-        if(party.getMember() == null || party.getMember().size() < 1){
-            Snackbar.make(partyLayout, "ポケモンが選択されていません。", Snackbar.LENGTH_SHORT).show();
-            return;
-        }
-        ((MainActivity)getActivity()).startAffinityActivity(party.getMember().get(0).getMaster());
+//        if(party.getMember() == null || party.getMember().size() < 1){
+//            Snackbar.make(partyLayout, "ポケモンが選択されていません。", Snackbar.LENGTH_SHORT).show();
+//            return;
+//        }
+//        ((MainActivity)getActivity()).startAffinityActivity(party.getMember().get(0).getMaster());
     }
 
     @Override

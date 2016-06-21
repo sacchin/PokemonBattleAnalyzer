@@ -6,11 +6,12 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon
+import kotlin.properties.Delegates
 
 class Util {
 
-    var pokemonImageResource: MutableMap<String, Int>? = null
-    var itemImageResource: MutableMap<String, Int>? = null
+    var pokemonImageResource: MutableMap<String, Int> by Delegates.notNull()
+    var itemImageResource: MutableMap<String, Int> by Delegates.notNull()
 
     init{
         itemImageResource = mutableMapOf(
@@ -631,12 +632,14 @@ class Util {
     }
 
     companion object {
-        fun createImage(p: PBAPokemon, scale: Float, resource: Resources): Bitmap? {
-            var image: Bitmap? = BitmapFactory.decodeResource(resource, p.resourceId)
+        fun createImage(p: PBAPokemon, scale: Float, resource: Resources): Bitmap {
+            var image = BitmapFactory.decodeResource(resource, p.resourceId!!.toInt())
             if (image == null) {
-                Log.e("createImage", p.masterRecord.jname + " - " + p.resourceId)
-                return null
+                Log.w("createImage", "${p.masterRecord.jname}'s image is not found(${p.resourceId})")
+                image = BitmapFactory.decodeResource(resource, R.drawable.noimage)
+            }else{
             }
+            //resize
             val matrix = Matrix()
             matrix.postScale(scale / image.width.toFloat(), scale / image.height.toFloat())
             image = Bitmap.createBitmap(image, 0, 0, image.width, image.height, matrix, true)
@@ -645,6 +648,11 @@ class Util {
 
         fun createImage(resourceId: Int, scale: Float, resource: Resources): Bitmap {
             var image = BitmapFactory.decodeResource(resource, resourceId)
+            if (image == null) {
+                Log.w("createImage", "${resourceId}'s image is not found")
+                image = BitmapFactory.decodeResource(resource, R.drawable.noimage)
+            }
+            //resize
             val matrix = Matrix()
             matrix.postScale(scale / image.width.toFloat(), scale / image.height.toFloat())
             image = Bitmap.createBitmap(image, 0, 0, image.width, image.height, matrix, true)

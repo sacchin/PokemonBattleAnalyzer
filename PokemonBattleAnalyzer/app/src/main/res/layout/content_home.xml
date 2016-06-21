@@ -9,19 +9,11 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.gmail.sacchin13.pokemonbattleanalyzer.HomeActivity"
+    tools:context=".activity.HomeActivity"
     tools:showIn="@layout/app_bar_home">
 
     <LinearLayout
-        android:layout_below="@id/tool_bar"
-        android:id="@+id/button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal" />
-
-    <LinearLayout
-        android:layout_below="@id/button"
+        android:id="@+id/opponent_party"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -32,26 +24,31 @@
             android:text="相手：" >
         </TextView>
         <LinearLayout
-            android:id="@+id/party"
+            android:id="@+id/partyLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
         </LinearLayout>
     </LinearLayout>
 
     <android.support.design.widget.CoordinatorLayout
-        android:layout_below="@id/button"
-        android:layout_width="fill_parent"
+        android:layout_below="@id/opponent_party"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="fill_parent"
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
-        </ScrollView>
+            android:numColumns="4"
+            android:verticalSpacing="2dp"
+            android:horizontalSpacing="2dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

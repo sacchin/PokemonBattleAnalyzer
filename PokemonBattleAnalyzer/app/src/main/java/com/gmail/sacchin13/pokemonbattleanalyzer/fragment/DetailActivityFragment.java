@@ -19,7 +19,7 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.Util;
 import com.gmail.sacchin13.pokemonbattleanalyzer.activity.DetailActivity;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon;
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Pokemon;
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingPokemonTrend;
 
 import java.util.TreeMap;
@@ -69,26 +69,26 @@ public class DetailActivityFragment extends PGLFragment {
     public void onResume() {
         super.onResume();
         resetParty(true);
-        if(party != null && party.getMember() != null){
-            for(IndividualPBAPokemon p : party.getMember()){
-                if(p.getId() == this.id){
-                    iv.setImageResource(p.getMaster().getResourceId());
-                    break;
-                }
-            }
-        }
+//        if(party != null && party.getMember() != null){
+//            for(IndividualPBAPokemon p : party.getMember()){
+//                if(p.getId() == this.id){
+//                    iv.setImageResource(p.getMaster().getResourceId());
+//                    break;
+//                }
+//            }
+//        }
     }
 
     @Override
     public void finishAllDownload() {
-        for(IndividualPBAPokemon p : party.getMember()){
-            if(p.getId() == this.id){
-                setTrend(p);
-                setMainView(p);
-                toolbar.setTitle(p.getMaster().getMasterRecord().getJname());
-                break;
-            }
-        }
+//        for(IndividualPBAPokemon p : party.getMember()){
+//            if(p.getId() == this.id){
+//                setTrend(p);
+//                setMainView(p);
+//                toolbar.setTitle(p.getMaster().getMasterRecord().getJname());
+//                break;
+//            }
+//        }
     }
 
     @Override
@@ -183,7 +183,7 @@ public class DetailActivityFragment extends PGLFragment {
 
         createPBAPokemonStatus(p.getMaster());
         if(p.getMaster().getMasterRecord().getMega() != null){
-            for(Pokemon mega : p.getMaster().getMasterRecord().getMega()){
+            for(PokemonMasterData mega : p.getMaster().getMasterRecord().getMega()){
                 //createPBAPokemonStatus(mega);
             }
         }
@@ -191,7 +191,7 @@ public class DetailActivityFragment extends PGLFragment {
 
     private void createPBAPokemonStatus(PBAPokemon po) {
 
-        Pokemon p = po.getMasterRecord();
+        PokemonMasterData p = po.getMasterRecord();
 
         Log.e("createPBAPokemonStatus", p.getJname());
         LinearLayout sss = new LinearLayout(getActivity());

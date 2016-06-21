@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.R;
-import com.gmail.sacchin13.pokemonbattleanalyzer.fragment.ToolFragment;
 
 public class ToolActivity extends AppCompatActivity {
 
@@ -23,7 +22,7 @@ public class ToolActivity extends AppCompatActivity {
 		getWindow().setExitTransition(new Explode());
 
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_select);
 
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

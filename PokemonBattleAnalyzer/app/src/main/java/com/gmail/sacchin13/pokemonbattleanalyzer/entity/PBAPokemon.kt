@@ -3,9 +3,9 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 import java.util.*
 
 open class PBAPokemon(
-        var resourceId:Int = 0,
+        var resourceId:Int? = 0,
         var rowId:Int = 0,
-        val masterRecord :Pokemon,
+        val masterRecord : PokemonMasterData,
         val ranking: Int) {
 
     val abilities: List<String>

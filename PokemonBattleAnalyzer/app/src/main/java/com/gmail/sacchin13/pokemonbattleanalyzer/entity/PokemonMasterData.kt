@@ -5,7 +5,7 @@ import io.realm.RealmObject
 import io.realm.annotations.RealmClass
 
 @RealmClass
-public open class Pokemon (
+public open class PokemonMasterData(
         public open var no: String = "none",
         public open var jname: String = "none",
         public open var ename: String = "none",
@@ -21,19 +21,12 @@ public open class Pokemon (
         public open var type1: Int = -1,
         public open var type2: Int = -1,
         public open var weight: Float = -1f,
-        public open var mega: RealmList<Pokemon>? = null
+        public open var mega: RealmList<PokemonMasterData>? = null
 ): RealmObject()  {
 
-    init {
-        /**
-         * nnn-mm
-         */
-        this.mega = RealmList<Pokemon>()
-    }
-
-    fun addMega(mega: Pokemon) {
+    fun addMega(mega: PokemonMasterData) {
         if (this.mega == null) {
-            this.mega = RealmList<Pokemon>()
+            this.mega = RealmList<PokemonMasterData>()
         }
         this.mega!!.add(mega)
     }

@@ -82,12 +82,12 @@ public class EditActivityFragment extends Fragment {
 
         try {
             mine = databaseHelper.selectMyParty();
-            if (mine != null) {
-                for (int i = 0; i < mine.getMember().size(); i++) {
-                    IndividualPBAPokemon p = mine.getMember().get(i);
-                    addPokemonBlock(scrollView, p);
-                }
-            }
+//            if (mine != null) {
+//                for (int i = 0; i < mine.getMember().size(); i++) {
+//                    IndividualPBAPokemon p = mine.getMember().get(i);
+//                    addPokemonBlock(scrollView, p);
+//                }
+//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -187,13 +187,13 @@ public class EditActivityFragment extends Fragment {
         int d = getEffortValue(input, 10);
         int s = getEffortValue(input, 11);
 
-        try {
-            long id = mine.getMember().get(index).getId();
-            databaseHelper.updateIndividualPBAPokemonData(id, item, characteristic, skill1, skill2, skill3, skill4,
-                    h, a, b, c, d, s);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            long id = mine.getMember().get(index).getId();
+//            databaseHelper.updateIndividualPBAPokemonData(id, item, characteristic, skill1, skill2, skill3, skill4,
+//                    h, a, b, c, d, s);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private int getEffortValue(TableLayout input, int position) throws ParseException{
