@@ -9,12 +9,10 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
 
-class PartyInsertHandler(private val databaseHelper: DatabaseHelper?, private val party: Party, isInit: Boolean) : Runnable {
-    var isInit = false
-
-    init {
-        this.isInit = isInit
-    }
+class PartyInsertHandler(
+        private val databaseHelper: DatabaseHelper?,
+        private val party: Party,
+        private val isInit: Boolean) : Runnable {
 
     override fun run() {
         if (isInit) {

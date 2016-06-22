@@ -115,7 +115,7 @@ class DatabaseHelper (context: Context){
     fun selectOpponentParty(): Party {
         val party = realm!!.where(Party().javaClass).findAll()[0]
         if(party == null){
-            Log.e("sasasasasasa", "sasasasasasa")
+            Log.e("selectOpponentParty", "party is null")
         }
 
         val result = ArrayList<PBAPokemon>()

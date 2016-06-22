@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.PartyDatabaseHelper;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.JSONParser;
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingPokemonIn;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,18 +60,18 @@ public class PokemonRankingDownloader implements Runnable {
 
     @Override
     public void run() {
-        String jsonStr = "";
-        try {
-            jsonStr = doPostToMyServer();
-            JSONArray temp = new JSONArray(jsonStr);
-            List<RankingPokemonIn> rankingList = JSONParser.Companion.createPokemonRankingList(temp);
-            databaseHelper.updatePBAPokemonRanking(rankingList);
-            Log.e("PokemonRankingDownloade", "finish");
-        } catch (JSONException e) {
-            Log.e("PokemonRankingDownloade", "JSONException : " + jsonStr);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        String jsonStr = "";
+//        try {
+//            jsonStr = doPostToMyServer();
+//            JSONArray temp = new JSONArray(jsonStr);
+//            List<RankingPokemonIn> rankingList = JSONParser.Companion.createPokemonRankingList(temp);
+//            databaseHelper.updatePBAPokemonRanking(rankingList);
+//            Log.e("PokemonRankingDownloade", "finish");
+//        } catch (JSONException e) {
+//            Log.e("PokemonRankingDownloade", "JSONException : " + jsonStr);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }
 

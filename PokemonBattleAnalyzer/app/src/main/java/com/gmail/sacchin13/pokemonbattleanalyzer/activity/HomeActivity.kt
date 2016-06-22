@@ -2,6 +2,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.activity
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
@@ -26,6 +27,7 @@ import kotlinx.android.synthetic.main.content_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.jar.Manifest
 
 import kotlin.properties.Delegates
 
@@ -49,6 +51,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_home)
         setSupportActionBar(toolbar)
 
+        if (checkSelfPermission("android.permission.INTERNET") != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf("android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE"), 1)
+        }
+
         fab!!.setOnClickListener { createOpponentParty() }
 
         val toggle = ActionBarDrawerToggle(
@@ -58,7 +64,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view!!.setNavigationItemSelectedListener(this)
 
-        serviceStatePreferences = getSharedPreferences("pokemon", MODE_PRIVATE);
+        serviceStatePreferences = getSharedPreferences("pokemon", MODE_PRIVATE)
 
 //        tool_bar.setTitle("Pokemon Battle Tool")
 //        tool_bar.setTitleTextColor(Color.WHITE)
@@ -72,8 +78,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         firstLaunch();
 //        buttonEnable = serviceStatePreferences.getBoolean("enable", true);
 
-        party = Party("", "")
-
+        party = Party(System.currentTimeMillis(), "opponent", "opponent")
 
 //        val createMyParty = Button(getActivity())
 //        createMyParty.text = "My Party"
@@ -98,6 +103,15 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (1 == requestCode) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Snackbar.make(partyLayout, "OK", Snackbar.LENGTH_SHORT).show()
+            } else {
+                Snackbar.make(partyLayout, "NG。", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -165,6 +179,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun startSelectActivity() {
         val intent = Intent(this, SelectActivity().javaClass)
+        intent.putExtra("member1", party.member[0]!!.masterRecord.no)
+        intent.putExtra("member2", party.member[1]!!.masterRecord.no)
+        intent.putExtra("member3", party.member[2]!!.masterRecord.no)
+        intent.putExtra("member4", party.member[3]!!.masterRecord.no)
+        intent.putExtra("member5", party.member[4]!!.masterRecord.no)
+        intent.putExtra("member6", party.member[5]!!.masterRecord.no)
         startActivityForResult(intent, SELECT_ACTIVITY_CODE)
     }
 
@@ -240,7 +260,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             return
         }
 
-        PartyInsertHandler(databaseHelper, party, false)
+        PartyInsertHandler(databaseHelper, party, false).run()
         startSelectActivity()
     }
 

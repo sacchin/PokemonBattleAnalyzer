@@ -8,8 +8,6 @@ import java.util.ArrayList
 import org.json.JSONException
 import org.json.JSONObject
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingPokemonIn
-
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -310,7 +308,7 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
                 individualCur.close()
 
                 val p = createPBAPokemon(rowNo)
-                val result = IndividualPBAPokemon(p)
+                val result = IndividualPBAPokemon(p as PBAPokemon)
                 result.id = id
                 result.item = item
                 result.ability = ""
@@ -418,39 +416,39 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
 
     }
 
-    @Synchronized @Throws(IOException::class, SQLException::class)
-    fun updatePBAPokemonRanking(rankingList: List<RankingPokemonIn>?) {
-        if (rankingList == null) {
-            throw NullPointerException("argument is null.")
-        }
-
-        val db = writableDatabase
-        if (db.isReadOnly) {
-            throw IOException("Cannot get writable access to DB.")
-        }
-        try {
-            for (temp in rankingList) {
-                val values = ContentValues()
-                val rank = if (temp.getRanking() !== 0) temp.getRanking() else 1000
-                values.put("count", rank)
-
-                var pn = temp.getPokemonNo().split("-")[0]
-                val intPokemonNo = Integer.parseInt(pn)
-                if (intPokemonNo < 10) {
-                    pn = "00" + pn
-                } else if (9 < intPokemonNo && intPokemonNo < 100) {
-                    pn = "0" + pn
-                } else if (intPokemonNo == 479 || intPokemonNo == 641 || intPokemonNo == 642 || intPokemonNo == 645) {
-                    pn = temp.getPokemonNo()
-                }
-
-                db.update(POKEMON_MASTER_TABLE_NAME, values, "no = ?", arrayOf<String>(pn))
-            }
-        } catch (e: IllegalStateException) {
-            Log.w(javaClass.simpleName, "perhaps, service was restarted or un/reinstalled.", e)
-        }
-
-    }
+//    @Synchronized @Throws(IOException::class, SQLException::class)
+//    fun updatePBAPokemonRanking(rankingList: List<RankingPokemonIn>?) {
+//        if (rankingList == null) {
+//            throw NullPointerException("argument is null.")
+//        }
+//
+//        val db = writableDatabase
+//        if (db.isReadOnly) {
+//            throw IOException("Cannot get writable access to DB.")
+//        }
+//        try {
+//            for (temp in rankingList) {
+//                val values = ContentValues()
+//                val rank = if (temp.getRanking() !== 0) temp.getRanking() else 1000
+//                values.put("count", rank)
+//
+//                var pn = temp.getPokemonNo().split("-")[0]
+//                val intPokemonNo = Integer.parseInt(pn)
+//                if (intPokemonNo < 10) {
+//                    pn = "00" + pn
+//                } else if (9 < intPokemonNo && intPokemonNo < 100) {
+//                    pn = "0" + pn
+//                } else if (intPokemonNo == 479 || intPokemonNo == 641 || intPokemonNo == 642 || intPokemonNo == 645) {
+//                    pn = temp.getPokemonNo()
+//                }
+//
+//                db.update(POKEMON_MASTER_TABLE_NAME, values, "no = ?", arrayOf<String>(pn))
+//            }
+//        } catch (e: IllegalStateException) {
+//            Log.w(javaClass.simpleName, "perhaps, service was restarted or un/reinstalled.", e)
+//        }
+//
+//    }
 
     @Synchronized @Throws(IOException::class, SQLException::class)
     fun updateIndividualPBAPokemonData(
@@ -503,7 +501,7 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
 
                 return Party(//Timestamp(cur.getLong(0)),
                         //member1, member2, member3, member4, member5, member6,
-                        cur.getString(8), cur.getString(1))
+                        System.currentTimeMillis(), cur.getString(8), cur.getString(1))
 
             }
         } catch (e: SQLiteException) {
@@ -531,7 +529,7 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
 
                 return Party(//Timestamp(cur.getLong(0)),
                         //member1, member2, member3, member4, member5, member6,
-                        cur.getString(8), cur.getString(1))
+                        System.currentTimeMillis(), cur.getString(8), cur.getString(1))
             } else {
                 Log.e("selectPBAPokemonByNo", "not found")
             }
@@ -557,7 +555,7 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
 
                 return Party(//Timestamp(cur.getLong(0)),
                         //member1, member2, member3, null, null, null,
-                        "", cur.getString(1))
+                        System.currentTimeMillis(), "", cur.getString(1))
 
             }
         } catch (e: SQLiteException) {

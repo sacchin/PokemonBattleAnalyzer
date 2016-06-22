@@ -1,7 +1,5 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingPokemonIn
-
 import java.util.ArrayList
 
 import org.json.JSONArray
@@ -85,22 +83,22 @@ class JSONParser {
             return result
         }
 
-        fun createPokemonRankingList(pbaPokemonRankingInfo: JSONArray?): List<RankingPokemonIn> {
-            val result = ArrayList<RankingPokemonIn>()
-            if (pbaPokemonRankingInfo == null || pbaPokemonRankingInfo.length() == 0) {
-                return result
-            }
-            for (i in 0..pbaPokemonRankingInfo.length() - 1) {
-                try {
-                    val temp = RankingPokemonIn.createRankingPokemon(pbaPokemonRankingInfo.getJSONObject(i))
-                    result.add(temp)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-
-            }
-            return result
-        }
+//        fun createPokemonRankingList(pbaPokemonRankingInfo: JSONArray?): List<RankingPokemonIn> {
+//            val result = ArrayList<RankingPokemonIn>()
+//            if (pbaPokemonRankingInfo == null || pbaPokemonRankingInfo.length() == 0) {
+//                return result
+//            }
+//            for (i in 0..pbaPokemonRankingInfo.length() - 1) {
+//                try {
+//                    val temp = RankingPokemonIn.createRankingPokemon(pbaPokemonRankingInfo.getJSONObject(i))
+//                    result.add(temp)
+//                } catch (e: JSONException) {
+//                    e.printStackTrace()
+//                }
+//
+//            }
+//            return result
+//        }
     }
 }
 

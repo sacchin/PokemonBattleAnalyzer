@@ -2,17 +2,19 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
 import io.realm.RealmObject
 import io.realm.annotations.Ignore
+import java.sql.Timestamp
 import java.util.*
 
 public open class Party (
-    public open var userName: String = "none",
-    public open var memo: String = "none",
-    public open var member1: String? = null,
-    public open var member2: String? = null,
-    public open var member3: String? = null,
-    public open var member4: String? = null,
-    public open var member5: String? = null,
-    public open var member6: String? = null
+        public open var time: Long = System.currentTimeMillis(),
+        public open var userName: String = "none",
+        public open var memo: String = "none",
+        public open var member1: String? = null,
+        public open var member2: String? = null,
+        public open var member3: String? = null,
+        public open var member4: String? = null,
+        public open var member5: String? = null,
+        public open var member6: String? = null
 ): RealmObject(){
 
     @Ignore

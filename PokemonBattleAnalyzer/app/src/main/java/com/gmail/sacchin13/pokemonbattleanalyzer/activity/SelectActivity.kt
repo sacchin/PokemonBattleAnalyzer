@@ -3,6 +3,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.util.Log
 import android.widget.ImageView
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 
@@ -17,13 +18,29 @@ class SelectActivity : PGLActivity(), AddToListInterface {
 
 //    private var databaseHelper: PartyDatabaseHelper? = null
 
-    private var mine: Party? = null
-    private var choices: Party = Party("choice", "")
+    private var choices: Party = Party(System.currentTimeMillis(), "choice", "choice")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select)
 
+        opponentParty = Party(System.currentTimeMillis(), "opponent", "opponent")
+        opponentParty.member1 = intent.extras.getString("member1", "")
+        opponentParty.member2 = intent.extras.getString("member2", "")
+        opponentParty.member3 = intent.extras.getString("member3", "")
+        opponentParty.member4 = intent.extras.getString("member4", "")
+        opponentParty.member5 = intent.extras.getString("member5", "")
+        opponentParty.member6 = intent.extras.getString("member6", "")
+
+        myParty = Party(System.currentTimeMillis(), "mine", "mine")
+        myParty.member1 = intent.extras.getString("member1", "")
+        myParty.member2 = intent.extras.getString("member2", "")
+        myParty.member3 = intent.extras.getString("member3", "")
+        myParty.member4 = intent.extras.getString("member4", "")
+        myParty.member5 = intent.extras.getString("member5", "")
+        myParty.member6 = intent.extras.getString("member6", "")
+
+        resetParty(true)
 //        first_fab.setOnClickListener(View.OnClickListener {
 //            if (choicedPokemon == null || choicedPokemon.getMember().size() !== 3) {
 //                Snackbar.make(estimate, "3体選択して下さい。", Snackbar.LENGTH_SHORT).show()
@@ -38,8 +55,6 @@ class SelectActivity : PGLActivity(), AddToListInterface {
 
     override fun onResume() {
         super.onResume()
-        resetParty(false)
-        createPartyList()
     }
 
     override fun onStop() {
@@ -124,8 +139,9 @@ class SelectActivity : PGLActivity(), AddToListInterface {
 
     }
 
-//    override fun setTrend() {
-//    }
+    override fun setTrend() {
+        createPartyList()
+    }
 //
 //    override fun finishAllDownload() {
 //        determineOpponent()

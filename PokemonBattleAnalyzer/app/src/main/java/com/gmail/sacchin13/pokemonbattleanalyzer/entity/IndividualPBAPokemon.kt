@@ -7,7 +7,7 @@ import java.util.HashMap
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingPokemonTrend
 
-open class IndividualPBAPokemon (val master : PBAPokemon?) {
+open class IndividualPBAPokemon (val master : PBAPokemon) {
 
     companion object {
         const val UNKNOWN_EV = -1
