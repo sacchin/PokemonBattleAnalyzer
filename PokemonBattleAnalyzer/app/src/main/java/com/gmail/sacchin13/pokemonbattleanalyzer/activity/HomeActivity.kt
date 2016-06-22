@@ -31,7 +31,7 @@ import java.util.jar.Manifest
 
 import kotlin.properties.Delegates
 
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, AddToListInterface {
+class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     val SELECT_ACTIVITY_CODE = 0
     val AFFINITY_ACTIVITY_CODE = 1
     val EDIT_ACTIVITY_CODE = 0
@@ -66,17 +66,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         serviceStatePreferences = getSharedPreferences("pokemon", MODE_PRIVATE)
 
-//        tool_bar.setTitle("Pokemon Battle Tool")
-//        tool_bar.setTitleTextColor(Color.WHITE)
-//        setSupportActionBar(tool_bar)
-//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-//        supportActionBar!!.setHomeButtonEnabled(true)
-
         databaseHelper = DatabaseHelper(this)
-//        executorService.execute(
-//                PokemonRankingDownloader(databaseHelper));
         firstLaunch();
-//        buttonEnable = serviceStatePreferences.getBoolean("enable", true);
 
         party = Party(System.currentTimeMillis(), "opponent", "opponent")
 
@@ -119,7 +110,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         if (id == R.id.nav_camera) {
         } else if (id == R.id.nav_gallery) {
-            for(temp in databaseHelper!!.selectAllPBAPokemon()){
+            for(temp in databaseHelper.selectAllPBAPokemon()){
                 Log.v("test", temp.masterRecord.no + "," + temp.masterRecord.jname)
             }
 
@@ -158,14 +149,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun firstLaunch() {
-        if(serviceStatePreferences!!.getBoolean("isFirst", true)){
+        if(serviceStatePreferences.getBoolean("isFirst", true)){
 
             PokemonInsertHandler(databaseHelper).run()
             ItemInsertHandler(databaseHelper).run()
             SkillInsertHandler(databaseHelper).run()
             MegaPokemonInsertHandler(databaseHelper).run()
 
-            val editor = serviceStatePreferences!!.edit()
+            val editor = serviceStatePreferences.edit()
             editor.putBoolean("isFirst", false);
             editor.apply();
             Log.i("This is First Time", "create table!");
@@ -236,11 +227,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        return fl
 //    }
 
-    override fun removePokemonFromList(pokemon: PBAPokemon) {
+    fun removePokemonFromList(pokemon: PBAPokemon) {
         //throw UnsupportedOperationException()
     }
 
-    override fun addPokemonToList(pokemon: PBAPokemon) {
+    fun addPokemonToList(pokemon: PBAPokemon) {
         val ip = IndividualPBAPokemon(pokemon)
         val index = party.addMember(ip)
         if (index == -1) Snackbar.make(partyLayout, "すでに6体選択しています。", Snackbar.LENGTH_SHORT).show()
@@ -248,7 +239,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val temp = Util.createImage(pokemon, 120f, resources)
             val localView = ImageView(this)
             localView.setImageBitmap(temp)
-            localView.setOnClickListener(OnClickFromParty(this, ip))
+            localView.setOnClickListener{ removePokemonFromList(ip.master) }
 
             partyLayout.addView(localView)
         }

@@ -41,7 +41,6 @@ class PokemonTrendDownloader(
     }
 
     override fun doInBackground(vararg params: Void?): String? {
-        Log.v("doInBackground", "start")
         try {
             val httpClient = OkHttpClient.Builder()
                             .addInterceptor {

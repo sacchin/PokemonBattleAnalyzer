@@ -36,22 +36,23 @@ open class PGLActivity: AppCompatActivity() {
     }
 
     protected fun resetParty(downloadTrend: Boolean) {
-        opponentParty.addMember(IndividualPBAPokemon(PBAPokemon(0, 0,databaseHelper.selectPokemonMasterData(opponentParty.member1), 0)))
-        opponentParty.addMember(IndividualPBAPokemon(PBAPokemon(0, 0,databaseHelper.selectPokemonMasterData(opponentParty.member2), 0)))
-        opponentParty.addMember(IndividualPBAPokemon(PBAPokemon(0, 0,databaseHelper.selectPokemonMasterData(opponentParty.member3), 0)))
-        opponentParty.addMember(IndividualPBAPokemon(PBAPokemon(0, 0,databaseHelper.selectPokemonMasterData(opponentParty.member4), 0)))
-        opponentParty.addMember(IndividualPBAPokemon(PBAPokemon(0, 0,databaseHelper.selectPokemonMasterData(opponentParty.member5), 0)))
-        opponentParty.addMember(IndividualPBAPokemon(PBAPokemon(0, 0,databaseHelper.selectPokemonMasterData(opponentParty.member6), 0)))
+        opponentParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(opponentParty.member1)))
+        opponentParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(opponentParty.member2)))
+        opponentParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(opponentParty.member3)))
+        opponentParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(opponentParty.member4)))
+        opponentParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(opponentParty.member5)))
+        opponentParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(opponentParty.member6)))
 
-        myParty.addMember(IndividualPBAPokemon(PBAPokemon(0, 0, databaseHelper.selectPokemonMasterData(myParty.member1), 0)))
-        myParty.addMember(IndividualPBAPokemon(PBAPokemon(0, 0, databaseHelper.selectPokemonMasterData(myParty.member2), 0)))
-        myParty.addMember(IndividualPBAPokemon(PBAPokemon(0, 0, databaseHelper.selectPokemonMasterData(myParty.member3), 0)))
-        myParty.addMember(IndividualPBAPokemon(PBAPokemon(0, 0, databaseHelper.selectPokemonMasterData(myParty.member4), 0)))
-        myParty.addMember(IndividualPBAPokemon(PBAPokemon(0, 0, databaseHelper.selectPokemonMasterData(myParty.member5), 0)))
-        myParty.addMember(IndividualPBAPokemon(PBAPokemon(0, 0, databaseHelper.selectPokemonMasterData(myParty.member6), 0)))
+        myParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(myParty.member1)))
+        myParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(myParty.member2)))
+        myParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(myParty.member3)))
+        myParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(myParty.member4)))
+        myParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(myParty.member5)))
+        myParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(myParty.member6)))
 
         if(downloadTrend) downloadTrend()
 
+        showParty()
     }
 
     private fun downloadTrend() {
@@ -75,4 +76,6 @@ open class PGLActivity: AppCompatActivity() {
 //
 //    abstract fun finishAllDownload()
     open fun setTrend(){}
+
+    open fun showParty(){}
 }

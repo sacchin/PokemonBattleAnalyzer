@@ -43,6 +43,14 @@ class DatabaseHelper (context: Context){
 
     }
 
+    fun selectPBAPokemonData(pokemonNo: String?): PBAPokemon {
+        val p = selectPokemonMasterData(pokemonNo)
+        if(util.pokemonImageResource[p.no] != null) {
+            return PBAPokemon(util.pokemonImageResource[p.no], 0, p, 0)
+        }
+        return PBAPokemon(0, 0, p, 0)
+    }
+
     fun selectPokemonMasterData(pokemonNo: String?): PokemonMasterData {
         val pokemon = realm!!.where(PokemonMasterData().javaClass).equalTo("no", pokemonNo).findFirst()
         if(pokemon != null) return pokemon
@@ -111,27 +119,28 @@ class DatabaseHelper (context: Context){
         }
     }
 
-
     fun selectOpponentParty(): Party {
-        val party = realm!!.where(Party().javaClass).findAll()[0]
+        val party = realm!!.where(Party().javaClass).equalTo("userName", "opponent").findAllSorted("time", Sort.DESCENDING)
         if(party == null){
             Log.e("selectOpponentParty", "party is null")
         }
 
-        val result = ArrayList<PBAPokemon>()
-        val member1 = selectPokemonMasterData(party!!.member1)
+        val result = ArrayList<PBAPokemon?>()
+        val member1 = selectPokemonMasterData(party[0].member1)
         result.add(PBAPokemon(util.pokemonImageResource[member1.no], 0, member1, 0))
-        val member2 = selectPokemonMasterData(party.member2)
+        val member2 = selectPokemonMasterData(party[0].member2)
         result.add(PBAPokemon(util.pokemonImageResource[member2.no], 0, member2, 0))
-        val member3 = selectPokemonMasterData(party.member3)
+        val member3 = selectPokemonMasterData(party[0].member3)
         result.add(PBAPokemon(util.pokemonImageResource[member3.no], 0, member3, 0))
-        val member4 = selectPokemonMasterData(party.member4)
+        val member4 = selectPokemonMasterData(party[0].member4)
         result.add(PBAPokemon(util.pokemonImageResource[member4.no], 0, member4, 0))
-        val member5 = selectPokemonMasterData(party.member5)
+        val member5 = selectPokemonMasterData(party[0].member5)
         result.add(PBAPokemon(util.pokemonImageResource[member5.no], 0, member5, 0))
-        val member6 = selectPokemonMasterData(party.member6)
+        val member6 = selectPokemonMasterData(party[0].member6)
         result.add(PBAPokemon(util.pokemonImageResource[member6.no], 0, member6, 0))
 
-        return party
+        party[0].member = result
+
+        return party[0]
     }
 }
