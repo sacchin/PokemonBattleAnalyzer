@@ -2,10 +2,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
 import com.gmail.sacchin13.pokemonbattleanalyzer.http.PokemonTrendDownloader
@@ -36,19 +33,8 @@ open class PGLActivity: AppCompatActivity() {
     }
 
     protected fun resetParty(downloadTrend: Boolean) {
-        opponentParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(opponentParty.member1)))
-        opponentParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(opponentParty.member2)))
-        opponentParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(opponentParty.member3)))
-        opponentParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(opponentParty.member4)))
-        opponentParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(opponentParty.member5)))
-        opponentParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(opponentParty.member6)))
-
-        myParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(myParty.member1)))
-        myParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(myParty.member2)))
-        myParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(myParty.member3)))
-        myParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(myParty.member4)))
-        myParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(myParty.member5)))
-        myParty.addMember(IndividualPBAPokemon(databaseHelper.selectPBAPokemonData(myParty.member6)))
+        opponentParty = databaseHelper.selectParty("opponent")
+        myParty = databaseHelper.selectParty("mine")
 
         if(downloadTrend) downloadTrend()
 
@@ -57,8 +43,8 @@ open class PGLActivity: AppCompatActivity() {
 
     private fun downloadTrend() {
         for (i in 0..opponentParty.member.size - 1) {
-            val p = opponentParty.member[i] as PBAPokemon
-            val pokemonNo = p.masterRecord.no
+            val p = opponentParty.member[i]
+            val pokemonNo = p.no
             PokemonTrendDownloader(pokemonNo + "-0", i, TrendListener()).execute()
         }
     }

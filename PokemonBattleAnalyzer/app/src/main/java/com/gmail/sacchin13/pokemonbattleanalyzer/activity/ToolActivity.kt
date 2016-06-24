@@ -16,8 +16,8 @@ import android.widget.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.fragment.ToolFragment
 import com.gmail.sacchin13.pokemonbattleanalyzer.listener.OnClickIndividualPokemon
 import kotlinx.android.synthetic.main.content_tool.*
@@ -29,12 +29,12 @@ class ToolActivity : PGLActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tool)
 
-        opponentParty = databaseHelper.selectOpponentParty()
+        opponentParty = databaseHelper.selectParty("opponent")
 
         myParty = Party(System.currentTimeMillis(), "mine", "mine")
-        myParty.member1 = intent.extras.getString("member1", "")
-        myParty.member2 = intent.extras.getString("member2", "")
-        myParty.member3 = intent.extras.getString("member3", "")
+//        myParty.member1 = intent.extras.getString("member1", "")
+//        myParty.member2 = intent.extras.getString("member2", "")
+//        myParty.member3 = intent.extras.getString("member3", "")
 
         resetParty(true)
     }
@@ -68,7 +68,7 @@ class ToolActivity : PGLActivity() {
 
         for (i in 0..opponentParty.member.size) {
             val p = opponentParty.member[i]
-            val frame = createFrameLayout(p as PBAPokemon, 210f)
+            val frame = createFrameLayout(p, 210f)
             frame.setOnClickListener{ OnClickIndividualPokemon(this, i, frame.getChildAt(0) as ImageView) }
             party.addView(frame);
         }
@@ -90,7 +90,7 @@ class ToolActivity : PGLActivity() {
         //        }
     }
 
-    fun createFrameLayout(p: PBAPokemon, size: Float): FrameLayout {
+    fun createFrameLayout(p: PokemonMasterData, size: Float): FrameLayout {
         val fl = FrameLayout(this)
 
         val temp = Util.createImage(p, size, resources)

@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.util.Log
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import kotlin.properties.Delegates
 
 class Util {
@@ -632,10 +632,10 @@ class Util {
     }
 
     companion object {
-        fun createImage(p: PBAPokemon, scale: Float, resource: Resources): Bitmap {
-            var image = BitmapFactory.decodeResource(resource, p.resourceId!!.toInt())
+        fun createImage(p: PokemonMasterData, scale: Float, resource: Resources): Bitmap {
+            var image = BitmapFactory.decodeResource(resource, p.resourceId.toInt())
             if (image == null) {
-                Log.w("createImage", "${p.masterRecord.jname}'s image is not found(${p.resourceId})")
+                Log.w("createImage", "${p.jname}'s image is not found(${p.resourceId})")
                 image = BitmapFactory.decodeResource(resource, R.drawable.noimage)
             }else{
             }

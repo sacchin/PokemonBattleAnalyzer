@@ -6,7 +6,8 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
 class ItemInsertHandler(private val databaseHelper: DatabaseHelper?) {
 
     fun run() {
-        databaseHelper!!.insertItemMaterData("いのちのたま")
+        databaseHelper!!.insertItemMaterData("unknown")
+        databaseHelper.insertItemMaterData("いのちのたま")
         databaseHelper.insertItemMaterData("こだわりメガネ")
         databaseHelper.insertItemMaterData("こだわりハチマキ")
         databaseHelper.insertItemMaterData("こだわりスカーフ")

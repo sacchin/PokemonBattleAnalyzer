@@ -2,33 +2,32 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
 import io.realm.RealmObject
 import io.realm.annotations.Ignore
-import java.sql.Timestamp
 import java.util.*
 
 public open class Party (
         public open var time: Long = System.currentTimeMillis(),
         public open var userName: String = "none",
         public open var memo: String = "none",
-        public open var member1: String? = null,
-        public open var member2: String? = null,
-        public open var member3: String? = null,
-        public open var member4: String? = null,
-        public open var member5: String? = null,
-        public open var member6: String? = null
+        public open var member1: IndividualPBAPokemon = IndividualPBAPokemon.create(-1, PokemonMasterData()),
+        public open var member2: IndividualPBAPokemon = IndividualPBAPokemon.create(-1, PokemonMasterData()),
+        public open var member3: IndividualPBAPokemon = IndividualPBAPokemon.create(-1, PokemonMasterData()),
+        public open var member4: IndividualPBAPokemon = IndividualPBAPokemon.create(-1, PokemonMasterData()),
+        public open var member5: IndividualPBAPokemon = IndividualPBAPokemon.create(-1, PokemonMasterData()),
+        public open var member6: IndividualPBAPokemon = IndividualPBAPokemon.create(-1, PokemonMasterData())
 ): RealmObject(){
 
     @Ignore
-    var member: MutableList<PBAPokemon?> = ArrayList<PBAPokemon?>()
+    var member: MutableList<PokemonMasterData> = ArrayList<PokemonMasterData>()
 
-    fun addMember(pokemon: IndividualPBAPokemon): Int {
+    fun addMember(pokemon: PokemonMasterData): Int {
         if(this.member.size < 6){
-            this.member.add(pokemon.master)
+            this.member.add(pokemon)
             return this.member.size - 1
         }
         return -1;
     }
 
-    fun removeMember(PBAPokemon: PBAPokemon?): Int {
+    fun removeMember(pokemon: PokemonMasterData): Int {
         return -1
     }
 

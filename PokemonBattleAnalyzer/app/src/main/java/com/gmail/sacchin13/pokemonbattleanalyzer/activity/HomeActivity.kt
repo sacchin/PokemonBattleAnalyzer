@@ -16,18 +16,12 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
 import com.gmail.sacchin13.pokemonbattleanalyzer.GridAdapter
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.Util
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.insert.*
-import com.gmail.sacchin13.pokemonbattleanalyzer.interfaces.AddToListInterface
-import com.gmail.sacchin13.pokemonbattleanalyzer.listener.OnClickFromParty
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.jar.Manifest
 
 import kotlin.properties.Delegates
 
@@ -39,9 +33,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var buttonEnable: Boolean = true
     var serviceStatePreferences: SharedPreferences by Delegates.notNull()
 
-    val executorService: ExecutorService = Executors.newCachedThreadPool()
-
-    //var databaseHelper: PartyDatabaseHelper? = null
     var databaseHelper: DatabaseHelper by Delegates.notNull()
 
     var party: Party by Delegates.notNull()
@@ -107,45 +98,30 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     @SuppressWarnings("StatementWithEmptyBody")
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
-
         if (id == R.id.nav_camera) {
+            createMyParty()
         } else if (id == R.id.nav_gallery) {
-            for(temp in databaseHelper.selectAllPBAPokemon()){
-                Log.v("test", temp.masterRecord.no + "," + temp.masterRecord.jname)
-            }
-
+            startEditActivity()
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
         }
-
-        //        when (id) {
+//        when (id) {
 //            R.id.action_settings -> {
 //                val serviceStatePreferences = getSharedPreferences("pokemon", MODE_PRIVATE)
 //                val editor = serviceStatePreferences!!.edit()
 //                editor.putBoolean("enable", !serviceStatePreferences.getBoolean("enable", true));
 //                editor.apply();
 //            }
-//            R.id.action_modify -> startEditActivity()
-//            android.R.id.home -> finish();
-//            else -> result = super.onOptionsItemSelected(item)
 //        }
-
-
-        drawer_layout!!.closeDrawer(GravityCompat.START)
+//        drawer_layout!!.closeDrawer(GravityCompat.START)
         return true
     }
 
     public override fun onResume() {
         super.onResume()
-        //party.clear()
-        //partyLayout.removeAllViews()
         createPokemonList()
-    }
-
-    fun showStatus(){
-        Snackbar.make(fab, "OK", Snackbar.LENGTH_SHORT).show()
     }
 
     fun firstLaunch() {
@@ -164,18 +140,18 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun startEditActivity() {
-//        val intent = Intent(MainActivity().javaClass, EditActivity().javaClass)
-//        startActivityForResult(intent, EDIT_ACTIVITY_CODE);
+        val intent = Intent(this, EditActivity().javaClass)
+        startActivityForResult(intent, EDIT_ACTIVITY_CODE);
     }
 
     fun startSelectActivity() {
         val intent = Intent(this, SelectActivity().javaClass)
-        intent.putExtra("member1", party.member[0]!!.masterRecord.no)
-        intent.putExtra("member2", party.member[1]!!.masterRecord.no)
-        intent.putExtra("member3", party.member[2]!!.masterRecord.no)
-        intent.putExtra("member4", party.member[3]!!.masterRecord.no)
-        intent.putExtra("member5", party.member[4]!!.masterRecord.no)
-        intent.putExtra("member6", party.member[5]!!.masterRecord.no)
+        intent.putExtra("member1", party.member[0].no)
+        intent.putExtra("member2", party.member[1].no)
+        intent.putExtra("member3", party.member[2].no)
+        intent.putExtra("member4", party.member[3].no)
+        intent.putExtra("member5", party.member[4].no)
+        intent.putExtra("member6", party.member[5].no)
         startActivityForResult(intent, SELECT_ACTIVITY_CODE)
     }
 
@@ -202,7 +178,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun createPokemonList() {
-        val list = databaseHelper.selectAllPBAPokemon()
+        val list = databaseHelper.selectAllPokemonMasterData()
         val adapter = GridAdapter(this, list)
         gridView.adapter = adapter
     }
@@ -227,19 +203,18 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        return fl
 //    }
 
-    fun removePokemonFromList(pokemon: PBAPokemon) {
+    fun removePokemonFromList(pokemon: PokemonMasterData) {
         //throw UnsupportedOperationException()
     }
 
-    fun addPokemonToList(pokemon: PBAPokemon) {
-        val ip = IndividualPBAPokemon(pokemon)
-        val index = party.addMember(ip)
+    fun addPokemonToList(pokemon: PokemonMasterData) {
+        val index = party.addMember(pokemon)
         if (index == -1) Snackbar.make(partyLayout, "すでに6体選択しています。", Snackbar.LENGTH_SHORT).show()
         else {
             val temp = Util.createImage(pokemon, 120f, resources)
             val localView = ImageView(this)
             localView.setImageBitmap(temp)
-            localView.setOnClickListener{ removePokemonFromList(ip.master) }
+            localView.setOnClickListener{ removePokemonFromList(pokemon) }
 
             partyLayout.addView(localView)
         }
@@ -256,15 +231,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun createMyParty() {
-//        if (party.member == null || party.member!!.size < 1) {
-//            Snackbar.make(partyLayout, "ポケモンが選択されていません。", Snackbar.LENGTH_SHORT).show()
-//
-//            return
-//        }
-//        party.time = Timestamp(System.currentTimeMillis())
-//        party.userName = "mine"
-//        executorService.execute(PartyInsertHandler(databaseHelper, party, false))
-//        Snackbar.make(partyLayout, "登録しました。", Snackbar.LENGTH_SHORT).show()
+        if (party.member.size < 1) {
+            Snackbar.make(partyLayout, "ポケモンが選択されていません。", Snackbar.LENGTH_SHORT).show()
+            return
+        }
+        party.userName = "mine"
+
+        PartyInsertHandler(databaseHelper, party, false).run()
+        Snackbar.make(partyLayout, "登録しました。", Snackbar.LENGTH_SHORT).show()
     }
 
 //    fun showAffinity() {

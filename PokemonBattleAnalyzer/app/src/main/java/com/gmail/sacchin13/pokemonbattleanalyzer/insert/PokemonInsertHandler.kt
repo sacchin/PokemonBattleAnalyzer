@@ -7,7 +7,8 @@ class PokemonInsertHandler(private val databaseHelper: DatabaseHelper?) {
 
     fun run() {
         Log.i("PokemonInsertHandler", "開始")
-        databaseHelper!!.insertPokemonMasterData("001", "フシギダネ", "-", 0, 0, 0, 0, 0, 0, "-", "-", "-", 4, 7, 6.9)
+        databaseHelper!!.insertPokemonMasterData("000", "unknown", "unknown", 0, 0, 0, 0, 0, 0, "-", "-", "-", 0, 0, 0.0)
+        databaseHelper.insertPokemonMasterData("001", "フシギダネ", "-", 0, 0, 0, 0, 0, 0, "-", "-", "-", 4, 7, 6.9)
         databaseHelper.insertPokemonMasterData("002", "フシギソウ", "-", 0, 0, 0, 0, 0, 0, "-", "-", "-", 4, 7, 13.0)
         databaseHelper.insertPokemonMasterData("003", "フシギバナ", "Venusaur", 80, 82, 83, 100, 100, 80, "しんりょく", "-", "ようりょくそ", 4, 7, 100.0)
         databaseHelper.insertPokemonMasterData("004", "ヒトカゲ", "-", 0, 0, 0, 0, 0, 0, "-", "-", "-", 1, -1, 8.5)

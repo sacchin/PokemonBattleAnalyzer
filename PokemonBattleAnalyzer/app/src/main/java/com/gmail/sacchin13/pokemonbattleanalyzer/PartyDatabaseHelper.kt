@@ -127,34 +127,34 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
 
     @Synchronized @Throws(IOException::class, SQLException::class)
     fun insertIndividualPBAPokemonData(p: IndividualPBAPokemon?, time: Timestamp?): Long {
-        val db = writableDatabase
-        if (p == null || time == null) {
-            throw NullPointerException()
-        }
-        if (db.isReadOnly) {
-            throw IOException("Cannot get writable access to DB.")
-        }
-        try {
-            val values = ContentValues()
-            values.put("time", time.time)
-            values.put("item", p!!.item)
-            values.put("characteristic", p!!.characteristic)
-            values.put("skillNo1", p!!.skillNo1)
-            values.put("skillNo2", p!!.skillNo2)
-            values.put("skillNo3", p!!.skillNo3)
-            values.put("skillNo4", p!!.skillNo4)
-            values.put("evh", 0)
-            values.put("eva", 0)
-            values.put("evb", 0)
-            values.put("evc", 0)
-            values.put("evd", 0)
-            values.put("evs", 0)
-//            values.put("pokemonNo", p!!.rowId)
-
-            return db.insert(POKEMON_INDIVIDUAL_TABLE_NAME, null, values)
-        } catch (e: IllegalStateException) {
-            Log.w(javaClass.simpleName, "perhaps, service was restarted or un/reinstalled.", e)
-        }
+//        val db = writableDatabase
+//        if (p == null || time == null) {
+//            throw NullPointerException()
+//        }
+//        if (db.isReadOnly) {
+//            throw IOException("Cannot get writable access to DB.")
+//        }
+//        try {
+//            val values = ContentValues()
+//            values.put("time", time.time)
+//            values.put("item", p!!.item)
+//            values.put("characteristic", p!!.characteristic)
+//            values.put("skillNo1", p!!.skillNo1)
+//            values.put("skillNo2", p!!.skillNo2)
+//            values.put("skillNo3", p!!.skillNo3)
+//            values.put("skillNo4", p!!.skillNo4)
+//            values.put("evh", 0)
+//            values.put("eva", 0)
+//            values.put("evb", 0)
+//            values.put("evc", 0)
+//            values.put("evd", 0)
+//            values.put("evs", 0)
+////            values.put("pokemonNo", p!!.rowId)
+//
+//            return db.insert(POKEMON_INDIVIDUAL_TABLE_NAME, null, values)
+//        } catch (e: IllegalStateException) {
+//            Log.w(javaClass.simpleName, "perhaps, service was restarted or un/reinstalled.", e)
+//        }
 
         return -1
     }
@@ -204,50 +204,50 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
 
     }
 
-    @Synchronized @Throws(IOException::class)
-    fun selectAllPBAPokemon(): ArrayList<PBAPokemon> {
-        val db = readableDatabase
-        val cur = db.query(POKEMON_MASTER_TABLE_NAME, null, null, null, null, null, "count desc, " + BaseColumns._ID + " desc", null)
+//    @Synchronized @Throws(IOException::class)
+//    fun selectAllPBAPokemon(): ArrayList<PBAPokemon> {
+//        val db = readableDatabase
+//        val cur = db.query(POKEMON_MASTER_TABLE_NAME, null, null, null, null, null, "count desc, " + BaseColumns._ID + " desc", null)
+//
+//        val list = ArrayList<PBAPokemon>()
+//        try {
+//            while (cur.moveToNext()) {
+//                val p = createPBAPokemon(cur)
+//                p.rowId = cur.getInt(0)
+//
+//                val id = util.pokemonImageResource!!.get(p.masterRecord.no.toString()) ?: continue
+//                p.resourceId = id
+//                list.add(p)
+//            }
+//        } catch (e: SQLiteException) {
+//            Log.e("selectAllPBAPokemon", "not found")
+//        }
+//
+//        return list
+//    }
 
-        val list = ArrayList<PBAPokemon>()
-        try {
-            while (cur.moveToNext()) {
-                val p = createPBAPokemon(cur)
-                p.rowId = cur.getInt(0)
-
-                val id = util.pokemonImageResource!!.get(p.masterRecord.no.toString()) ?: continue
-                p.resourceId = id
-                list.add(p)
-            }
-        } catch (e: SQLiteException) {
-            Log.e("selectAllPBAPokemon", "not found")
-        }
-
-        return list
-    }
-
-    @Synchronized @Throws(IOException::class)
-    fun selectPBAPokemon(pokemonNo: String): PBAPokemon? {
-        val db = readableDatabase
-        val values = arrayOf(pokemonNo)
-        val cur = db.query(POKEMON_MASTER_TABLE_NAME, null, "no = ?", values, null, null, null, null)
-        try {
-            if (cur.moveToNext()) {
-                val p = createPBAPokemon(cur)
-                p.rowId = cur.getInt(0)
-
-                val id = util.pokemonImageResource!!.get(p.masterRecord.no.toString())
-                if (id != null) {
-                    p.resourceId = id
-                }
-                return p
-            }
-        } catch (e: SQLiteException) {
-            Log.e("selectPBAPokemon", "not found")
-        }
-
-        return null
-    }
+//    @Synchronized @Throws(IOException::class)
+//    fun selectPBAPokemon(pokemonNo: String): PBAPokemon? {
+//        val db = readableDatabase
+//        val values = arrayOf(pokemonNo)
+//        val cur = db.query(POKEMON_MASTER_TABLE_NAME, null, "no = ?", values, null, null, null, null)
+//        try {
+//            if (cur.moveToNext()) {
+//                val p = createPBAPokemon(cur)
+//                p.rowId = cur.getInt(0)
+//
+//                val id = util.pokemonImageResource!!.get(p.masterRecord.no.toString())
+//                if (id != null) {
+//                    p.resourceId = id
+//                }
+//                return p
+//            }
+//        } catch (e: SQLiteException) {
+//            Log.e("selectPBAPokemon", "not found")
+//        }
+//
+//        return null
+//    }
 
     @Synchronized @Throws(IOException::class)
     fun selectAllSkill(): ArrayList<String> {
@@ -285,107 +285,107 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
 
     @Synchronized @Throws(IOException::class)
     fun selectIndividualPBAPokemonByID(rowId: Long): IndividualPBAPokemon? {
-        val db = readableDatabase
-        val individualCur = db.query(POKEMON_INDIVIDUAL_TABLE_NAME, null, BaseColumns._ID + " = ?", arrayOf(rowId.toString()), null, null, null, null)
-        try {
-            if (individualCur.moveToNext()) {
-                val id = individualCur.getLong(0)
-                val time = Timestamp(individualCur.getLong(1))
-                val item = individualCur.getString(2)
-                //				String ability = individualCur.getString(3);
-                val characteristic = individualCur.getString(3)
-                val skillNo1 = individualCur.getString(4)
-                val skillNo2 = individualCur.getString(5)
-                val skillNo3 = individualCur.getString(6)
-                val skillNo4 = individualCur.getString(7)
-                val evh = individualCur.getInt(8)
-                val eva = individualCur.getInt(9)
-                val evb = individualCur.getInt(10)
-                val evc = individualCur.getInt(11)
-                val evd = individualCur.getInt(12)
-                val evs = individualCur.getInt(13)
-                val rowNo = individualCur.getString(14)
-                individualCur.close()
-
-                val p = createPBAPokemon(rowNo)
-                val result = IndividualPBAPokemon(p as PBAPokemon)
-                result.id = id
-                result.item = item
-                result.ability = ""
-                result.characteristic = characteristic
-                result.skillNo1 = skillNo1
-                result.skillNo2 = skillNo2
-                result.skillNo3 = skillNo3
-                result.skillNo4 = skillNo4
-
-                result.hpEffortValue = evh
-                result.attackEffortValue = eva
-                result.deffenceEffortValue = evb
-                result.specialAttackEffortValue = evc
-                result.specialDeffenceEffortValue = evd
-                result.speedEffortValue = evs
-
-                val resourceId = util.pokemonImageResource!!.get(result.master!!.masterRecord.no)
-                if (resourceId != null) {
-                    result.master.resourceId = resourceId
-                }
-                Log.v("selectIndividualPBAPok", result.toString())
-
-                return result
-            } else {
-                Log.e("selectPBAPokemonByNo", "not found")
-            }
-        } catch (e: SQLiteException) {
-            Log.e("selectPBAPokemonByNo", "not found")
-        }
+//        val db = readableDatabase
+//        val individualCur = db.query(POKEMON_INDIVIDUAL_TABLE_NAME, null, BaseColumns._ID + " = ?", arrayOf(rowId.toString()), null, null, null, null)
+//        try {
+//            if (individualCur.moveToNext()) {
+//                val id = individualCur.getLong(0)
+//                val time = Timestamp(individualCur.getLong(1))
+//                val item = individualCur.getString(2)
+//                //				String ability = individualCur.getString(3);
+//                val characteristic = individualCur.getString(3)
+//                val skillNo1 = individualCur.getString(4)
+//                val skillNo2 = individualCur.getString(5)
+//                val skillNo3 = individualCur.getString(6)
+//                val skillNo4 = individualCur.getString(7)
+//                val evh = individualCur.getInt(8)
+//                val eva = individualCur.getInt(9)
+//                val evb = individualCur.getInt(10)
+//                val evc = individualCur.getInt(11)
+//                val evd = individualCur.getInt(12)
+//                val evs = individualCur.getInt(13)
+//                val rowNo = individualCur.getString(14)
+//                individualCur.close()
+//
+//                val p = createPBAPokemon(rowNo)
+//                val result = IndividualPBAPokemon(p as PBAPokemon)
+//                result.id = id
+//                result.item = item
+//                result.ability = ""
+//                result.characteristic = characteristic
+//                result.skillNo1 = skillNo1
+//                result.skillNo2 = skillNo2
+//                result.skillNo3 = skillNo3
+//                result.skillNo4 = skillNo4
+//
+//                result.hpEffortValue = evh
+//                result.attackEffortValue = eva
+//                result.deffenceEffortValue = evb
+//                result.specialAttackEffortValue = evc
+//                result.specialDeffenceEffortValue = evd
+//                result.speedEffortValue = evs
+//
+//                val resourceId = util.pokemonImageResource!!.get(result.master!!.masterRecord.no)
+//                if (resourceId != null) {
+//                    result.master.resourceId = resourceId
+//                }
+//                Log.v("selectIndividualPBAPok", result.toString())
+//
+//                return result
+//            } else {
+//                Log.e("selectPBAPokemonByNo", "not found")
+//            }
+//        } catch (e: SQLiteException) {
+//            Log.e("selectPBAPokemonByNo", "not found")
+//        }
 
         return null
     }
 
-    private fun createPBAPokemon(pokemonNo: String): PBAPokemon? {
-        val db = readableDatabase
-        val cur = db.rawQuery("select * from " + POKEMON_MASTER_TABLE_NAME + " left outer join " + MEGA_POKEMON_TABLE_NAME + " on " +
-                POKEMON_MASTER_TABLE_NAME + "." + BaseColumns._ID + " = " +
-                MEGA_POKEMON_TABLE_NAME + ".pokemonNo where " + BaseColumns._ID + " = ?", arrayOf(pokemonNo.toString()))
-
-        var result: PBAPokemon? = null
-        while (cur.moveToNext()) {
-            val p = PokemonMasterData()
-
-            if (result == null) {
-                val no = cur.getString(1)
-                val jname = cur.getString(2)
-                val ename = cur.getString(3)
-                val h = cur.getInt(4)
-                val a = cur.getInt(5)
-                val b = cur.getInt(6)
-                val c = cur.getInt(7)
-                val d = cur.getInt(8)
-                val s = cur.getInt(9)
-                val ability1 = cur.getString(10)
-                val ability2 = cur.getString(11)
-                val abilityd = cur.getString(12)
-
-
-                result = PBAPokemon(0, 0, p, 0)
-            }
-            if (0 < cur.getInt(17)) {
-                val mega = PBAPokemon(0, 0, p, 0)
-//                        result!!.masterRecord.no, "メガ" + result!!.masterRecord.jname, "Mega " + result!!.masterRecord.ename,
-//                        cur.getInt(19), cur.getInt(20), cur.getInt(21), cur.getInt(22), cur.getInt(23), cur.getInt(24), cur.getString(25),
-//                        "", "", Type.TypeCode.UNKNOWN, Type.TypeCode.UNKNOWN, 0f, 0)
-
-                val resouceId = util.pokemonImageResource!!.get(result!!.masterRecord.no + "m" + cur.getString(26))
-                if (resouceId != null) {
-                    mega.resourceId = resouceId
-                }
-//                result!!.masterRecord.addMega(mega)
-            }
-        }
-        cur.close()
-
-        return result
-    }
+//    private fun createPBAPokemon(pokemonNo: String): PBAPokemon? {
+//        val db = readableDatabase
+//        val cur = db.rawQuery("select * from " + POKEMON_MASTER_TABLE_NAME + " left outer join " + MEGA_POKEMON_TABLE_NAME + " on " +
+//                POKEMON_MASTER_TABLE_NAME + "." + BaseColumns._ID + " = " +
+//                MEGA_POKEMON_TABLE_NAME + ".pokemonNo where " + BaseColumns._ID + " = ?", arrayOf(pokemonNo.toString()))
+//
+//        var result: PBAPokemon? = null
+//        while (cur.moveToNext()) {
+//            val p = PokemonMasterData()
+//
+//            if (result == null) {
+//                val no = cur.getString(1)
+//                val jname = cur.getString(2)
+//                val ename = cur.getString(3)
+//                val h = cur.getInt(4)
+//                val a = cur.getInt(5)
+//                val b = cur.getInt(6)
+//                val c = cur.getInt(7)
+//                val d = cur.getInt(8)
+//                val s = cur.getInt(9)
+//                val ability1 = cur.getString(10)
+//                val ability2 = cur.getString(11)
+//                val abilityd = cur.getString(12)
+//
+//
+//                result = PBAPokemon(0, 0, p, 0)
+//            }
+//            if (0 < cur.getInt(17)) {
+//                val mega = PBAPokemon(0, 0, p, 0)
+////                        result!!.masterRecord.no, "メガ" + result!!.masterRecord.jname, "Mega " + result!!.masterRecord.ename,
+////                        cur.getInt(19), cur.getInt(20), cur.getInt(21), cur.getInt(22), cur.getInt(23), cur.getInt(24), cur.getString(25),
+////                        "", "", Type.TypeCode.UNKNOWN, Type.TypeCode.UNKNOWN, 0f, 0)
+//
+//                val resouceId = util.pokemonImageResource!!.get(result!!.masterRecord.no + "m" + cur.getString(26))
+//                if (resouceId != null) {
+//                    mega.resourceId = resouceId
+//                }
+////                result!!.masterRecord.addMega(mega)
+//            }
+//        }
+//        cur.close()
+//
+//        return result
+//    }
 
     @Synchronized @Throws(IOException::class, SQLException::class)
     fun insertPartyData(party: Party?) {
@@ -662,12 +662,11 @@ class PartyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, PartyDat
 
     }
 
-    fun createPBAPokemon(cur: Cursor): PBAPokemon {
-        return PBAPokemon(0, 0, PokemonMasterData(), 0)
-
+//    fun createPBAPokemon(cur: Cursor): PBAPokemon {
+//        return PBAPokemon(0, 0, PokemonMasterData(), 0)
 //                cur.getString(1), cur.getString(2), cur.getString(3), cur.getInt(4), cur.getInt(5), cur.getInt(6), cur.getInt(7), cur.getInt(8),
 //                cur.getInt(9), cur.getString(10), cur.getString(11), cur.getString(12), Type.convertNoToTypeCode(cur.getInt(13)), Type.convertNoToTypeCode(cur.getInt(14)), cur.getFloat(15), cur.getInt(16))
-    }
+//    }
 
     override fun onUpgrade(arg0: SQLiteDatabase, arg1: Int, arg2: Int) {
     }

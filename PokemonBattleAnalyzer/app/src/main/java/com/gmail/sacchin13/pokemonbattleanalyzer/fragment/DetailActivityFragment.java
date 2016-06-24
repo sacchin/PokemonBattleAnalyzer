@@ -18,7 +18,6 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.R;
 import com.gmail.sacchin13.pokemonbattleanalyzer.Util;
 import com.gmail.sacchin13.pokemonbattleanalyzer.activity.DetailActivity;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon;
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingPokemonTrend;
 
@@ -181,24 +180,24 @@ public class DetailActivityFragment extends PGLFragment {
     public void setMainView(IndividualPBAPokemon p) {
         mainView.removeAllViews();
 
-        createPBAPokemonStatus(p.getMaster());
-        if(p.getMaster().getMasterRecord().getMega() != null){
-            for(PokemonMasterData mega : p.getMaster().getMasterRecord().getMega()){
+        createPBAPokemonStatus(p);
+        if(p.getMaster().getMega() != null){
+            for(PokemonMasterData mega : p.getMaster().getMega()){
                 //createPBAPokemonStatus(mega);
             }
         }
     }
 
-    private void createPBAPokemonStatus(PBAPokemon po) {
+    private void createPBAPokemonStatus(IndividualPBAPokemon po) {
 
-        PokemonMasterData p = po.getMasterRecord();
+        PokemonMasterData p = po.getMaster();
 
         Log.e("createPBAPokemonStatus", p.getJname());
         LinearLayout sss = new LinearLayout(getActivity());
         sss.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         sss.setOrientation(LinearLayout.HORIZONTAL);
 
-        Bitmap temp = Util.Companion.createImage(po, 150f, getResources());
+        Bitmap temp = Util.Companion.createImage(po.getMaster(), 150f, getResources());
         ImageView imageView = new ImageView(getActivity());
         imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
         imageView.setImageBitmap(temp);

@@ -18,7 +18,6 @@ import android.view.MenuItem;
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.PartyDatabaseHelper;
 import com.gmail.sacchin13.pokemonbattleanalyzer.R;
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon;
 import com.gmail.sacchin13.pokemonbattleanalyzer.http.PokemonRankingDownloader;
 
 public class MainActivity extends AppCompatActivity {
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, SELECT_ACTIVITY_CODE);
     }
 
-    public void startAffinityActivity(PBAPokemon selected) {
+//    public void startAffinityActivity(PBAPokemon selected) {
 //        if(selected == null){
 //            Toast.makeText(this, "エラーが発生しました。", Toast.LENGTH_SHORT).show();
 //            return;
@@ -128,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 //        Intent intent = new Intent(MainActivity.this, AffinityComplementActivity.class);
 //        intent.putExtra("selected",selected.getNo());
 //        startActivityForResult(intent, AFFINITY_ACTIVITY_CODE);
-    }
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

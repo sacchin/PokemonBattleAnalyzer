@@ -3,44 +3,36 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import kotlinx.android.synthetic.main.activity_select.*
 import kotlinx.android.synthetic.main.content_select.*
+import java.util.*
+import kotlin.properties.Delegates
 
 class SelectActivity : PGLActivity() {
 
-    private var choices: MutableMap<Int, PBAPokemon> = mutableMapOf()
+    private var choices: MutableMap<Int, IndividualPBAPokemon> = mutableMapOf()
+    var opponentList: MutableList<PokemonMasterData> by Delegates.notNull()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select)
 
-        opponentParty = Party(System.currentTimeMillis(), "opponent", "opponent")
-        opponentParty.member1 = intent.extras.getString("member1", "")
-        opponentParty.member2 = intent.extras.getString("member2", "")
-        opponentParty.member3 = intent.extras.getString("member3", "")
-        opponentParty.member4 = intent.extras.getString("member4", "")
-        opponentParty.member5 = intent.extras.getString("member5", "")
-        opponentParty.member6 = intent.extras.getString("member6", "")
-
-        myParty = Party(System.currentTimeMillis(), "mine", "mine")
-        myParty.member1 = intent.extras.getString("member1", "")
-        myParty.member2 = intent.extras.getString("member2", "")
-        myParty.member3 = intent.extras.getString("member3", "")
-        myParty.member4 = intent.extras.getString("member4", "")
-        myParty.member5 = intent.extras.getString("member5", "")
-        myParty.member6 = intent.extras.getString("member6", "")
+        opponentList = ArrayList<PokemonMasterData>()
+        opponentList.add(databaseHelper.selectPokemonMasterData(intent.extras.getString("member1", "")))
+        opponentList.add(databaseHelper.selectPokemonMasterData(intent.extras.getString("member2", "")))
+        opponentList.add(databaseHelper.selectPokemonMasterData(intent.extras.getString("member3", "")))
+        opponentList.add(databaseHelper.selectPokemonMasterData(intent.extras.getString("member4", "")))
+        opponentList.add(databaseHelper.selectPokemonMasterData(intent.extras.getString("member5", "")))
+        opponentList.add(databaseHelper.selectPokemonMasterData(intent.extras.getString("member6", "")))
 
         resetParty(false)
 
         first_fab.setOnClickListener { startBattle() }
-
     }
 
     override fun onResume() {
@@ -52,12 +44,12 @@ class SelectActivity : PGLActivity() {
     }
 
     private fun createPartyList() {
-        opponent_party1.setImageBitmap(Util.createImage(opponentParty.member[0] as PBAPokemon, 250f, resources))
-        opponent_party2.setImageBitmap(Util.createImage(opponentParty.member[1] as PBAPokemon, 250f, resources))
-        opponent_party3.setImageBitmap(Util.createImage(opponentParty.member[2] as PBAPokemon, 250f, resources))
-        opponent_party4.setImageBitmap(Util.createImage(opponentParty.member[3] as PBAPokemon, 250f, resources))
-        opponent_party5.setImageBitmap(Util.createImage(opponentParty.member[4] as PBAPokemon, 250f, resources))
-        opponent_party6.setImageBitmap(Util.createImage(opponentParty.member[5] as PBAPokemon, 250f, resources))
+        opponent_party1.setImageBitmap(Util.createImage(opponentList[0], 250f, resources))
+        opponent_party2.setImageBitmap(Util.createImage(opponentList[1], 250f, resources))
+        opponent_party3.setImageBitmap(Util.createImage(opponentList[2], 250f, resources))
+        opponent_party4.setImageBitmap(Util.createImage(opponentList[3], 250f, resources))
+        opponent_party5.setImageBitmap(Util.createImage(opponentList[4], 250f, resources))
+        opponent_party6.setImageBitmap(Util.createImage(opponentList[5], 250f, resources))
 
         selected_party1.setOnClickListener{ removePokemonFromList(0) }
         selected_party2.setOnClickListener{ removePokemonFromList(1) }
@@ -66,18 +58,18 @@ class SelectActivity : PGLActivity() {
         selected_party5.setOnClickListener{ removePokemonFromList(4) }
         selected_party6.setOnClickListener{ removePokemonFromList(5) }
 
-        my_party1.setImageBitmap(Util.createImage(myParty.member[0] as PBAPokemon, 250f, resources))
-        my_party1.setOnClickListener{ addPokemonToList(myParty.member[0] as PBAPokemon, 0) }
-        my_party2.setImageBitmap(Util.createImage(myParty.member[1] as PBAPokemon, 250f, resources))
-        my_party2.setOnClickListener{ addPokemonToList(myParty.member[1] as PBAPokemon, 1) }
-        my_party3.setImageBitmap(Util.createImage(myParty.member[2] as PBAPokemon, 250f, resources))
-        my_party3.setOnClickListener{ addPokemonToList(myParty.member[2] as PBAPokemon, 2) }
-        my_party4.setImageBitmap(Util.createImage(myParty.member[3] as PBAPokemon, 250f, resources))
-        my_party4.setOnClickListener{ addPokemonToList(myParty.member[3] as PBAPokemon, 3) }
-        my_party5.setImageBitmap(Util.createImage(myParty.member[4] as PBAPokemon, 250f, resources))
-        my_party5.setOnClickListener{ addPokemonToList(myParty.member[4] as PBAPokemon, 4) }
-        my_party6.setImageBitmap(Util.createImage(myParty.member[5] as PBAPokemon, 250f, resources))
-        my_party6.setOnClickListener{ addPokemonToList(myParty.member[5] as PBAPokemon, 5) }
+        my_party1.setImageBitmap(Util.createImage(myParty.member1.master, 250f, resources))
+        my_party1.setOnClickListener{ addPokemonToList(myParty.member1, 0) }
+        my_party2.setImageBitmap(Util.createImage(myParty.member2.master,  250f, resources))
+        my_party2.setOnClickListener{ addPokemonToList(myParty.member2, 1) }
+        my_party3.setImageBitmap(Util.createImage(myParty.member3.master, 250f, resources))
+        my_party3.setOnClickListener{ addPokemonToList(myParty.member3, 2) }
+        my_party4.setImageBitmap(Util.createImage(myParty.member4.master, 250f, resources))
+        my_party4.setOnClickListener{ addPokemonToList(myParty.member4, 3) }
+        my_party5.setImageBitmap(Util.createImage(myParty.member5.master, 250f, resources))
+        my_party5.setOnClickListener{ addPokemonToList(myParty.member5, 4) }
+        my_party6.setImageBitmap(Util.createImage(myParty.member6.master, 250f, resources))
+        my_party6.setOnClickListener{ addPokemonToList(myParty.member6, 5) }
     }
 
     private fun determineOpponent() {
@@ -89,8 +81,7 @@ class SelectActivity : PGLActivity() {
         //        addPokemonToOpponentParty(estimated[0]);
     }
 
-    fun addPokemonToList(pokemon: PBAPokemon, index: Int) {
-        val ip = IndividualPBAPokemon(pokemon)
+    fun addPokemonToList(pokemon: IndividualPBAPokemon, index: Int) {
         if (choices.size == 3) {
             Snackbar.make(my_party1, "すでに3体選択しています。", Snackbar.LENGTH_SHORT).show()
             return
@@ -108,7 +99,7 @@ class SelectActivity : PGLActivity() {
         }
     }
 
-    fun addPokemonToOpponentParty(pokemons: Array<PBAPokemon>) {
+    fun addPokemonToOpponentParty(pokemons: Array<PokemonMasterData>) {
 //        val l = LinearLayout(getActivity())
 //        l.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 //        l.orientation = LinearLayout.HORIZONTAL
@@ -151,10 +142,10 @@ class SelectActivity : PGLActivity() {
         if (choices.size < 3) {
             Snackbar.make(my_party1, "3体選択して下さい。", Snackbar.LENGTH_SHORT).show()
         } else {
-            val intent = Intent(this, ToolActivity().javaClass)
-            intent.putExtra("member1", choices[0]!!.masterRecord.no)
-            intent.putExtra("member2", choices[1]!!.masterRecord.no)
-            intent.putExtra("member3", choices[2]!!.masterRecord.no)
+            val intent = Intent(this, ExpectedActivity().javaClass)
+            intent.putExtra("member1", choices[0]!!.id)
+            intent.putExtra("member2", choices[1]!!.id)
+            intent.putExtra("member3", choices[2]!!.id)
             startActivityForResult(intent, 1)
         }
     }

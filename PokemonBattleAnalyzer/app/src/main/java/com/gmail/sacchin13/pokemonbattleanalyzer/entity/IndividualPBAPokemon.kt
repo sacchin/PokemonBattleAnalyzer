@@ -1,32 +1,52 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
-import java.sql.Timestamp
 import java.util.ArrayList
 import java.util.Collections
 import java.util.HashMap
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingPokemonTrend
+import io.realm.RealmObject
+import io.realm.annotations.Ignore
+import io.realm.annotations.RealmClass
 
-open class IndividualPBAPokemon (val master : PBAPokemon) {
+@RealmClass
+public open class IndividualPBAPokemon (
+        public open var id: Long = -1,
+        public open var status: Int = UNKNOWN,
+        public open var item: String = "unknown",
+        public open var characteristic: String = "unknown",
+        public open var ability: String = "unknown",
+        public open var skillNo1: Skill = Skill(),
+        public open var skillNo2: Skill = Skill(),
+        public open var skillNo3: Skill = Skill(),
+        public open var skillNo4: Skill = Skill(),
+        public open var hpEffortValue: Int = UNKNOWN,
+        public open var hpRatio: Int = 100,
+        public open var attackEffortValue: Int = UNKNOWN,
+        public open var attackRank: Int = UNKNOWN,
+        public open var defenseEffortValue: Int = UNKNOWN,
+        public open var defenseRank: Int = UNKNOWN,
+        public open var specialAttackEffortValue: Int = UNKNOWN,
+        public open var specialAttackRank: Int = UNKNOWN,
+        public open var specialDefenseEffortValue: Int = UNKNOWN,
+        public open var specialDefenseRank: Int = UNKNOWN,
+        public open var speedEffortValue: Int = UNKNOWN,
+        public open var speedRank: Int = UNKNOWN,
+        public open var hpValue: Int = UNKNOWN,
+        public open var attackValue: Int = UNKNOWN,
+        public open var defenseValue: Int = UNKNOWN,
+        public open var specialAttackValue: Int = UNKNOWN,
+        public open var specialDefenseValue: Int = UNKNOWN,
+        public open var speedValue: Int = UNKNOWN,
+        public open var master : PokemonMasterData = PokemonMasterData()
+        ): RealmObject() {
 
     companion object {
-        const val UNKNOWN_EV = -1
-    }
+        const val UNKNOWN = -1
 
-    var id: Long = 0
-    var item = ""
-    var characteristic: String? = null
-    var ability: String? = null
-    var skillNo1 = ""
-    var skillNo2 = ""
-    var skillNo3 = ""
-    var skillNo4 = ""
-    var hpEffortValue = UNKNOWN_EV
-    var attackEffortValue = UNKNOWN_EV
-    var deffenceEffortValue = UNKNOWN_EV
-    var specialAttackEffortValue = UNKNOWN_EV
-    var specialDeffenceEffortValue = UNKNOWN_EV
-    var speedEffortValue = UNKNOWN_EV
+        fun create(id: Long, master : PokemonMasterData): IndividualPBAPokemon{
+            return IndividualPBAPokemon(id, 0, "", "", "", Skill(), Skill(), Skill(), Skill(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, master)
+        }
+    }
 
 //    var trend: RankingPokemonTrend? = null
 
@@ -36,57 +56,33 @@ open class IndividualPBAPokemon (val master : PBAPokemon) {
         return entries
     }
 
-    val hpValue: Int
-        get() {
-            if (hpEffortValue == UNKNOWN_EV) {
-                return master!!.masterRecord.getHPValue(31, 252)
-            }
-            return master!!.masterRecord.getHPValue(31, hpEffortValue)
-        }
+    fun calcHp(): Int {
+        return master.getHPValue(31, hpEffortValue)
+    }
 
-    val attackValue: Int
-        get() {
-            if (attackEffortValue == UNKNOWN_EV) {
-                return master!!.masterRecord.getAttackValue(31, 252)
-            }
-            return master!!.masterRecord.getAttackValue(31, attackEffortValue)
-        }
+    fun calcAttack(): Int {
+        return master.getAttackValue(31, attackEffortValue)
+    }
 
-    val deffenceValue: Int
-        get() {
-            if (deffenceEffortValue == UNKNOWN_EV) {
-                return master!!.masterRecord.getDefenseValue(31, 252)
-            }
-            return master!!.masterRecord.getDefenseValue(31, deffenceEffortValue)
-        }
+    fun calcDefense(): Int {
+        return master.getDefenseValue(31, defenseEffortValue)
+    }
 
-    val specialAttackValue: Int
-        get() {
-            if (specialAttackEffortValue == UNKNOWN_EV) {
-                return master!!.masterRecord.getSpecialAttackValue(31, 252)
-            }
-            return master!!.masterRecord.getSpecialAttackValue(31, specialAttackEffortValue)
-        }
+    fun calcSpecialAttack(): Int {
+        return master.getSpecialAttackValue(31, specialAttackEffortValue)
+    }
 
-    val specialDeffenceValue: Int
-        get() {
-            if (specialDeffenceEffortValue == UNKNOWN_EV) {
-                return master!!.masterRecord.getSpecialDefenseValue(31, 252)
-            }
-            return master!!.masterRecord.getSpecialDefenseValue(31, specialDeffenceEffortValue)
-        }
+    fun calcSpecialDefense(): Int {
+        return master.getSpecialDefenseValue(31, specialDefenseEffortValue)
+    }
 
-    val speedValue: Int
-        get() {
-            if (speedEffortValue == UNKNOWN_EV) {
-                return master!!.masterRecord.getSpeedValue(31, 252)
-            }
-            return master!!.masterRecord.getSpeedValue(31, speedEffortValue)
-        }
+    fun calcSpeed(): Int {
+        return master.getSpeedValue(31, speedEffortValue)
+    }
 
     fun getSpeedValue(characteristicNo: Int): Int {
         val rate = Characteristic.CHARACTERISTIC_TABLE[characteristicNo]
-        if (rate != null && 4 < rate.size) {
+        if (4 < rate.size) {
             return (speedValue.times(rate[4] as Float)).toInt()
         } else {
             return speedValue
@@ -121,9 +117,66 @@ open class IndividualPBAPokemon (val master : PBAPokemon) {
         return resultMap
     }
 
-    override fun toString(): String {
-        return "id:$id, No:$master!!.no, Name:$master!!.jname, item:$item, ability:$ability, characteristic:$characteristic, skill1$skillNo1, skill2$skillNo2, skill3$skillNo3, skill4$skillNo4, H:$hpEffortValue, A:$attackEffortValue, B:$deffenceEffortValue, C:$specialAttackEffortValue, D:$specialDeffenceEffortValue, S:$speedEffortValue"
+    val abilities: List<String>
+        get() {
+            val temp = ArrayList<String>()
+            temp.add(master.ability1)
+            if (master.ability2 != "-") {
+                temp.add(master.ability2)
+            }
+            if (master.abilityd != "-") {
+                temp.add(master.abilityd)
+            }
+            return temp
+        }
+
+    fun calcATypeScale(type: Type.TypeCode): Map<String, Int> {
+        val scaleMap = HashMap<String, Int>()
+        var result: Int
+
+        //タイプ相性に関係する特性がある場合、その値を格納する
+        //ふしぎなまもりは特別
+        for (ability in abilities) {
+            if ("ふしぎなまもり".equals(ability)) {
+                if (type === Type.TypeCode.FIRE || type === Type.TypeCode.GHOST || type === Type.TypeCode.FLYING ||
+                        type === Type.TypeCode.ROCK || type === Type.TypeCode.DARK) {
+                    scaleMap.put(ability, 200)
+                } else {
+                    scaleMap.put(ability, 0)
+                }
+            } else {
+                val scaleByAbility = Ability.calcTypeScale(ability, type)
+                result = (scaleByAbility * Type.calcurateAffinity(type, master) * 100f).toInt()
+                scaleMap.put(ability, result)
+            }
+        }
+
+        //すべての特性で倍率が同じ場合、１つにまとめる
+//        val judgeSameScale = scaleMap.entries.iterator().next() as Int
+//        var isSame = true
+//        for (scale in scaleMap.entries) {
+//            if (judgeSameScale != scale) {
+//                isSame = false
+//            }
+//        }
+//        if (isSame) {
+//            scaleMap.clear()
+//            scaleMap.put("both", judgeSameScale)
+//        }
+        return scaleMap
     }
 
+    fun calcAllTypeScale(): Map<Type.TypeCode, Map<String, Int>> {
+        val scaleMap = HashMap<Type.TypeCode, Map<String, Int>>()
+        for (type in Type.TypeCode.values()) {
+            val temp = calcATypeScale(type)
+            scaleMap.put(type, temp)
+        }
+        return scaleMap
+    }
+
+    override fun toString(): String {
+        return "id:$id, $master, r:${master.resourceId}, item:$item, ability:$ability, characteristic:$characteristic, skill1:$skillNo1, skill2:$skillNo2, skill3:$skillNo3, skill4:$skillNo4, H:$hpEffortValue, A:$attackEffortValue, B:$defenseEffortValue, C:$specialAttackEffortValue, D:$specialDefenseEffortValue, S:$speedEffortValue"
+    }
 
 }

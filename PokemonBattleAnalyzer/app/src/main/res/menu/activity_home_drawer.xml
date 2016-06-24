@@ -5,11 +5,11 @@
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Add Pokemon" />
+            android:title="Save My Party" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Make Party" />
+            android:title="Edit My Party" />
     </group>
 
     <item android:title="Communicate">

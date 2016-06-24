@@ -2,6 +2,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
 import io.realm.RealmList
 import io.realm.RealmObject
+import io.realm.annotations.Ignore
 import io.realm.annotations.RealmClass
 
 @RealmClass
@@ -24,6 +25,8 @@ public open class PokemonMasterData(
         public open var mega: RealmList<PokemonMasterData>? = null
 ): RealmObject()  {
 
+    @Ignore var resourceId:Int = 0
+
     fun addMega(mega: PokemonMasterData) {
         if (this.mega == null) {
             this.mega = RealmList<PokemonMasterData>()
@@ -32,26 +35,44 @@ public open class PokemonMasterData(
     }
 
     fun getHPValue(iv: Int, ev: Int): Int {
-        return (h * 2 + iv + ev / 4) / 2 + 60
+        var effort = 0
+        if(ev == IndividualPBAPokemon.UNKNOWN) effort = 252
+        else effort = ev
+        return (h * 2 + iv + effort / 4) / 2 + 60
     }
 
     fun getAttackValue(iv: Int, ev: Int): Int {
-        return ((a * 2 + iv + ev / 4) / 2 + 5).toInt()
+        var effort = 0
+        if(ev == IndividualPBAPokemon.UNKNOWN) effort = 252
+        else effort = ev
+        return ((a * 2 + iv + effort / 4) / 2 + 5).toInt()
     }
 
     fun getDefenseValue(iv: Int, ev: Int): Int {
-        return ((b * 2 + iv + ev / 4) / 2 + 5).toInt()
+        var effort = 0
+        if(ev == IndividualPBAPokemon.UNKNOWN) effort = 252
+        else effort = ev
+        return ((b * 2 + iv + effort / 4) / 2 + 5).toInt()
     }
 
     fun getSpecialAttackValue(iv: Int, ev: Int): Int {
-        return ((c * 2 + iv + ev / 4) / 2 + 5).toInt()
+        var effort = 0
+        if(ev == IndividualPBAPokemon.UNKNOWN) effort = 252
+        else effort = ev
+        return ((c * 2 + iv + effort / 4) / 2 + 5).toInt()
     }
 
     fun getSpecialDefenseValue(iv: Int, ev: Int): Int {
-        return ((d * 2 + iv + ev / 4) / 2 + 5).toInt()
+        var effort = 0
+        if(ev == IndividualPBAPokemon.UNKNOWN) effort = 252
+        else effort = ev
+        return ((d * 2 + iv + effort / 4) / 2 + 5).toInt()
     }
 
     fun getSpeedValue(iv: Int, ev: Int): Int {
-        return ((s * 2 + iv + ev / 4) / 2 + 5).toInt()
+        var effort = 0
+        if(ev == IndividualPBAPokemon.UNKNOWN) effort = 252
+        else effort = ev
+        return ((s * 2 + iv + effort / 4) / 2 + 5).toInt()
     }
 }

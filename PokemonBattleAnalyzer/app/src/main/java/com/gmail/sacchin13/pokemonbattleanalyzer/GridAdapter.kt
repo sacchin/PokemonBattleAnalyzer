@@ -1,7 +1,5 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer
 
-import android.content.Context
-import android.support.design.widget.Snackbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,16 +7,15 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.gmail.sacchin13.pokemonbattleanalyzer.activity.HomeActivity
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import org.jetbrains.anko.onClick
-import java.util.*
 import kotlin.properties.Delegates
 
-class GridAdapter(context: HomeActivity, list: ArrayList<PBAPokemon>): BaseAdapter() {
+class GridAdapter(context: HomeActivity, list: MutableList<PokemonMasterData>): BaseAdapter() {
 
     var mContext: HomeActivity by Delegates.notNull()
     var mLayoutInflater: LayoutInflater by Delegates.notNull()
-    var pokemonArray: ArrayList<PBAPokemon> by Delegates.notNull()
+    var pokemonArray: MutableList<PokemonMasterData> by Delegates.notNull()
 
     private class ViewHolder {
         var hueImageView: ImageView by Delegates.notNull()

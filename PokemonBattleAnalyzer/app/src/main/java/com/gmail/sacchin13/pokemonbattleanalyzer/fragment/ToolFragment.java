@@ -21,7 +21,6 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.activity.DetailActivity;
 import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator;
 import com.gmail.sacchin13.pokemonbattleanalyzer.Util;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon;
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PBAPokemon;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party;
 import com.gmail.sacchin13.pokemonbattleanalyzer.listener.OnClickChoicedPokemon;
 import com.gmail.sacchin13.pokemonbattleanalyzer.listener.OnClickIndividualPokemon;
@@ -115,10 +114,10 @@ public class ToolFragment extends PGLFragment {
 //        }
     }
 
-    public FrameLayout createFrameLayout(PBAPokemon p, float size){
+    public FrameLayout createFrameLayout(IndividualPBAPokemon p, float size){
         FrameLayout fl = new FrameLayout(getActivity());
 
-        Bitmap temp = Util.Companion.createImage(p, size, getResources());
+        Bitmap temp = Util.Companion.createImage(p.getMaster(), size, getResources());
         ImageView localView = new ImageView(getActivity());
         localView.setImageBitmap(temp);
         localView.setTransitionName("image");
