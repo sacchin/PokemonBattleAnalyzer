@@ -13,6 +13,7 @@ import kotlin.properties.Delegates
 
 class GridAdapter(context: HomeActivity, list: MutableList<PokemonMasterData>): BaseAdapter() {
 
+    var util: Util by Delegates.notNull()
     var mContext: HomeActivity by Delegates.notNull()
     var mLayoutInflater: LayoutInflater by Delegates.notNull()
     var pokemonArray: MutableList<PokemonMasterData> by Delegates.notNull()
@@ -23,6 +24,7 @@ class GridAdapter(context: HomeActivity, list: MutableList<PokemonMasterData>): 
     }
 
     init{
+        util = Util()
         mContext = context
         mLayoutInflater = LayoutInflater.from(context)
         pokemonArray = list
@@ -35,23 +37,25 @@ class GridAdapter(context: HomeActivity, list: MutableList<PokemonMasterData>): 
             holder.hueImageView = newConvertView.findViewById(R.id.imageView) as ImageView
             holder.hueTextView = newConvertView.findViewById(R.id.textView) as TextView
             newConvertView.tag = holder
-            val pokemonImage = Util.Companion.createImage(pokemonArray[position], 200f, mContext.resources)
+            val pokemonImage = util.createImage(pokemonArray[position], 200f, mContext.resources)
             holder.hueImageView.setImageBitmap(pokemonImage)
             holder.hueTextView.text = "0"//pokemonArray[position].masterRecord.jname
 
             newConvertView.onClick {
-                mContext.addPokemonToList(pokemonArray[position])
+                val temp = util.createImage(pokemonArray[position], 120f, mContext.resources)
+                mContext.addPokemonToList(pokemonArray[position],temp)
             }
 
             return newConvertView
         } else {
             val holder = convertView.tag as ViewHolder
-            val pokemonImage = Util.Companion.createImage(pokemonArray[position], 200f, mContext.resources)
+            val pokemonImage = util.createImage(pokemonArray[position], 200f, mContext.resources)
             holder.hueImageView.setImageBitmap(pokemonImage)
             holder.hueTextView.text = "0"//pokemonArray[position].masterRecord.jname
 
             convertView.onClick {
-                mContext.addPokemonToList(pokemonArray[position])
+                val temp = util.createImage(pokemonArray[position], 120f, mContext.resources)
+                mContext.addPokemonToList(pokemonArray[position],temp)
             }
 
             return convertView

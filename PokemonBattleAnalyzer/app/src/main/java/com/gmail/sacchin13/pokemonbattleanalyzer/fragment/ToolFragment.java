@@ -117,11 +117,11 @@ public class ToolFragment extends PGLFragment {
     public FrameLayout createFrameLayout(IndividualPBAPokemon p, float size){
         FrameLayout fl = new FrameLayout(getActivity());
 
-        Bitmap temp = Util.Companion.createImage(p.getMaster(), size, getResources());
-        ImageView localView = new ImageView(getActivity());
-        localView.setImageBitmap(temp);
-        localView.setTransitionName("image");
-        fl.addView(localView);
+//        Bitmap temp = Util.Companion.createImage(p.getMaster(), size, getResources());
+//        ImageView localView = new ImageView(getActivity());
+//        localView.setImageBitmap(temp);
+//        localView.setTransitionName("image");
+//        fl.addView(localView);
 
         return fl;
     }

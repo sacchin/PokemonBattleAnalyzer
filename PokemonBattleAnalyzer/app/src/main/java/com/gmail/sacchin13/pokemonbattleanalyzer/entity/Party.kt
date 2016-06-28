@@ -19,6 +19,15 @@ public open class Party (
     @Ignore
     var member: MutableList<PokemonMasterData> = ArrayList<PokemonMasterData>()
 
+    fun initMember(){
+        addMember(member1.master)
+        addMember(member2.master)
+        addMember(member3.master)
+        addMember(member4.master)
+        addMember(member5.master)
+        addMember(member6.master)
+    }
+
     fun addMember(pokemon: PokemonMasterData): Int {
         if(this.member.size < 6){
             this.member.add(pokemon)

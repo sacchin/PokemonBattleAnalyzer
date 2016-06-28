@@ -9,11 +9,11 @@ public open class Skill(
         public open var no: Int = -1,
         public open var jname: String = "unknown",
         public open var ename: String = "unknown",
-        public open var type: Int = 0,
-        public open var power: Int = 0,
-        public open var accuracy: Int = 0,
-        public open var category: Int = 0,
-        public open var pp: Int = 0,
+        public open var type: Int = -1,
+        public open var power: Int = -1,
+        public open var accuracy: Int = -1,
+        public open var category: Int = -1,
+        public open var pp: Int = -1,
         public open var contact: Boolean = false,
         public open var protectable: Boolean = false
 ):RealmObject() {

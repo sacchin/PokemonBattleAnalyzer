@@ -3,6 +3,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
@@ -37,6 +38,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     var party: Party by Delegates.notNull()
 
+    var util: Util by Delegates.notNull()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -45,6 +48,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (checkSelfPermission("android.permission.INTERNET") != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf("android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE"), 1)
         }
+
+        util = Util()
 
         fab!!.setOnClickListener { createOpponentParty() }
 
@@ -207,13 +212,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //throw UnsupportedOperationException()
     }
 
-    fun addPokemonToList(pokemon: PokemonMasterData) {
+    fun addPokemonToList(pokemon: PokemonMasterData, image: Bitmap) {
         val index = party.addMember(pokemon)
         if (index == -1) Snackbar.make(partyLayout, "すでに6体選択しています。", Snackbar.LENGTH_SHORT).show()
         else {
-            val temp = Util.createImage(pokemon, 120f, resources)
             val localView = ImageView(this)
-            localView.setImageBitmap(temp)
+            localView.setImageBitmap(image)
             localView.setOnClickListener{ removePokemonFromList(pokemon) }
 
             partyLayout.addView(localView)

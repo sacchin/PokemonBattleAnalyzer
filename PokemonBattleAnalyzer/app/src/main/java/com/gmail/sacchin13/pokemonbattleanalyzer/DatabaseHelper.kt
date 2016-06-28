@@ -55,9 +55,6 @@ class DatabaseHelper (context: Context){
     fun selectPokemonMasterData(pokemonNo: String?): PokemonMasterData {
         val pokemon = realm.where(PokemonMasterData().javaClass).equalTo("no", pokemonNo).findFirst()
         if(pokemon != null) {
-            if(util.itemImageResource.contains(pokemon.no)){
-                pokemon.resourceId = util.pokemonImageResource[pokemon.no] as Int
-            }
             return pokemon
         }
         return realm.where(PokemonMasterData().javaClass).equalTo("no", "000").findFirst()
@@ -69,7 +66,6 @@ class DatabaseHelper (context: Context){
         val result = ArrayList<PokemonMasterData>()
         for(p in pokemonList){
             if(util.pokemonImageResource.contains(p.no)){
-                p.resourceId = util.pokemonImageResource[p.no] as Int
                 result.add(p)
             }
         }
@@ -172,33 +168,6 @@ class DatabaseHelper (context: Context){
             return Party()
         }
 
-        if(util.pokemonImageResource.containsKey(party[0].member1.master.no)){
-            party[0].member1.master.resourceId = util.pokemonImageResource[party[0].member1.master.no] as Int
-            Log.e("selectParty", "${party[0].member1.master.jname}'s image is not found(${party[0].member1.master.no}, ${util.pokemonImageResource[party[0].member1.master.no]})")
-        }
-        if(util.pokemonImageResource.containsKey(party[0].member2.master.no)){
-            party[0].member2.master.resourceId = util.pokemonImageResource[party[0].member2.master.no] as Int
-            Log.e("selectParty", "${party[0].member2.master.jname}'s image is not found(${party[0].member2.master.no}, ${util.pokemonImageResource[party[0].member2.master.no]})")
-        }
-        if(util.pokemonImageResource.containsKey(party[0].member3.master.no)){
-            party[0].member3.master.resourceId = util.pokemonImageResource[party[0].member3.master.no] as Int
-            Log.e("selectParty", "${party[0].member3.master.jname}'s image is not found(${party[0].member3.master.no}, ${util.pokemonImageResource[party[0].member3.master.no]})")
-        }
-        if(util.pokemonImageResource.containsKey(party[0].member4.master.no)){
-            party[0].member4.master.resourceId = util.pokemonImageResource[party[0].member4.master.no] as Int
-            Log.e("selectParty", "${party[0].member4.master.jname}'s image is not found(${party[0].member4.master.no}, ${util.pokemonImageResource[party[0].member4.master.no]})")
-        }
-        if(util.pokemonImageResource.containsKey(party[0].member5.master.no)){
-            party[0].member5.master.resourceId = util.pokemonImageResource[party[0].member5.master.no] as Int
-            Log.e("selectParty", "${party[0].member5.master.jname}'s image is not found(${party[0].member5.master.no}, ${util.pokemonImageResource[party[0].member5.master.no]})")
-        }
-        if(util.pokemonImageResource.containsKey(party[0].member6.master.no)){
-            party[0].member6.master.resourceId = util.pokemonImageResource[party[0].member6.master.no] as Int
-            Log.e("selectParty", "${party[0].member6.master.jname}'s image is not found(${party[0].member6.master.no}, ${util.pokemonImageResource[party[0].member6.master.no]})")
-        }
-
-        Log.v("userName", "${party[0].time}")
-        Log.v("userName", party[0].userName)
         Log.v("userName", "${party[0].member1}")
         Log.v("userName", "${party[0].member2}")
         Log.v("userName", "${party[0].member3}")

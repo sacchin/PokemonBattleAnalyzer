@@ -2,6 +2,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
@@ -14,8 +15,8 @@ open class PGLActivity: AppCompatActivity() {
     var myParty: Party by Delegates.notNull()
 
     inner class TrendListener: PokemonTrendDownloader.EventListener{
-        override  fun onFinish(result: RankingResponse){
-//            setTrend()
+        override  fun onFinish(result: RankingResponse, index: Int){
+            setTrend(result, index)
         }
     }
 
@@ -34,6 +35,7 @@ open class PGLActivity: AppCompatActivity() {
 
     protected fun resetParty(downloadTrend: Boolean) {
         opponentParty = databaseHelper.selectParty("opponent")
+        opponentParty.initMember()
         myParty = databaseHelper.selectParty("mine")
 
         if(downloadTrend) downloadTrend()
@@ -44,8 +46,9 @@ open class PGLActivity: AppCompatActivity() {
     private fun downloadTrend() {
         for (i in 0..opponentParty.member.size - 1) {
             val p = opponentParty.member[i]
-            val pokemonNo = p.no
-            PokemonTrendDownloader(pokemonNo + "-0", i, TrendListener()).execute()
+            val pokemonNo = p.no + "-0"
+            Log.v("downloadTrend",  "start $pokemonNo")
+            PokemonTrendDownloader(pokemonNo, i, TrendListener()).execute()
         }
     }
 
@@ -61,7 +64,7 @@ open class PGLActivity: AppCompatActivity() {
 //    }
 //
 //    abstract fun finishAllDownload()
-    open fun setTrend(){}
+    open fun setTrend(result: RankingResponse, index: Int){}
 
     open fun showParty(){}
 }

@@ -9,17 +9,21 @@ import android.widget.SeekBar
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.Util
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PartyInBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
 import kotlinx.android.synthetic.main.activity_expected.*
+import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlin.properties.Delegates
 
 class ExpectedActivity : PGLActivity() {
 
+    var util: Util by Delegates.notNull()
     var opponent: PartyInBattle by Delegates.notNull()
     var mine: PartyInBattle by Delegates.notNull()
 
     init {
+        util = Util()
         opponent = PartyInBattle()
         mine = PartyInBattle()
     }
@@ -28,17 +32,56 @@ class ExpectedActivity : PGLActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expected)
 
-        opponentParty = databaseHelper.selectParty("opponent")
-
-        myParty = Party(System.currentTimeMillis(), "mine", "mine")
-//        myParty.member1 = intent.extras.getString("member1", "")
-//        myParty.member2 = intent.extras.getString("member2", "")
-//        myParty.member3 = intent.extras.getString("member3", "")
-
         opponentHPBar.setOnSeekBarChangeListener(OnHPChangeListener(opponent))
         myHPBar.setOnSeekBarChangeListener(OnHPChangeListener(mine))
 
         resetParty(true)
+
+        opponent.add(opponentParty.member1)
+        opponent.add(opponentParty.member2)
+        opponent.add(opponentParty.member3)
+        opponent.add(opponentParty.member4)
+        opponent.add(opponentParty.member5)
+        opponent.add(opponentParty.member6)
+
+
+
+        mine.add(get(intent.extras.getInt("member1", 0)))
+        mine.add(get(intent.extras.getInt("member2", 0)))
+        mine.add(get(intent.extras.getInt("member3", 0)))
+
+
+        expected_fab!!.setOnClickListener { calc() }
+    }
+
+    fun calc (){
+        opponent.apply()
+        mine.apply()
+
+
+
+
+
+    }
+
+
+    fun get(index: Int): IndividualPBAPokemon{
+        when(index){
+            0 -> return myParty.member1
+            1 -> return myParty.member2
+            2 -> return myParty.member3
+            3 -> return myParty.member4
+            4 -> return myParty.member5
+            5 -> return myParty.member6
+            else -> return myParty.member1
+        }
+    }
+
+    override fun setTrend(result: RankingResponse, index: Int){
+        opponent.member[index].trend = result as RankingResponse
+        Log.v("setTrend", result.statusCode)
+        Log.v("setTrend", result.beforePokemonId)
+        Log.v("setTrend", result.nextPokemonId)
     }
 
     override fun showParty() {
@@ -136,7 +179,7 @@ class ExpectedActivity : PGLActivity() {
             if(isMine){
                 mine.selected = position
                 myHPBar.progress = 100
-                myPokemonImage.setImageBitmap(Util.createImage(myParty.member[position], 120f, resources))
+                myPokemonImage.setImageBitmap(util.createImage(myParty.member[position], 120f, resources))
                 Log.v("myPokemonSpinner", "${position} click!")
             }else{
                 opponent.selected = position

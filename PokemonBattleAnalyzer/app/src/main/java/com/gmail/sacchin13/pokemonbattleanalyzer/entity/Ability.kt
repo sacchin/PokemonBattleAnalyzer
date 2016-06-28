@@ -9,8 +9,8 @@ import java.util.HashMap
 class Ability(val ranking: Int = 0, val usageRate: Double = 0.0, val name: String = "", val sequenceNumber: Int = 0) {
 
     companion object {
-        private var invalidAbility: MutableMap<Type.TypeCode, Array<String>>? = null
-        private var scalUpAbility: MutableMap<Type.TypeCode, Array<String>>? = null
+        private var invalidAbility: MutableMap<Type.Code, Array<String>>? = null
+        private var scalUpAbility: MutableMap<Type.Code, Array<String>>? = null
 
         val ELECTRIC_INVALID_ABILITY = arrayOf("ちくでん", "でんきエンジン", "ひらいしん")
         val WATER_INVALID_ABILITY = arrayOf("かんそうはだ", "ちょすい", "よびみず")
@@ -33,20 +33,20 @@ class Ability(val ranking: Int = 0, val usageRate: Double = 0.0, val name: Strin
             return Ability()
         }
 
-        fun calcTypeScale(ability: String?, type: Type.TypeCode?): Float {
+        fun calcTypeScale(ability: String?, type: Type.Code?): Float {
             if (ability == null || type == null) {
                 throw NullPointerException()
             }
 
-            invalidAbility = HashMap<Type.TypeCode, Array<String>>()
-            invalidAbility!!.put(Type.TypeCode.ELECTRIC, ELECTRIC_INVALID_ABILITY)
-            invalidAbility!!.put(Type.TypeCode.WATER, WATER_INVALID_ABILITY)
-            invalidAbility!!.put(Type.TypeCode.GRASS, GRASS_INVALID_ABILITY)
-            invalidAbility!!.put(Type.TypeCode.FIRE, FIRE_INVALID_ABILITY)
-            invalidAbility!!.put(Type.TypeCode.GROUND, GRAND_INVALID_ABILITY)
+            invalidAbility = HashMap<Type.Code, Array<String>>()
+            invalidAbility!!.put(Type.Code.ELECTRIC, ELECTRIC_INVALID_ABILITY)
+            invalidAbility!!.put(Type.Code.WATER, WATER_INVALID_ABILITY)
+            invalidAbility!!.put(Type.Code.GRASS, GRASS_INVALID_ABILITY)
+            invalidAbility!!.put(Type.Code.FIRE, FIRE_INVALID_ABILITY)
+            invalidAbility!!.put(Type.Code.GROUND, GRAND_INVALID_ABILITY)
 
-            scalUpAbility = HashMap<Type.TypeCode, Array<String>>()
-            scalUpAbility!!.put(Type.TypeCode.FIRE, FIRE_SCALE_UP_ABILITY)
+            scalUpAbility = HashMap<Type.Code, Array<String>>()
+            scalUpAbility!!.put(Type.Code.FIRE, FIRE_SCALE_UP_ABILITY)
 
             var list: Array<String>? = invalidAbility!![type]
             if (list != null) {

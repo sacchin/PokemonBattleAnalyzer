@@ -1,5 +1,6 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
 import java.util.ArrayList
 import java.util.Collections
 import java.util.HashMap
@@ -22,15 +23,10 @@ public open class IndividualPBAPokemon (
         public open var hpEffortValue: Int = UNKNOWN,
         public open var hpRatio: Int = 100,
         public open var attackEffortValue: Int = UNKNOWN,
-        public open var attackRank: Int = UNKNOWN,
         public open var defenseEffortValue: Int = UNKNOWN,
-        public open var defenseRank: Int = UNKNOWN,
         public open var specialAttackEffortValue: Int = UNKNOWN,
-        public open var specialAttackRank: Int = UNKNOWN,
         public open var specialDefenseEffortValue: Int = UNKNOWN,
-        public open var specialDefenseRank: Int = UNKNOWN,
         public open var speedEffortValue: Int = UNKNOWN,
-        public open var speedRank: Int = UNKNOWN,
         public open var hpValue: Int = UNKNOWN,
         public open var attackValue: Int = UNKNOWN,
         public open var defenseValue: Int = UNKNOWN,
@@ -44,11 +40,12 @@ public open class IndividualPBAPokemon (
         const val UNKNOWN = -1
 
         fun create(id: Long, master : PokemonMasterData): IndividualPBAPokemon{
-            return IndividualPBAPokemon(id, 0, "", "", "", Skill(), Skill(), Skill(), Skill(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, master)
+            return IndividualPBAPokemon(id, 0, "", "", "", Skill(), Skill(), Skill(), Skill(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, master)
         }
     }
 
-//    var trend: RankingPokemonTrend? = null
+    @Ignore
+    var trend: RankingResponse? = null
 
     private fun valueSort(statistics: Map<String, Int>): List<Any> {
         val entries = ArrayList(statistics.entries)
@@ -89,14 +86,19 @@ public open class IndividualPBAPokemon (
         }
     }
 
+
+
+
+
     fun calcDamage(attackSide: IndividualPBAPokemon, skill: Skill): Map<Float, Int> {
-//        val dSideCharacteristics = trend!!.characteristicList
-//        val aSideCharacteristics = attackSide.trend!!.getCharacteristicList()
+        val dSideCharacteristics = trend!!.rankingPokemonTrend.seikakuInfo
+        val aSideCharacteristics = attackSide.characteristic
 
         val resultMap = HashMap<Float, Int>()
 //        for (dc in dSideCharacteristics) {
+//            Log.v("calcDamage", dc.name)
 //            val dRevision = dc.revision
-//            for (ac in aSideCharacteristics) {
+//
 //                val aRevision = ac.revision
 //                val rate = (dc.usageRate * ac.usageRate).toFloat()
 //                var damage = 0
@@ -112,7 +114,6 @@ public open class IndividualPBAPokemon (
 //                    else -> {
 //                    }
 //                }//this is not attack
-//            }
 //        }
         return resultMap
     }
@@ -130,7 +131,7 @@ public open class IndividualPBAPokemon (
             return temp
         }
 
-    fun calcATypeScale(type: Type.TypeCode): Map<String, Int> {
+    fun calcATypeScale(type: Type.Code): Map<String, Int> {
         val scaleMap = HashMap<String, Int>()
         var result: Int
 
@@ -138,15 +139,15 @@ public open class IndividualPBAPokemon (
         //ふしぎなまもりは特別
         for (ability in abilities) {
             if ("ふしぎなまもり".equals(ability)) {
-                if (type === Type.TypeCode.FIRE || type === Type.TypeCode.GHOST || type === Type.TypeCode.FLYING ||
-                        type === Type.TypeCode.ROCK || type === Type.TypeCode.DARK) {
+                if (type === Type.Code.FIRE || type === Type.Code.GHOST || type === Type.Code.FLYING ||
+                        type === Type.Code.ROCK || type === Type.Code.DARK) {
                     scaleMap.put(ability, 200)
                 } else {
                     scaleMap.put(ability, 0)
                 }
             } else {
                 val scaleByAbility = Ability.calcTypeScale(ability, type)
-                result = (scaleByAbility * Type.calcurateAffinity(type, master) * 100f).toInt()
+                result = (scaleByAbility * Type.calculateAffinity(type, master) * 100f).toInt()
                 scaleMap.put(ability, result)
             }
         }
@@ -166,9 +167,9 @@ public open class IndividualPBAPokemon (
         return scaleMap
     }
 
-    fun calcAllTypeScale(): Map<Type.TypeCode, Map<String, Int>> {
-        val scaleMap = HashMap<Type.TypeCode, Map<String, Int>>()
-        for (type in Type.TypeCode.values()) {
+    fun calcAllTypeScale(): Map<Type.Code, Map<String, Int>> {
+        val scaleMap = HashMap<Type.Code, Map<String, Int>>()
+        for (type in Type.Code.values()) {
             val temp = calcATypeScale(type)
             scaleMap.put(type, temp)
         }
@@ -176,7 +177,7 @@ public open class IndividualPBAPokemon (
     }
 
     override fun toString(): String {
-        return "id:$id, $master, r:${master.resourceId}, item:$item, ability:$ability, characteristic:$characteristic, skill1:$skillNo1, skill2:$skillNo2, skill3:$skillNo3, skill4:$skillNo4, H:$hpEffortValue, A:$attackEffortValue, B:$defenseEffortValue, C:$specialAttackEffortValue, D:$specialDefenseEffortValue, S:$speedEffortValue"
+        return "id:$id, $master, item:$item, ability:$ability, characteristic:$characteristic, skill1:$skillNo1, skill2:$skillNo2, skill3:$skillNo3, skill4:$skillNo4, H:$hpEffortValue, A:$attackEffortValue, B:$defenseEffortValue, C:$specialAttackEffortValue, D:$specialDefenseEffortValue, S:$speedEffortValue"
     }
 
 }

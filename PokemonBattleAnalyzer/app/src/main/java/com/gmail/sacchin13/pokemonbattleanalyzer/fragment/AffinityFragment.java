@@ -1,7 +1,6 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.fragment;
 
 import android.app.Fragment;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -17,17 +15,10 @@ import android.widget.TextView;
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.PartyDatabaseHelper;
 import com.gmail.sacchin13.pokemonbattleanalyzer.R;
-import com.gmail.sacchin13.pokemonbattleanalyzer.Util;
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.AffinityRank;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon;
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Type;
-import com.gmail.sacchin13.pokemonbattleanalyzer.listener.OnClickFromAffinityList;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AffinityFragment extends Fragment {
@@ -208,17 +199,17 @@ public class AffinityFragment extends Fragment {
 //        setAffinity(resultMap, targetPokemonAffinity);
 //    }
 
-    public void setAffinity(Map<Type.TypeCode, Map<String, Integer>> affinityMap, LinearLayout[] targetLayout){
-        for(Type.TypeCode type : affinityMap.keySet()){
+    public void setAffinity(Map<Type.Code, Map<String, Integer>> affinityMap, LinearLayout[] targetLayout){
+        for(Type.Code type : affinityMap.keySet()){
             Map<String, Integer> ttt = affinityMap.get(type);
             for(String key : ttt.keySet()){
                 Integer p = affinityCode.get(String.valueOf(ttt.get(key)));
                 if(p != null) {
                     TextView temp = new TextView(getActivity());
                     if(key.equals("both")){
-                        temp.setText(Type.INSTANCE.convertTypeCodeToName(type));
+                        temp.setText(Type.INSTANCE.name(type));
                     }else{
-                        String message = Type.INSTANCE.convertTypeCodeToName(type) + " (" + key + ")";
+                        String message = Type.INSTANCE.name(type) + " (" + key + ")";
                         temp.setText(message);
                     }
                     targetLayout[p].addView(temp);

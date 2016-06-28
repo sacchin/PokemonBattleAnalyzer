@@ -631,32 +631,30 @@ class Util {
         )
     }
 
-    companion object {
-        fun createImage(p: PokemonMasterData, scale: Float, resource: Resources): Bitmap {
-            var image = BitmapFactory.decodeResource(resource, p.resourceId.toInt())
+    fun createImage(p: PokemonMasterData, scale: Float, resource: Resources): Bitmap {
+        var image = BitmapFactory.decodeResource(resource, R.drawable.noimage)
+        if(pokemonImageResource.contains(p.no)){
+            image = BitmapFactory.decodeResource(resource, pokemonImageResource[p.no]!!.toInt())
             if (image == null) {
-                Log.w("createImage", "${p.jname}'s image is not found(${p.resourceId})")
-                image = BitmapFactory.decodeResource(resource, R.drawable.noimage)
-            }else{
+                Log.w("createImage", "${p.jname}'s image is not found.")
             }
-            //resize
-            val matrix = Matrix()
-            matrix.postScale(scale / image.width.toFloat(), scale / image.height.toFloat())
-            image = Bitmap.createBitmap(image, 0, 0, image.width, image.height, matrix, true)
-            return image
         }
+        val matrix = Matrix()
+        matrix.postScale(scale / image.width.toFloat(), scale / image.height.toFloat())
+        image = Bitmap.createBitmap(image, 0, 0, image.width, image.height, matrix, true)
+        return image
+    }
 
-        fun createImage(resourceId: Int, scale: Float, resource: Resources): Bitmap {
-            var image = BitmapFactory.decodeResource(resource, resourceId)
-            if (image == null) {
-                Log.w("createImage", "${resourceId}'s image is not found")
-                image = BitmapFactory.decodeResource(resource, R.drawable.noimage)
-            }
-            //resize
-            val matrix = Matrix()
-            matrix.postScale(scale / image.width.toFloat(), scale / image.height.toFloat())
-            image = Bitmap.createBitmap(image, 0, 0, image.width, image.height, matrix, true)
-            return image
+    fun createImage(resourceId: Int, scale: Float, resource: Resources): Bitmap {
+        var image = BitmapFactory.decodeResource(resource, resourceId)
+        if (image == null) {
+            Log.w("createImage", "${resourceId}'s image is not found")
+            image = BitmapFactory.decodeResource(resource, R.drawable.noimage)
         }
+        //resize
+        val matrix = Matrix()
+        matrix.postScale(scale / image.width.toFloat(), scale / image.height.toFloat())
+        image = Bitmap.createBitmap(image, 0, 0, image.width, image.height, matrix, true)
+        return image
     }
 }

@@ -53,13 +53,17 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <TextView
+                android:text="HP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <SeekBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:progress="100"
                 android:max="100"
                 android:id="@+id/myHPBar"
-                android:layout_span="5"/>
+                android:layout_span="4"/>
         </TableRow>
 
         <TableRow
@@ -68,23 +72,23 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="A"/>
+                android:text="@string/edit_activity_a"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="B"/>
+                android:text="@string/edit_activity_b"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="C"/>
+                android:text="@string/edit_activity_c"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="D"/>
+                android:text="@string/edit_activity_d"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="S"/>
+                android:text="@string/edit_activity_s"/>
         </TableRow>
 
         <TableRow
@@ -147,13 +151,17 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <TextView
+                android:text="HP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <SeekBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:progress="100"
                 android:max="100"
                 android:id="@+id/opponentHPBar"
-                android:layout_span="5"/>
+                android:layout_span="4"/>
         </TableRow>
 
         <TableRow
@@ -162,23 +170,23 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="A"/>
+                android:text="@string/edit_activity_a"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="B"/>
+                android:text="@string/edit_activity_b"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="C"/>
+                android:text="@string/edit_activity_c"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="D"/>
+                android:text="@string/edit_activity_d"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="S"/>
+                android:text="@string/edit_activity_s"/>
         </TableRow>
 
         <TableRow
@@ -219,7 +227,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_gravity="bottom|right"
+            android:layout_gravity="bottom|end"
             app:fabSize="normal"
             android:src="@drawable/monsterball"
             app:backgroundTint="@color/colorAccent"

@@ -18,9 +18,13 @@ class SelectActivity : PGLActivity() {
     private var choices: MutableMap<Int, IndividualPBAPokemon> = mutableMapOf()
     var opponentList: MutableList<PokemonMasterData> by Delegates.notNull()
 
+    var util: Util by Delegates.notNull()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select)
+
+        util = Util()
 
         opponentList = ArrayList<PokemonMasterData>()
         opponentList.add(databaseHelper.selectPokemonMasterData(intent.extras.getString("member1", "")))
@@ -44,12 +48,12 @@ class SelectActivity : PGLActivity() {
     }
 
     private fun createPartyList() {
-        opponent_party1.setImageBitmap(Util.createImage(opponentList[0], 250f, resources))
-        opponent_party2.setImageBitmap(Util.createImage(opponentList[1], 250f, resources))
-        opponent_party3.setImageBitmap(Util.createImage(opponentList[2], 250f, resources))
-        opponent_party4.setImageBitmap(Util.createImage(opponentList[3], 250f, resources))
-        opponent_party5.setImageBitmap(Util.createImage(opponentList[4], 250f, resources))
-        opponent_party6.setImageBitmap(Util.createImage(opponentList[5], 250f, resources))
+        opponent_party1.setImageBitmap(util.createImage(opponentList[0], 250f, resources))
+        opponent_party2.setImageBitmap(util.createImage(opponentList[1], 250f, resources))
+        opponent_party3.setImageBitmap(util.createImage(opponentList[2], 250f, resources))
+        opponent_party4.setImageBitmap(util.createImage(opponentList[3], 250f, resources))
+        opponent_party5.setImageBitmap(util.createImage(opponentList[4], 250f, resources))
+        opponent_party6.setImageBitmap(util.createImage(opponentList[5], 250f, resources))
 
         selected_party1.setOnClickListener{ removePokemonFromList(0) }
         selected_party2.setOnClickListener{ removePokemonFromList(1) }
@@ -58,17 +62,17 @@ class SelectActivity : PGLActivity() {
         selected_party5.setOnClickListener{ removePokemonFromList(4) }
         selected_party6.setOnClickListener{ removePokemonFromList(5) }
 
-        my_party1.setImageBitmap(Util.createImage(myParty.member1.master, 250f, resources))
+        my_party1.setImageBitmap(util.createImage(myParty.member1.master, 250f, resources))
         my_party1.setOnClickListener{ addPokemonToList(myParty.member1, 0) }
-        my_party2.setImageBitmap(Util.createImage(myParty.member2.master,  250f, resources))
+        my_party2.setImageBitmap(util.createImage(myParty.member2.master,  250f, resources))
         my_party2.setOnClickListener{ addPokemonToList(myParty.member2, 1) }
-        my_party3.setImageBitmap(Util.createImage(myParty.member3.master, 250f, resources))
+        my_party3.setImageBitmap(util.createImage(myParty.member3.master, 250f, resources))
         my_party3.setOnClickListener{ addPokemonToList(myParty.member3, 2) }
-        my_party4.setImageBitmap(Util.createImage(myParty.member4.master, 250f, resources))
+        my_party4.setImageBitmap(util.createImage(myParty.member4.master, 250f, resources))
         my_party4.setOnClickListener{ addPokemonToList(myParty.member4, 3) }
-        my_party5.setImageBitmap(Util.createImage(myParty.member5.master, 250f, resources))
+        my_party5.setImageBitmap(util.createImage(myParty.member5.master, 250f, resources))
         my_party5.setOnClickListener{ addPokemonToList(myParty.member5, 4) }
-        my_party6.setImageBitmap(Util.createImage(myParty.member6.master, 250f, resources))
+        my_party6.setImageBitmap(util.createImage(myParty.member6.master, 250f, resources))
         my_party6.setOnClickListener{ addPokemonToList(myParty.member6, 5) }
     }
 
@@ -88,7 +92,7 @@ class SelectActivity : PGLActivity() {
         }
         choices[index] = pokemon
 
-        val temp = Util.createImage(R.drawable.select, 250f, resources)
+        val temp = util.createImage(R.drawable.select, 250f, resources)
         when(index){
             0 -> selected_party1.setImageBitmap(temp)
             1 -> selected_party2.setImageBitmap(temp)
@@ -143,9 +147,10 @@ class SelectActivity : PGLActivity() {
             Snackbar.make(my_party1, "3体選択して下さい。", Snackbar.LENGTH_SHORT).show()
         } else {
             val intent = Intent(this, ExpectedActivity().javaClass)
-            intent.putExtra("member1", choices[0]!!.id)
-            intent.putExtra("member2", choices[1]!!.id)
-            intent.putExtra("member3", choices[2]!!.id)
+            val keys = choices.keys.toList()
+            intent.putExtra("member1", keys[0])
+            intent.putExtra("member2", keys[1])
+            intent.putExtra("member3", keys[2])
             startActivityForResult(intent, 1)
         }
     }

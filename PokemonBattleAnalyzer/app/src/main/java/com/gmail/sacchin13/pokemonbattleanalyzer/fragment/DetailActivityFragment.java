@@ -33,6 +33,7 @@ public class DetailActivityFragment extends PGLFragment {
     private ImageView iv;
     private LinearLayout mainView = null;
     private CollapsingToolbarLayout toolbar = null;
+    private Util util = new Util();
 
     public DetailActivityFragment() {
     }
@@ -197,7 +198,7 @@ public class DetailActivityFragment extends PGLFragment {
         sss.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         sss.setOrientation(LinearLayout.HORIZONTAL);
 
-        Bitmap temp = Util.Companion.createImage(po.getMaster(), 150f, getResources());
+        Bitmap temp = util.createImage(po.getMaster(), 150f, getResources());
         ImageView imageView = new ImageView(getActivity());
         imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
         imageView.setImageBitmap(temp);

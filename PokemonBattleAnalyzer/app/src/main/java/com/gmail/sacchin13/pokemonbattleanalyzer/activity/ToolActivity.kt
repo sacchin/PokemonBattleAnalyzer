@@ -18,12 +18,20 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
 import com.gmail.sacchin13.pokemonbattleanalyzer.fragment.ToolFragment
 import com.gmail.sacchin13.pokemonbattleanalyzer.listener.OnClickIndividualPokemon
 import kotlinx.android.synthetic.main.content_tool.*
 import java.io.IOException
+import kotlin.properties.Delegates
 
 class ToolActivity : PGLActivity() {
+
+    var util: Util by Delegates.notNull()
+
+    init{
+        util = Util()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +101,7 @@ class ToolActivity : PGLActivity() {
     fun createFrameLayout(p: PokemonMasterData, size: Float): FrameLayout {
         val fl = FrameLayout(this)
 
-        val temp = Util.createImage(p, size, resources)
+        val temp = util.createImage(p, size, resources)
         val localView = ImageView(this)
         localView.setImageBitmap(temp)
         localView.transitionName = "image"
@@ -114,7 +122,7 @@ class ToolActivity : PGLActivity() {
         this.index = index
     }
 
-    override fun setTrend() {
+    override fun setTrend(result: RankingResponse, index: Int) {
 
     }
 

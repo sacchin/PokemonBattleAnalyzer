@@ -25,8 +25,6 @@ public open class PokemonMasterData(
         public open var mega: RealmList<PokemonMasterData>? = null
 ): RealmObject()  {
 
-    @Ignore var resourceId:Int = 0
-
     fun addMega(mega: PokemonMasterData) {
         if (this.mega == null) {
             this.mega = RealmList<PokemonMasterData>()

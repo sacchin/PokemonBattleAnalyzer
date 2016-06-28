@@ -8,12 +8,6 @@ import org.junit.Assert.*
 
 class PokemonTrendDownloaderUnitTest {
 
-    inner class TestListener: PokemonTrendDownloader.EventListener{
-        override fun onFinish(result: RankingResponse){
-            assertTrue(false)
-        }
-    }
-
     @Test
     @Throws(Exception::class)
     fun addition_isCorrect() {
