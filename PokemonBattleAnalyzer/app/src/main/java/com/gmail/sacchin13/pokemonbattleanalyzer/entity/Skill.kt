@@ -14,6 +14,7 @@ public open class Skill(
         public open var accuracy: Int = -1,
         public open var category: Int = -1,
         public open var pp: Int = -1,
+        public open var priority: Int = 0,
         public open var contact: Boolean = false,
         public open var protectable: Boolean = false
 ):RealmObject() {
@@ -29,7 +30,7 @@ public open class Skill(
     }
 
     override fun toString(): String{
-        return "${no},${jname},${ename},${type},${power},${accuracy},${category},${pp},${contact},${protectable}"
+        return "${no},${jname},${ename},${type},${power},${accuracy},${category},${pp},${priority},${contact},${protectable}"
     }
 }
 

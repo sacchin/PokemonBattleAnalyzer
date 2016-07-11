@@ -28,33 +28,6 @@ object BattleCalculator {
 
     }
 
-    fun getAttackOrder(mine: PokemonForBattle, opponent: PokemonForBattle): RiskDegree {
-//
-//        mine.calcSpeedValue()
-//
-//
-//
-//
-//        var secondRate = 0f
-//        val trend = opponent.getTrend()
-//        if (trend != null) {
-//            val opponentCharacteristic = trend!!.getCharacteristicList()
-//            for (pc in opponentCharacteristic) {
-//                val order = BattleUtil.getAttackOrder(mine.characteristic.toString(), mine, pc, opponent)
-//                if (order[1] === mine) {
-//                    secondRate += pc.usageRate.toFloat()
-//                }
-//                Log.v(mine.getJname() + "(S:" + mine.getS() + ")",
-//                        mine.characteristic.toString() + " vs " + opponent.getJname() +
-//                                "(S:" + opponent.getS() + ":" + pc.usageRate.toInt() + "%)" + ":" + pc.name)
-//            }
-//            return getRiskDegree(secondRate)
-//        } else {
-//            Log.e("getAttackOrder", "Trend is null!")
-//        }
-        return RiskDegree.SAFE
-    }
-
     fun getRiskDegree(rate: Float): RiskDegree {
         if (rate <= 0) {
             return RiskDegree.SAFE
@@ -69,14 +42,18 @@ object BattleCalculator {
         }
     }
 
-
-
-
     object companion{
+        fun getAttackOrder(mine: PokemonForBattle, opponent: PokemonForBattle): Array<PokemonForBattle> {
+            when {
+                mine.skill.priority < opponent.skill.priority -> return arrayOf(opponent, mine)
+                mine.skill.priority > opponent.skill.priority -> return arrayOf(mine, opponent)
+                else -> if (opponent.calcSpeedValue() < mine.calcSpeedValue()) return arrayOf(mine, opponent) else return arrayOf(opponent, mine)
+            }
+        }
 
-        fun calcFirstSection(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, isCritical: Boolean): Int {
+        fun calcFirstSection(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, isCritical: Boolean, first: Boolean,  damaged: Boolean): Int {
             var damage = 0
-            val skillPower = calcSkillPower(attackSide, defenseSide, true, false)
+            val skillPower = calcSkillPower(attackSide, defenseSide, first, damaged)
             var attackValue = 0
             var defenseValue = 0
             when (attackSide.skill.category) {
@@ -108,8 +85,8 @@ object BattleCalculator {
             return damage
         }
 
-        fun calcDamage(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, isCritical: Boolean) {
-            var damage = calcFirstSection(attackSide, defenseSide, isCritical)
+        fun calcDamage(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, isCritical: Boolean, first: Boolean, damaged: Boolean) {
+            var damage = calcFirstSection(attackSide, defenseSide, isCritical, first, damaged)
             var randomDamage = arrayOf(
                     damage.times(0.85).toInt(),
                     damage.times(0.86).toInt(),
@@ -133,7 +110,6 @@ object BattleCalculator {
             }
 
         }
-
 
 //            resultMap.put(rate, damage)
 //            damage = (22f * skill.power.toFloat() * attackSide.specialAttackValue.toFloat() * aRevision[2] / specialDeffenceValue * dRevision[3] / 50 + 2).toInt()

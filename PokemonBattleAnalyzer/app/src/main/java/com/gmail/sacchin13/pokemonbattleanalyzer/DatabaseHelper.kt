@@ -80,6 +80,11 @@ class DatabaseHelper (context: Context){
     }
 
     fun insertSkillMasterData(id: Int, name: String, type: Int, power: Int, accuracy: Int, category: Int, pp: Int, contact: Boolean, protectable: Boolean) {
+        insertSkillMasterData(id, name, type, power, accuracy, category, pp, 0, contact, protectable)
+    }
+
+
+    fun insertSkillMasterData(id: Int, name: String, type: Int, power: Int, accuracy: Int, category: Int, pp: Int, priority: Int, contact: Boolean, protectable: Boolean) {
         realm.executeTransaction{
             val skill = realm.createObject(Skill::class.java)
             skill.no = id
@@ -90,6 +95,7 @@ class DatabaseHelper (context: Context){
             skill.accuracy = accuracy
             skill.category = category
             skill.pp = pp
+            skill.priority = priority
             skill.contact = contact
             skill.protectable = protectable
         }

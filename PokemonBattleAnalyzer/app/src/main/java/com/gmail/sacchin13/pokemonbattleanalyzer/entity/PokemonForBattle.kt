@@ -106,6 +106,7 @@ class PokemonForBattle (
 
     fun calcAttackValue(isCritical: Boolean): Int{
         var result = master.getAttackValue(31, attackEffortValue)
+        result = result.times(Characteristic.correction(characteristic, "A")).toInt()
 
         //ToDo: スロースタート
         if(ability.equals("ヨガパワー") || ability.equals("ちからもち")){
@@ -149,6 +150,7 @@ class PokemonForBattle (
 
     fun calcDefenseValue(isCritical: Boolean): Int{
         var result = master.getDefenseValue(31, defenseEffortValue)
+        result = result.times(Characteristic.correction(characteristic, "B")).toInt()
 
         if(ability.equals("ふしぎなうろこ") && status != 0){
             result = result.times(1.5).toInt()
@@ -177,6 +179,7 @@ class PokemonForBattle (
 
     fun calcSpecialAttackValue(isCritical: Boolean): Int{
         var result = master.getSpecialAttackValue(31, specialAttackEffortValue)
+        result = result.times(Characteristic.correction(characteristic, "C")).toInt()
 
         if(item.equals("こだわりメガネ")){
             result = result.times(1.5).toInt()
@@ -207,6 +210,7 @@ class PokemonForBattle (
 
     fun calcSpecialDefenseValue(isCritical: Boolean): Int{
         var result = master.getSpecialDefenseValue(31, specialDefenseEffortValue)
+        result = result.times(Characteristic.correction(characteristic, "D")).toInt()
 
         if(item.equals("しんかいのウロコ")){
             result = result.times(2).toInt()
@@ -235,6 +239,7 @@ class PokemonForBattle (
 
     fun calcSpeedValue(): Int{
         var result = master.getSpeedValue(31, speedEffortValue)
+        result = result.times(Characteristic.correction(characteristic, "S")).toInt()
 
         if(item.equals("こだわりスカーフ")){
             result = result.times(1.5).toInt()

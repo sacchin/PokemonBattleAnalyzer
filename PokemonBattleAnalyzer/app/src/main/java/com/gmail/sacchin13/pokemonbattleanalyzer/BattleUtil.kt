@@ -9,8 +9,8 @@ object BattleUtil {
                        opPc: PokemonCharacteristic, opponent: IndividualPBAPokemon): Array<IndividualPBAPokemon?> {
         val order = arrayOfNulls<IndividualPBAPokemon>(2)
 
-        val mysp = mine.getSpeedValue(Characteristic.convertCharacteristicNameToNo(myCharacteristicName))
-        val opposp = opponent.getSpeedValue(Characteristic.convertCharacteristicNameToNo(opPc.name))
+        val mysp = mine.getSpeedValue(Characteristic.no(myCharacteristicName))
+        val opposp = opponent.getSpeedValue(Characteristic.no(opPc.name))
         //        Log.v("getAttackOrder", "mine:" + mysp + ", oppo:" + opposp);
         if (opposp < mysp) {
             order[0] = mine

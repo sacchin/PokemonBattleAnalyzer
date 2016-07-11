@@ -18,8 +18,8 @@ class PokemonCharacteristic(ranking: Int, usageRate: Double, name: String, seque
 
     val revision: FloatArray
         get(){
-            val temp = Characteristic.Factory.characteristicList()
-            val t = temp.get(Characteristic.convertCharacteristicNameToNo(name))
+            val temp = Characteristic.Code.characteristicList()
+            val t = temp.get(Characteristic.no(name))
             return t as FloatArray
 
         }
