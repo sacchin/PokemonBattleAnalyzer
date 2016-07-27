@@ -37,6 +37,7 @@ open class PGLActivity: AppCompatActivity() {
         opponentParty = databaseHelper.selectParty("opponent")
         opponentParty.initMember()
         myParty = databaseHelper.selectParty("mine")
+        myParty.initMember()
 
         if(downloadTrend) downloadTrend()
 

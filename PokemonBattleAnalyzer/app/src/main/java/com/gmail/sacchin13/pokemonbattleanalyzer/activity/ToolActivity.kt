@@ -124,6 +124,7 @@ class ToolActivity : PGLActivity() {
 
     override fun setTrend(result: RankingResponse, index: Int) {
 
+
     }
 
     fun setAlert(index: Int) {

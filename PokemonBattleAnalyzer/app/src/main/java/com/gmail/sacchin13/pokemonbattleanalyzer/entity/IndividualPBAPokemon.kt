@@ -44,9 +44,6 @@ public open class IndividualPBAPokemon (
         }
     }
 
-    @Ignore
-    var trend: RankingResponse? = null
-
     private fun valueSort(statistics: Map<String, Int>): List<Any> {
         val entries = ArrayList(statistics.entries)
         Collections.sort(entries) { o1, o2 -> o2.value.compareTo(o1.value)}
@@ -91,7 +88,7 @@ public open class IndividualPBAPokemon (
 
 
     fun calcDamage(attackSide: IndividualPBAPokemon, skill: Skill): Map<Float, Int> {
-        val dSideCharacteristics = trend!!.rankingPokemonTrend.seikakuInfo
+//        val dSideCharacteristics = trend!!.rankingPokemonTrend.seikakuInfo
         val aSideCharacteristics = attackSide.characteristic
 
         val resultMap = HashMap<Float, Int>()

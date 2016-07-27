@@ -1,5 +1,6 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,9 +10,11 @@ import android.widget.SeekBar
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.Util
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.BattleField
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PartyInBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
+import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
 import kotlinx.android.synthetic.main.activity_expected.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlin.properties.Delegates
@@ -32,35 +35,21 @@ class ExpectedActivity : PGLActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expected)
 
-        opponentHPBar.setOnSeekBarChangeListener(OnHPChangeListener(opponent))
-        myHPBar.setOnSeekBarChangeListener(OnHPChangeListener(mine))
-
         resetParty(true)
-
-        opponent.add(opponentParty.member1)
-        opponent.add(opponentParty.member2)
-        opponent.add(opponentParty.member3)
-        opponent.add(opponentParty.member4)
-        opponent.add(opponentParty.member5)
-        opponent.add(opponentParty.member6)
-
-
-
-        mine.add(get(intent.extras.getInt("member1", 0)))
-        mine.add(get(intent.extras.getInt("member2", 0)))
-        mine.add(get(intent.extras.getInt("member3", 0)))
-
-
-        expected_fab!!.setOnClickListener { calc() }
+        initView(intent)
     }
 
     fun calc (){
-        opponent.apply()
-        mine.apply()
+        val selectedOpponent = opponent.apply()
+        val selectedMine = mine.apply()
 
-
-
-
+        //技1の場合
+        BattleCalculator.companion.getResult(selectedMine.individual.skillNo1, selectedMine, selectedOpponent, BattleField())
+        //技2の場合
+        //技3の場合
+        //技4の場合
+        //控え1に交換した場合
+        //控え2に交換した場合
 
     }
 
@@ -78,15 +67,28 @@ class ExpectedActivity : PGLActivity() {
     }
 
     override fun setTrend(result: RankingResponse, index: Int){
-        opponent.member[index].trend = result as RankingResponse
+        opponent.member[index].trend = result
         Log.v("setTrend", result.statusCode)
         Log.v("setTrend", result.beforePokemonId)
         Log.v("setTrend", result.nextPokemonId)
     }
 
-    override fun showParty() {
-//        opponent.setMember(opponentParty.member)
-//        mine.setMember(myParty.member)
+    fun initView(intent: Intent){
+        mine.add(get(intent.extras.getInt("member1", 0)))
+        mine.add(get(intent.extras.getInt("member2", 0)))
+        mine.add(get(intent.extras.getInt("member3", 0)))
+
+        val myAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
+        for(temp in mine.member){
+            myAdapter.add(temp.individual.master.jname)
+        }
+        myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        myPokemonSpinner.adapter = myAdapter
+        myPokemonSpinner.onItemSelectedListener = OnPokemonSelectedListener(true)
+
+        opponentHPBar.setOnSeekBarChangeListener(OnHPChangeListener(opponent))
+        myHPBar.setOnSeekBarChangeListener(OnHPChangeListener(mine))
 
         val statusAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
         statusAdapter.add("やけど")
@@ -101,26 +103,6 @@ class ExpectedActivity : PGLActivity() {
         myStatusSpinner.onItemSelectedListener = OnStatusSelectedListener(mine)
         opponentStatusSpinner.adapter = statusAdapter
         opponentStatusSpinner.onItemSelectedListener = OnStatusSelectedListener(opponent)
-
-
-        val opponentAdapter = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item)
-        for(temp in opponent.member){
-            opponentAdapter.add(temp.master.jname)
-        }
-        opponentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        opponentPokemonSpinner.adapter = opponentAdapter
-        opponentPokemonSpinner.onItemSelectedListener = OnPokemonSelectedListener(false)
-
-        val myAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
-        for(temp in mine.member){
-            myAdapter.add(temp.master.jname)
-        }
-        myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        myPokemonSpinner.adapter = myAdapter
-        myPokemonSpinner.onItemSelectedListener = OnPokemonSelectedListener(true)
-
 
         val rankAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
         rankAdapter.add("6")
@@ -137,40 +119,55 @@ class ExpectedActivity : PGLActivity() {
         rankAdapter.add("-5")
         rankAdapter.add("-6")
         rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
         myASpinner.adapter = rankAdapter
-        myASpinner.setSelection(7)
+        myASpinner.setSelection(6)
         myASpinner.onItemSelectedListener = OnRankSelectedListener(mine, 0)
         myBSpinner.adapter = rankAdapter
-        myBSpinner.setSelection(7)
+        myBSpinner.setSelection(6)
         myBSpinner.onItemSelectedListener = OnRankSelectedListener(mine, 1)
         myCSpinner.adapter = rankAdapter
-        myCSpinner.setSelection(7)
+        myCSpinner.setSelection(6)
         myCSpinner.onItemSelectedListener = OnRankSelectedListener(mine, 2)
         myDSpinner.adapter = rankAdapter
-        myDSpinner.setSelection(7)
+        myDSpinner.setSelection(6)
         myDSpinner.onItemSelectedListener = OnRankSelectedListener(mine, 3)
         mySSpinner.adapter = rankAdapter
-        mySSpinner.setSelection(7)
+        mySSpinner.setSelection(6)
         mySSpinner.onItemSelectedListener = OnRankSelectedListener(mine, 4)
         opponentASpinner.adapter = rankAdapter
-        opponentASpinner.setSelection(7)
+        opponentASpinner.setSelection(6)
         opponentASpinner.onItemSelectedListener = OnRankSelectedListener(mine, 0)
         opponentBSpinner.adapter = rankAdapter
-        opponentBSpinner.setSelection(7)
+        opponentBSpinner.setSelection(6)
         opponentBSpinner.onItemSelectedListener = OnRankSelectedListener(mine, 1)
         opponentCSpinner.adapter = rankAdapter
-        opponentCSpinner.setSelection(7)
+        opponentCSpinner.setSelection(6)
         opponentCSpinner.onItemSelectedListener = OnRankSelectedListener(mine, 2)
         opponentDSpinner.adapter = rankAdapter
-        opponentDSpinner.setSelection(7)
+        opponentDSpinner.setSelection(6)
         opponentDSpinner.onItemSelectedListener = OnRankSelectedListener(mine, 3)
         opponentSSpinner.adapter = rankAdapter
-        opponentSSpinner.setSelection(7)
+        opponentSSpinner.setSelection(6)
         opponentSSpinner.onItemSelectedListener = OnRankSelectedListener(mine, 4)
 
-        expected_fab.setOnClickListener{}
+        expected_fab.setOnClickListener{ calc() }
+    }
 
+    override fun showParty() {
+        opponent.add(opponentParty.member1)
+        opponent.add(opponentParty.member2)
+        opponent.add(opponentParty.member3)
+        opponent.add(opponentParty.member4)
+        opponent.add(opponentParty.member5)
+        opponent.add(opponentParty.member6)
+
+        val opponentAdapter = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item)
+        for(temp in opponent.member){
+            opponentAdapter.add(temp.individual.master.jname)
+        }
+        opponentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        opponentPokemonSpinner.adapter = opponentAdapter
+        opponentPokemonSpinner.onItemSelectedListener = OnPokemonSelectedListener(false)
     }
 
     inner class OnPokemonSelectedListener(val isMine: Boolean) : AdapterView.OnItemSelectedListener {
@@ -197,7 +194,6 @@ class ExpectedActivity : PGLActivity() {
     inner class OnRankSelectedListener(val party: PartyInBattle, val which: Int) : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-
             when(which){
                 0 ->  party.setAttackRank(position)
                 1 ->  party.setDefenseRank(position)
@@ -215,6 +211,4 @@ class ExpectedActivity : PGLActivity() {
             party.setHPRatio(seekBar!!.progress)
         }
     }
-
-
 }

@@ -1,5 +1,8 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
+import kotlin.properties.Delegates
+
 class PokemonForBattle (
     var status: Int = UNKNOWN,
     var item: String = "unknown",
@@ -19,14 +22,16 @@ class PokemonForBattle (
     var speedEffortValue: Int = UNKNOWN,
     var speedRank: Int = UNKNOWN,
     var criticalRank: Int = UNKNOWN,
-    var master : PokemonMasterData = PokemonMasterData()
+    var individual : IndividualPBAPokemon = IndividualPBAPokemon()
     ){
+
+    var trend: RankingResponse by Delegates.notNull()
 
     companion object {
         const val UNKNOWN = -1
 
-        fun create(master : PokemonMasterData): PokemonForBattle{
-            return PokemonForBattle(-1, "", "", "", Skill(), 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, master)
+        fun create(individual : IndividualPBAPokemon): PokemonForBattle{
+            return PokemonForBattle(-1, "", "", "", Skill(), 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, individual)
         }
     }
 
@@ -68,7 +73,7 @@ class PokemonForBattle (
             if(7 < sum) return 200
         }
         if(skill.jname.equals("けたぐり") || skill.jname.equals("くさむすび")){
-            val tmp = defenseSide.master.weight
+            val tmp = defenseSide.individual.master.weight
             when{
                 (tmp < 10.0) -> return  20
                 (10.1 < tmp && tmp < 25.0) -> return  40
@@ -105,7 +110,7 @@ class PokemonForBattle (
     }
 
     fun calcAttackValue(isCritical: Boolean): Int{
-        var result = master.getAttackValue(31, attackEffortValue)
+        var result = individual.master.getAttackValue(31, attackEffortValue)
         result = result.times(Characteristic.correction(characteristic, "A")).toInt()
 
         //ToDo: スロースタート
@@ -149,7 +154,7 @@ class PokemonForBattle (
     }
 
     fun calcDefenseValue(isCritical: Boolean): Int{
-        var result = master.getDefenseValue(31, defenseEffortValue)
+        var result = individual.master.getDefenseValue(31, defenseEffortValue)
         result = result.times(Characteristic.correction(characteristic, "B")).toInt()
 
         if(ability.equals("ふしぎなうろこ") && status != 0){
@@ -178,7 +183,7 @@ class PokemonForBattle (
     }
 
     fun calcSpecialAttackValue(isCritical: Boolean): Int{
-        var result = master.getSpecialAttackValue(31, specialAttackEffortValue)
+        var result = individual.master.getSpecialAttackValue(31, specialAttackEffortValue)
         result = result.times(Characteristic.correction(characteristic, "C")).toInt()
 
         if(item.equals("こだわりメガネ")){
@@ -209,7 +214,7 @@ class PokemonForBattle (
     }
 
     fun calcSpecialDefenseValue(isCritical: Boolean): Int{
-        var result = master.getSpecialDefenseValue(31, specialDefenseEffortValue)
+        var result = individual.master.getSpecialDefenseValue(31, specialDefenseEffortValue)
         result = result.times(Characteristic.correction(characteristic, "D")).toInt()
 
         if(item.equals("しんかいのウロコ")){
@@ -238,7 +243,7 @@ class PokemonForBattle (
     }
 
     fun calcSpeedValue(): Int{
-        var result = master.getSpeedValue(31, speedEffortValue)
+        var result = individual.master.getSpeedValue(31, speedEffortValue)
         result = result.times(Characteristic.correction(characteristic, "S")).toInt()
 
         if(item.equals("こだわりスカーフ")){
@@ -304,7 +309,7 @@ class PokemonForBattle (
     }
 
     fun calcTypeBonus(): Float{
-        if(skill.type == master.type1 || skill.type == master.type2){
+        if(skill.type == individual.master.type1 || skill.type == individual.master.type2){
             if(ability.equals("てきおうりょく")) return 2f else return 1.5f
         }
         return 1f

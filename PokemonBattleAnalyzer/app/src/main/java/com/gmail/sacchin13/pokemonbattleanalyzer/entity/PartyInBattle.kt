@@ -4,7 +4,7 @@ import java.util.*
 import kotlin.properties.Delegates
 
 class PartyInBattle{
-    var member: MutableList<IndividualPBAPokemon> by Delegates.notNull()
+    var member: MutableList<PokemonForBattle> by Delegates.notNull()
     var selected = 0
     val rank = arrayOf(-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6)
 
@@ -17,11 +17,14 @@ class PartyInBattle{
     var tempSpeed: Int = 0
 
     init{
-        member = ArrayList<IndividualPBAPokemon>()
+        member = ArrayList<PokemonForBattle>()
     }
 
     fun add(pokemon: IndividualPBAPokemon): Int{
-        this.member.add(pokemon)
+        val temp = PokemonForBattle()
+        temp.individual = pokemon
+
+        this.member.add(temp)
         return member.size
     }
 
@@ -54,14 +57,15 @@ class PartyInBattle{
     }
 
 
-    fun apply(){
-        if(selected < member.size){
-            member[selected].hpRatio = tempHpRatio
-//            member[selected].attackRank = tempAttack
-//            member[selected].defenseRank = tempDefense
-//            member[selected].specialAttackRank = tempSpecialAttack
-//            member[selected].specialDefenseRank = tempSpecialDefense
-//            member[selected].speedRank = tempSpeed
-        }
+    fun apply(): PokemonForBattle{
+        member[selected].status = tempStatus
+        member[selected].hpRatio = tempHpRatio
+        member[selected].attackRank = tempAttack
+        member[selected].defenseRank = tempDefense
+        member[selected].specialAttackRank = tempSpecialAttack
+        member[selected].specialDefenseRank = tempSpecialDefense
+        member[selected].speedRank = tempSpeed
+
+        return member[selected]
     }
 }

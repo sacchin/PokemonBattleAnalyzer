@@ -42,7 +42,7 @@ class EditActivity : AppCompatActivity() {
                 member1Skill1Spinner, member1Skill2Spinner, member1Skill3Spinner, member1Skill4Spinner,
                 member1H, member1A, member1B, member1C, member1D, member1S)
         addPokemonBlock(mine.member2, member2_text, member2CharSpinner, member2ItemSpinner,
-                member2Skill2Spinner, member2Skill2Spinner, member2Skill3Spinner, member2Skill4Spinner,
+                member2Skill1Spinner, member2Skill2Spinner, member2Skill3Spinner, member2Skill4Spinner,
                 member2H, member2A, member2B, member2C, member2D, member2S)
         addPokemonBlock(mine.member3, member3_text, member3CharSpinner, member3ItemSpinner,
                 member3Skill1Spinner, member3Skill2Spinner, member3Skill3Spinner, member3Skill4Spinner,
@@ -77,17 +77,17 @@ class EditActivity : AppCompatActivity() {
         itemSpinner.setSelection(itemAdapter.getPosition(pokemon.item))
         itemSpinner.onItemSelectedListener = OnItemSelectedListener(pokemon)
         skill1Spinner.adapter = skillAdapter
-        skill1Spinner.setSelection(charAdapter.getPosition(pokemon.skillNo1.jname))
+        skill1Spinner.setSelection(skillAdapter.getPosition(pokemon.skillNo1.jname))
         skill1Spinner.onItemSelectedListener = OnSkillSelectedListener(1, pokemon)
         skill2Spinner.adapter = skillAdapter
-        skill2Spinner.setSelection(charAdapter.getPosition(pokemon.skillNo2.jname))
-        skill1Spinner.onItemSelectedListener = OnSkillSelectedListener(2, pokemon)
+        skill2Spinner.setSelection(skillAdapter.getPosition(pokemon.skillNo2.jname))
+        skill2Spinner.onItemSelectedListener = OnSkillSelectedListener(2, pokemon)
         skill3Spinner.adapter = skillAdapter
-        skill3Spinner.setSelection(charAdapter.getPosition(pokemon.skillNo3.jname))
-        skill1Spinner.onItemSelectedListener = OnSkillSelectedListener(3, pokemon)
+        skill3Spinner.setSelection(skillAdapter.getPosition(pokemon.skillNo3.jname))
+        skill3Spinner.onItemSelectedListener = OnSkillSelectedListener(3, pokemon)
         skill4Spinner.adapter = skillAdapter
-        skill4Spinner.setSelection(charAdapter.getPosition(pokemon.skillNo4.jname))
-        skill1Spinner.onItemSelectedListener = OnSkillSelectedListener(4, pokemon)
+        skill4Spinner.setSelection(skillAdapter.getPosition(pokemon.skillNo4.jname))
+        skill4Spinner.onItemSelectedListener = OnSkillSelectedListener(4, pokemon)
         hEdit.inputType = InputType.TYPE_CLASS_NUMBER
         if (isEffortValue(pokemon.hpEffortValue)) hEdit.setText(pokemon.hpEffortValue.toString())
         hEdit.addTextChangedListener(OnEditText(1, pokemon))

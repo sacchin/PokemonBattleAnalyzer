@@ -43,6 +43,35 @@ object BattleCalculator {
     }
 
     object companion{
+        fun getResult(skill: Skill, mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult{
+            for(item in opponent.trend.rankingPokemonTrend.itemInfo){
+                for(tokusei in opponent.trend.rankingPokemonTrend.tokuseiInfo){
+                    for(seikaku in opponent.trend.rankingPokemonTrend.seikakuInfo){
+                        for(waza in opponent.trend.rankingPokemonTrend.wazaInfo){
+                            val rate = item.usageRate.times(tokusei.usageRate.times(seikaku.usageRate.times(waza.usageRate)))
+                            opponent.item = item.name
+                            opponent.ability = tokusei.name
+                            opponent.characteristic = seikaku.name
+
+                            val order = getAttackOrder(mine, opponent)
+
+
+                            calcDamage(order[0], order[1], field, false, false, false)
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+
+
+
+            return BattleResult()
+        }
+
         fun getAttackOrder(mine: PokemonForBattle, opponent: PokemonForBattle): Array<PokemonForBattle> {
             when {
                 mine.skill.priority < opponent.skill.priority -> return arrayOf(opponent, mine)
@@ -118,7 +147,7 @@ object BattleCalculator {
         fun calcSecondSection(firstSectionDamage: Int, attackSide: PokemonForBattle, defenseSide: PokemonForBattle): Int{
             var damage = firstSectionDamage.times(attackSide.calcTypeBonus()).toInt()
 
-            val batsugun = Type.calculateAffinity(Type.code(attackSide.skill.type), defenseSide.master)
+            val batsugun = Type.calculateAffinity(Type.code(attackSide.skill.type), defenseSide.individual.master)
             damage = damage.times(batsugun).toInt()
             if(1 < batsugun){
                 when(attackSide.skill.type){
