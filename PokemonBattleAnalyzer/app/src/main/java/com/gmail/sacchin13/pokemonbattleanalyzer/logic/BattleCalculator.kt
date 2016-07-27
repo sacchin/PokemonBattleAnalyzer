@@ -51,9 +51,9 @@ object BattleCalculator {
             }
         }
 
-        fun calcFirstSection(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, isCritical: Boolean, first: Boolean,  damaged: Boolean): Int {
+        fun calcFirstSection(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, isCritical: Boolean, first: Boolean,  damaged: Boolean): Int {
             var damage = 0
-            val skillPower = calcSkillPower(attackSide, defenseSide, first, damaged)
+            val skillPower = calcSkillPower(attackSide, defenseSide, field, first, damaged)
             var attackValue = 0
             var defenseValue = 0
             when (attackSide.skill.category) {
@@ -85,8 +85,8 @@ object BattleCalculator {
             return damage
         }
 
-        fun calcDamage(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, isCritical: Boolean, first: Boolean, damaged: Boolean) {
-            var damage = calcFirstSection(attackSide, defenseSide, isCritical, first, damaged)
+        fun calcDamage(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, isCritical: Boolean, first: Boolean, damaged: Boolean) {
+            var damage = calcFirstSection(attackSide, defenseSide, field, isCritical, first, damaged)
             var randomDamage = arrayOf(
                     damage.times(0.85).toInt(),
                     damage.times(0.86).toInt(),
@@ -149,7 +149,7 @@ object BattleCalculator {
             return damage
         }
 
-        fun calcSkillPower(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, first: Boolean, damaged: Boolean): Int{
+        fun calcSkillPower(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, first: Boolean, damaged: Boolean): Int{
             var result = attackSide.determineSkillPower(defenseSide)
             var cause = ""
             var apply = true

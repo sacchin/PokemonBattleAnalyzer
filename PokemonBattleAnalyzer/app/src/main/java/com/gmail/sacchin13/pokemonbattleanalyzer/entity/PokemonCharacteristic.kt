@@ -16,14 +16,6 @@ class PokemonCharacteristic(ranking: Int, usageRate: Double, name: String, seque
         this.sequenceNumber = sequenceNumber
     }
 
-    val revision: FloatArray
-        get(){
-            val temp = Characteristic.Code.characteristicList()
-            val t = temp.get(Characteristic.no(name))
-            return t as FloatArray
-
-        }
-
     companion object {
         val CHARACTERISTIC = arrayOf("さみしがり", "いじっぱり", "やんちゃ", "ゆうかん", "ずぶとい", "わんぱく", "のうてんき", "のんき", "ひかえめ", "おっとり", "うっかりや", "れいせい", "おだやか", "おとなしい", "しんちょう", "なまいき", "おくびょう", "せっかち", "ようき", "むじゃき", "てれや", "がんばりや", "すなお", "きまぐれ", "まじめ")
 
