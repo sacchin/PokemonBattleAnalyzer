@@ -3,7 +3,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 import java.util.*
 import kotlin.properties.Delegates
 
-class PartyInBattle{
+class PartyInBattle(val side: Int = 0) {
     var member: MutableList<PokemonForBattle> by Delegates.notNull()
     var selected = 0
     val rank = arrayOf(-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6)
@@ -21,10 +21,7 @@ class PartyInBattle{
     }
 
     fun add(pokemon: IndividualPBAPokemon): Int{
-        val temp = PokemonForBattle()
-        temp.individual = pokemon
-
-        this.member.add(temp)
+        this.member.add(PokemonForBattle.create(side, pokemon))
         return member.size
     }
 

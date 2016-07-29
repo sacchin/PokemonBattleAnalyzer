@@ -27,8 +27,8 @@ class ExpectedActivity : PGLActivity() {
 
     init {
         util = Util()
-        opponent = PartyInBattle()
-        mine = PartyInBattle()
+        opponent = PartyInBattle(1)
+        mine = PartyInBattle(0)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

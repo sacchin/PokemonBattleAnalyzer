@@ -44,6 +44,7 @@ object BattleCalculator {
 
     object companion{
         fun getResult(skill: Skill, mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult{
+            val result = BattleResult()
             for(item in opponent.trend.rankingPokemonTrend.itemInfo){
                 for(tokusei in opponent.trend.rankingPokemonTrend.tokuseiInfo){
                     for(seikaku in opponent.trend.rankingPokemonTrend.seikakuInfo){
@@ -54,9 +55,18 @@ object BattleCalculator {
                             opponent.characteristic = seikaku.name
 
                             val order = getAttackOrder(mine, opponent)
+                            var damages = calcDamage(order[0], order[1], field, false, false, false)
+                            var count = 0
+                            for(d in damages){
+                                val remain = order[1].individual.calcHp().times(100).div(order[1].hpRatio) - d
+                                if(remain < 1) count++
+                            }
+                            when(order[1].side){
+                                0 -> result.mayOccur[BattleStatus.Code.DEFEAT] = result.mayOccur[BattleStatus.Code.DEFEAT]!!.plus(rate.times(count).div(damages.size))
+                                1 -> result.mayOccur[BattleStatus.Code.WIN] = result.mayOccur[BattleStatus.Code.WIN]!!.plus(rate.times(count).div(damages.size))
+                            }
 
-
-                            calcDamage(order[0], order[1], field, false, false, false)
+                            var damages = calcDamage(order[0], order[1], field, false, false, false)
                         }
                     }
                 }
@@ -114,9 +124,9 @@ object BattleCalculator {
             return damage
         }
 
-        fun calcDamage(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, isCritical: Boolean, first: Boolean, damaged: Boolean) {
-            var damage = calcFirstSection(attackSide, defenseSide, field, isCritical, first, damaged)
-            var randomDamage = arrayOf(
+        fun calcDamage(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, isCritical: Boolean, first: Boolean, damaged: Boolean): Array<Int> {
+            val damage = calcFirstSection(attackSide, defenseSide, field, isCritical, first, damaged)
+            val randomDamage = arrayOf(
                     damage.times(0.85).toInt(),
                     damage.times(0.86).toInt(),
                     damage.times(0.87).toInt(),
@@ -138,6 +148,7 @@ object BattleCalculator {
                 randomDamage[i] = calcSecondSection(randomDamage[i], attackSide, defenseSide)
             }
 
+            return randomDamage
         }
 
 //            resultMap.put(rate, damage)
