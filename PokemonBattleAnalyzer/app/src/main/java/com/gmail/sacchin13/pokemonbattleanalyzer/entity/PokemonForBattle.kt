@@ -35,8 +35,11 @@ class PokemonForBattle(
             return PokemonForBattle(side, -1, "", "", "", Skill(), 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, individual)
         }
     }
+    fun getSkillPower(): Int {
+        if (skill.jname.equals("マグニチュード") || skill.jname.equals("トリプルキック")) {
+            return 71
+        }
 
-    fun determineSkillPower(defenseSide: PokemonForBattle): Int {
         if (skill.jname.equals("ダブルニードル") || skill.jname.equals("にどげり") || skill.jname.equals("ホネブーメラン") ||
                 skill.jname.equals("ダブルチョップ") || skill.jname.equals("ギアソーサー") || skill.jname.equals("ダブルアタック")) {
             return skill.power * 2
@@ -50,12 +53,56 @@ class PokemonForBattle(
             if (ability.equals("スキルリンク")) return skill.power * 5 else return skill.power * 3
         }
 
-        if (skill.jname.equals("しおみず")) {
-            if (defenseSide.hpRatio < 50) return skill.power * 2 else skill.power
+        if (skill.jname.equals("じたばた") || skill.jname.equals("きしかいせい")) {
+            val tmp = hpRatio.div(100f).times(48f)
+            when {
+                (0f <= tmp && tmp < 1f) -> return 200
+                (1f <= tmp && tmp < 4f) -> return 150
+                (4f <= tmp && tmp < 9f) -> return 100
+                (9f <= tmp && tmp < 16f) -> return 80
+                (16f <= tmp && tmp < 31f) -> return 40
+                (31 <= tmp && tmp <= 48f) -> return 20
+            }
         }
+
+        if(skill.jname.equals("ふんか") && skill.jname.equals("しおふき") && (hpRatio < 30)){
+            val r = hpRatio.toFloat().div(100f).times(150).toInt()
+            return if(r < 1) 1 else r
+        }
+
+        if(skill.jname.equals("アクロバット")){
+            return skill.power * 2
+        }
+
+        if(skill.jname.equals("アシストパワー")){
+            var sum = if (0 < attackRank) attackRank else 0
+            sum += if (0 < defenseRank) defenseRank else 0
+            sum += if (0 < specialAttackRank) specialAttackRank else 0
+            sum += if (0 < specialDefenseRank) specialDefenseRank else 0
+            sum += if (0 < speedRank) speedRank else 0
+            sum += if (0 < criticalRank) criticalRank else 0
+            return sum.times(20)
+        }
+
+        return skill.power
+    }
+
+    fun determineSkillPower(defenseSide: PokemonForBattle): Int {
+        val skillPower = getSkillPower()
+        //TODO れんぞくぎり,ころがる,エコーボイス,りんしょう,たつまき,かぜおこし,きりふだ,ちかい系,なげつける,ふくろだだき,ダメおし,しぜんのめぐみ,ウェザーボール、はきだす、おいうち対応
+
+        if (skill.jname.equals("たたりめ")) {
+            return if(defenseSide.status != StatusAilment.no(StatusAilment.Code.UNKNOWN)) skillPower * 2 else skillPower
+        }
+        if (skill.jname.equals("めざましビンタ")) {
+            return if(defenseSide.status == StatusAilment.no(StatusAilment.Code.SLEEP)) skillPower * 2 else skillPower
+        }
+        if (skill.jname.equals("きつけ")) {
+            return if(defenseSide.status == StatusAilment.no(StatusAilment.Code.PARALYSIS)) skillPower * 2 else skillPower
+        }
+
         if (skill.jname.equals("おしおき")) {
-            var sum = 0
-            sum += if (0 < defenseSide.attackRank) defenseSide.attackRank else 0
+            var sum = if (0 < defenseSide.attackRank) defenseSide.attackRank else 0
             sum += if (0 < defenseSide.defenseRank) defenseSide.defenseRank else 0
             sum += if (0 < defenseSide.specialAttackRank) defenseSide.specialAttackRank else 0
             sum += if (0 < defenseSide.specialDefenseRank) defenseSide.specialDefenseRank else 0
@@ -73,6 +120,17 @@ class PokemonForBattle(
             }
             if (7 < sum) return 200
         }
+        if (skill.jname.equals("ヘビーボンバー")) {
+            val tmp =  (defenseSide.individual.master.weight / individual.master.weight).times(120)
+            when {
+                (tmp <= 24) -> return 120
+                (24 < tmp && tmp <= 30) -> return 100
+                (30 < tmp && tmp <= 40) -> return 80
+                (40 < tmp && tmp <= 60) -> return 60
+                (60 < tmp) -> return 40
+            }
+        }
+
         if (skill.jname.equals("けたぐり") || skill.jname.equals("くさむすび")) {
             val tmp = defenseSide.individual.master.weight
             when {
@@ -85,57 +143,128 @@ class PokemonForBattle(
             }
         }
 
+
         if (skill.jname.equals("ジャイロボール")) {
             val tmp = (25 * defenseSide.calcSpeedValue() / calcSpeedValue()).toInt() + 1
-            if (150 < tmp) return 150 else return tmp
+            return if (150 < tmp) 150 else tmp
+        }
+
+        if (skill.jname.equals("エレキボール")) {
+            val tmp = calcSpeedValue().toDouble() / defenseSide.calcSpeedValue().toDouble()
+            when {
+                (tmp < 1) -> return 40
+                (1 <= tmp && tmp < 2) -> return 60
+                (2 <= tmp && tmp < 3) -> return 80
+                (3 <= tmp && tmp < 4) -> return 120
+                (4 <= tmp) -> return 150
+            }
         }
 
         if (skill.jname.equals("しぼりとる") || skill.jname.equals("にぎりつぶす")) {
             val tmp = (120 * defenseSide.hpRatio / 100) + 1
-            if (120 < tmp) return 120 else return tmp
+            return if (120 < tmp) 120 else tmp
         }
 
-        if (skill.jname.equals("じたばた") || skill.jname.equals("きしかいせい")) {
-            val tmp = hpRatio.div(100f).times(48f)
-            when {
-                (0f <= tmp && tmp < 1f) -> return 200
-                (1f <= tmp && tmp < 4f) -> return 150
-                (4f <= tmp && tmp < 9f) -> return 100
-                (9f <= tmp && tmp < 16f) -> return 80
-                (16f <= tmp && tmp < 31f) -> return 40
-                (31 <= tmp && tmp <= 48f) -> return 20
+
+        return skillPower
+    }
+
+    fun calcAttackValueCorrection(defenseSide: PokemonForBattle, isCritical: Boolean): Double {
+        var initValue = 4096.0
+
+        //TODO よわき, スロースタート: initValue = initValue.times(2048).div(4096).toInt()
+        //TODO プラス,マイナス,フラワーギフト,もらいび: initValue = initValue.times(6144).div(4096).toInt()
+
+        if (status != StatusAilment.no(StatusAilment.Code.UNKNOWN)) {
+            if (ability.equals("こんじょう")) {
+                initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+            } else if (status == StatusAilment.no(StatusAilment.Code.BURN)) {
+                initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
             }
         }
+        if(Type.code(skill.type) == Type.Code.FIRE && ability.equals("もうか") && (hpRatio < 30)){
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
+        if(Type.code(skill.type) == Type.Code.WATER && ability.equals("げきりゅう") && (hpRatio < 30)){
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
+        if(Type.code(skill.type) == Type.Code.GRASS && ability.equals("しんりょく") && (hpRatio < 30)){
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
+        if(Type.code(skill.type) == Type.Code.BUG && ability.equals("むしのしらせ") && (hpRatio < 30)){
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
 
-        return skill.power
+        if (ability.equals("ヨガパワー") || ability.equals("ちからもち")) {
+            initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
+        }
+
+        if (item.equals("こだわりハチマキ")) {
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
+
+        if((Type.code(skill.type) == Type.Code.FIRE || Type.code(skill.type) == Type.Code.ICE) && defenseSide.ability.equals("あついしぼう")){
+            initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+        }
+
+        if(item.equals("でんきだま")) {
+            initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
+        }
+
+        if (item.equals("ふといホネ")) {
+            initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
+        }
+
+        return initValue
+    }
+
+    fun calcSpecialAttackValueCorrection(defenseSide: PokemonForBattle, isCritical: Boolean): Double {
+        var initValue = 4096.0
+
+        //TODO よわき, スロースタート: initValue = initValue.times(2048).div(4096).toInt()
+        //TODO もらいび,サンパワー,プラス,マイナス,フラワーギフト: initValue = initValue.times(6144).div(4096).toInt()
+
+        if(Type.code(skill.type) == Type.Code.FIRE && ability.equals("もうか") && (hpRatio < 30)){
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
+        if(Type.code(skill.type) == Type.Code.WATER && ability.equals("げきりゅう") && (hpRatio < 30)){
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
+        if(Type.code(skill.type) == Type.Code.GRASS && ability.equals("しんりょく") && (hpRatio < 30)){
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
+        if(Type.code(skill.type) == Type.Code.BUG && ability.equals("むしのしらせ") && (hpRatio < 30)){
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
+
+        if (ability.equals("ヨガパワー") || ability.equals("ちからもち")) {
+            initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
+        }
+
+        if((Type.code(skill.type) == Type.Code.FIRE || Type.code(skill.type) == Type.Code.ICE) && defenseSide.ability.equals("あついしぼう")){
+            initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+        }
+
+        if (item.equals("しんかいのキバ")) {
+            initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
+        }
+        if (ability.equals("こころのしずく")) {
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
+        if (item.equals("こだわりメガネ")) {
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
+
+        return initValue
     }
 
     fun calcAttackValue(isCritical: Boolean): Int {
         var result = individual.master.getAttackValue(31, attackEffortValue)
         result = result.times(Characteristic.correction(characteristic, "A")).toInt()
 
-        //ToDo: スロースタート
-        if (ability.equals("ヨガパワー") || ability.equals("ちからもち")) {
-            result = result.times(2)
-        }
-        if (item.equals("こだわりハチマキ")) {
-            result = result.times(1.5).toInt()
-        }
-        if (item.equals("ふといホネ")) {
-            result = result.times(2).toInt()
-        }
-        if (status != StatusAilment.no(StatusAilment.Code.UNKNOWN)) {
-            if (ability.equals("こんじょう")) {
-                result = result.times(1.5).toInt()
-            } else if (status == StatusAilment.no(StatusAilment.Code.BURN)) {
-                result = result.times(0.5).toInt()
-            }
-        }
-
         if (ability.equals("はりきり")) {
             result = result.times(1.5).toInt()
         }
-        //ToDo: サンパワー、フラワーギフト、プラスマイナス対応
 
         when (attackRank) {
             -6 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(3).div(9).toInt()
@@ -187,15 +316,6 @@ class PokemonForBattle(
         var result = individual.master.getSpecialAttackValue(31, specialAttackEffortValue)
         result = result.times(Characteristic.correction(characteristic, "C")).toInt()
 
-        if (item.equals("こだわりメガネ")) {
-            result = result.times(1.5).toInt()
-        }
-        if (item.equals("しんかいのキバ")) {
-            result = result.times(2).toInt()
-        }
-        if (ability.equals("こころのしずく")) {
-            result = result.times(1.5).toInt()
-        }
 
         when (specialAttackRank) {
             -6 -> return if (isCritical) result else result.times(3).div(9).toInt()

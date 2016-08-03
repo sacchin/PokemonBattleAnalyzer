@@ -11,6 +11,7 @@ import android.widget.SeekBar
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.BattleField
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.BattleStatus
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PartyInBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
@@ -44,7 +45,12 @@ class ExpectedActivity : PGLActivity() {
         val selectedMine = mine.apply()
 
         //技1の場合
-        BattleCalculator.companion.getResult(selectedMine.individual.skillNo1, selectedMine, selectedOpponent, BattleField())
+        val caseOfSkill1 = BattleCalculator.companion.getResult(selectedMine.individual.skillNo1, selectedMine, selectedOpponent, BattleField())
+        Log.v(BattleStatus.name(BattleStatus.Code.WIN), caseOfSkill1.mayOccur[BattleStatus.Code.WIN].toString())
+        Log.v(BattleStatus.name(BattleStatus.Code.DEFEAT), caseOfSkill1.mayOccur[BattleStatus.Code.DEFEAT].toString())
+        Log.v(BattleStatus.name(BattleStatus.Code.REVERSE), caseOfSkill1.mayOccur[BattleStatus.Code.REVERSE].toString())
+        Log.v(BattleStatus.name(BattleStatus.Code.OWN_HEAD), caseOfSkill1.mayOccur[BattleStatus.Code.OWN_HEAD].toString())
+
         //技2の場合
         //技3の場合
         //技4の場合

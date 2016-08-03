@@ -7,51 +7,43 @@ object BattleStatus {
     }
 
     fun convertNameToTypeCode(statusName: String): Code {
-        return if ("やけど".equals(statusName)) Code.BURN
-        else if ("こおり".equals(statusName)) Code.FREEZE
-         else if ("まひ".equals(statusName)) Code.PARALYSIS
-         else if ("どく".equals(statusName)) Code.POISON
-         else if ("もうどく".equals(statusName)) Code.BADPOISON
-         else if ("ねむり".equals(statusName)) Code.SLEEP
-        else if ("ひんし".equals(statusName)) Code.FAINTING
+        return if ("先勝".equals(statusName)) Code.WIN
+        else if ("後負".equals(statusName)) Code.DEFEAT
+         else if ("後勝".equals(statusName)) Code.REVERSE
+         else if ("先負".equals(statusName)) Code.OWN_HEAD
+         else if ("引分".equals(statusName)) Code.DRAW
          else Code.UNKNOWN
     }
 
     fun name(status: Code): String {
         when (status) {
-            Code.BURN -> return "やけど"
-            Code.FREEZE -> return "こおり"
-            Code.PARALYSIS -> return "まひ"
-            Code.POISON -> return "どく"
-            Code.BADPOISON -> return "もうどく"
-            Code.SLEEP -> return "ねむり"
-            Code.FAINTING -> return "ひんし"
+            Code.WIN -> return "先勝"
+            Code.DEFEAT -> return "後負"
+            Code.REVERSE -> return "後勝"
+            Code.OWN_HEAD -> return "先負"
+            Code.DRAW -> return "引分"
             else -> return "UNKNOWN"
         }
     }
 
     fun no(status: Code): Int {
         when (status) {
-            Code.BURN -> return 0
-            Code.FREEZE -> return 1
-            Code.PARALYSIS -> return 2
-            Code.POISON -> return 3
-            Code.BADPOISON -> return 4
-            Code.SLEEP -> return 5
-            Code.FAINTING -> return 6
+            Code.WIN -> return 0
+            Code.DEFEAT -> return 1
+            Code.REVERSE -> return 2
+            Code.OWN_HEAD -> return 3
+            Code.DRAW -> return 4
             else -> return -1
         }
     }
 
     fun code(type: Int): Code {
         when (type) {
-            0 -> return Code.BURN
-            1 -> return Code.FREEZE
-            2 -> return Code.PARALYSIS
-            3 -> return Code.POISON
-            4 -> return Code.BADPOISON
-            5 -> return Code.SLEEP
-            6 -> return Code.FAINTING
+            0 -> return Code.WIN
+            1 -> return Code.DEFEAT
+            2 -> return Code.REVERSE
+            3 -> return Code.OWN_HEAD
+            4 -> return Code.DRAW
             else -> return Code.UNKNOWN
         }
     }
