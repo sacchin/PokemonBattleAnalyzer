@@ -27,6 +27,7 @@ class PokemonForBattle(
 ) {
 
     var trend: RankingResponse by Delegates.notNull()
+    var field: MutableList<BattleField.Field> = mutableListOf()
 
     companion object {
         const val UNKNOWN = -1
@@ -35,6 +36,11 @@ class PokemonForBattle(
             return PokemonForBattle(side, -1, "", "", "", Skill(), 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, individual)
         }
     }
+
+    fun add(item: BattleField.Field){
+        field.add(item)
+    }
+
     fun getSkillPower(): Int {
         if (skill.jname.equals("マグニチュード") || skill.jname.equals("トリプルキック")) {
             return 71
@@ -169,7 +175,7 @@ class PokemonForBattle(
         return skillPower
     }
 
-    fun calcAttackValueCorrection(defenseSide: PokemonForBattle, isCritical: Boolean): Double {
+    fun calcAttackValueCorrection(defenseSide: PokemonForBattle): Double {
         var initValue = 4096.0
 
         //TODO よわき, スロースタート: initValue = initValue.times(2048).div(4096).toInt()
@@ -218,7 +224,7 @@ class PokemonForBattle(
         return initValue
     }
 
-    fun calcSpecialAttackValueCorrection(defenseSide: PokemonForBattle, isCritical: Boolean): Double {
+    fun calcSpecialAttackValueCorrection(defenseSide: PokemonForBattle): Double {
         var initValue = 4096.0
 
         //TODO よわき, スロースタート: initValue = initValue.times(2048).div(4096).toInt()
@@ -258,108 +264,135 @@ class PokemonForBattle(
         return initValue
     }
 
-    fun calcAttackValue(isCritical: Boolean): Int {
-        var result = individual.master.getAttackValue(31, attackEffortValue)
-        result = result.times(Characteristic.correction(characteristic, "A")).toInt()
+    fun calcAttackValue(): Double {
+        val result = individual.master.getAttackValue(31, attackEffortValue)
+        return result.times(Characteristic.correction(characteristic, "A")).toDouble()
+    }
 
-        if (ability.equals("はりきり")) {
-            result = result.times(1.5).toInt()
-        }
-
+    fun getAttackRankCorrection(isCritical: Boolean): Double {
         when (attackRank) {
-            -6 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(3).div(9).toInt()
-            -5 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(3).div(8).toInt()
-            -4 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(3).div(7).toInt()
-            -3 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(3).div(6).toInt()
-            -2 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(3).div(5).toInt()
-            -1 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(3).div(4).toInt()
-            1 -> return result.times(4).div(3).toInt()
-            2 -> return result.times(5).div(3).toInt()
-            3 -> return result.times(6).div(3).toInt()
-            4 -> return result.times(7).div(3).toInt()
-            5 -> return result.times(8).div(3).toInt()
-            6 -> return result.times(9).div(3).toInt()
-            else -> return result
+            -6 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(9)
+            -5 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(8)
+            -4 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(7)
+            -3 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(6)
+            -2 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(5)
+            -1 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(4)
+            1 -> return 4.toDouble().div(3)
+            2 -> return 5.toDouble().div(3)
+            3 -> return 6.toDouble().div(3)
+            4 -> return 7.toDouble().div(3)
+            5 -> return 8.toDouble().div(3)
+            6 -> return 9.toDouble().div(3)
+            else -> return 1.toDouble()
         }
     }
 
-    fun calcDefenseValue(isCritical: Boolean): Int {
-        var result = individual.master.getDefenseValue(31, defenseEffortValue)
-        result = result.times(Characteristic.correction(characteristic, "B")).toInt()
+    fun calcDefenseValue(): Double {
+        val result = individual.master.getDefenseValue(31, defenseEffortValue)
+        return result.times(Characteristic.correction(characteristic, "B")).toDouble()
+    }
 
+    fun calcDefenseValueCorrection(attackSide: PokemonForBattle): Double {
+        var initValue = 4096.0
+
+        //×6144 / 4096 四捨五入 くさのけがわ
         if (ability.equals("ふしぎなうろこ") && status != 0) {
-            result = result.times(1.5).toInt()
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
         }
-
+        if (ability.equals("ファーコート") && attackSide.skill.category == 0) {
+            initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
+        }
+        if (item.equals("しんかのきせき")) {
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
         if (ability.equals("メタルパウダー")) {
-            result = result.times(1.5).toInt()
+            initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
         }
 
+        return initValue
+    }
+
+    fun getDefenseRankCorrection(isCritical: Boolean): Double {
         when (defenseRank) {
-            -6 -> return result.times(3).div(9).toInt()
-            -5 -> return result.times(3).div(8).toInt()
-            -4 -> return result.times(3).div(7).toInt()
-            -3 -> return result.times(3).div(6).toInt()
-            -2 -> return result.times(3).div(5).toInt()
-            -1 -> return result.times(3).div(4).toInt()
-            1 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(4).div(3).toInt()
-            2 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(5).div(3).toInt()
-            3 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(6).div(3).toInt()
-            4 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(7).div(3).toInt()
-            5 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(8).div(3).toInt()
-            6 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(9).div(3).toInt()
-            else -> return result
+            -6 -> return 3.toDouble().div(9)
+            -5 -> return 3.toDouble().div(8)
+            -4 -> return 3.toDouble().div(7)
+            -3 -> return 3.toDouble().div(6)
+            -2 -> return 3.toDouble().div(5)
+            -1 -> return 3.toDouble().div(4)
+            1 -> return if (isCritical) 3.toDouble().div(3) else 4.toDouble().div(3)
+            2 -> return if (isCritical) 3.toDouble().div(3) else 5.toDouble().div(3)
+            3 -> return if (isCritical) 3.toDouble().div(3) else 6.toDouble().div(3)
+            4 -> return if (isCritical) 3.toDouble().div(3) else 7.toDouble().div(3)
+            5 -> return if (isCritical) 3.toDouble().div(3) else 8.toDouble().div(3)
+            6 -> return if (isCritical) 3.toDouble().div(3) else 9.toDouble().div(3)
+            else -> return 1.toDouble()
         }
     }
 
-    fun calcSpecialAttackValue(isCritical: Boolean): Int {
-        var result = individual.master.getSpecialAttackValue(31, specialAttackEffortValue)
-        result = result.times(Characteristic.correction(characteristic, "C")).toInt()
+    fun calcSpecialAttackValue(): Double {
+        val result = individual.master.getSpecialAttackValue(31, specialAttackEffortValue)
+        return result.times(Characteristic.correction(characteristic, "C")).toDouble()
+    }
 
-
+    fun getSpecialAttackRankCorrection(isCritical: Boolean): Double {
         when (specialAttackRank) {
-            -6 -> return if (isCritical) result else result.times(3).div(9).toInt()
-            -5 -> return if (isCritical) result else result.times(3).div(8).toInt()
-            -4 -> return if (isCritical) result else result.times(3).div(7).toInt()
-            -3 -> return if (isCritical) result else result.times(3).div(6).toInt()
-            -2 -> return if (isCritical) result else result.times(3).div(5).toInt()
-            -1 -> return if (isCritical) result else result.times(3).div(4).toInt()
-            1 -> return result.times(4).div(3).toInt()
-            2 -> return result.times(5).div(3).toInt()
-            3 -> return result.times(6).div(3).toInt()
-            4 -> return result.times(7).div(3).toInt()
-            5 -> return result.times(8).div(3).toInt()
-            6 -> return result.times(9).div(3).toInt()
-            else -> return result
+            -6 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(9)
+            -5 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(8)
+            -4 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(7)
+            -3 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(6)
+            -2 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(5)
+            -1 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(4)
+            1 -> return 4.toDouble().div(3)
+            2 -> return 5.toDouble().div(3)
+            3 -> return 6.toDouble().div(3)
+            4 -> return 7.toDouble().div(3)
+            5 -> return 8.toDouble().div(3)
+            6 -> return 9.toDouble().div(3)
+            else -> return 1.toDouble()
         }
     }
 
-    fun calcSpecialDefenseValue(isCritical: Boolean): Int {
-        var result = individual.master.getSpecialDefenseValue(31, specialDefenseEffortValue)
-        result = result.times(Characteristic.correction(characteristic, "D")).toInt()
+    fun calcSpecialDefenseValue(): Double {
+        val result = individual.master.getSpecialDefenseValue(31, specialDefenseEffortValue)
+        return result.times(Characteristic.correction(characteristic, "D")).toDouble()
+    }
 
-        if (item.equals("しんかいのウロコ")) {
-            result = result.times(2).toInt()
+    fun calcSpecialDefenseValueCorrection(): Double {
+        var initValue = 4096.0
+
+        //×6144 / 4096 四捨五入 フラワーギフト
+        if (item.equals("しんかのきせき")) {
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
+        if (item.equals("とつげきチョッキ")) {
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
         }
         if (ability.equals("こころのしずく")) {
-            result = result.times(1.5).toInt()
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
         }
-        //ToDo: すなあらし対応
 
+        if (item.equals("しんかいのウロコ")) {
+            initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
+        }
+        return initValue
+    }
+
+    fun getSpecialDefenseRankCorrection(isCritical: Boolean): Double {
         when (specialDefenseRank) {
-            -6 -> return result.times(3).div(9).toInt()
-            -5 -> return result.times(3).div(8).toInt()
-            -4 -> return result.times(3).div(7).toInt()
-            -3 -> return result.times(3).div(6).toInt()
-            -2 -> return result.times(3).div(5).toInt()
-            -1 -> return result.times(3).div(4).toInt()
-            1 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(4).div(3).toInt()
-            2 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(5).div(3).toInt()
-            3 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(6).div(3).toInt()
-            4 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(7).div(3).toInt()
-            5 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(8).div(3).toInt()
-            6 -> return if (isCritical) result.times(3).div(3).toInt() else result.times(9).div(3).toInt()
-            else -> return result
+            -6 -> return 3.toDouble().div(9)
+            -5 -> return 3.toDouble().div(8)
+            -4 -> return 3.toDouble().div(7)
+            -3 -> return 3.toDouble().div(6)
+            -2 -> return 3.toDouble().div(5)
+            -1 -> return 3.toDouble().div(4)
+            1 -> return if (isCritical) 3.toDouble().div(3) else 4.toDouble().div(3)
+            2 -> return if (isCritical) 3.toDouble().div(3) else 5.toDouble().div(3)
+            3 -> return if (isCritical) 3.toDouble().div(3) else 6.toDouble().div(3)
+            4 -> return if (isCritical) 3.toDouble().div(3) else 7.toDouble().div(3)
+            5 -> return if (isCritical) 3.toDouble().div(3) else 8.toDouble().div(3)
+            6 -> return if (isCritical) 3.toDouble().div(3) else 9.toDouble().div(3)
+            else -> return 1.toDouble()
         }
     }
 
@@ -381,20 +414,24 @@ class PokemonForBattle(
             }
         }
 
+        return result
+    }
+
+    fun getSpeedRankCorrection(): Double {
         when (speedRank) {
-            -6 -> return result.times(3).div(9).toInt()
-            -5 -> return result.times(3).div(8).toInt()
-            -4 -> return result.times(3).div(7).toInt()
-            -3 -> return result.times(3).div(6).toInt()
-            -2 -> return result.times(3).div(5).toInt()
-            -1 -> return result.times(3).div(4).toInt()
-            1 -> return result.times(4).div(3).toInt()
-            2 -> return result.times(5).div(3).toInt()
-            3 -> return result.times(6).div(3).toInt()
-            4 -> return result.times(7).div(3).toInt()
-            5 -> return result.times(8).div(3).toInt()
-            6 -> return result.times(9).div(3).toInt()
-            else -> return result
+            -6 -> return 3.toDouble().div(9)
+            -5 -> return 3.toDouble().div(8)
+            -4 -> return 3.toDouble().div(7)
+            -3 -> return 3.toDouble().div(6)
+            -2 -> return 3.toDouble().div(5)
+            -1 -> return 3.toDouble().div(4)
+            1 -> return 4.toDouble().div(3)
+            2 -> return 5.toDouble().div(3)
+            3 -> return 6.toDouble().div(3)
+            4 -> return 7.toDouble().div(3)
+            5 -> return 8.toDouble().div(3)
+            6 -> return 9.toDouble().div(3)
+            else -> return 1.toDouble()
         }
     }
 

@@ -21,4 +21,5 @@ object BattleUtil {
         }
         return order
     }
+
 }

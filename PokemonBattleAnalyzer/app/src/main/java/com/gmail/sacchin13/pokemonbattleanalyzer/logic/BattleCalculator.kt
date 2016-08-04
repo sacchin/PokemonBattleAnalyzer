@@ -22,19 +22,6 @@ object BattleCalculator {
         FATAL
     }
 
-    fun calcDamageRate(attackSide: IndividualPBAPokemon, skill: Skill, defenseSide: IndividualPBAPokemon) {
-//        val maxDamage = defenseSide.calcDamage(attackSide, skill)
-//        var kakuitiCount = 0
-//        for (revision in damageRevesion) {
-//            val remain = defenseSide.getHPValue() - (maxDamage * revision).toInt()
-//            if (remain <= 0) {
-//                kakuitiCount++
-//            }
-//        }
-//        (attackLevel * 2 / 5 + 2) * skill.power * attackValue / (deffenceValue / 50 + 2)
-
-    }
-
     fun getRiskDegree(rate: Float): RiskDegree {
         if (rate <= 0) {
             return RiskDegree.SAFE
@@ -103,42 +90,51 @@ object BattleCalculator {
             }
         }
 
-        fun calcFirstSection(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, isCritical: Boolean, first: Boolean,  damaged: Boolean): Int {
-            var damage = 0
-            val skillPower = calcSkillPower(attackSide, defenseSide, field, first, damaged)
-            var attackValue = 0
-            var defenseValue = 0
+        fun calcDamage(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, isCritical: Boolean, first: Boolean, damaged: Boolean): Array<Int> {
+            var attackValue = 0.0
+            var attackValueCorrection = 0.0
+            var defenseValue = 0.0
+            var defenseValueCorrection = 0.0
+            var attackRankCorrection = 0.0
+            var defenseRankCorrection = 0.0
             when (attackSide.skill.category) {
                 0 -> {
-                    attackValue = attackSide.calcAttackValue(isCritical)
-                    defenseValue = defenseSide.calcDefenseValue(isCritical)
+                    attackValue = attackSide.calcAttackValue()
+                    attackValueCorrection = attackSide.calcAttackValueCorrection(defenseSide)
+                    attackRankCorrection = attackSide.getAttackRankCorrection(isCritical)
+                    defenseValue = defenseSide.calcDefenseValue()
+                    defenseValueCorrection = defenseSide.calcDefenseValueCorrection(attackSide)
+                    defenseRankCorrection = defenseSide.getDefenseRankCorrection(isCritical)
                 }
                 1 -> {
-                    attackValue = attackSide.calcSpecialAttackValue(isCritical)
-                    defenseValue = defenseSide.calcSpecialDefenseValue(isCritical)
+                    attackValue = attackSide.calcSpecialAttackValue()
+                    attackValueCorrection = attackSide.calcSpecialAttackValueCorrection(defenseSide)
+                    attackRankCorrection = attackSide.getSpecialAttackRankCorrection(isCritical)
+                    defenseValue = defenseSide.calcSpecialDefenseValue()
+                    defenseValueCorrection = defenseSide.calcSpecialDefenseValueCorrection()
+                    defenseRankCorrection = defenseSide.getDefenseRankCorrection(isCritical)
                 }
             }
 
-            damage = (22f * skillPower * attackValue.toFloat() / defenseValue / 50).toInt()
-            //Todo: if(isCritical) リフレクター
-            //ToDo: 天候補正
-            //ToDo: もらいび
+            val skillPower = calcSkillPower(attackSide, defenseSide, field, first, damaged)
 
-            damage += 2
 
-            if(isCritical){
-                if(attackSide.ability.equals("スナイパー")) damage *= 3 else damage *= 2
+            attackValue = Math.floor(attackValue.times(attackRankCorrection))
+            if (attackSide.skill.category == 0 && attackSide.ability.equals("はりきり")) {
+                attackValue = Math.ceil(attackValue.times(1.5).plus(0.5)) //五捨五超入
             }
+            attackValue = Math.ceil(attackValue.times(attackValueCorrection).div(4096.0).plus(0.5))
+            attackValue = if(attackValue < 1) 1.0 else attackValue
 
-            //ToDo: さきどり
-            //ToDo: メトロノーム
-            if(attackSide.item.equals("いのちのたま")) damage = damage.times(1.3).toInt()
+            defenseValue = Math.floor(defenseValue.times(defenseRankCorrection))
+            if (attackSide.skill.category == 1 && //ToDo: すなあらし対応
+                    (defenseSide.individual.master.type1 == Type.no(Type.Code.ROCK) || defenseSide.individual.master.type2 == Type.no(Type.Code.ROCK))) {
+                defenseValue = Math.ceil(defenseValue.times(1.5).plus(0.5)) //五捨五超入
+            }
+            defenseValue = Math.ceil(defenseValue.times(defenseValueCorrection).div(4096.0).plus(0.5))
 
-            return damage
-        }
 
-        fun calcDamage(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, isCritical: Boolean, first: Boolean, damaged: Boolean): Array<Int> {
-            val damage = calcFirstSection(attackSide, defenseSide, field, isCritical, first, damaged)
+            val damage = 8
             val randomDamage = arrayOf(
                     damage.times(0.85).toInt(),
                     damage.times(0.86).toInt(),
@@ -156,53 +152,14 @@ object BattleCalculator {
                     damage.times(0.98).toInt(),
                     damage.times(0.99).toInt(),
                     damage)
-
-            for(i in 0..randomDamage.size){
-                randomDamage[i] = calcSecondSection(randomDamage[i], attackSide, defenseSide)
-            }
+//            for(i in 0..randomDamage.size){
+//                randomDamage[i] = calcSecondSection(randomDamage[i], attackSide, defenseSide)
+//            }
 
             return randomDamage
         }
 
-//            resultMap.put(rate, damage)
-//            damage = (22f * skill.power.toFloat() * attackSide.specialAttackValue.toFloat() * aRevision[2] / specialDeffenceValue * dRevision[3] / 50 + 2).toInt()
-//            resultMap.put(rate, damage)
-
-        fun calcSecondSection(firstSectionDamage: Int, attackSide: PokemonForBattle, defenseSide: PokemonForBattle): Int{
-            var damage = firstSectionDamage.times(attackSide.calcTypeBonus()).toInt()
-
-            val batsugun = Type.calculateAffinity(Type.code(attackSide.skill.type), defenseSide.individual.master)
-            damage = damage.times(batsugun).toInt()
-            if(1 < batsugun){
-                when(attackSide.skill.type){
-                    Type.no(Type.Code.FIRE) -> if(defenseSide.item.equals("オッカのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.WATER) -> if(defenseSide.item.equals("イトケのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.ELECTRIC) -> if(defenseSide.item.equals("ソクノのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.GRASS) -> if(defenseSide.item.equals("リンドのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.ICE) -> if(defenseSide.item.equals("ヤチェのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.FIGHTING) -> if(defenseSide.item.equals("ヨプのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.POISON) -> if(defenseSide.item.equals("ビアーのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.GROUND) -> if(defenseSide.item.equals("シュカのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.FLYING) -> if(defenseSide.item.equals("バコウのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.PSYCHIC) -> if(defenseSide.item.equals("ウタンのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.BUG) -> if(defenseSide.item.equals("タンガのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.ROCK) -> if(defenseSide.item.equals("ヨロギのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.GHOST) -> if(defenseSide.item.equals("カシブのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.DRAGON) -> if(defenseSide.item.equals("ハバンのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.DARK) -> if(defenseSide.item.equals("ナモのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.STEEL) -> if(defenseSide.item.equals("リリバのみ")) damage = damage.times(0.5).toInt()
-                    Type.no(Type.Code.FAIRY) -> if(defenseSide.item.equals("ロゼルのみ")) damage = damage.times(0.5).toInt()
-                }
-                if(attackSide.item.equals("たつじんのおび")) damage = damage.times(1.2).toInt()
-                if(defenseSide.ability.equals("ハードロック")) damage = damage.times(0.75).toInt()
-            }
-            if(batsugun < 1 && attackSide.ability.equals("いろめがね")) damage = damage.times(2).toInt()
-            if(attackSide.skill.type == Type.no(Type.Code.NORMAL) && defenseSide.item.equals("ホズのみ")) damage = damage.times(0.5).toInt()
-
-            return damage
-        }
-
-        fun calcSkillPowerCorrection(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, first: Boolean, damaged: Boolean): Double{
+        fun calcSkillPowerCorrection(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, first: Boolean): Double{
             var initValue = 4096.0
 
 
@@ -376,23 +333,99 @@ object BattleCalculator {
             return initValue
         }
 
-
-
         fun calcSkillPower(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, first: Boolean, damaged: Boolean): Int{
-            var result = attackSide.determineSkillPower(defenseSide)
-
+            //first と damagedを利用して技の威力を計算するもののみ、attackSide.determineSkillPower(defenseSide)の外側で計算
+            var skillPower = attackSide.determineSkillPower(defenseSide)
             if(attackSide.skill.jname.equals("しっぺがえし") && !first){
-                result = result.times(2.0f).toInt()
+                skillPower = skillPower.times(2)
             }
-
             if(attackSide.skill.jname.equals("ゆきなだれ") || attackSide.skill.jname.equals("リベンジ") && damaged){
-                result = result.times(2.0f).toInt()
+                skillPower = skillPower.times(2)
             }
 
-            return result
+            val skillCorrection = calcSkillPowerCorrection(attackSide, defenseSide, field, first)
+            //五捨五超入
+            return Math.ceil(skillPower.toDouble().times(skillCorrection).div(4096.0).plus(0.5)).toInt()
+        }
+
+        fun calcDamageCorrection(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, isCritical: Boolean): Double{
+            var initValue = 4096.0
+
+            if(attackSide.skill.category == 0 && defenseSide.field.contains(BattleField.Field.Reflect)){
+                initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+            }
+            if(attackSide.skill.category == 1 && defenseSide.field.contains(BattleField.Field.LightScreen)){
+                initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+            }
+
+            if(defenseSide.hpRatio == 100 && defenseSide.ability.equals("マルチスケイル")){
+                initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+            }
+
+            val batsugun = Type.calculateAffinity(Type.code(attackSide.skill.type), defenseSide.individual.master)
+            if(batsugun < 1 && attackSide.ability.equals("いろめがね")) {
+                initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
+            }
+
+            if(isCritical && attackSide.ability.equals("スナイパー")) {
+                initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+            }
+
+            //Todo: フレンドガード1 initValue = Math.round(initValue.times(3072.0).div(4096.0)).toDouble()
+            //Todo: フレンドガード2 initValue = Math.round(initValue.times(2304.0).div(4096.0)).toDouble()
+
+            if(batsugun < 1 && (defenseSide.ability.equals("ハードロック") || defenseSide.ability.equals("フィルター"))){
+                initValue = Math.round(initValue.times(3072.0).div(4096.0)).toDouble()
+            }
+
+            //ToDo: メトロノーム initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble() 4096 から 819 ずつ上がる。6回目以降：8196
+
+            if(batsugun < 1 && attackSide.item.equals("たつじんのおび")) {
+                initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
+            }
+
+            if(attackSide.item.equals("いのちのたま")) {
+                initValue = Math.round(initValue.times(5324.0).div(4096.0)).toDouble()
+            }
+
+            if(1 < batsugun){
+                when(attackSide.skill.type){
+                    Type.no(Type.Code.FIRE) -> if(defenseSide.item.equals("オッカのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.WATER) -> if(defenseSide.item.equals("イトケのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.ELECTRIC) -> if(defenseSide.item.equals("ソクノのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.GRASS) -> if(defenseSide.item.equals("リンドのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.ICE) -> if(defenseSide.item.equals("ヤチェのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.FIGHTING) -> if(defenseSide.item.equals("ヨプのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.POISON) -> if(defenseSide.item.equals("ビアーのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.GROUND) -> if(defenseSide.item.equals("シュカのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.FLYING) -> if(defenseSide.item.equals("バコウのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.PSYCHIC) -> if(defenseSide.item.equals("ウタンのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.BUG) -> if(defenseSide.item.equals("タンガのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.ROCK) -> if(defenseSide.item.equals("ヨロギのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.GHOST) -> if(defenseSide.item.equals("カシブのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.DRAGON) -> if(defenseSide.item.equals("ハバンのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.DARK) -> if(defenseSide.item.equals("ナモのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.STEEL) -> if(defenseSide.item.equals("リリバのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                    Type.no(Type.Code.FAIRY) -> if(defenseSide.item.equals("ロゼルのみ")) initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                }
+            }
+            if(attackSide.skill.type == Type.no(Type.Code.NORMAL) && defenseSide.item.equals("ホズのみ")) {
+                initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+            }
+
+//            　×　8192（0x2000）　÷　4096（0x1000）　→　四捨五入
+//            　　ふみつけ（ちいさくなる）
+//            　　じしん（あなをほる）
+//            　　なみのり（ダイビング）
+//            　　ハードローラー（ちいさくなる）
+//            　　ドラゴンダイブ（ちいさくなる）
+//            　　ゴーストダイブ（ちいさくなる）
+//            　　シャドーダイブ（ちいさくなる）
+//            　　フライングプレス（ちいさくなる）
+//            　　のしかかり（ちいさくなる）：
+
+            return initValue
         }
     }
-
-
 
 }

@@ -4,9 +4,7 @@ class BattleField(
         var weather: Weather = BattleField.Weather.Unknown,
         var room: Room = BattleField.Room.Unknown,
         var terrain: Terrain = BattleField.Terrain.Unknown,
-        var field: MutableList<Field> = mutableListOf(),
-        var myField: MutableList<Field> = mutableListOf(),
-        var oppoField: MutableList<Field> = mutableListOf()
+        var field: MutableList<Field> = mutableListOf()
     ){
 
     enum class Weather {
@@ -27,14 +25,6 @@ class BattleField(
 
     fun add(item: BattleField.Field){
         field.add(item)
-    }
-
-    fun addToMine(item: BattleField.Field){
-        myField.add(item)
-    }
-
-    fun addToOpponent(item: BattleField.Field){
-        oppoField.add(item)
     }
 
 }
