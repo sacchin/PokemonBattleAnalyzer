@@ -1,6 +1,6 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import kotlin.properties.Delegates
 
 class PokemonForBattle(
@@ -26,7 +26,7 @@ class PokemonForBattle(
         var individual: IndividualPBAPokemon = IndividualPBAPokemon()
 ) {
 
-    var trend: RankingResponse by Delegates.notNull()
+    var trend: TrendForBattle by Delegates.notNull()
     var field: MutableList<BattleField.Field> = mutableListOf()
 
     companion object {

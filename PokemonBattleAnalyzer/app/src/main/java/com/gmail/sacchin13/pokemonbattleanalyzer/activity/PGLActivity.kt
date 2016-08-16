@@ -5,17 +5,17 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.http.PokemonTrendDownloader
 import kotlin.properties.Delegates
 
-open class PGLActivity: AppCompatActivity() {
+open class PGLActivity : AppCompatActivity() {
     var databaseHelper: DatabaseHelper by Delegates.notNull()
     var opponentParty: Party by Delegates.notNull()
     var myParty: Party by Delegates.notNull()
 
-    inner class TrendListener: PokemonTrendDownloader.EventListener{
-        override  fun onFinish(result: RankingResponse, index: Int){
+    inner class TrendListener : PokemonTrendDownloader.EventListener {
+        override fun onFinish(result: TrendForBattle, index: Int) {
             setTrend(result, index)
         }
     }
@@ -39,7 +39,7 @@ open class PGLActivity: AppCompatActivity() {
         myParty = databaseHelper.selectParty("mine")
         myParty.initMember()
 
-        if(downloadTrend) downloadTrend()
+        if (downloadTrend) downloadTrend()
 
         showParty()
     }
@@ -48,12 +48,12 @@ open class PGLActivity: AppCompatActivity() {
         for (i in 0..opponentParty.member.size - 1) {
             val p = opponentParty.member[i]
             val pokemonNo = p.no + "-0"
-            Log.v("downloadTrend",  "start $pokemonNo")
-            PokemonTrendDownloader(pokemonNo, i, TrendListener()).execute()
+            Log.v("downloadTrend", "start $pokemonNo")
+            PokemonTrendDownloader(pokemonNo, i, TrendListener(), databaseHelper).execute()
         }
     }
 
-//    fun getIndividualPBAPokemon(index: Int): IndividualPBAPokemon {
+    //    fun getIndividualPBAPokemon(index: Int): IndividualPBAPokemon {
 //        return party.getMember().get(index)
 //    }
 //
@@ -65,7 +65,9 @@ open class PGLActivity: AppCompatActivity() {
 //    }
 //
 //    abstract fun finishAllDownload()
-    open fun setTrend(result: RankingResponse, index: Int){}
+    open fun setTrend(result: TrendForBattle, index: Int) {
+    }
 
-    open fun showParty(){}
+    open fun showParty() {
+    }
 }

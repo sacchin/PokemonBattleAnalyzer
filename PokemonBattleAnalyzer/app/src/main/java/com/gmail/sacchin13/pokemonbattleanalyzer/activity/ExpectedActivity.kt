@@ -13,7 +13,7 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.entity.BattleField
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.BattleStatus
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PartyInBattle
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
 import kotlinx.android.synthetic.main.activity_expected.*
 import kotlin.properties.Delegates
@@ -43,7 +43,8 @@ class ExpectedActivity : PGLActivity() {
         val selectedMine = mine.apply()
 
         //技1の場合
-        val caseOfSkill1 = BattleCalculator.companion.getResult(selectedMine.individual.skillNo1, selectedMine, selectedOpponent, BattleField())
+        selectedMine.skill = selectedMine.individual.skillNo1
+        val caseOfSkill1 = BattleCalculator.companion.getResult(selectedMine, selectedOpponent, BattleField())
         Log.v(BattleStatus.name(BattleStatus.Code.WIN), caseOfSkill1.mayOccur[BattleStatus.Code.WIN].toString())
         Log.v(BattleStatus.name(BattleStatus.Code.DEFEAT), caseOfSkill1.mayOccur[BattleStatus.Code.DEFEAT].toString())
         Log.v(BattleStatus.name(BattleStatus.Code.REVERSE), caseOfSkill1.mayOccur[BattleStatus.Code.REVERSE].toString())
@@ -70,11 +71,8 @@ class ExpectedActivity : PGLActivity() {
         }
     }
 
-    override fun setTrend(result: RankingResponse, index: Int) {
+    override fun setTrend(result: TrendForBattle, index: Int) {
         opponent.member[index].trend = result
-        Log.v("setTrend", result.statusCode)
-        Log.v("setTrend", result.beforePokemonId)
-        Log.v("setTrend", result.nextPokemonId)
     }
 
     fun initView(intent: Intent) {

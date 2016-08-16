@@ -16,20 +16,29 @@ public open class Skill(
         public open var pp: Int = -1,
         public open var priority: Int = 0,
         public open var contact: Boolean = false,
-        public open var protectable: Boolean = false
-):RealmObject() {
+        public open var protectable: Boolean = false,
+        public open var aliment: Int = -1,
+        public open var alimentRate: Double = 0.0,
+        public open var myRankUp: Int = -1,
+        public open var myRankUpRate: Double = 0.0,
+        public open var myRankUpValue: Int = 0,
+        public open var oppoRankUp: Int = -1,
+        public open var oppoRankUpRate: Double = 0.0,
+        public open var oppoRankUpValue: Int = 0
 
-    object companion{
-        fun skillNameList(list: MutableList<Skill?>): MutableList<String>{
+) : RealmObject() {
+
+    object companion {
+        fun skillNameList(list: MutableList<Skill?>): MutableList<String> {
             val result = ArrayList<String>()
-            for(temp in list){
+            for (temp in list) {
                 result.add(temp!!.jname)
             }
             return result
         }
     }
 
-    override fun toString(): String{
+    override fun toString(): String {
         return "${no},${jname},${ename},${type},${power},${accuracy},${category},${pp},${priority},${contact},${protectable}"
     }
 }

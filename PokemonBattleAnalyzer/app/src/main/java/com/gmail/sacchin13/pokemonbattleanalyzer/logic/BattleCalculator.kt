@@ -33,67 +33,91 @@ object BattleCalculator {
     }
 
     object companion {
-        fun getResult(skill: Skill, mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
+        fun getResult(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
             val result = BattleResult()
-            for (item in opponent.trend.rankingPokemonTrend.itemInfo) {
-                for (tokusei in opponent.trend.rankingPokemonTrend.tokuseiInfo) {
-                    for (seikaku in opponent.trend.rankingPokemonTrend.seikakuInfo) {
-                        for (waza in opponent.trend.rankingPokemonTrend.wazaInfo) {
+            for (item in opponent.trend.itemInfo) {
+                for (tokusei in opponent.trend.tokuseiInfo) {
+                    for (seikaku in opponent.trend.seikakuInfo) {
+                        for (waza in opponent.trend.wazaInfo) {
                             val rate = item.usageRate.times(tokusei.usageRate.times(seikaku.usageRate.times(waza.usageRate)))
                             opponent.item = item.name
                             opponent.ability = tokusei.name
                             opponent.characteristic = seikaku.name
+                            opponent.skill = waza.skill
 
-                            val order = getAttackOrder(mine, opponent)
-                            val first = order[0]
-                            val second = order[1]
-
-                            val damages1 = calcDamage(first, second, field, false, false, false)
-                            for (d1 in damages1) {
-                                val remain1 = second.individual.calcHp().times(second.hpRatio).div(100).minus(d1)
-                                if (remain1 < 1) {
-                                    when (second.side) {
-                                        PartyInBattle.MY_SIDE -> {
-                                            result.mayOccur[BattleStatus.Code.DEFEAT] =
-                                                    result.mayOccur[BattleStatus.Code.DEFEAT]!!.plus(rate.div(damages1.size))
-                                        }
-                                        PartyInBattle.OPPONENT_SIDE -> {
-                                            result.mayOccur[BattleStatus.Code.WIN] =
-                                                    result.mayOccur[BattleStatus.Code.WIN]!!.plus(rate.div(damages1.size))
-                                        }
-                                    }
-                                } else {
-
-                                    val damages2 = calcDamage(second, first, field, false, false, false)
-                                    for (d2 in damages2) {
-                                        val remain2 = first.individual.calcHp().times(first.hpRatio).div(100).minus(d2)
-                                        if (remain2 < 1) {
-                                            when (first.side) {
-                                                0 -> result.mayOccur[BattleStatus.Code.OWN_HEAD] = result.mayOccur[BattleStatus.Code.OWN_HEAD]!!.plus(rate.div(damages2.size))
-                                                1 -> result.mayOccur[BattleStatus.Code.REVERSE] = result.mayOccur[BattleStatus.Code.REVERSE]!!.plus(rate.div(damages2.size))
-                                            }
-
-                                        }
-                                    }
-
-
-                                }
-                            }
-
-
+                            val (first, second) = getAttackOrder(mine, opponent)
+                            simulateTurn(rate, first, second, field)
                         }
                     }
                 }
             }
-
             return result
         }
 
-        fun getAttackOrder(mine: PokemonForBattle, opponent: PokemonForBattle): Array<PokemonForBattle> {
+        fun simulateTurn(baseRate: Float, baseFirst: PokemonForBattle, baseSecond: PokemonForBattle, field: BattleField): BattleResult {
+            val result = BattleResult()
+
+            val firstAttackSuccessRate = baseRate.times(baseFirst.skill.accuracy).div(100.0)
+            val firstAttackFailRate = baseRate.times(100.minus(baseFirst.skill.accuracy)).div(100.0)
+            val firstCriticalRate = baseFirst.calcCriticalRate()
+
+            //技が成功したかつ急所にあたった場合
+            val damages1 = calcDamage(baseFirst, baseSecond, field, true, true, false)
+            for (d1 in damages1) {
+                val remain1 = baseSecond.individual.calcHp().times(baseSecond.hpRatio).div(100).minus(d1)
+                if (remain1 < 1) {
+                    when (baseSecond.side) {
+                        PartyInBattle.MY_SIDE -> {
+                            result.mayOccur[BattleStatus.Code.DEFEAT] =
+                                    result.mayOccur[BattleStatus.Code.DEFEAT]!!.plus(firstAttackSuccessRate.times(firstCriticalRate).div(damages1.size))
+                        }
+                        PartyInBattle.OPPONENT_SIDE -> {
+                            result.mayOccur[BattleStatus.Code.WIN] =
+                                    result.mayOccur[BattleStatus.Code.WIN]!!.plus(firstAttackSuccessRate.times(firstCriticalRate).div(damages1.size))
+                        }
+                    }
+                } else {
+                    val secondAttackSuccessRate = baseRate.times(baseSecond.skill.accuracy).div(100.0)
+                    val secondAttackFailRate = baseRate.times(100.minus(baseSecond.skill.accuracy)).div(100.0)
+                    val secondCriticalRate = baseSecond.calcCriticalRate()
+
+                    baseSecond.hpRatio = baseSecond.individual.calcHp().times(remain1).div(100).toInt()
+                    if (baseFirst.skill.aliment.equals(StatusAilment.no(StatusAilment.Code.UNKNOWN))) {
+
+                        val damages2 = calcDamage(baseSecond, baseFirst, field, false, false, false)
+                        for (d2 in damages2) {
+                            val remain2 = baseFirst.individual.calcHp().times(baseFirst.hpRatio).div(100).minus(d2)
+                            if (remain2 < 1) {
+                                when (baseFirst.side) {
+                                    0 -> result.mayOccur[BattleStatus.Code.OWN_HEAD] = result.mayOccur[BattleStatus.Code.OWN_HEAD]!!.plus(rate.div(damages2.size))
+                                    1 -> result.mayOccur[BattleStatus.Code.REVERSE] = result.mayOccur[BattleStatus.Code.REVERSE]!!.plus(rate.div(damages2.size))
+                                }
+
+                            }
+                        }
+
+                    } else {
+
+                    }
+
+
+                }
+            }
+        }
+
+        fun doBattle() {
+
+        }
+
+        fun getAttackOrder(mine: PokemonForBattle, opponent: PokemonForBattle): Pair<PokemonForBattle, PokemonForBattle> {
             when {
-                mine.skill.priority < opponent.skill.priority -> return arrayOf(opponent, mine)
-                mine.skill.priority > opponent.skill.priority -> return arrayOf(mine, opponent)
-                else -> if (opponent.calcSpeedValue() < mine.calcSpeedValue()) return arrayOf(mine, opponent) else return arrayOf(opponent, mine)
+                mine.skill.priority < opponent.skill.priority -> return Pair(opponent, mine)
+                mine.skill.priority > opponent.skill.priority -> return Pair(mine, opponent)
+                else -> {
+                    val mineSpeed = mine.calcSpeedValue().times(mine.getSpeedRankCorrection())
+                    val oppoSpeed = opponent.calcSpeedValue().times(opponent.getSpeedRankCorrection())
+                    if (oppoSpeed < mineSpeed) return Pair(mine, opponent) else return Pair(opponent, mine)
+                }
             }
         }
 
@@ -120,7 +144,7 @@ object BattleCalculator {
                     attackRankCorrection = attackSide.getSpecialAttackRankCorrection(isCritical)
                     defenseValue = defenseSide.calcSpecialDefenseValue()
                     defenseValueCorrection = defenseSide.calcSpecialDefenseValueCorrection()
-                    defenseRankCorrection = defenseSide.getDefenseRankCorrection(isCritical)
+                    defenseRankCorrection = defenseSide.getSpecialDefenseRankCorrection(isCritical)
                 }
             }
 
