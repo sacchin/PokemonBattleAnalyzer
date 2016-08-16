@@ -29,23 +29,23 @@ object Type {
     fun code(typeName: String): Code {
         return if ("ノーマル".equals(typeName)) Code.NORMAL
         else if ("ほのお".equals(typeName)) Code.FIRE
-         else if ("みず".equals(typeName)) Code.WATER
-         else if ("でんき".equals(typeName)) Code.ELECTRIC
-         else if ("くさ".equals(typeName)) Code.GRASS
-         else if ("こおり".equals(typeName)) Code.ICE
-         else if ("かくとう".equals(typeName)) Code.FIGHTING
-         else if ("どく".equals(typeName)) Code.POISON
-         else if ("じめん".equals(typeName)) Code.GROUND
-         else if ("ひこう".equals(typeName)) Code.FLYING
-         else if ("エスパー".equals(typeName)) Code.PSYCHIC
-         else if ("むし".equals(typeName)) Code.BUG
-         else if ("いわ".equals(typeName)) Code.ROCK
-         else if ("ゴースト".equals(typeName)) Code.GHOST
-         else if ("ドラゴン".equals(typeName)) Code.DRAGON
-         else if ("あく".equals(typeName)) Code.DARK
-         else if ("はがね".equals(typeName)) Code.STEEL
-         else if ("フェアリー".equals(typeName)) Code.FAIRY
-         else Code.UNKNOWN
+        else if ("みず".equals(typeName)) Code.WATER
+        else if ("でんき".equals(typeName)) Code.ELECTRIC
+        else if ("くさ".equals(typeName)) Code.GRASS
+        else if ("こおり".equals(typeName)) Code.ICE
+        else if ("かくとう".equals(typeName)) Code.FIGHTING
+        else if ("どく".equals(typeName)) Code.POISON
+        else if ("じめん".equals(typeName)) Code.GROUND
+        else if ("ひこう".equals(typeName)) Code.FLYING
+        else if ("エスパー".equals(typeName)) Code.PSYCHIC
+        else if ("むし".equals(typeName)) Code.BUG
+        else if ("いわ".equals(typeName)) Code.ROCK
+        else if ("ゴースト".equals(typeName)) Code.GHOST
+        else if ("ドラゴン".equals(typeName)) Code.DRAGON
+        else if ("あく".equals(typeName)) Code.DARK
+        else if ("はがね".equals(typeName)) Code.STEEL
+        else if ("フェアリー".equals(typeName)) Code.FAIRY
+        else Code.UNKNOWN
     }
 
     fun name(type: Code): String {
@@ -124,17 +124,19 @@ object Type {
         return Code.values()
     }
 
-    fun calculateAffinity(attackType: Code, p: PokemonMasterData): Float {
+    fun calculateAffinity(attackType: Code, p: PokemonMasterData): Double {
+        if (attackType.equals(Type.Code.UNKNOWN)) return -1.0
+
         val attackNo = no(attackType)
         val type1 = Type.code(p.type1)
         val type2 = Type.code(p.type2)
 
         if (type1 != Code.UNKNOWN && type2 == Code.UNKNOWN) {
-            return AFFINITY_TABLE[attackNo][p.type1]
+            return AFFINITY_TABLE[attackNo][p.type1].toDouble()
         } else if (type1 == Code.UNKNOWN && type2 != Code.UNKNOWN) {
-            return AFFINITY_TABLE[attackNo][p.type2]
+            return AFFINITY_TABLE[attackNo][p.type2].toDouble()
         } else {
-            return AFFINITY_TABLE[attackNo][p.type1] * AFFINITY_TABLE[attackNo][p.type2]
+            return AFFINITY_TABLE[attackNo][p.type1].times(AFFINITY_TABLE[attackNo][p.type2]).toDouble()
         }
     }
 }

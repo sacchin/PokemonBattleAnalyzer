@@ -1,21 +1,11 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Characteristic
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Type
-import org.junit.Test as Test
-
 import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class PokemonTest {
-    @Test
-    @Throws(Exception::class)
-    fun testConvertCharacteristicNameToNo() {
-        assertEquals(Characteristic.SAMISIGARI, Characteristic.no("さみしがり"))
-        assertEquals(Characteristic.IJIPPARI, Characteristic.no("いじっぱり"))
-        assertEquals(-1, Characteristic.no("かわいい"))
-    }
-
 
     @Test
     fun testGetHPValue() {
@@ -70,7 +60,7 @@ class PokemonTest {
     @Test
     fun testGetSpeedValue() {
         val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
-                "かいりきバサミ", "いかく", "ちからずく",Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
+                "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
         assertEquals(102, kucheat.getSpeedValue(31, 252))
         assertEquals(86, kucheat.getSpeedValue(0, 252))
         assertEquals(70, kucheat.getSpeedValue(31, 0))

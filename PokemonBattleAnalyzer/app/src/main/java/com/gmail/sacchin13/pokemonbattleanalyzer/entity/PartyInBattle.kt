@@ -4,9 +4,14 @@ import java.util.*
 import kotlin.properties.Delegates
 
 class PartyInBattle(val side: Int = 0) {
+    companion object {
+        val MY_SIDE = 0
+        val OPPONENT_SIDE = 1
+    }
+
     var member: MutableList<PokemonForBattle> by Delegates.notNull()
     var selected = 0
-    val rank = arrayOf(-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6)
+    val rank = arrayOf(-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6)
 
     var tempStatus: Int = 0
     var tempHpRatio: Int = 0
@@ -16,45 +21,45 @@ class PartyInBattle(val side: Int = 0) {
     var tempSpecialDefense: Int = 0
     var tempSpeed: Int = 0
 
-    init{
+    init {
         member = ArrayList<PokemonForBattle>()
     }
 
-    fun add(pokemon: IndividualPBAPokemon): Int{
+    fun add(pokemon: IndividualPBAPokemon): Int {
         this.member.add(PokemonForBattle.create(side, pokemon))
         return member.size
     }
 
-    fun setHPRatio(ratio: Int){
+    fun setHPRatio(ratio: Int) {
         tempHpRatio = ratio
     }
 
-    fun setStatus(position: Int){
+    fun setStatus(position: Int) {
         tempStatus = position
     }
 
-    fun setAttackRank(position: Int){
+    fun setAttackRank(position: Int) {
         tempAttack = rank[position]
     }
 
-    fun setDefenseRank(position: Int){
+    fun setDefenseRank(position: Int) {
         tempDefense = rank[position]
     }
 
-    fun setSpecialAttackRank(position: Int){
+    fun setSpecialAttackRank(position: Int) {
         tempSpecialAttack = rank[position]
     }
 
-    fun setSpecialDefenseRank(position: Int){
+    fun setSpecialDefenseRank(position: Int) {
         tempSpecialDefense = rank[position]
     }
 
-    fun setSpeedRank(position: Int){
+    fun setSpeedRank(position: Int) {
         tempSpeed = rank[position]
     }
 
 
-    fun apply(): PokemonForBattle{
+    fun apply(): PokemonForBattle {
         member[selected].status = tempStatus
         member[selected].hpRatio = tempHpRatio
         member[selected].attackRank = tempAttack

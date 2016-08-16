@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
-
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.BattleField
@@ -17,7 +16,6 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PartyInBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
 import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
 import kotlinx.android.synthetic.main.activity_expected.*
-import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlin.properties.Delegates
 
 class ExpectedActivity : PGLActivity() {
@@ -28,8 +26,8 @@ class ExpectedActivity : PGLActivity() {
 
     init {
         util = Util()
-        opponent = PartyInBattle(1)
-        mine = PartyInBattle(0)
+        opponent = PartyInBattle(PartyInBattle.OPPONENT_SIDE)
+        mine = PartyInBattle(PartyInBattle.MY_SIDE)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +38,7 @@ class ExpectedActivity : PGLActivity() {
         initView(intent)
     }
 
-    fun calc (){
+    fun calc() {
         val selectedOpponent = opponent.apply()
         val selectedMine = mine.apply()
 
@@ -60,8 +58,8 @@ class ExpectedActivity : PGLActivity() {
     }
 
 
-    fun get(index: Int): IndividualPBAPokemon{
-        when(index){
+    fun get(index: Int): IndividualPBAPokemon {
+        when (index) {
             0 -> return myParty.member1
             1 -> return myParty.member2
             2 -> return myParty.member3
@@ -72,20 +70,20 @@ class ExpectedActivity : PGLActivity() {
         }
     }
 
-    override fun setTrend(result: RankingResponse, index: Int){
+    override fun setTrend(result: RankingResponse, index: Int) {
         opponent.member[index].trend = result
         Log.v("setTrend", result.statusCode)
         Log.v("setTrend", result.beforePokemonId)
         Log.v("setTrend", result.nextPokemonId)
     }
 
-    fun initView(intent: Intent){
+    fun initView(intent: Intent) {
         mine.add(get(intent.extras.getInt("member1", 0)))
         mine.add(get(intent.extras.getInt("member2", 0)))
         mine.add(get(intent.extras.getInt("member3", 0)))
 
         val myAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
-        for(temp in mine.member){
+        for (temp in mine.member) {
             myAdapter.add(temp.individual.master.jname)
         }
         myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -156,7 +154,7 @@ class ExpectedActivity : PGLActivity() {
         opponentSSpinner.setSelection(6)
         opponentSSpinner.onItemSelectedListener = OnRankSelectedListener(mine, 4)
 
-        expected_fab.setOnClickListener{ calc() }
+        expected_fab.setOnClickListener { calc() }
     }
 
     override fun showParty() {
@@ -167,8 +165,8 @@ class ExpectedActivity : PGLActivity() {
         opponent.add(opponentParty.member5)
         opponent.add(opponentParty.member6)
 
-        val opponentAdapter = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item)
-        for(temp in opponent.member){
+        val opponentAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
+        for (temp in opponent.member) {
             opponentAdapter.add(temp.individual.master.jname)
         }
         opponentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -177,42 +175,52 @@ class ExpectedActivity : PGLActivity() {
     }
 
     inner class OnPokemonSelectedListener(val isMine: Boolean) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) { }
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            if(isMine){
+            if (isMine) {
                 mine.selected = position
                 myHPBar.progress = 100
                 myPokemonImage.setImageBitmap(util.createImage(myParty.member[position], 120f, resources))
                 Log.v("myPokemonSpinner", "${position} click!")
-            }else{
+            } else {
                 opponent.selected = position
             }
         }
     }
 
     inner class OnStatusSelectedListener(val party: PartyInBattle) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {}
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             party.setStatus(position)
         }
     }
 
     inner class OnRankSelectedListener(val party: PartyInBattle, val which: Int) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {}
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            when(which){
-                0 ->  party.setAttackRank(position)
-                1 ->  party.setDefenseRank(position)
-                2 ->  party.setSpecialAttackRank(position)
-                3 ->  party.setSpecialDefenseRank(position)
-                4 ->  party.setSpeedRank(position)
+            when (which) {
+                0 -> party.setAttackRank(position)
+                1 -> party.setDefenseRank(position)
+                2 -> party.setSpecialAttackRank(position)
+                3 -> party.setSpecialDefenseRank(position)
+                4 -> party.setSpeedRank(position)
             }
         }
     }
 
     inner class OnHPChangeListener(val party: PartyInBattle) : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
-        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+        }
+
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
             party.setHPRatio(seekBar!!.progress)
         }
