@@ -9,8 +9,8 @@ class CharacteristicTest {
     @Test
     @Throws(Exception::class)
     fun testConvertCharacteristicNameToNo() {
-        assertEquals(Characteristic.SAMISIGARI, Characteristic.convertCharacteristicNameToNo("さみしがり"));
-        assertEquals(Characteristic.IJIPPARI, Characteristic.convertCharacteristicNameToNo("いじっぱり"));
-        assertEquals(-1, Characteristic.convertCharacteristicNameToNo("かわいい"));
+        assertEquals(Characteristic.SAMISIGARI, Characteristic.no("さみしがり"));
+        assertEquals(Characteristic.IJIPPARI, Characteristic.no("いじっぱり"));
+        assertEquals(-1, Characteristic.no("かわいい"));
     }
 }

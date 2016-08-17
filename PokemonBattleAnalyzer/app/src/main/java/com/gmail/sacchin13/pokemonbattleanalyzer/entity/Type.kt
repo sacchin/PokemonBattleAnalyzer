@@ -2,8 +2,8 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
 object Type {
 
-    enum class TypeCode {
-        NORMAL, FIRE, WATER, ELECTRIC, GRASS, ICE, FIGHTING, POISON, GROUND, FLYING, PSYCHIC, BUG, ROCK, GHOST, DRAGON, DARK, STEEL, FAIRY
+    enum class Code {
+        NORMAL, FIRE, WATER, ELECTRIC, GRASS, ICE, FIGHTING, POISON, GROUND, FLYING, PSYCHIC, BUG, ROCK, GHOST, DRAGON, DARK, STEEL, FAIRY, UNKNOWN
     }
 
     var AFFINITY_TABLE = arrayOf(
@@ -26,128 +26,117 @@ object Type {
             floatArrayOf(1f, 0.5f, 0.5f, 0.5f, 1f, 2f, 1f, 1f, 1f, 1f, 1f, 1f, 2f, 1f, 1f, 1f, 0.5f, 2f),
             floatArrayOf(1f, 0.5f, 1f, 1f, 1f, 1f, 2f, 0.5f, 1f, 1f, 1f, 1f, 1f, 1f, 2f, 2f, 0.5f, 1f))
 
-    fun convertNameToTypeCode(typeName: String): TypeCode? {
-        return if ("ノーマル".equals(typeName)) TypeCode.NORMAL
-        else if ("ほのお".equals(typeName)) TypeCode.FIRE
-         else if ("みず".equals(typeName)) TypeCode.WATER
-         else if ("でんき".equals(typeName)) TypeCode.ELECTRIC
-         else if ("くさ".equals(typeName)) TypeCode.GRASS
-         else if ("こおり".equals(typeName)) TypeCode.ICE
-         else if ("かくとう".equals(typeName)) TypeCode.FIGHTING
-         else if ("どく".equals(typeName)) TypeCode.POISON
-         else if ("じめん".equals(typeName)) TypeCode.GROUND
-         else if ("ひこう".equals(typeName)) TypeCode.FLYING
-         else if ("エスパー".equals(typeName)) TypeCode.PSYCHIC
-         else if ("むし".equals(typeName)) TypeCode.BUG
-         else if ("いわ".equals(typeName)) TypeCode.ROCK
-         else if ("ゴースト".equals(typeName)) TypeCode.GHOST
-         else if ("ドラゴン".equals(typeName)) TypeCode.DRAGON
-         else if ("あく".equals(typeName)) TypeCode.DARK
-         else if ("はがね".equals(typeName)) TypeCode.STEEL
-         else if ("フェアリー".equals(typeName)) TypeCode.FAIRY
-         else null
+    fun code(typeName: String): Code {
+        return if ("ノーマル".equals(typeName)) Code.NORMAL
+        else if ("ほのお".equals(typeName)) Code.FIRE
+        else if ("みず".equals(typeName)) Code.WATER
+        else if ("でんき".equals(typeName)) Code.ELECTRIC
+        else if ("くさ".equals(typeName)) Code.GRASS
+        else if ("こおり".equals(typeName)) Code.ICE
+        else if ("かくとう".equals(typeName)) Code.FIGHTING
+        else if ("どく".equals(typeName)) Code.POISON
+        else if ("じめん".equals(typeName)) Code.GROUND
+        else if ("ひこう".equals(typeName)) Code.FLYING
+        else if ("エスパー".equals(typeName)) Code.PSYCHIC
+        else if ("むし".equals(typeName)) Code.BUG
+        else if ("いわ".equals(typeName)) Code.ROCK
+        else if ("ゴースト".equals(typeName)) Code.GHOST
+        else if ("ドラゴン".equals(typeName)) Code.DRAGON
+        else if ("あく".equals(typeName)) Code.DARK
+        else if ("はがね".equals(typeName)) Code.STEEL
+        else if ("フェアリー".equals(typeName)) Code.FAIRY
+        else Code.UNKNOWN
     }
 
-    fun convertTypeCodeToName(type: TypeCode?): String {
-        if (type == null) {
-            return "エラー"
-        }
+    fun name(type: Code): String {
         when (type) {
-            Type.TypeCode.NORMAL -> return "ノーマル"
-            Type.TypeCode.FIRE -> return "ほのお"
-            Type.TypeCode.WATER -> return "みず"
-            Type.TypeCode.ELECTRIC -> return "でんき"
-            Type.TypeCode.GRASS -> return "くさ"
-            Type.TypeCode.ICE -> return "こおり"
-            Type.TypeCode.FIGHTING -> return "かくとう"
-            Type.TypeCode.POISON -> return "どく"
-            Type.TypeCode.GROUND -> return "じめん"
-            Type.TypeCode.FLYING -> return "ひこう"
-            Type.TypeCode.PSYCHIC -> return "エスパー"
-            Type.TypeCode.BUG -> return "むし"
-            Type.TypeCode.ROCK -> return "いわ"
-            Type.TypeCode.GHOST -> return "ゴースト"
-            Type.TypeCode.DRAGON -> return "ドラゴン"
-            Type.TypeCode.DARK -> return "あく"
-            Type.TypeCode.STEEL -> return "はがね"
-            Type.TypeCode.FAIRY -> return "フェアリー"
-            else -> return "エラー"
+            Type.Code.NORMAL -> return "ノーマル"
+            Type.Code.FIRE -> return "ほのお"
+            Type.Code.WATER -> return "みず"
+            Type.Code.ELECTRIC -> return "でんき"
+            Type.Code.GRASS -> return "くさ"
+            Type.Code.ICE -> return "こおり"
+            Type.Code.FIGHTING -> return "かくとう"
+            Type.Code.POISON -> return "どく"
+            Type.Code.GROUND -> return "じめん"
+            Type.Code.FLYING -> return "ひこう"
+            Type.Code.PSYCHIC -> return "エスパー"
+            Type.Code.BUG -> return "むし"
+            Type.Code.ROCK -> return "いわ"
+            Type.Code.GHOST -> return "ゴースト"
+            Type.Code.DRAGON -> return "ドラゴン"
+            Type.Code.DARK -> return "あく"
+            Type.Code.STEEL -> return "はがね"
+            Type.Code.FAIRY -> return "フェアリー"
+            else -> return "UNKNOWN"
         }
     }
 
-    fun convertTypeCodeToNo(type: TypeCode?): Int {
-        if (type == null) {
-            return -1
-        }
+    fun no(type: Code): Int {
         when (type) {
-            Type.TypeCode.NORMAL -> return 0
-            Type.TypeCode.FIRE -> return 1
-            Type.TypeCode.WATER -> return 2
-            Type.TypeCode.ELECTRIC -> return 3
-            Type.TypeCode.GRASS -> return 4
-            Type.TypeCode.ICE -> return 5
-            Type.TypeCode.FIGHTING -> return 6
-            Type.TypeCode.POISON -> return 7
-            Type.TypeCode.GROUND -> return 8
-            Type.TypeCode.FLYING -> return 9
-            Type.TypeCode.PSYCHIC -> return 10
-            Type.TypeCode.BUG -> return 11
-            Type.TypeCode.ROCK -> return 12
-            Type.TypeCode.GHOST -> return 13
-            Type.TypeCode.DRAGON -> return 14
-            Type.TypeCode.DARK -> return 15
-            Type.TypeCode.STEEL -> return 16
-            Type.TypeCode.FAIRY -> return 17
+            Type.Code.NORMAL -> return 0
+            Type.Code.FIRE -> return 1
+            Type.Code.WATER -> return 2
+            Type.Code.ELECTRIC -> return 3
+            Type.Code.GRASS -> return 4
+            Type.Code.ICE -> return 5
+            Type.Code.FIGHTING -> return 6
+            Type.Code.POISON -> return 7
+            Type.Code.GROUND -> return 8
+            Type.Code.FLYING -> return 9
+            Type.Code.PSYCHIC -> return 10
+            Type.Code.BUG -> return 11
+            Type.Code.ROCK -> return 12
+            Type.Code.GHOST -> return 13
+            Type.Code.DRAGON -> return 14
+            Type.Code.DARK -> return 15
+            Type.Code.STEEL -> return 16
+            Type.Code.FAIRY -> return 17
             else -> return -1
         }
     }
 
-    fun convertNoToTypeCode(type: Int): TypeCode? {
+    fun code(type: Int): Code {
         when (type) {
-            0 -> return TypeCode.NORMAL
-            1 -> return TypeCode.FIRE
-            2 -> return TypeCode.WATER
-            3 -> return TypeCode.ELECTRIC
-            4 -> return TypeCode.GRASS
-            5 -> return TypeCode.ICE
-            6 -> return TypeCode.FIGHTING
-            7 -> return TypeCode.POISON
-            8 -> return TypeCode.GROUND
-            9 -> return TypeCode.FLYING
-            10 -> return TypeCode.PSYCHIC
-            11 -> return TypeCode.BUG
-            12 -> return TypeCode.ROCK
-            13 -> return TypeCode.GHOST
-            14 -> return TypeCode.DRAGON
-            15 -> return TypeCode.DARK
-            16 -> return TypeCode.STEEL
-            17 -> return TypeCode.FAIRY
-            else -> return null
+            0 -> return Code.NORMAL
+            1 -> return Code.FIRE
+            2 -> return Code.WATER
+            3 -> return Code.ELECTRIC
+            4 -> return Code.GRASS
+            5 -> return Code.ICE
+            6 -> return Code.FIGHTING
+            7 -> return Code.POISON
+            8 -> return Code.GROUND
+            9 -> return Code.FLYING
+            10 -> return Code.PSYCHIC
+            11 -> return Code.BUG
+            12 -> return Code.ROCK
+            13 -> return Code.GHOST
+            14 -> return Code.DRAGON
+            15 -> return Code.DARK
+            16 -> return Code.STEEL
+            17 -> return Code.FAIRY
+            else -> return Code.UNKNOWN
         }
     }
 
-    fun values(): Array<TypeCode> {
-        return TypeCode.values()
+    fun values(): Array<Code> {
+        return Code.values()
     }
 
-    fun calcurateAffinity(attackType: TypeCode?, p: Pokemon): Float {
-        if (attackType == null) {
-            return -1f
-        }
-        val attackNo = convertTypeCodeToNo(attackType)
+    fun calculateAffinity(attackType: Code, p: PokemonMasterData): Double {
+        if (attackType.equals(Type.Code.UNKNOWN)) return -1.0
 
-        if (p.type1 == null && p.type2 == null) {
-            return -1f
-        } else if (p.type1 != null && p.type2 == null) {
-            val type1No = convertTypeCodeToNo(p.type1)
-            return AFFINITY_TABLE[attackNo][type1No]
-        } else if (p.type1 == null && p.type2 != null) {
-            val type2No = convertTypeCodeToNo(p.type2)
-            return AFFINITY_TABLE[attackNo][type2No]
+        val attackNo = no(attackType)
+        val type1 = Type.code(p.type1)
+        val type2 = Type.code(p.type2)
+
+        if (type1 != Code.UNKNOWN && type2 == Code.UNKNOWN) {
+            return AFFINITY_TABLE[attackNo][p.type1].toDouble()
+        } else if (type1 == Code.UNKNOWN && type2 != Code.UNKNOWN) {
+            return AFFINITY_TABLE[attackNo][p.type2].toDouble()
         } else {
-            val type1No = convertTypeCodeToNo(p.type1)
-            val type2No = convertTypeCodeToNo(p.type2)
-            return AFFINITY_TABLE[attackNo][type1No] * AFFINITY_TABLE[attackNo][type2No]
+            return AFFINITY_TABLE[attackNo][p.type1].times(AFFINITY_TABLE[attackNo][p.type2]).toDouble()
         }
     }
 }
