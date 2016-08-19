@@ -79,12 +79,14 @@ class DatabaseHelper (context: Context){
         }
     }
 
-    fun insertSkillMasterData(id: Int, name: String, type: Int, power: Int, accuracy: Int, category: Int, pp: Int, contact: Boolean, protectable: Boolean) {
-        insertSkillMasterData(id, name, type, power, accuracy, category, pp, 0, contact, protectable)
+    fun insertSkillMasterData(id: Int, name: String, type: Int, power: Int, accuracy: Int, category: Int, pp: Int, contact: Boolean, protectable: Boolean,
+                              aliment: Int, alimentRate: Double, myRankUp: Int, myRankUpRate: Double, oppoRankUp: Int, oppoRankUpRate: Double) {
+        insertSkillMasterData(id, name, type, power, accuracy, category, pp, 0, contact, protectable, aliment, alimentRate, myRankUp, myRankUpRate, oppoRankUp, oppoRankUpRate)
     }
 
 
-    fun insertSkillMasterData(id: Int, name: String, type: Int, power: Int, accuracy: Int, category: Int, pp: Int, priority: Int, contact: Boolean, protectable: Boolean) {
+    fun insertSkillMasterData(id: Int, name: String, type: Int, power: Int, accuracy: Int, category: Int, pp: Int, priority: Int,
+                              contact: Boolean, protectable: Boolean, aliment: Int, alimentRate: Double, myRankUp: Int, myRankUpRate: Double, oppoRankUp: Int, oppoRankUpRate: Double) {
         realm.executeTransaction{
             val skill = realm.createObject(Skill::class.java)
             skill.no = id
@@ -92,12 +94,18 @@ class DatabaseHelper (context: Context){
             skill.ename = name
             skill.type = type
             skill.power = power
-            skill.accuracy = accuracy
+            skill.accuracy = accuracy.div(100.0)
             skill.category = category
             skill.pp = pp
             skill.priority = priority
             skill.contact = contact
             skill.protectable = protectable
+            skill.aliment = aliment
+            skill.alimentRate = alimentRate
+            skill.myRankUp = myRankUp
+            skill.myRankUpRate = myRankUpRate
+            skill.oppoRankUp = oppoRankUp
+            skill.oppoRankUpRate = oppoRankUpRate
         }
     }
 

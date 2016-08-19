@@ -11,7 +11,7 @@ public open class Skill(
         public open var ename: String = "unknown",
         public open var type: Int = -1,
         public open var power: Int = -1,
-        public open var accuracy: Int = -1,
+        public open var accuracy: Double = -1.0,
         public open var category: Int = -1,
         public open var pp: Int = -1,
         public open var priority: Int = 0,
@@ -21,10 +21,8 @@ public open class Skill(
         public open var alimentRate: Double = 0.0,
         public open var myRankUp: Int = -1,
         public open var myRankUpRate: Double = 0.0,
-        public open var myRankUpValue: Int = 0,
         public open var oppoRankUp: Int = -1,
-        public open var oppoRankUpRate: Double = 0.0,
-        public open var oppoRankUpValue: Int = 0
+        public open var oppoRankUpRate: Double = 0.0
 
 ) : RealmObject() {
 

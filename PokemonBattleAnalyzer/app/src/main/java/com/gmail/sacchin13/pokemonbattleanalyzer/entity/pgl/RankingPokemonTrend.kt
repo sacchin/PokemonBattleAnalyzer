@@ -117,4 +117,12 @@ data class RankingPokemonTrend(
             return null
         }
     }
+
+    fun convertToFew(){
+        wazaInfo.forEach { it.convertToFew() }
+        seikakuInfo.forEach { it.convertToFew() }
+        tokuseiInfo.forEach { it.convertToFew() }
+        itemInfo.forEach { it.convertToFew() }
+    }
+
 }

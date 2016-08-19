@@ -36,17 +36,28 @@ object BattleCalculator {
         fun getResult(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
             val result = BattleResult()
             for (item in opponent.trend.itemInfo) {
+                if(item.name == null || item.name.equals("null")) continue else println(item.name)
                 for (tokusei in opponent.trend.tokuseiInfo) {
+                    if(tokusei.name == null || tokusei.name.equals("null")) continue else println("-${tokusei.name}")
                     for (seikaku in opponent.trend.seikakuInfo) {
+                        if(seikaku.name == null || seikaku.name.equals("null")) continue else println("--${seikaku.name}")
                         for (waza in opponent.trend.wazaInfo) {
-                            val rate = item.usageRate.times(tokusei.usageRate.times(seikaku.usageRate.times(waza.usageRate)))
+                            val rate = item.usageRate.times(tokusei.usageRate.times(seikaku.usageRate.times(waza.usageRate))).toDouble()
                             opponent.item = item.name
                             opponent.ability = tokusei.name
                             opponent.characteristic = seikaku.name
                             opponent.skill = waza.skill
+                            println("---${waza.skill.jname}, ${rate}, ${item.usageRate}, ${tokusei.usageRate}, ${seikaku.usageRate}, ${waza.usageRate}")
 
                             val (first, second) = getAttackOrder(mine, opponent)
-                            simulateTurn(rate, first, second, field)
+                            println("---${first.individual.master.jname}(${first.hp()}), ${second.individual.master.jname}(${second.hp()}), ${mine.skill.jname}")
+                            val resultOfTurn = simulateTurn(rate, first, second, field)
+
+                            result.mayOccur[BattleStatus.Code.WIN] = result.mayOccur[BattleStatus.Code.WIN]!!.plus(resultOfTurn.mayOccur[BattleStatus.Code.WIN] as Double)
+                            result.mayOccur[BattleStatus.Code.DEFEAT] = result.mayOccur[BattleStatus.Code.DEFEAT]!!.plus(resultOfTurn.mayOccur[BattleStatus.Code.DEFEAT] as Double)
+                            result.mayOccur[BattleStatus.Code.REVERSE] = result.mayOccur[BattleStatus.Code.REVERSE]!!.plus(resultOfTurn.mayOccur[BattleStatus.Code.REVERSE] as Double)
+                            result.mayOccur[BattleStatus.Code.OWN_HEAD] = result.mayOccur[BattleStatus.Code.OWN_HEAD]!!.plus(resultOfTurn.mayOccur[BattleStatus.Code.OWN_HEAD] as Double)
+                            result.mayOccur[BattleStatus.Code.DRAW] = result.mayOccur[BattleStatus.Code.DRAW]!!.plus(resultOfTurn.mayOccur[BattleStatus.Code.DRAW] as Double)
                         }
                     }
                 }
@@ -54,59 +65,64 @@ object BattleCalculator {
             return result
         }
 
-        fun simulateTurn(baseRate: Float, baseFirst: PokemonForBattle, baseSecond: PokemonForBattle, field: BattleField): BattleResult {
+        fun simulateTurn(baseRate: Double, baseFirst: PokemonForBattle, baseSecond: PokemonForBattle, field: BattleField): BattleResult {
             val result = BattleResult()
 
-            val firstAttackSuccessRate = baseRate.times(baseFirst.skill.accuracy).div(100.0)
-            val firstAttackFailRate = baseRate.times(100.minus(baseFirst.skill.accuracy)).div(100.0)
-            val firstCriticalRate = baseFirst.calcCriticalRate()
+            val firstAttackSuccessRate = if(baseFirst.skill.accuracy.equals(-1)) 1.0 else baseRate.times(baseFirst.skill.accuracy)
+            val firstAttackFailRate = 1.0.minus(firstAttackSuccessRate)
 
             //技が成功したかつ急所にあたった場合
-            val damages1 = calcDamage(baseFirst, baseSecond, field, true, true, false)
+            val damages1 = calcDamage(baseFirst, baseSecond, field, baseFirst.calcCriticalRate().toDouble(), true, false)
+            println("----:${firstAttackSuccessRate}, ${damages1}")
             for (d1 in damages1) {
-                val remain1 = baseSecond.individual.calcHp().times(baseSecond.hpRatio).div(100).minus(d1)
-                if (remain1 < 1) {
+                baseSecond.updateHP(d1.key)
+                baseFirst.recoil(d1.key)
+                if (baseSecond.dying()) {
                     when (baseSecond.side) {
                         PartyInBattle.MY_SIDE -> {
                             result.mayOccur[BattleStatus.Code.DEFEAT] =
-                                    result.mayOccur[BattleStatus.Code.DEFEAT]!!.plus(firstAttackSuccessRate.times(firstCriticalRate).div(damages1.size))
+                                    result.mayOccur[BattleStatus.Code.DEFEAT]!!.plus(firstAttackSuccessRate.times(d1.value))
                         }
                         PartyInBattle.OPPONENT_SIDE -> {
                             result.mayOccur[BattleStatus.Code.WIN] =
-                                    result.mayOccur[BattleStatus.Code.WIN]!!.plus(firstAttackSuccessRate.times(firstCriticalRate).div(damages1.size))
+                                    result.mayOccur[BattleStatus.Code.WIN]!!.plus(firstAttackSuccessRate.times(d1.value))
                         }
                     }
                 } else {
-                    val secondAttackSuccessRate = baseRate.times(baseSecond.skill.accuracy).div(100.0)
-                    val secondAttackFailRate = baseRate.times(100.minus(baseSecond.skill.accuracy)).div(100.0)
-                    val secondCriticalRate = baseSecond.calcCriticalRate()
-
-                    baseSecond.hpRatio = baseSecond.individual.calcHp().times(remain1).div(100).toInt()
-                    if (baseFirst.skill.aliment.equals(StatusAilment.no(StatusAilment.Code.UNKNOWN))) {
-
-                        val damages2 = calcDamage(baseSecond, baseFirst, field, false, false, false)
-                        for (d2 in damages2) {
-                            val remain2 = baseFirst.individual.calcHp().times(baseFirst.hpRatio).div(100).minus(d2)
-                            if (remain2 < 1) {
-                                when (baseFirst.side) {
-                                    0 -> result.mayOccur[BattleStatus.Code.OWN_HEAD] = result.mayOccur[BattleStatus.Code.OWN_HEAD]!!.plus(rate.div(damages2.size))
-                                    1 -> result.mayOccur[BattleStatus.Code.REVERSE] = result.mayOccur[BattleStatus.Code.REVERSE]!!.plus(rate.div(damages2.size))
-                                }
-
-                            }
-                        }
-
-                    } else {
+                    if(baseSecond.ability.equals("")){
 
                     }
 
+                    val secondAttackSuccessRate = if(baseFirst.skill.accuracy.equals(-1)) 1.0 else firstAttackSuccessRate.times(d1.value).times(baseSecond.skill.accuracy)
+                    val secondAttackFailRate = 1.0.minus(secondAttackSuccessRate)
+                    val secondCriticalRate = baseSecond.calcCriticalRate()
 
+                    val affects = baseFirst.skillAffects()
+                    for(case in affects){
+                        val rate = case.value
+                        baseSecond.status = case.key[0]
+                        baseFirst.updateRank(case.key[1])
+                        baseSecond.updateRank(case.key[2])
+
+                        val damages2 = calcDamage(baseSecond, baseFirst, field, baseSecond.calcCriticalRate().toDouble(), false, false)
+                        println("-----:${secondAttackSuccessRate}, ${damages2}")
+                        for (d2 in damages2) {
+                            val remain2 = baseFirst.individual.calcHp().times(baseFirst.hpRatio).div(100).minus(d2.key)
+                            if (remain2 < 1) {
+                                when (baseFirst.side) {
+                                    0 -> result.mayOccur[BattleStatus.Code.OWN_HEAD] =
+                                            result.mayOccur[BattleStatus.Code.OWN_HEAD]!!.plus(secondAttackSuccessRate.times(d2.value))
+                                    1 -> result.mayOccur[BattleStatus.Code.REVERSE] =
+                                            result.mayOccur[BattleStatus.Code.REVERSE]!!.plus(secondAttackSuccessRate.times(d2.value))
+                                }
+                            }else{
+                                result.mayOccur[BattleStatus.Code.DRAW] = result.mayOccur[BattleStatus.Code.DRAW]!!.plus(secondAttackSuccessRate.times(d2.value))
+                            }
+                        }
+                    }
                 }
             }
-        }
-
-        fun doBattle() {
-
+            return result
         }
 
         fun getAttackOrder(mine: PokemonForBattle, opponent: PokemonForBattle): Pair<PokemonForBattle, PokemonForBattle> {
@@ -121,61 +137,78 @@ object BattleCalculator {
             }
         }
 
-        fun calcDamage(attackSide: PokemonForBattle, defenseSide: PokemonForBattle,
-                       field: BattleField, isCritical: Boolean, first: Boolean, damaged: Boolean): Array<Double> {
+        fun calcDamage(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField,
+                       criticalRate: Double, first: Boolean, damaged: Boolean): MutableMap<Int, Double> {
             var attackValue = 0.0
             var attackValueCorrection = 0.0
             var defenseValue = 0.0
             var defenseValueCorrection = 0.0
-            var attackRankCorrection = 0.0
-            var defenseRankCorrection = 0.0
+            var attackRankCorrectionA = 0.0
+            var defenseRankCorrectionA = 0.0
+            var attackRankCorrectionB = 0.0
+            var defenseRankCorrectionB = 0.0
             when (attackSide.skill.category) {
                 0 -> {
                     attackValue = attackSide.calcAttackValue()
                     attackValueCorrection = attackSide.calcAttackValueCorrection(defenseSide)
-                    attackRankCorrection = attackSide.getAttackRankCorrection(isCritical)
+                    attackRankCorrectionA = attackSide.getAttackRankCorrection(true)
+                    attackRankCorrectionB = attackSide.getAttackRankCorrection(false)
                     defenseValue = defenseSide.calcDefenseValue()
                     defenseValueCorrection = defenseSide.calcDefenseValueCorrection(attackSide)
-                    defenseRankCorrection = defenseSide.getDefenseRankCorrection(isCritical)
+                    defenseRankCorrectionA = defenseSide.getDefenseRankCorrection(true)
+                    defenseRankCorrectionB = defenseSide.getDefenseRankCorrection(false)
                 }
                 1 -> {
                     attackValue = attackSide.calcSpecialAttackValue()
                     attackValueCorrection = attackSide.calcSpecialAttackValueCorrection(defenseSide)
-                    attackRankCorrection = attackSide.getSpecialAttackRankCorrection(isCritical)
+                    attackRankCorrectionA = attackSide.getSpecialAttackRankCorrection(true)
+                    attackRankCorrectionB = attackSide.getSpecialAttackRankCorrection(false)
                     defenseValue = defenseSide.calcSpecialDefenseValue()
                     defenseValueCorrection = defenseSide.calcSpecialDefenseValueCorrection()
-                    defenseRankCorrection = defenseSide.getSpecialDefenseRankCorrection(isCritical)
+                    defenseRankCorrectionA = defenseSide.getSpecialDefenseRankCorrection(true)
+                    defenseRankCorrectionB = defenseSide.getSpecialDefenseRankCorrection(false)
                 }
             }
 
             val skillPower = calcSkillPower(attackSide, defenseSide, field, first, damaged)
 
+            attackValue = calcAttackValue(attackValue, attackValueCorrection, attackRankCorrectionA, attackSide)
+            defenseValue = calcDefenseValue(defenseValue, defenseValueCorrection, defenseRankCorrectionA, attackSide, defenseSide)
 
-            attackValue = Math.floor(attackValue.times(attackRankCorrection))
-            if (attackSide.skill.category == 0 && attackSide.ability.equals("はりきり")) {
-                attackValue = Math.ceil(attackValue.times(1.5).plus(0.5)) //五捨五超入
-            }
-            attackValue = Math.ceil(attackValue.times(attackValueCorrection).div(4096.0).plus(0.5))
-            attackValue = if (attackValue < 1) 1.0 else attackValue
-
-            defenseValue = Math.floor(defenseValue.times(defenseRankCorrection))
-            if (attackSide.skill.category == 1 && //ToDo: すなあらし対応
-                    (defenseSide.individual.master.type1 == Type.no(Type.Code.ROCK) || defenseSide.individual.master.type2 == Type.no(Type.Code.ROCK))) {
-                defenseValue = Math.ceil(defenseValue.times(1.5).plus(0.5)) //五捨五超入
-            }
-            defenseValue = Math.ceil(defenseValue.times(defenseValueCorrection).div(4096.0).plus(0.5))
+            var criticalDamage = Math.ceil(Math.ceil(22.times(skillPower).times(attackValue).div(defenseValue)).toDouble().div(50.0).plus(2.0))
+            //TODO * 3072 / 4096 五捨五超入 複数ダメージ補正
+            //TODO * 2048 / 4096 五捨五超入 おやこあい2回目
+            //TODO * 6144 / 4096 五捨五超入 天候強化
+            //TODO * 2048 / 4096 五捨五超入 天候弱化
+            criticalDamage = Math.ceil(criticalDamage.times(1.5))
 
 
-            var damage = Math.ceil(Math.ceil(22.times(skillPower).times(attackValue).div(defenseValue)).toDouble().div(50.0).plus(2.0))
+            attackValue = calcAttackValue(attackValue, attackValueCorrection, attackRankCorrectionB, attackSide)
+            defenseValue = calcDefenseValue(defenseValue, defenseValueCorrection, defenseRankCorrectionB, attackSide, defenseSide)
 
+            val damage = Math.ceil(Math.ceil(22.times(skillPower).times(attackValue).div(defenseValue)).toDouble().div(50.0).plus(2.0))
             //TODO * 3072 / 4096 五捨五超入 複数ダメージ補正
             //TODO * 2048 / 4096 五捨五超入 おやこあい2回目
             //TODO * 6144 / 4096 五捨五超入 天候強化
             //TODO * 2048 / 4096 五捨五超入 天候弱化
 
-
-            damage = if (isCritical) Math.ceil(damage.times(1.5)) else damage
             val randomDamage = arrayOf(
+                    Math.floor(criticalDamage.times(0.85)),
+                    Math.floor(criticalDamage.times(0.86)),
+                    Math.floor(criticalDamage.times(0.87)),
+                    Math.floor(criticalDamage.times(0.88)),
+                    Math.floor(criticalDamage.times(0.89)),
+                    Math.floor(criticalDamage.times(0.90)),
+                    Math.floor(criticalDamage.times(0.91)),
+                    Math.floor(criticalDamage.times(0.92)),
+                    Math.floor(criticalDamage.times(0.93)),
+                    Math.floor(criticalDamage.times(0.94)),
+                    Math.floor(criticalDamage.times(0.95)),
+                    Math.floor(criticalDamage.times(0.96)),
+                    Math.floor(criticalDamage.times(0.97)),
+                    Math.floor(criticalDamage.times(0.98)),
+                    Math.floor(criticalDamage.times(0.99)),
+                    Math.floor(criticalDamage),
                     Math.floor(damage.times(0.85)),
                     Math.floor(damage.times(0.86)),
                     Math.floor(damage.times(0.87)),
@@ -192,20 +225,56 @@ object BattleCalculator {
                     Math.floor(damage.times(0.98)),
                     Math.floor(damage.times(0.99)),
                     Math.floor(damage))
-            val damageCorrection = calcDamageCorrection(attackSide, defenseSide, field, isCritical)
-            for (i in 0..randomDamage.size) {
+
+            val damageCorrectionA = calcDamageCorrection(attackSide, defenseSide, field, true)
+            val damageCorrectionB = calcDamageCorrection(attackSide, defenseSide, field, false)
+            for (i in 0..(randomDamage.size - 1)) {
                 randomDamage[i] = Math.ceil(randomDamage[i].times(attackSide.typeBonus()).plus(0.5))
                 randomDamage[i] = Math.floor(randomDamage[i].times(Type.calculateAffinity(Type.code(attackSide.skill.type), defenseSide.individual.master)))
                 if (attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
                     randomDamage[i] = Math.floor(randomDamage[i].times(0.5))
                 }
-                randomDamage[i] = Math.ceil(randomDamage[i].times(damageCorrection).div(4096).plus(0.5))
+                if(i < 16){
+                    randomDamage[i] = Math.ceil(randomDamage[i].times(damageCorrectionA).div(4096).plus(0.5))
+                }else{
+                    randomDamage[i] = Math.ceil(randomDamage[i].times(damageCorrectionB).div(4096).plus(0.5))
+                }
                 if (randomDamage[i] < 1) {
                     randomDamage[i] = 1.0
                 }
             }
 
-            return randomDamage
+            val r = criticalRate.div(16.0)
+            val notr = 1.minus(criticalRate).div(16.0)
+
+            val result = mutableMapOf<Int, Double>()
+            for (i in 0..(randomDamage.size - 1)) {
+                val k = randomDamage[i].toInt()
+                if (result.containsKey(k)) {
+                    result[k] = if (i < 16) result[k]!!.plus(r) else result[k]!!.plus(notr)
+                } else {
+                    result[k] = if (i < 16) r else notr
+                }
+            }
+            return result
+        }
+
+        fun calcAttackValue(base: Double, attackValueCorrection: Double, attackRankCorrection: Double, attackSide: PokemonForBattle): Double{
+            var result = Math.floor(base.times(attackRankCorrection))
+            if (attackSide.skill.category == 0 && attackSide.ability.equals("はりきり")) {
+                result = Math.ceil(result.times(1.5).plus(0.5)) //五捨五超入
+            }
+            result = Math.ceil(result.times(attackValueCorrection).div(4096.0).plus(0.5))
+            return if (result < 1) 1.0 else result
+        }
+
+        fun calcDefenseValue(base: Double, defenseValueCorrection: Double, defenseRankCorrection: Double, attackSide: PokemonForBattle, defenseSide: PokemonForBattle): Double{
+            var result = Math.floor(base.times(defenseRankCorrection))
+            if (attackSide.skill.category == 1 && //ToDo: すなあらし対応
+                    (defenseSide.individual.master.type1 == Type.no(Type.Code.ROCK) || defenseSide.individual.master.type2 == Type.no(Type.Code.ROCK))) {
+                result = Math.ceil(result.times(1.5).plus(0.5)) //五捨五超入
+            }
+            return Math.ceil(result.times(defenseValueCorrection).div(4096.0).plus(0.5))
         }
 
         fun calcSkillPowerCorrection(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, first: Boolean): Double {

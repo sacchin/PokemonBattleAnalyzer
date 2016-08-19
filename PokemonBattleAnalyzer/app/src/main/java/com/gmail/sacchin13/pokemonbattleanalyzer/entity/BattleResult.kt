@@ -1,7 +1,7 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
 class BattleResult {
-    var mayOccur = mutableMapOf(
+    var mayOccur = mutableMapOf<BattleStatus.Code, Double>(
             BattleStatus.Code.WIN to 0.0,
             BattleStatus.Code.DEFEAT to 0.0,
             BattleStatus.Code.REVERSE to 0.0,

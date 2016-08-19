@@ -134,7 +134,7 @@ class PokemonForBattleTest {
         attackSide.ability = "きょううん"
 
         val result = attackSide.calcCriticalRate()
-        assertEquals(0.5f, result)
+        assertEquals(0.5, result, 0.001)
     }
 
     @Test
@@ -145,7 +145,7 @@ class PokemonForBattleTest {
         attackSide.ability = "きょううん"
 
         val result = attackSide.calcCriticalRate()
-        assertEquals(1f, result)
+        assertEquals(1.0, result, 0.001)
     }
 
     @Test
@@ -283,7 +283,7 @@ class PokemonForBattleTest {
     }
 
     @Test
-    fun 攻撃技を無効にするするかどうかのテスト() {
+    fun 攻撃技を無効にするかどうかのテスト() {
         val skill = Skill()
         val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
 
@@ -309,5 +309,79 @@ class PokemonForBattleTest {
         assertEquals(false, defenseSide.doesntAffect(skill))
     }
 
+    @Test
+    fun 状態異常を付加せずRankの変動も発生しない攻撃技の影響のテスト() {
+        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        attackSide.skill.aliment = StatusAilment.no(StatusAilment.Code.UNKNOWN)
+        attackSide.skill.myRankUp = Rank.no(Rank.Code.UNKNOWN)
+        attackSide.skill.oppoRankUp = Rank.no(Rank.Code.UNKNOWN)
 
+        val actual = attackSide.skillAffects().iterator()
+
+        val first = actual.next()
+        assertEquals(StatusAilment.no(StatusAilment.Code.UNKNOWN), first.key[0])
+        assertEquals(Rank.no(Rank.Code.UNKNOWN), first.key[1])
+        assertEquals(Rank.no(Rank.Code.UNKNOWN), first.key[2])
+        assertEquals(1.0, first.value, 0.001)
+    }
+
+    @Test
+    fun 状態異常を付加するがRankの変動は発生しない攻撃技の影響のテスト() {
+        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        attackSide.skill.aliment = StatusAilment.no(StatusAilment.Code.BURN)
+        attackSide.skill.alimentRate = 0.1
+        attackSide.skill.myRankUp = Rank.no(Rank.Code.UNKNOWN)
+        attackSide.skill.oppoRankUp = Rank.no(Rank.Code.UNKNOWN)
+
+        val actual = attackSide.skillAffects().iterator()
+
+        val first = actual.next()
+        assertEquals(StatusAilment.no(StatusAilment.Code.BURN), first.key[0])
+        assertEquals(Rank.no(Rank.Code.UNKNOWN), first.key[1])
+        assertEquals(Rank.no(Rank.Code.UNKNOWN), first.key[2])
+        assertEquals(0.1, first.value, 0.001)
+
+        val second = actual.next()
+        assertEquals(StatusAilment.no(StatusAilment.Code.UNKNOWN), second.key[0])
+        assertEquals(Rank.no(Rank.Code.UNKNOWN), second.key[1])
+        assertEquals(Rank.no(Rank.Code.UNKNOWN), second.key[2])
+        assertEquals(0.9, second.value, 0.001)
+    }
+
+    @Test
+    fun 状態異常を付加しないがRankの変動が発生する攻撃技の影響のテスト() {
+        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        attackSide.skill.aliment = StatusAilment.no(StatusAilment.Code.PARALYSIS)
+        attackSide.skill.alimentRate = 0.3
+        attackSide.skill.myRankUp = Rank.no(Rank.Code.UNKNOWN)
+        attackSide.skill.oppoRankUp = Rank.no(Rank.Code.S)
+        attackSide.skill.oppoRankUpRate = 0.1
+
+        val actual = attackSide.skillAffects().iterator()
+
+        val first = actual.next()
+        assertEquals(StatusAilment.no(StatusAilment.Code.PARALYSIS), first.key[0])
+        assertEquals(Rank.no(Rank.Code.UNKNOWN), first.key[1])
+        assertEquals(Rank.no(Rank.Code.S), first.key[2])
+        assertEquals(0.03, first.value, 0.001)
+
+        val second = actual.next()
+        assertEquals(StatusAilment.no(StatusAilment.Code.UNKNOWN), second.key[0])
+        assertEquals(Rank.no(Rank.Code.UNKNOWN), second.key[1])
+        assertEquals(Rank.no(Rank.Code.S), second.key[2])
+        assertEquals(0.07, second.value, 0.001)
+
+        val third = actual.next()
+        assertEquals(StatusAilment.no(StatusAilment.Code.PARALYSIS), third.key[0])
+        assertEquals(Rank.no(Rank.Code.UNKNOWN), third.key[1])
+        assertEquals(Rank.no(Rank.Code.UNKNOWN), third.key[2])
+        assertEquals(0.27, third.value, 0.001)
+
+
+        val fourth = actual.next()
+        assertEquals(StatusAilment.no(StatusAilment.Code.UNKNOWN), fourth.key[0])
+        assertEquals(Rank.no(Rank.Code.UNKNOWN), fourth.key[1])
+        assertEquals(Rank.no(Rank.Code.UNKNOWN), fourth.key[2])
+        assertEquals(0.63, fourth.value, 0.001)
+    }
 }

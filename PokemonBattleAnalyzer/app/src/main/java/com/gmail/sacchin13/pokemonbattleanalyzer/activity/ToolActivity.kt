@@ -19,6 +19,7 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.fragment.ToolFragment
 import com.gmail.sacchin13.pokemonbattleanalyzer.listener.OnClickIndividualPokemon
 import kotlinx.android.synthetic.main.content_tool.*
@@ -122,7 +123,7 @@ class ToolActivity : PGLActivity() {
         this.index = index
     }
 
-    override fun setTrend(result: RankingResponse, index: Int) {
+    override fun setTrend(result: TrendForBattle, index: Int) {
 
 
     }

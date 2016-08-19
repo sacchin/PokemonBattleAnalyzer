@@ -4,7 +4,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class PokemonSkill(no: Int, name: String, ename: String, type: Type.Code, power: Int,
-                   accuracy: Int, category: Int, pp: Int){
+                   accuracy: Double, category: Int, pp: Int){
 
     var master: Skill
     var usageRate = 0.0
@@ -12,7 +12,7 @@ class PokemonSkill(no: Int, name: String, ename: String, type: Type.Code, power:
     var sequenceNumber = 0
 
     init{
-        master = Skill(no, name, ename, Type.no(type), power, accuracy, category, pp)
+        master = Skill(no, name, ename, Type.no(type), power, accuracy.div(100.0), category, pp)
     }
 
     companion object {
@@ -24,7 +24,7 @@ class PokemonSkill(no: Int, name: String, ename: String, type: Type.Code, power:
                     return null
                 }
 
-                val obj = PokemonSkill(0, waza.getString("name"), waza.getString("name"), Type.code(waza.getInt("typeId")), 0, 0, 0, 0)
+                val obj = PokemonSkill(0, waza.getString("name"), waza.getString("name"), Type.code(waza.getInt("typeId")), 0, 0.0, 0, 0)
                 obj.ranking = waza.getInt("ranking")
                 obj.usageRate = waza.getDouble("usageRate")
                 obj.sequenceNumber = waza.getInt("sequenceNumber")

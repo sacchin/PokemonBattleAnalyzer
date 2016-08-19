@@ -18,7 +18,7 @@ data class TrendForBattle(
                     rankingPokemonTrend.itemInfo)
 
             result.wazaInfo = mutableListOf()
-            for (temp in 0..rankingPokemonTrend.wazaInfo.size) {
+            for (temp in 0..(rankingPokemonTrend.wazaInfo.size - 2)) {
                 result.wazaInfo.add(RankingPokemonSkill.create(rankingPokemonTrend.wazaInfo[temp], skills[temp]))
             }
 
