@@ -40,8 +40,8 @@ class PokemonForBattle(
         }
     }
 
-    fun hp(): Int{
-        when(side){
+    fun hp(): Int {
+        when (side) {
             0 -> return hpValue
             1 -> return individual.calcHp().times(hpRatio).div(100.0).toInt()
         }
@@ -569,43 +569,43 @@ class PokemonForBattle(
 
     fun skillAffects(): MutableMap<Array<Int>, Double> {
         val result = mutableMapOf<Array<Int>, Double>()
-        if(skill.aliment.equals(StatusAilment.no(StatusAilment.Code.UNKNOWN))){
-            if(skill.myRankUp.equals(Rank.no(Rank.Code.UNKNOWN))){
-                if(skill.oppoRankUp.equals(Rank.no(Rank.Code.UNKNOWN))){
+        if (skill.aliment.equals(StatusAilment.no(StatusAilment.Code.UNKNOWN))) {
+            if (skill.myRankUp.equals(Rank.no(Rank.Code.UNKNOWN))) {
+                if (skill.oppoRankUp.equals(Rank.no(Rank.Code.UNKNOWN))) {
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN))] = 1.0
-                }else{
+                } else {
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN), skill.oppoRankUp)] = skill.oppoRankUpRate
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN))] = 1.0.minus(skill.oppoRankUpRate)
                 }
-            }else{
-                if(skill.oppoRankUp.equals(Rank.no(Rank.Code.UNKNOWN))){
+            } else {
+                if (skill.oppoRankUp.equals(Rank.no(Rank.Code.UNKNOWN))) {
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), skill.myRankUp, Rank.no(Rank.Code.UNKNOWN))] = skill.myRankUpRate
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN))] = 1.0.minus(skill.myRankUpRate)
-                }else{
+                } else {
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), skill.myRankUp, skill.oppoRankUp)] = skill.myRankUpRate.times(skill.oppoRankUpRate)
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN), skill.oppoRankUp)] = 1.0.minus(skill.myRankUpRate).times(skill.oppoRankUpRate)
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), skill.myRankUp, Rank.no(Rank.Code.UNKNOWN))] = skill.myRankUpRate.times(1.0.minus(skill.oppoRankUpRate))
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN))] = 1.0.minus(skill.myRankUpRate).times(1.0.minus(skill.oppoRankUpRate))
                 }
             }
-        }else{
-            if(skill.myRankUp.equals(Rank.no(Rank.Code.UNKNOWN))){
-                if(skill.oppoRankUp.equals(Rank.no(Rank.Code.UNKNOWN))){
+        } else {
+            if (skill.myRankUp.equals(Rank.no(Rank.Code.UNKNOWN))) {
+                if (skill.oppoRankUp.equals(Rank.no(Rank.Code.UNKNOWN))) {
                     result[arrayOf(skill.aliment, Rank.no(Rank.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN))] = skill.alimentRate
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN))] = 1.0.minus(skill.alimentRate)
-                }else{
+                } else {
                     result[arrayOf(skill.aliment, Rank.no(Rank.Code.UNKNOWN), skill.oppoRankUp)] = skill.alimentRate.times(skill.oppoRankUpRate)
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN), skill.oppoRankUp)] = 1.0.minus(skill.alimentRate).times(skill.oppoRankUpRate)
                     result[arrayOf(skill.aliment, Rank.no(Rank.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN))] = skill.alimentRate.times(1.0.minus(skill.oppoRankUpRate))
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN))] = 1.0.minus(skill.alimentRate).times(1.0.minus(skill.oppoRankUpRate))
                 }
-            }else{
-                if(skill.oppoRankUp.equals(Rank.no(Rank.Code.UNKNOWN))){
+            } else {
+                if (skill.oppoRankUp.equals(Rank.no(Rank.Code.UNKNOWN))) {
                     result[arrayOf(skill.aliment, skill.myRankUp, Rank.no(Rank.Code.UNKNOWN))] = skill.alimentRate.times(skill.myRankUpRate)
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), skill.myRankUp, Rank.no(Rank.Code.UNKNOWN))] = 1.0.minus(skill.alimentRate).times(skill.myRankUpRate)
                     result[arrayOf(skill.aliment, Rank.no(Rank.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN))] = skill.alimentRate.times(1.0.minus(skill.myRankUpRate))
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN), Rank.no(Rank.Code.UNKNOWN))] = 1.0.minus(skill.alimentRate).times(1.0.minus(skill.myRankUpRate))
-                }else{
+                } else {
                     result[arrayOf(skill.aliment, skill.myRankUp, skill.oppoRankUp)] = skill.alimentRate.times(skill.myRankUpRate.times(skill.oppoRankUpRate))
                     result[arrayOf(skill.aliment, Rank.no(Rank.Code.UNKNOWN), skill.oppoRankUp)] = skill.alimentRate.times(1.0.minus(skill.myRankUpRate).times(skill.oppoRankUpRate))
                     result[arrayOf(StatusAilment.no(StatusAilment.Code.UNKNOWN), skill.myRankUp, skill.oppoRankUp)] = 1.0.minus(skill.alimentRate).times(skill.myRankUpRate.times(skill.oppoRankUpRate))
@@ -620,27 +620,31 @@ class PokemonForBattle(
         return result
     }
 
-    fun updateHP(damage: Int){
-        when(side){
-            0 -> {
+    fun updateHP(damage: Int) {
+        when (side) {
+            PartyInBattle.MY_SIDE -> {
                 hpValue -= damage
             }
-            1 -> {
+            PartyInBattle.OPPONENT_SIDE -> {
                 val remain = individual.calcHp().times(hpRatio).div(100.0).minus(damage)
-                hpRatio = if(remain < 1) 0 else remain.times(100.0).div(individual.calcHp()).toInt()
+                hpRatio = if (remain < 1) 0 else remain.times(100.0).div(individual.calcHp()).toInt()
             }
         }
     }
 
-    fun dying(): Boolean{
-        when(side){
-            0 -> return if(hpValue < 1) true else false
-            1 -> return if(hpRatio < 1) true else false
+    fun dying(): Boolean {
+        when (side) {
+            PartyInBattle.MY_SIDE -> {
+                return if (hpValue < 1) true else false
+            }
+            PartyInBattle.OPPONENT_SIDE -> {
+                return if (hpRatio < 1) true else false
+            }
             else -> return false
         }
     }
 
-    fun updateRank(affects: Int){
+    fun updateRank(affects: Int) {
         val value = Rank.RANK_TABLE[Rank.code(affects)]
         attackRank += value!![0]
         defenseRank += value[1]
@@ -652,43 +656,54 @@ class PokemonForBattle(
         criticalRank += value[7]
     }
 
-    fun recoil(damage: Int){
-        if(ability.equals("いしあたま") || ability.equals("マジックガード")){
+    fun recoil(damage: Int) {
+        if (ability.equals("いしあたま") || ability.equals("マジックガード")) {
             return
         }
 
-        if(skill.jname.equals("アフロブレイク") || skill.jname.equals("じごくぐるま") || skill.jname.equals("とっしん") || skill.jname.equals("ワイルドボルト")){
+        if (skill.jname.equals("アフロブレイク") || skill.jname.equals("じごくぐるま") || skill.jname.equals("とっしん") || skill.jname.equals("ワイルドボルト")) {
             damage.div(4.0)
 
         }
-        if(skill.jname.equals("ウッドハンマー") || skill.jname.equals("すてみタックル") ||
-                skill.jname.equals("フレアドライブ") || skill.jname.equals("ブレイブバード") || skill.jname.equals("ボルテッカー")){
+        if (skill.jname.equals("ウッドハンマー") || skill.jname.equals("すてみタックル") ||
+                skill.jname.equals("フレアドライブ") || skill.jname.equals("ブレイブバード") || skill.jname.equals("ボルテッカー")) {
             damage.div(3.0)
 
         }
-        if(skill.jname.equals("もろはのずつき")){
+        if (skill.jname.equals("もろはのずつき")) {
             damage.div(2.0)
 
         }
-        if(skill.jname.equals("アフロブレイク")){
+        if (skill.jname.equals("アフロブレイク")) {
 
         }
-        if(skill.jname.equals("アフロブレイク")){
+        if (skill.jname.equals("アフロブレイク")) {
 
         }
-        if(skill.jname.equals("アフロブレイク")){
+        if (skill.jname.equals("アフロブレイク")) {
 
         }
-        if(skill.jname.equals("アフロブレイク")){
+        if (skill.jname.equals("アフロブレイク")) {
 
         }
 
 
     }
-    
-    fun clone(): PokemonForBattle{
-        return PokemonForBattle(side, status, item, characteristic, ability, skill, hpEffortValue, hpRatio,hpValue,attackEffortValue,attackRank,
+
+    fun recoil() {
+        if (ability.equals("ひざげり") || ability.equals("とびひざげり")) {
+            return
+        }
+
+    }
+
+    fun clone(): PokemonForBattle {
+        return PokemonForBattle(side, status, item, characteristic, ability, skill, hpEffortValue, hpRatio, hpValue, attackEffortValue, attackRank,
                 defenseEffortValue, defenseRank, specialAttackEffortValue, specialAttackRank, specialDefenseEffortValue, specialDefenseRank,
                 speedEffortValue, speedRank, hitProbabilityRank, avoidanceRank, criticalRank, individual)
+    }
+
+    fun skillAccuracy(): Double {
+        return if (skill.accuracy < 0) return 1.0 else skill.accuracy
     }
 }

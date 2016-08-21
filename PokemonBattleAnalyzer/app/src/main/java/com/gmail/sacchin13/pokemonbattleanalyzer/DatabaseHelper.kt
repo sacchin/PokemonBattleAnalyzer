@@ -10,29 +10,29 @@ import org.json.JSONObject
 import java.util.*
 import kotlin.properties.Delegates
 
-class DatabaseHelper (context: Context){
+class DatabaseHelper(context: Context) {
 
     val util = Util()
     var realm: Realm by Delegates.notNull()
 
-    init{
+    init {
         val realmConfig = RealmConfiguration.Builder(context).build()
         realm = Realm.getInstance(realmConfig);
     }
 
-    fun begin(){
+    fun begin() {
         realm.beginTransaction()
     }
 
-    fun commit(){
+    fun commit() {
         realm.commitTransaction()
     }
 
 
     fun insertPokemonMasterData(no: String, jname: String, ename: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int,
-                             ability1: String, ability2: String, abilityd: String, type1: Int, type2: Int, weight: Double) {
+                                ability1: String, ability2: String, abilityd: String, type1: Int, type2: Int, weight: Double) {
 
-        realm.executeTransaction{
+        realm.executeTransaction {
             val pokemon = realm.createObject(PokemonMasterData::class.java)
             pokemon.no = no
             pokemon.jname = jname
@@ -54,7 +54,7 @@ class DatabaseHelper (context: Context){
 
     fun selectPokemonMasterData(pokemonNo: String?): PokemonMasterData {
         val pokemon = realm.where(PokemonMasterData().javaClass).equalTo("no", pokemonNo).findFirst()
-        if(pokemon != null) {
+        if (pokemon != null) {
             return pokemon
         }
         return realm.where(PokemonMasterData().javaClass).equalTo("no", "000").findFirst()
@@ -64,8 +64,8 @@ class DatabaseHelper (context: Context){
         val pokemonList = realm.where(PokemonMasterData().javaClass).findAllSorted("no", Sort.DESCENDING)
 
         val result = ArrayList<PokemonMasterData>()
-        for(p in pokemonList){
-            if(util.pokemonImageResource.contains(p.no)){
+        for (p in pokemonList) {
+            if (util.pokemonImageResource.contains(p.no)) {
                 result.add(p)
             }
         }
@@ -73,7 +73,7 @@ class DatabaseHelper (context: Context){
     }
 
     fun insertItemMaterData(name: String) {
-        realm.executeTransaction{
+        realm.executeTransaction {
             val item = realm.createObject(ItemMasterData::class.java)
             item.name = name
         }
@@ -87,7 +87,7 @@ class DatabaseHelper (context: Context){
 
     fun insertSkillMasterData(id: Int, name: String, type: Int, power: Int, accuracy: Int, category: Int, pp: Int, priority: Int,
                               contact: Boolean, protectable: Boolean, aliment: Int, alimentRate: Double, myRankUp: Int, myRankUpRate: Double, oppoRankUp: Int, oppoRankUpRate: Double) {
-        realm.executeTransaction{
+        realm.executeTransaction {
             val skill = realm.createObject(Skill::class.java)
             skill.no = id
             skill.jname = name
@@ -101,16 +101,16 @@ class DatabaseHelper (context: Context){
             skill.contact = contact
             skill.protectable = protectable
             skill.aliment = aliment
-            skill.alimentRate = alimentRate
+            skill.alimentRate = alimentRate.div(100.0)
             skill.myRankUp = myRankUp
-            skill.myRankUpRate = myRankUpRate
+            skill.myRankUpRate = myRankUpRate.div(100.0)
             skill.oppoRankUp = oppoRankUp
-            skill.oppoRankUpRate = oppoRankUpRate
+            skill.oppoRankUpRate = oppoRankUpRate.div(100.0)
         }
     }
 
     fun insertMegaPBAPokemonData(megaPBAPokemon: JSONObject?) {
-        realm.executeTransaction{
+        realm.executeTransaction {
             val megaPokemon = realm.createObject(MegaPokemonMasterData::class.java)
             megaPokemon.h = megaPBAPokemon!!.getInt("h")
             megaPokemon.a = megaPBAPokemon.getInt("a")
@@ -123,21 +123,21 @@ class DatabaseHelper (context: Context){
         }
     }
 
-    fun selectSkillByName(name: String): Skill{
+    fun selectSkillByName(name: String): Skill {
         return realm.where(Skill().javaClass).equalTo("jname", name).findFirst()
     }
 
-    fun selectUnknownSkill(): Skill{
+    fun selectUnknownSkill(): Skill {
         return realm.where(Skill().javaClass).equalTo("no", -1).findFirst()
     }
 
-    fun countIndividualPBAPokemon(): Long{
+    fun countIndividualPBAPokemon(): Long {
         return realm.where(IndividualPBAPokemon().javaClass).count()
     }
 
     fun insertPartyData(selectedParty: Party?) {
         val count = countIndividualPBAPokemon()
-        realm.executeTransaction{
+        realm.executeTransaction {
             val party = realm.createObject(Party::class.java)
             party.time = System.currentTimeMillis()
             party.memo = selectedParty!!.memo
@@ -157,7 +157,7 @@ class DatabaseHelper (context: Context){
         }
     }
 
-    fun insertIndividualPBAPokemon(id: Long, master: PokemonMasterData){
+    fun insertIndividualPBAPokemon(id: Long, master: PokemonMasterData) {
         val pokemon = realm.createObject(IndividualPBAPokemon::class.java)
         pokemon.id = id
         pokemon.item = ""
@@ -171,13 +171,13 @@ class DatabaseHelper (context: Context){
         pokemon.master = selectPokemonMasterData(master.no)
     }
 
-    fun selectIndividualPBAPokemon(id: Long): IndividualPBAPokemon{
+    fun selectIndividualPBAPokemon(id: Long): IndividualPBAPokemon {
         return realm.where(IndividualPBAPokemon().javaClass).equalTo("id", id).findFirst()
     }
 
     fun selectParty(userName: String): Party {
         val party = realm.where(Party().javaClass).equalTo("userName", userName).findAllSorted("time", Sort.DESCENDING)
-        if(party == null || party.size < 1){
+        if (party == null || party.size < 1) {
             Log.e("selectParty", "party is not found")
             return Party()
         }
@@ -191,7 +191,7 @@ class DatabaseHelper (context: Context){
         return party[0]
     }
 
-   fun selectAllSkill(): MutableList<Skill?> {
+    fun selectAllSkill(): MutableList<Skill?> {
         val skill = realm.where(Skill().javaClass).findAllSorted("jname", Sort.ASCENDING)
         return skill.toMutableList()
     }
@@ -199,7 +199,7 @@ class DatabaseHelper (context: Context){
     fun selectAllItem(): ArrayList<String> {
         val item = realm.where(ItemMasterData().javaClass).findAllSorted("name", Sort.ASCENDING)
         val list = ArrayList<String>()
-        for(temp in item){
+        for (temp in item) {
             list.add(temp.name)
         }
         return list

@@ -5,12 +5,9 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
 import com.squareup.moshi.Moshi
-import org.junit.Test as Test
-
-import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Test
 import java.io.File
-import java.nio.charset.Charset
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -20,7 +17,7 @@ class BattleCalculatorTest {
     var fireallow: PokemonForBattle by Delegates.notNull()
 
     @Before
-    fun 初期化(){
+    fun 初期化() {
         val moshi = Moshi.Builder().build()
         val adapter = moshi.adapter(RankingResponse::class.java)
         val database = mapOf<String, Skill>(
@@ -76,16 +73,16 @@ class BattleCalculatorTest {
 
         var reader = File("testdata/1.txt").absoluteFile
         val sb1 = StringBuilder()
-        for(temp in reader.readLines()){
+        for (temp in reader.readLines()) {
             sb1.append(temp)
         }
         val rankingResponse1 = adapter.fromJson(sb1.toString())
         rankingResponse1.rankingPokemonTrend.convertToFew()
         val skills1 = ArrayList<Skill>()
         for (temp in rankingResponse1.rankingPokemonTrend.wazaInfo) {
-            if(database.contains(temp.name)) skills1.add(database[temp.name] as Skill)
+            if (database.contains(temp.name)) skills1.add(database[temp.name] as Skill)
         }
-        garura = PokemonForBattle.create(0, IndividualPBAPokemon(
+        garura = PokemonForBattle.create(PartyInBattle.MY_SIDE, IndividualPBAPokemon(
                 0, -1, "ガルーラナイト", "いじっぱり", "せいしんりょく",
                 database["ねこだまし"] as Skill, database["いわなだれ"] as Skill, database["みがわり"] as Skill, database["アイアンヘッド"] as Skill,
                 252, 0, 0, 0, 0, 0, 252, 212, -1, -1, -1, -1, -1,
@@ -96,16 +93,16 @@ class BattleCalculatorTest {
 
         reader = File("testdata/2.txt").absoluteFile
         val sb2 = StringBuilder()
-        for(temp in reader.readLines()){
+        for (temp in reader.readLines()) {
             sb2.append(temp)
         }
         val skills2 = ArrayList<Skill>()
         val rankingResponse2 = adapter.fromJson(sb2.toString())
         rankingResponse2.rankingPokemonTrend.convertToFew()
         for (temp in rankingResponse2.rankingPokemonTrend.wazaInfo) {
-            if(database.contains(temp.name)) skills2.add(database[temp.name] as Skill)
+            if (database.contains(temp.name)) skills2.add(database[temp.name] as Skill)
         }
-        fireallow = PokemonForBattle.create(1, IndividualPBAPokemon(
+        fireallow = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, IndividualPBAPokemon(
                 0, -1, "ゴツゴツメット", "ずぶとい", "はやてのつばさ",
                 database["はねやすめ"] as Skill, database["おにび"] as Skill, database["みがわり"] as Skill, database["ブレイブバード"] as Skill,
                 252, 100, 252, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1,
@@ -163,13 +160,13 @@ class BattleCalculatorTest {
     }
 
     fun createSkill(id: Int, name: String, type: Int, power: Int, accuracy: Int, category: Int, pp: Int, contact: Boolean, protectable: Boolean,
-                              aliment: Int, alimentRate: Double, myRankUp: Int, myRankUpRate: Double, oppoRankUp: Int, oppoRankUpRate: Double): Skill{
+                    aliment: Int, alimentRate: Double, myRankUp: Int, myRankUpRate: Double, oppoRankUp: Int, oppoRankUpRate: Double): Skill {
         return createSkill(id, name, type, power, accuracy, category, pp, 0, contact, protectable, aliment, alimentRate, myRankUp, myRankUpRate, oppoRankUp, oppoRankUpRate)
     }
 
     fun createSkill(id: Int, name: String, type: Int, power: Int, accuracy: Int, category: Int, pp: Int, priority: Int,
-                              contact: Boolean, protectable: Boolean, aliment: Int, alimentRate: Double, myRankUp: Int, myRankUpRate: Double, oppoRankUp: Int, oppoRankUpRate: Double): Skill {
-        return Skill(id, name, "", type, power, accuracy.div(100.0), category, pp, priority, contact, protectable, aliment, alimentRate, myRankUp, myRankUpRate, oppoRankUp, oppoRankUpRate)
+                    contact: Boolean, protectable: Boolean, aliment: Int, alimentRate: Double, myRankUp: Int, myRankUpRate: Double, oppoRankUp: Int, oppoRankUpRate: Double): Skill {
+        return Skill(id, name, "", type, power, accuracy.div(100.0), category, pp, priority, contact, protectable, aliment, alimentRate.div(100.0), myRankUp, myRankUpRate.div(100.0), oppoRankUp, oppoRankUpRate.div(100.0))
     }
 
 //    @Test
@@ -249,7 +246,7 @@ class BattleCalculatorTest {
     @Test
     fun 戦闘シミュレーションの正常系テスト() {
         val result = BattleCalculator.companion.getResult(garura, fireallow, BattleField())
-        for(temp in result.mayOccur){
+        for (temp in result.mayOccur) {
             println(BattleStatus.name(temp.key) + " = ${temp.value}")
         }
     }
