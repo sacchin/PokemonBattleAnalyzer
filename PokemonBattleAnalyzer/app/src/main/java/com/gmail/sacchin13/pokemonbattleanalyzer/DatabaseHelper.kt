@@ -6,12 +6,10 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.Sort
-import org.json.JSONObject
 import java.util.*
 import kotlin.properties.Delegates
 
 class DatabaseHelper(context: Context) {
-
     val util = Util()
     var realm: Realm by Delegates.notNull()
 
@@ -27,7 +25,6 @@ class DatabaseHelper(context: Context) {
     fun commit() {
         realm.commitTransaction()
     }
-
 
     fun insertPokemonMasterData(no: String, jname: String, ename: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int,
                                 ability1: String, ability2: String, abilityd: String, type1: Int, type2: Int, weight: Double) {
@@ -109,17 +106,39 @@ class DatabaseHelper(context: Context) {
         }
     }
 
-    fun insertMegaPBAPokemonData(megaPBAPokemon: JSONObject?) {
+    fun insertMegaPokemonDataX(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, megaType: String) {
         realm.executeTransaction {
             val megaPokemon = realm.createObject(MegaPokemonMasterData::class.java)
-            megaPokemon.h = megaPBAPokemon!!.getInt("h")
-            megaPokemon.a = megaPBAPokemon.getInt("a")
-            megaPokemon.b = megaPBAPokemon.getInt("b")
-            megaPokemon.c = megaPBAPokemon.getInt("c")
-            megaPokemon.d = megaPBAPokemon.getInt("d")
-            megaPokemon.s = megaPBAPokemon.getInt("s")
-            megaPokemon.characteristic = megaPBAPokemon.getString("characteristic")
-            megaPokemon.megaType = megaPBAPokemon.getString("megaType")
+            megaPokemon.pokemonNo = no
+            megaPokemon.h = h
+            megaPokemon.a = a
+            megaPokemon.b = b
+            megaPokemon.c = c
+            megaPokemon.d = d
+            megaPokemon.s = s
+            megaPokemon.ability = ability
+            megaPokemon.megaType = megaType
+
+            val master = selectPokemonMasterData(no)
+            master.megax = megaPokemon
+        }
+    }
+
+    fun insertMegaPokemonDataY(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, megaType: String) {
+        realm.executeTransaction {
+            val megaPokemon = realm.createObject(MegaPokemonMasterData::class.java)
+            megaPokemon.pokemonNo = no
+            megaPokemon.h = h
+            megaPokemon.a = a
+            megaPokemon.b = b
+            megaPokemon.c = c
+            megaPokemon.d = d
+            megaPokemon.s = s
+            megaPokemon.ability = ability
+            megaPokemon.megaType = megaType
+
+            val master = selectPokemonMasterData(no)
+            master.megay = megaPokemon
         }
     }
 

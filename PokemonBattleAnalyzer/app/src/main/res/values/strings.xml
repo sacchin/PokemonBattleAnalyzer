@@ -7,6 +7,8 @@
 
     <string name="action_settings">Settings</string>
 
+    <string name="mine">自分</string>
+    <string name="opponent">相手</string>
 
     <string name="affinity_fragment_button">Back</string>
     <string name="affinity_fragment_column1title">選択したポケモン</string>
@@ -29,6 +31,7 @@
 
     <string name="edit_activity_item">持物</string>
     <string name="edit_activity_char">性格</string>
+    <string name="edit_activity_abi">特性</string>
     <string name="edit_activity_skill1">技1</string>
     <string name="edit_activity_skill2">技2</string>
     <string name="edit_activity_skill3">技3</string>
@@ -40,4 +43,7 @@
     <string name="edit_activity_d">D</string>
     <string name="edit_activity_s">S</string>
 
+    <string name="expected_activity_skill">技</string>
+    <string name="expected_activity_alive">倒す</string>
+    <string name="expected_activity_dead">倒される</string>
 </resources>

@@ -1,6 +1,11 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
+import java.text.NumberFormat
+
 class BattleResult {
+
+    var coverRate: Double = 0.0
+
     var mayOccur = mutableMapOf<BattleStatus.Code, Double>(
             BattleStatus.Code.WIN to 0.0,
             BattleStatus.Code.DEFEAT to 0.0,
@@ -16,7 +21,6 @@ class BattleResult {
             BattleStatus.Code.OWN_HEAD to mutableSetOf<String>(),
             BattleStatus.Code.DRAW to mutableSetOf<String>()
     )
-
 
     fun updateWinDefeat(first: PokemonForBattle, second: PokemonForBattle, rate: Double) {
         when (second.side) {
@@ -45,8 +49,68 @@ class BattleResult {
             }
         }
     }
-    fun updateDraw(rate: Double) {
 
+    fun updateDraw(rate: Double) {
+        mayOccur[BattleStatus.Code.DRAW] =
+                mayOccur[BattleStatus.Code.DRAW]!!.plus(rate)
     }
 
+    fun winRate(): String{
+        val value = mayOccur[BattleStatus.Code.WIN]!!.plus(mayOccur[BattleStatus.Code.REVERSE]!!)
+        if(value < 0 || 1 < value){
+            return "ERROR"
+        }else if(value.minus(0.0) < 0.00001){
+            return "0%"
+        }else if(value < 0.001){
+            return "極小"
+        }else{
+            val format = NumberFormat.getInstance()
+            format.maximumFractionDigits = 1
+            return format.format(value.times(100.0)) + "%"
+        }
+    }
+
+    fun loseRate(): String{
+        val value = mayOccur[BattleStatus.Code.DEFEAT]!!.plus(mayOccur[BattleStatus.Code.OWN_HEAD]!!)
+        if(value < 0 || 1 < value){
+            return "ERROR"
+        }else if(value.minus(0.0) < 0.00001){
+            return "0%"
+        }else if(value < 0.001){
+            return "極小"
+        }else{
+            val format = NumberFormat.getInstance()
+            format.maximumFractionDigits = 1
+            return format.format(value.times(100.0)) + "%"
+        }
+    }
+
+    fun drawRate(): String{
+        val value = mayOccur[BattleStatus.Code.DRAW]!!
+        if(value < 0 || 1 < value){
+            return "ERROR"
+        }else if(value.minus(0.0) < 0.00001){
+            return "0%"
+        }else if(value < 0.001){
+            return "極小"
+        }else{
+            val format = NumberFormat.getInstance()
+            format.maximumFractionDigits = 1
+            return format.format(value.times(100.0)) + "%"
+        }
+    }
+
+    fun coverRate(): String{
+        if(coverRate < 0 || 1 < coverRate){
+            return "ERROR"
+        }else if(coverRate.minus(0.0) < 0.00001){
+            return "0%"
+        }else if(coverRate < 0.001){
+            return "極小"
+        }else{
+            val format = NumberFormat.getInstance()
+            format.maximumFractionDigits = 1
+            return format.format(coverRate.times(100.0)) + "%"
+        }
+    }
 }

@@ -275,8 +275,10 @@ class PokemonForBattle(
     }
 
     fun calcAttackValue(): Double {
-        val result = individual.master.getAttackValue(31, attackEffortValue)
-        return result.times(Characteristic.correction(characteristic, "A")).toDouble()
+        if(side == PartyInBattle.MY_SIDE){
+            return individual.attackValue.toDouble()
+        }
+        return individual.calcAttack().times(Characteristic.correction(characteristic, "A")).toDouble()
     }
 
     fun getAttackRankCorrection(isCritical: Boolean): Double {
@@ -298,8 +300,10 @@ class PokemonForBattle(
     }
 
     fun calcDefenseValue(): Double {
-        val result = individual.master.getDefenseValue(31, defenseEffortValue)
-        return result.times(Characteristic.correction(characteristic, "B")).toDouble()
+        if(side == PartyInBattle.MY_SIDE){
+            return individual.defenseValue.toDouble()
+        }
+        return individual.calcDefense().times(Characteristic.correction(characteristic, "B")).toDouble()
     }
 
     fun calcDefenseValueCorrection(attackSide: PokemonForBattle): Double {
@@ -341,8 +345,10 @@ class PokemonForBattle(
     }
 
     fun calcSpecialAttackValue(): Double {
-        val result = individual.master.getSpecialAttackValue(31, specialAttackEffortValue)
-        return result.times(Characteristic.correction(characteristic, "C")).toDouble()
+        if(side == PartyInBattle.MY_SIDE){
+            return individual.specialAttackValue.toDouble()
+        }
+        return individual.calcSpecialAttack().times(Characteristic.correction(characteristic, "C")).toDouble()
     }
 
     fun getSpecialAttackRankCorrection(isCritical: Boolean): Double {
@@ -364,8 +370,10 @@ class PokemonForBattle(
     }
 
     fun calcSpecialDefenseValue(): Double {
-        val result = individual.master.getSpecialDefenseValue(31, specialDefenseEffortValue)
-        return result.times(Characteristic.correction(characteristic, "D")).toDouble()
+        if(side == PartyInBattle.MY_SIDE){
+            return individual.specialDefenseValue.toDouble()
+        }
+        return individual.calcSpecialDefense().times(Characteristic.correction(characteristic, "D")).toDouble()
     }
 
     fun calcSpecialDefenseValueCorrection(): Double {
@@ -407,8 +415,8 @@ class PokemonForBattle(
     }
 
     fun calcSpeedValue(): Int {
-        var result = individual.master.getSpeedValue(31, speedEffortValue)
-        result = result.times(Characteristic.correction(characteristic, "S")).toInt()
+        var result = if(side == PartyInBattle.MY_SIDE) individual.speedValue
+        else individual.calcSpeed().times(Characteristic.correction(characteristic, "S")).toInt()
 
         if (item.equals("こだわりスカーフ")) {
             result = result.times(1.5).toInt()

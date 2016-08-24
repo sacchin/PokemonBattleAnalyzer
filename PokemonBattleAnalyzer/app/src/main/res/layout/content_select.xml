@@ -34,12 +34,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="自分" />
+                        android:text="@string/mine" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Warning!!!" />
+                        android:text="@string/opponent" />
                 </TableRow>
 
                 <TableRow

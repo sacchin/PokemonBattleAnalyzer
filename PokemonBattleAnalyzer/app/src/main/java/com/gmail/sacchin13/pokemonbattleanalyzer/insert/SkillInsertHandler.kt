@@ -194,7 +194,7 @@ class SkillInsertHandler(private val databaseHelper: DatabaseHelper?) {
         databaseHelper.insertSkillMasterData(182, "コールドフレア", 5, 140, 90, 1, 5, false, true, StatusAilment.no(StatusAilment.Code.BURN), 30.0, -1, 0.0, -1, 0.0)
         databaseHelper.insertSkillMasterData(183, "ゴッドバード", 9, 140, 90, 0, 5, false, true, -1, 0.0, -1, 0.0, -1, 0.0)
         databaseHelper.insertSkillMasterData(184, "ゴーストダイブ", 13, 90, 100, 0, 10, true, false, -1, 0.0, -1, 0.0, -1, 0.0)
-        databaseHelper.insertSkillMasterData(185, "10まんボルト", 3, 90, 100, 1, 15, false, true, StatusAilment.no(StatusAilment.Code.PARALYSIS), 10.0, -1, 0.0, -1, 0.0)
+        databaseHelper.insertSkillMasterData(185, "１０まんボルト", 3, 90, 100, 1, 15, false, true, StatusAilment.no(StatusAilment.Code.PARALYSIS), 10.0, -1, 0.0, -1, 0.0)
         databaseHelper.insertSkillMasterData(186, "さいみんじゅつ", 10, -1, 60, 2, 20, false, true, StatusAilment.no(StatusAilment.Code.SLEEP), 100.0, -1, 0.0, -1, 0.0)
         databaseHelper.insertSkillMasterData(187, "さきおくり", 15, -1, 100, 2, 15, false, true, -1, 0.0, -1, 0.0, -1, 0.0)
         databaseHelper.insertSkillMasterData(188, "さきどり", 0, -1, -1, 2, 20, false, true, -1, 0.0, -1, 0.0, -1, 0.0)

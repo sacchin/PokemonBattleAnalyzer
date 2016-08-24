@@ -1,6 +1,7 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingPokemonSkill
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
@@ -78,36 +79,36 @@ class BattleCalculatorTest {
         }
         val rankingResponse1 = adapter.fromJson(sb1.toString())
         rankingResponse1.rankingPokemonTrend.convertToFew()
-        val skills1 = ArrayList<Skill>()
+        val skills1 = ArrayList<RankingPokemonSkill>()
         for (temp in rankingResponse1.rankingPokemonTrend.wazaInfo) {
-            if (database.contains(temp.name)) skills1.add(database[temp.name] as Skill)
+            if (database.contains(temp.name)) skills1.add(RankingPokemonSkill.create(temp, database[temp.name] as Skill))
         }
         garura = PokemonForBattle.create(PartyInBattle.MY_SIDE, IndividualPBAPokemon(
                 0, -1, "ガルーラナイト", "いじっぱり", "せいしんりょく",
                 database["ねこだまし"] as Skill, database["いわなだれ"] as Skill, database["みがわり"] as Skill, database["アイアンヘッド"] as Skill,
-                252, 0, 0, 0, 0, 0, 252, 212, -1, -1, -1, -1, -1,
-                PokemonMasterData("115", "ガルーラ", "Kangaskhan", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
-        garura.skill = database["アイアンヘッド"] as Skill
+                252, 0, 0, 0, 0, 0, 252, PokemonMasterData("115", "ガルーラ", "Kangaskhan", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
+        garura.skill = database["いわなだれ"] as Skill
         garura.hpValue = 212
-        garura.trend = TrendForBattle.create(rankingResponse1.rankingPokemonTrend, skills1)
+        garura.trend = TrendForBattle.create(rankingResponse1.rankingPokemonTrend)
+        garura.trend.skillList = skills1
 
         reader = File("testdata/2.txt").absoluteFile
         val sb2 = StringBuilder()
         for (temp in reader.readLines()) {
             sb2.append(temp)
         }
-        val skills2 = ArrayList<Skill>()
         val rankingResponse2 = adapter.fromJson(sb2.toString())
         rankingResponse2.rankingPokemonTrend.convertToFew()
+        val skills2 = ArrayList<RankingPokemonSkill>()
         for (temp in rankingResponse2.rankingPokemonTrend.wazaInfo) {
-            if (database.contains(temp.name)) skills2.add(database[temp.name] as Skill)
+            if (database.contains(temp.name)) skills2.add(RankingPokemonSkill.create(temp, database[temp.name] as Skill))
         }
         fireallow = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, IndividualPBAPokemon(
                 0, -1, "ゴツゴツメット", "ずぶとい", "はやてのつばさ",
                 database["はねやすめ"] as Skill, database["おにび"] as Skill, database["みがわり"] as Skill, database["ブレイブバード"] as Skill,
-                252, 100, 252, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1,
-                PokemonMasterData("663", "ファイアロー", "Talonflame", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
-        fireallow.trend = TrendForBattle.create(rankingResponse2.rankingPokemonTrend, skills2)
+                252, 100, 252, 0, 0, 0, 0, PokemonMasterData("663", "ファイアロー", "Talonflame", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
+        fireallow.trend = TrendForBattle.create(rankingResponse2.rankingPokemonTrend)
+        garura.trend.skillList = skills2
 
 //        reader = File("testdata/3.txt").absoluteFile
 //        val sb3 = StringBuilder()

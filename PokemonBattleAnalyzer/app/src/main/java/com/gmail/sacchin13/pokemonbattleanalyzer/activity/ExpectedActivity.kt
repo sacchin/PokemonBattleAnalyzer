@@ -1,21 +1,26 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.SeekBar
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.BattleField
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.BattleStatus
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PartyInBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Skill
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
 import kotlinx.android.synthetic.main.activity_expected.*
+import kotlinx.android.synthetic.main.app_bar_home.*
+import java.util.*
 import kotlin.properties.Delegates
 
 class ExpectedActivity : PGLActivity() {
@@ -38,26 +43,43 @@ class ExpectedActivity : PGLActivity() {
         initView(intent)
     }
 
-    fun calc() {
+    fun showBest() {
         val selectedOpponent = opponent.apply()
         val selectedMine = mine.apply()
 
         //技1の場合
         selectedMine.skill = selectedMine.individual.skillNo1
         val caseOfSkill1 = BattleCalculator.companion.getResult(selectedMine, selectedOpponent, BattleField())
-        Log.v(BattleStatus.name(BattleStatus.Code.WIN), caseOfSkill1.mayOccur[BattleStatus.Code.WIN].toString())
-        Log.v(BattleStatus.name(BattleStatus.Code.DEFEAT), caseOfSkill1.mayOccur[BattleStatus.Code.DEFEAT].toString())
-        Log.v(BattleStatus.name(BattleStatus.Code.REVERSE), caseOfSkill1.mayOccur[BattleStatus.Code.REVERSE].toString())
-        Log.v(BattleStatus.name(BattleStatus.Code.OWN_HEAD), caseOfSkill1.mayOccur[BattleStatus.Code.OWN_HEAD].toString())
+        skill1_name.text = selectedMine.individual.skillNo1.jname
+        skill1_alive.text = caseOfSkill1.winRate()
+        skill1_dead.text = caseOfSkill1.loseRate()
 
         //技2の場合
+        selectedMine.skill = selectedMine.individual.skillNo2
+        val caseOfSkill2 = BattleCalculator.companion.getResult(selectedMine, selectedOpponent, BattleField())
+        skill2_name.text = selectedMine.individual.skillNo2.jname
+        skill2_alive.text = caseOfSkill2.winRate()
+        skill2_dead.text = caseOfSkill2.loseRate()
+
         //技3の場合
+        selectedMine.skill = selectedMine.individual.skillNo3
+        val caseOfSkill3 = BattleCalculator.companion.getResult(selectedMine, selectedOpponent, BattleField())
+        skill3_name.text = selectedMine.individual.skillNo3.jname
+        skill3_alive.text = caseOfSkill3.winRate()
+        skill3_dead.text = caseOfSkill3.loseRate()
+
         //技4の場合
+        selectedMine.skill = selectedMine.individual.skillNo4
+        val caseOfSkill4 = BattleCalculator.companion.getResult(selectedMine, selectedOpponent, BattleField())
+        skill4_name.text = selectedMine.individual.skillNo4.jname
+        skill4_alive.text = caseOfSkill4.winRate()
+        skill4_dead.text = caseOfSkill4.loseRate()
+
+        coverRate.text = caseOfSkill1.coverRate()
+
         //控え1に交換した場合
         //控え2に交換した場合
-
     }
-
 
     fun get(index: Int): IndividualPBAPokemon {
         when (index) {
@@ -72,7 +94,18 @@ class ExpectedActivity : PGLActivity() {
     }
 
     override fun setTrend(result: TrendForBattle, index: Int) {
+        finishCount++
+
+        result.updateSkills(databaseHelper)
         opponent.member[index].trend = result
+
+        if(result.itemInfo.isEmpty() && result.seikakuInfo.isEmpty() &&
+            result.tokuseiInfo.isEmpty() && result.skillList.isEmpty()){
+            Snackbar.make(inputTable, "download failed at $index", Snackbar.LENGTH_SHORT).show()
+        }
+        if(finishCount == opponentParty.member.size){
+            Snackbar.make(inputTable, "download finish", Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     fun initView(intent: Intent) {
@@ -80,19 +113,20 @@ class ExpectedActivity : PGLActivity() {
         mine.add(get(intent.extras.getInt("member2", 0)))
         mine.add(get(intent.extras.getInt("member3", 0)))
 
-        val myAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
-        for (temp in mine.member) {
-            myAdapter.add(temp.individual.master.jname)
-        }
-        myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        my_party1.setOnClickListener(OnPokemonSelectedListener(true, 0))
+        my_party1.setImageBitmap(util.createImage(mine.member[0].individual.master, 120.0f, resources))
 
-        myPokemonSpinner.adapter = myAdapter
-        myPokemonSpinner.onItemSelectedListener = OnPokemonSelectedListener(true)
+        my_party2.setOnClickListener(OnPokemonSelectedListener(true, 1))
+        my_party2.setImageBitmap(util.createImage(mine.member[1].individual.master, 120.0f, resources))
 
-        opponentHPBar.setOnSeekBarChangeListener(OnHPChangeListener(opponent))
-        myHPBar.setOnSeekBarChangeListener(OnHPChangeListener(mine))
+        my_party3.setOnClickListener(OnPokemonSelectedListener(true, 2))
+        my_party3.setImageBitmap(util.createImage(mine.member[2].individual.master, 120.0f, resources))
+
+        opponentHPBar.setOnSeekBarChangeListener(OnHPChangeListener())
+        myHPBar.setOnEditorActionListener(OnHPEditListener())
 
         val statusAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
+        statusAdapter.add("状態異常")
         statusAdapter.add("やけど")
         statusAdapter.add("こおり")
         statusAdapter.add("まひ")
@@ -152,7 +186,7 @@ class ExpectedActivity : PGLActivity() {
         opponentSSpinner.setSelection(6)
         opponentSSpinner.onItemSelectedListener = OnRankSelectedListener(mine, 4)
 
-        expected_fab.setOnClickListener { calc() }
+        expected_fab.setOnClickListener { showBest() }
     }
 
     override fun showParty() {
@@ -163,27 +197,52 @@ class ExpectedActivity : PGLActivity() {
         opponent.add(opponentParty.member5)
         opponent.add(opponentParty.member6)
 
-        val opponentAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
-        for (temp in opponent.member) {
-            opponentAdapter.add(temp.individual.master.jname)
-        }
-        opponentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        opponentPokemonSpinner.adapter = opponentAdapter
-        opponentPokemonSpinner.onItemSelectedListener = OnPokemonSelectedListener(false)
+        oppo_party1.setOnClickListener(OnPokemonSelectedListener(false, 0))
+        oppo_party1.setImageBitmap(util.createImage(opponent.member[0].individual.master, 120.0f, resources))
+
+        oppo_party2.setOnClickListener(OnPokemonSelectedListener(false, 1))
+        oppo_party2.setImageBitmap(util.createImage(opponent.member[1].individual.master, 120.0f, resources))
+
+        oppo_party3.setOnClickListener(OnPokemonSelectedListener(false, 2))
+        oppo_party3.setImageBitmap(util.createImage(opponent.member[2].individual.master, 120.0f, resources))
+
+        oppo_party4.setOnClickListener(OnPokemonSelectedListener(false, 3))
+        oppo_party4.setImageBitmap(util.createImage(opponent.member[3].individual.master, 120.0f, resources))
+
+        oppo_party5.setOnClickListener(OnPokemonSelectedListener(false, 4))
+        oppo_party5.setImageBitmap(util.createImage(opponent.member[4].individual.master, 120.0f, resources))
+
+        oppo_party6.setOnClickListener(OnPokemonSelectedListener(false, 5))
+        oppo_party6.setImageBitmap(util.createImage(opponent.member[5].individual.master, 120.0f, resources))
     }
 
-    inner class OnPokemonSelectedListener(val isMine: Boolean) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-        }
-
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+    inner class OnPokemonSelectedListener(val isMine: Boolean, val position: Int) : View.OnClickListener {
+        val temp = util.createImage(R.drawable.select, 120f, resources)
+        override fun onClick(v: View?) {
             if (isMine) {
-                mine.selected = position
-                myHPBar.progress = 100
-                myPokemonImage.setImageBitmap(util.createImage(myParty.member[position], 120f, resources))
-                Log.v("myPokemonSpinner", "${position} click!")
+                selected_party1.setImageBitmap(null)
+                selected_party2.setImageBitmap(null)
+                selected_party3.setImageBitmap(null)
+                when(position){
+                    0 -> selected_party1.setImageBitmap(temp)
+                    1 -> selected_party2.setImageBitmap(temp)
+                    2 -> selected_party3.setImageBitmap(temp)
+                }
             } else {
-                opponent.selected = position
+                selected_oppoParty1.setImageBitmap(null)
+                selected_oppoParty2.setImageBitmap(null)
+                selected_oppoParty3.setImageBitmap(null)
+                selected_oppoParty4.setImageBitmap(null)
+                selected_oppoParty5.setImageBitmap(null)
+                selected_oppoParty6.setImageBitmap(null)
+                when(position){
+                    0 -> selected_oppoParty1.setImageBitmap(temp)
+                    1 -> selected_oppoParty2.setImageBitmap(temp)
+                    2 -> selected_oppoParty3.setImageBitmap(temp)
+                    3 -> selected_oppoParty4.setImageBitmap(temp)
+                    4 -> selected_oppoParty5.setImageBitmap(temp)
+                    5 -> selected_oppoParty6.setImageBitmap(temp)
+                }
             }
         }
     }
@@ -212,7 +271,7 @@ class ExpectedActivity : PGLActivity() {
         }
     }
 
-    inner class OnHPChangeListener(val party: PartyInBattle) : SeekBar.OnSeekBarChangeListener {
+    inner class OnHPChangeListener() : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         }
 
@@ -220,7 +279,20 @@ class ExpectedActivity : PGLActivity() {
         }
 
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            party.setHPRatio(seekBar!!.progress)
+            opponent.setHPRatio(seekBar!!.progress)
         }
     }
+
+    inner class OnHPEditListener() : TextView.OnEditorActionListener {
+        override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+            if (actionId === EditorInfo.IME_ACTION_SEND) {
+                val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(v!!.windowToken, 0)
+                mine.setHP(Integer.parseInt(v.text.toString()))
+                return true
+            }
+            return false
+        }
+    }
+
 }

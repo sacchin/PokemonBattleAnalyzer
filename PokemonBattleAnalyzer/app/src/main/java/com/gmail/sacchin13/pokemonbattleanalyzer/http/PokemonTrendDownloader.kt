@@ -18,8 +18,7 @@ import java.util.*
 class PokemonTrendDownloader(
         val pokemonNo: String,
         val index: Int,
-        val listener: EventListener,
-        val databaseHelper: DatabaseHelper) : AsyncTask<Void, Void, TrendForBattle>() {
+        val listener: EventListener) : AsyncTask<Void, Void, TrendForBattle>() {
 
     interface EventListener {
         fun onFinish(result: TrendForBattle, index: Int)
@@ -39,7 +38,7 @@ class PokemonTrendDownloader(
                                 .build())
                     }.build()
             val requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"),
-                    "languageId=1&seasonId=116&battleType=1&timezone=JST&pokemonId=$pokemonNo&displayNumberWaza=10&displayNumberTokusei=3&displayNumberSeikaku=10&displayNumberItem=10&displayNumberLevel=10&displayNumberPokemonIn=10&displayNumberPokemonDown=10&displayNumberPokemonDownWaza=10&timeStamp=1466495098653"
+                    "languageId=1&seasonId=117&battleType=1&timezone=JST&pokemonId=${pokemonNo}&displayNumberWaza=10&displayNumberTokusei=3&displayNumberSeikaku=10&displayNumberItem=10&displayNumberLevel=10&displayNumberPokemonIn=10&displayNumberPokemonDown=10&displayNumberPokemonDownWaza=10&timeStamp=1471925867011"
             )
 
             val request = Request.Builder().url(URL).post(requestBody).build()
@@ -48,28 +47,20 @@ class PokemonTrendDownloader(
             val str = response.body().string()
 
             if (str.equals("error")) {
-                Log.e("doInBackground", str)
+                Log.v("PokemonTrendDownloader", "stop $str")
             } else {
                 val moshi = Moshi.Builder().build()
                 val adapter = moshi.adapter(RankingResponse::class.java)
 
                 val rankingResponse = adapter.fromJson(str)
-
-                val skills = ArrayList<Skill>()
-                for (temp in rankingResponse.rankingPokemonTrend.wazaInfo) {
-                    skills.add(databaseHelper.selectSkillByName(temp.name))
-                }
-
-                return TrendForBattle.create(rankingResponse.rankingPokemonTrend, skills)
+                rankingResponse.rankingPokemonTrend.convertToFew()
+                return TrendForBattle.create(rankingResponse.rankingPokemonTrend)
             }
-        } catch(e: IOException) {
-            Log.e("doInBackground", "IOException")
-        } catch(e: JSONException) {
-            Log.e("doInBackground", "JSONException")
         } catch(e: Exception) {
             Log.e("doInBackground", e.message)
+            Log.e("doInBackground", e.toString())
         }
-        return TrendForBattle(listOf(), listOf(), listOf())
+        return TrendForBattle(listOf(), listOf(), listOf(), listOf())
     }
 
     companion object {

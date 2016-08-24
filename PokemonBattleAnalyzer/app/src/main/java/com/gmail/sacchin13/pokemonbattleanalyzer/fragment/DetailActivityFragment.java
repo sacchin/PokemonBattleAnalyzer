@@ -182,11 +182,11 @@ public class DetailActivityFragment extends PGLFragment {
         mainView.removeAllViews();
 
         createPBAPokemonStatus(p);
-        if(p.getMaster().getMega() != null){
-            for(PokemonMasterData mega : p.getMaster().getMega()){
-                //createPBAPokemonStatus(mega);
-            }
-        }
+        //if(p.getMaster().getMega() != null){
+        //    for(PokemonMasterData mega : p.getMaster().getMega()){
+        //        //createPBAPokemonStatus(mega);
+        //    }
+        //}
     }
 
     private void createPBAPokemonStatus(IndividualPBAPokemon po) {
