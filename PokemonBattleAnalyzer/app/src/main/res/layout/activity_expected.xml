@@ -4,19 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_padding"
+    android:paddingLeft="@dimen/activity_horizontal_padding"
+    android:paddingRight="@dimen/activity_horizontal_padding"
+    android:paddingTop="@dimen/activity_vertical_padding"
     tools:context="com.gmail.sacchin13.pokemonbattleanalyzer.activity.ExpectedActivity">
 
-
     <TableLayout
+        android:background="#EEEEEE"
+        android:paddingLeft="@dimen/activity_horizontal_padding"
+        android:paddingRight="@dimen/activity_horizontal_padding"
+        android:paddingBottom="@dimen/activity_vertical_padding"
+        android:paddingTop="@dimen/activity_vertical_padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:stretchColumns="0,1,2,3,4,5,6"
-        android:layout_marginTop="16dp"
         android:id="@+id/inputTable">
 
         <TableRow
@@ -72,8 +75,8 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView
-                android:text="HP"
+            <CheckBox
+                android:id="@+id/my_mega_check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <EditText
@@ -82,7 +85,8 @@
                 android:layout_width="wrap_content"
                 android:layout_span="2"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionSend" />
+                android:imeOptions="actionSend"
+                android:hint="HP" />
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -140,10 +144,17 @@
                 android:id="@+id/mySSpinner"/>
         </TableRow>
 
+        <TextView
+            android:gravity="center"
+            android:text="@string/expected_activity_vs"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/expected_vertical_margin">
+            android:layout_marginTop="@dimen/activity_vertical_margin">
             <TextView
                 android:text="@string/opponent"
                 android:layout_width="match_parent"
@@ -231,8 +242,8 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView
-                android:text="HP"
+            <CheckBox
+                android:id="@+id/oppo_mega_check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <SeekBar
@@ -302,28 +313,37 @@
     </TableLayout>
 
     <LinearLayout
+        android:background="#EEEEEE"
+        android:layout_marginTop="@dimen/activity_vertical_padding"
+        android:paddingBottom="@dimen/activity_vertical_padding"
+        android:paddingTop="@dimen/activity_vertical_padding"
+        android:paddingLeft="@dimen/activity_horizontal_padding"
+        android:paddingRight="@dimen/activity_horizontal_padding"
         android:id="@+id/coverLayout"
         android:layout_below="@+id/inputTable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
             android:text="網羅率:"
-            android:layout_marginTop="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/coverRate"
-            android:layout_marginTop="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <TableLayout
+        android:background="#EEEEEE"
+        android:paddingBottom="@dimen/activity_vertical_padding"
+        android:paddingTop="@dimen/activity_vertical_padding"
+        android:paddingLeft="@dimen/activity_horizontal_padding"
+        android:paddingRight="@dimen/activity_horizontal_padding"
         android:layout_below="@+id/coverLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/activity_vertical_padding"
         android:id="@+id/resultTable">
 
         <TableRow
@@ -407,6 +427,14 @@
                 android:layout_height="wrap_content"/>
         </TableRow>
     </TableLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"

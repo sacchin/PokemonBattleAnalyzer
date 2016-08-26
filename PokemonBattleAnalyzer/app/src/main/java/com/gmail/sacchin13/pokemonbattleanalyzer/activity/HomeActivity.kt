@@ -31,7 +31,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     val AFFINITY_ACTIVITY_CODE = 1
     val EDIT_ACTIVITY_CODE = 0
 
-    var buttonEnable: Boolean = true
     var serviceStatePreferences: SharedPreferences by Delegates.notNull()
 
     var databaseHelper: DatabaseHelper by Delegates.notNull()
@@ -103,24 +102,16 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     @SuppressWarnings("StatementWithEmptyBody")
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_save) {
             createMyParty()
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_edit) {
             startEditActivity()
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_clear) {
+            party.clear()
+            partyLayout.removeAllViews()
+            party.userName = "none"
         }
-//        when (id) {
-//            R.id.action_settings -> {
-//                val serviceStatePreferences = getSharedPreferences("pokemon", MODE_PRIVATE)
-//                val editor = serviceStatePreferences!!.edit()
-//                editor.putBoolean("enable", !serviceStatePreferences.getBoolean("enable", true));
-//                editor.apply();
-//            }
-//        }
-//        drawer_layout!!.closeDrawer(GravityCompat.START)
+
         return true
     }
 

@@ -21,6 +21,7 @@ class PartyInBattle(val side: Int = 0) {
     var tempSpecialAttack: Int = 0
     var tempSpecialDefense: Int = 0
     var tempSpeed: Int = 0
+    var tempMega: Boolean = false
 
     init {
         member = ArrayList<PokemonForBattle>()
@@ -29,18 +30,6 @@ class PartyInBattle(val side: Int = 0) {
     fun add(pokemon: IndividualPBAPokemon): Int {
         this.member.add(PokemonForBattle.create(side, pokemon))
         return member.size
-    }
-
-    fun setHPRatio(ratio: Int) {
-        tempHpRatio = ratio
-    }
-
-    fun setHP(value: Int) {
-        tempHpValue = value
-    }
-
-    fun setStatus(position: Int) {
-        tempStatus = position
     }
 
     fun setAttackRank(position: Int) {
@@ -65,6 +54,7 @@ class PartyInBattle(val side: Int = 0) {
 
 
     fun apply(): PokemonForBattle {
+        member[selected].mega = tempMega
         member[selected].status = tempStatus
         member[selected].hpRatio = tempHpRatio
         member[selected].hpValue = tempHpValue

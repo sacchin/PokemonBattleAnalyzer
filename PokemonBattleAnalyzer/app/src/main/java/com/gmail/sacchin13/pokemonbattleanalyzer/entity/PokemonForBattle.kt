@@ -1,5 +1,6 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
+import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import kotlin.properties.Delegates
 
@@ -26,17 +27,19 @@ class PokemonForBattle(
         var hitProbabilityRank: Int = UNKNOWN,
         var avoidanceRank: Int = UNKNOWN,
         var criticalRank: Int = UNKNOWN,
+        var mega: Boolean = false,
         var individual: IndividualPBAPokemon = IndividualPBAPokemon()
 ) {
 
     var trend: TrendForBattle by Delegates.notNull()
     var field: MutableList<BattleField.Field> = mutableListOf()
+    var firstCheck = true
 
     companion object {
         const val UNKNOWN = -1
 
         fun create(side: Int, individual: IndividualPBAPokemon): PokemonForBattle {
-            return PokemonForBattle(side, -1, "", "", "", Skill(), 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, individual)
+            return PokemonForBattle(side, -1, "", "", "", Skill(), 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, individual)
         }
     }
 
@@ -694,8 +697,6 @@ class PokemonForBattle(
         if (skill.jname.equals("アフロブレイク")) {
 
         }
-
-
     }
 
     fun recoil() {
@@ -708,10 +709,25 @@ class PokemonForBattle(
     fun clone(): PokemonForBattle {
         return PokemonForBattle(side, status, item, characteristic, ability, skill, hpEffortValue, hpRatio, hpValue, attackEffortValue, attackRank,
                 defenseEffortValue, defenseRank, specialAttackEffortValue, specialAttackRank, specialDefenseEffortValue, specialDefenseRank,
-                speedEffortValue, speedRank, hitProbabilityRank, avoidanceRank, criticalRank, individual)
+                speedEffortValue, speedRank, hitProbabilityRank, avoidanceRank, criticalRank, mega, individual)
     }
 
     fun skillAccuracy(): Double {
         return if (skill.accuracy < 0) return 1.0 else skill.accuracy
     }
+
+    fun noEffect(skill: Skill): Boolean {
+        val result = individual.typeScale(Type.code(skill.type))
+        return if(result < 1) true else false
+    }
+
+    fun summarizable(): Boolean{
+        if(ability.equals("よわき") || ability.equals("むしのしらせ") || ability.equals("げきりゅう") ||
+                ability.equals("もうか") || ability.equals("しんりょく") || item.equals("オボンのみ")){
+            return false
+        }
+        return true
+    }
+
+
 }

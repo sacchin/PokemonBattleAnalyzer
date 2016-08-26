@@ -33,7 +33,7 @@ class PokemonForBattleTest {
         attackSide.item = "こだわりハチマキ"
         attackSide.attackRank = 0
 
-        assertEquals(137, kucheat.getAttackValue(31, 252))
+        assertEquals(137, kucheat.attack(31, 252))
 
         //val result = attackSide.calcAttackValue()
         //assertEquals(411, result)
@@ -82,7 +82,7 @@ class PokemonForBattleTest {
         attackSide.item = "こだわりメガネ"
         attackSide.specialAttackRank = -3
 
-        assertEquals(107, kucheat.getSpecialAttackValue(31, 252))
+        assertEquals(107, kucheat.specialAttack(31, 252))
 
         //val result = attackSide.calcSpecialAttackValue()
         //assertEquals(120, result)
@@ -95,7 +95,7 @@ class PokemonForBattleTest {
         defenseSide.ability = "ふしぎなうろこ"
         defenseSide.status = StatusAilment.no(StatusAilment.Code.POISON)
 
-        assertEquals(137, kucheat.getDefenseValue(31, 252))
+        assertEquals(137, kucheat.specialDefense(31, 252))
 
         //val result = defenseSide.calcDefenseValue()
         //assertEquals(205, result)

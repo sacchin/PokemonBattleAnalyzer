@@ -1,6 +1,5 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
-
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -9,15 +8,21 @@ import java.util.HashMap
 class Ability(val ranking: Int = 0, val usageRate: Double = 0.0, val name: String = "", val sequenceNumber: Int = 0) {
 
     companion object {
-        private var invalidAbility: MutableMap<Type.Code, Array<String>>? = null
-        private var scalUpAbility: MutableMap<Type.Code, Array<String>>? = null
+        private var invalidAbility: MutableMap<Type.Code, Array<String>> = HashMap<Type.Code, Array<String>>()
 
         val ELECTRIC_INVALID_ABILITY = arrayOf("ちくでん", "でんきエンジン", "ひらいしん")
         val WATER_INVALID_ABILITY = arrayOf("かんそうはだ", "ちょすい", "よびみず")
         val GRASS_INVALID_ABILITY = arrayOf("そうしょく")
         val FIRE_INVALID_ABILITY = arrayOf("もらいび")
         val GRAND_INVALID_ABILITY = arrayOf("ふゆう")
-        val FIRE_SCALE_UP_ABILITY = arrayOf("かんそうはだ")
+
+        init {
+            invalidAbility.put(Type.Code.ELECTRIC, ELECTRIC_INVALID_ABILITY)
+            invalidAbility.put(Type.Code.WATER, WATER_INVALID_ABILITY)
+            invalidAbility.put(Type.Code.GRASS, GRASS_INVALID_ABILITY)
+            invalidAbility.put(Type.Code.FIRE, FIRE_INVALID_ABILITY)
+            invalidAbility.put(Type.Code.GROUND, GRAND_INVALID_ABILITY)
+        }
 
         fun createAbility(tokusei: JSONObject): Ability {
             try {
@@ -33,39 +38,19 @@ class Ability(val ranking: Int = 0, val usageRate: Double = 0.0, val name: Strin
             return Ability()
         }
 
-        fun calcTypeScale(ability: String?, type: Type.Code?): Float {
-            if (ability == null || type == null) {
-                throw NullPointerException()
-            }
+        fun calcTypeScale(ability: String, type: Type.Code): Double {
+            val list: Array<String>? = invalidAbility[type]
+            if (list != null && list.contains(ability)) return 0.0
 
-            invalidAbility = HashMap<Type.Code, Array<String>>()
-            invalidAbility!!.put(Type.Code.ELECTRIC, ELECTRIC_INVALID_ABILITY)
-            invalidAbility!!.put(Type.Code.WATER, WATER_INVALID_ABILITY)
-            invalidAbility!!.put(Type.Code.GRASS, GRASS_INVALID_ABILITY)
-            invalidAbility!!.put(Type.Code.FIRE, FIRE_INVALID_ABILITY)
-            invalidAbility!!.put(Type.Code.GROUND, GRAND_INVALID_ABILITY)
-
-            scalUpAbility = HashMap<Type.Code, Array<String>>()
-            scalUpAbility!!.put(Type.Code.FIRE, FIRE_SCALE_UP_ABILITY)
-
-            var list: Array<String>? = invalidAbility!![type]
-            if (list != null) {
-                for (temp in list) {
-                    if (temp == ability) {
-                        return 0f
-                    }
+            if ("ふしぎなまもり".equals(ability)) {
+                if (type === Type.Code.FIRE || type === Type.Code.GHOST || type === Type.Code.FLYING ||
+                        type === Type.Code.ROCK || type === Type.Code.DARK) {
+                    return  2.0
+                } else {
+                    return  0.0
                 }
             }
-
-            list = scalUpAbility!![type]
-            if (list != null) {
-                for (temp in list) {
-                    if (temp == ability) {
-                        return 1.25f
-                    }
-                }
-            }
-            return 1f
+            return 1.0
         }
     }
 }

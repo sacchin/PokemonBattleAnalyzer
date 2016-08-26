@@ -35,29 +35,12 @@ public open class IndividualPBAPokemon (
         }
     }
 
-    fun calcHp(): Int {
-        return master.getHPValue(31, 252)
-    }
-
-    fun calcAttack(): Int {
-        return master.getAttackValue(31, 252)
-    }
-
-    fun calcDefense(): Int {
-        return master.getDefenseValue(31, 252)
-    }
-
-    fun calcSpecialAttack(): Int {
-        return master.getSpecialAttackValue(31, 252)
-    }
-
-    fun calcSpecialDefense(): Int {
-        return master.getSpecialDefenseValue(31, 252)
-    }
-
-    fun calcSpeed(): Int {
-        return master.getSpeedValue(31, 252)
-    }
+    fun calcHp() = master.hp(31, 252)
+    fun calcAttack() = master.attack(31, 252)
+    fun calcDefense() = master.defense(31, 252)
+    fun calcSpecialAttack() = master.specialAttack(31, 252)
+    fun calcSpecialDefense() = master.specialDefense(31, 252)
+    fun calcSpeed() = master.speed(31, 252)
 
     val abilities: List<String>
         get() {
@@ -72,49 +55,17 @@ public open class IndividualPBAPokemon (
             return temp
         }
 
-    fun calcATypeScale(type: Type.Code): Map<String, Int> {
-        val scaleMap = HashMap<String, Int>()
-        var result: Int
-
-        //タイプ相性に関係する特性がある場合、その値を格納する
-        //ふしぎなまもりは特別
-        for (ability in abilities) {
-            if ("ふしぎなまもり".equals(ability)) {
-                if (type === Type.Code.FIRE || type === Type.Code.GHOST || type === Type.Code.FLYING ||
-                        type === Type.Code.ROCK || type === Type.Code.DARK) {
-                    scaleMap.put(ability, 200)
-                } else {
-                    scaleMap.put(ability, 0)
-                }
-            } else {
-                val scaleByAbility = Ability.calcTypeScale(ability, type)
-                result = (scaleByAbility * Type.calculateAffinity(type, master) * 100f).toInt()
-                scaleMap.put(ability, result)
-            }
+    fun typeScale(type: Type.Code): Double {
+        val scale = Type.calculateAffinity(type, master)
+        if(scale < 1){
+            return  0.0
         }
 
-        //すべての特性で倍率が同じ場合、１つにまとめる
-//        val judgeSameScale = scaleMap.entries.iterator().next() as Int
-//        var isSame = true
-//        for (scale in scaleMap.entries) {
-//            if (judgeSameScale != scale) {
-//                isSame = false
-//            }
-//        }
-//        if (isSame) {
-//            scaleMap.clear()
-//            scaleMap.put("both", judgeSameScale)
-//        }
-        return scaleMap
-    }
-
-    fun calcAllTypeScale(): Map<Type.Code, Map<String, Int>> {
-        val scaleMap = HashMap<Type.Code, Map<String, Int>>()
-        for (type in Type.Code.values()) {
-            val temp = calcATypeScale(type)
-            scaleMap.put(type, temp)
+        val scaleByAbility = Ability.calcTypeScale(ability, type)
+        if(scaleByAbility < 1){
+            return  0.0
         }
-        return scaleMap
-    }
 
+        return scale
+    }
 }

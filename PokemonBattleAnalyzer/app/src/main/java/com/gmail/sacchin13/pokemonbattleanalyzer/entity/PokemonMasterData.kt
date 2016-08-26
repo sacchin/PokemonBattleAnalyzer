@@ -24,33 +24,142 @@ public open class PokemonMasterData(
         public open var megay: MegaPokemonMasterData? = null
 ): RealmObject()  {
 
-    fun getHPValue(iv: Int, ev: Int): Int {
+    fun hp(iv: Int, ev: Int): Int {
         val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
         return (h * 2 + iv + effort / 4) / 2 + 60
     }
 
-    fun getAttackValue(iv: Int, ev: Int): Int {
+    fun hpX(iv: Int, ev: Int): Int {
+        if(megax!= null){
+            val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
+            return (megax!!.h * 2 + iv + effort / 4) / 2 + 60
+        }else{
+            return hp(iv, ev)
+        }
+    }
+
+    fun hpY(iv: Int, ev: Int): Int {
+        if(megay!= null){
+            val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
+            return (megay!!.h * 2 + iv + effort / 4) / 2 + 60
+        }else{
+            return hp(iv, ev)
+        }
+    }
+
+    fun attack(iv: Int, ev: Int): Int {
         val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
         return ((a * 2 + iv + effort / 4) / 2 + 5).toInt()
     }
 
-    fun getDefenseValue(iv: Int, ev: Int): Int {
+    fun attackX(iv: Int, ev: Int): Int {
+        if(megax!= null) {
+            val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
+            return ((megax!!.a * 2 + iv + effort / 4) / 2 + 5).toInt()
+        } else {
+            return attack(iv, ev)
+        }
+    }
+
+    fun attackY(iv: Int, ev: Int): Int {
+        if(megay!= null) {
+            val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
+            return ((megay!!.a * 2 + iv + effort / 4) / 2 + 5).toInt()
+        } else {
+            return attack(iv, ev)
+        }
+    }
+
+    fun defense(iv: Int, ev: Int): Int {
         val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
         return ((b * 2 + iv + effort / 4) / 2 + 5).toInt()
     }
 
-    fun getSpecialAttackValue(iv: Int, ev: Int): Int {
+    fun defenseX(iv: Int, ev: Int): Int {
+        if(megax!= null) {
+            val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
+            return ((megax!!.b * 2 + iv + effort / 4) / 2 + 5).toInt()
+        } else {
+            return defense(iv, ev)
+        }
+    }
+
+    fun defenseY(iv: Int, ev: Int): Int {
+        if(megay!= null) {
+            val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
+            return ((megay!!.b * 2 + iv + effort / 4) / 2 + 5).toInt()
+        } else {
+            return defense(iv, ev)
+        }
+    }
+
+    fun specialAttack(iv: Int, ev: Int): Int {
         val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
         return ((c * 2 + iv + effort / 4) / 2 + 5).toInt()
     }
 
-    fun getSpecialDefenseValue(iv: Int, ev: Int): Int {
+    fun specialAttackX(iv: Int, ev: Int): Int {
+        if(megax!= null) {
+            val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
+            return ((megax!!.c * 2 + iv + effort / 4) / 2 + 5).toInt()
+        }else{
+            return specialAttack(iv, ev)
+        }
+    }
+
+    fun specialAttackY(iv: Int, ev: Int): Int {
+        if(megay!= null) {
+            val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
+            return ((megay!!.c * 2 + iv + effort / 4) / 2 + 5).toInt()
+        }else{
+            return specialAttack(iv, ev)
+        }
+    }
+
+    fun specialDefense(iv: Int, ev: Int): Int {
         val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
         return ((d * 2 + iv + effort / 4) / 2 + 5).toInt()
     }
 
-    fun getSpeedValue(iv: Int, ev: Int): Int {
+    fun specialDefenseX(iv: Int, ev: Int): Int {
+        if(megax!= null) {
+            val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
+            return ((megax!!.d * 2 + iv + effort / 4) / 2 + 5).toInt()
+        }else{
+            return specialDefense(iv, ev)
+        }
+    }
+
+    fun specialDefenseY(iv: Int, ev: Int): Int {
+        if(megay!= null) {
+            val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
+            return ((megay!!.d * 2 + iv + effort / 4) / 2 + 5).toInt()
+        }else{
+            return specialDefense(iv, ev)
+        }
+    }
+
+    fun speed(iv: Int, ev: Int): Int {
         val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
         return ((s * 2 + iv + effort / 4) / 2 + 5).toInt()
     }
+
+    fun speedX(iv: Int, ev: Int): Int {
+        if(megax!= null) {
+            val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
+            return ((megax!!.s * 2 + iv + effort / 4) / 2 + 5).toInt()
+        }else{
+            return speed(iv, ev)
+        }
+    }
+
+    fun speedY(iv: Int, ev: Int): Int {
+        if(megay!= null) {
+            val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
+            return ((megay!!.s * 2 + iv + effort / 4) / 2 + 5).toInt()
+        }else{
+            return speed(iv, ev)
+        }
+    }
+
 }

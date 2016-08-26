@@ -108,7 +108,7 @@ class BattleCalculatorTest {
                 database["はねやすめ"] as Skill, database["おにび"] as Skill, database["みがわり"] as Skill, database["ブレイブバード"] as Skill,
                 252, 100, 252, 0, 0, 0, 0, PokemonMasterData("663", "ファイアロー", "Talonflame", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
         fireallow.trend = TrendForBattle.create(rankingResponse2.rankingPokemonTrend)
-        garura.trend.skillList = skills2
+        fireallow.trend.skillList = skills2
 
 //        reader = File("testdata/3.txt").absoluteFile
 //        val sb3 = StringBuilder()
@@ -246,7 +246,7 @@ class BattleCalculatorTest {
 
     @Test
     fun 戦闘シミュレーションの正常系テスト() {
-        val result = BattleCalculator.companion.getResult(garura, fireallow, BattleField())
+        val result = BattleCalculator.getResult(garura, fireallow, BattleField())
         for (temp in result.mayOccur) {
             println(BattleStatus.name(temp.key) + " = ${temp.value}")
         }

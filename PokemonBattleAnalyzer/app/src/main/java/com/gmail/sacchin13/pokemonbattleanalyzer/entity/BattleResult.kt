@@ -113,4 +113,12 @@ class BattleResult {
             return format.format(coverRate.times(100.0)) + "%"
         }
     }
+
+    fun add(result: BattleResult){
+        mayOccur[BattleStatus.Code.WIN] = mayOccur[BattleStatus.Code.WIN]!!.plus(result.mayOccur[BattleStatus.Code.WIN]!!)
+        mayOccur[BattleStatus.Code.DEFEAT] = mayOccur[BattleStatus.Code.DEFEAT]!!.plus(result.mayOccur[BattleStatus.Code.DEFEAT]!!)
+        mayOccur[BattleStatus.Code.REVERSE] = mayOccur[BattleStatus.Code.REVERSE]!!.plus(result.mayOccur[BattleStatus.Code.REVERSE]!!)
+        mayOccur[BattleStatus.Code.OWN_HEAD] = mayOccur[BattleStatus.Code.OWN_HEAD]!!.plus(result.mayOccur[BattleStatus.Code.OWN_HEAD]!!)
+        mayOccur[BattleStatus.Code.DRAW] = mayOccur[BattleStatus.Code.DRAW]!!.plus(result.mayOccur[BattleStatus.Code.DRAW]!!)
+    }
 }

@@ -23,10 +23,6 @@ class BattleField(
         MudSport, WaterSport, Gravity, Tailwind, LuckyChant, Mist, Safeguard, StealthRock, MatBlock, ToxicSpikes, StickyWeb, LightScreen, Spikes, Reflect, Unknown
     }
 
-    fun add(item: BattleField.Field){
-        field.add(item)
-    }
-
     fun update(attackSide: PokemonForBattle, defenseSide: PokemonForBattle){
         if(attackSide.skill.jname.equals("あまごい")) weather = Weather.Rainy
         if(attackSide.skill.jname.equals("あられ")) weather = Weather.Hailstone

@@ -3,13 +3,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Save My Party" />
+            android:id="@+id/nav_save"
+            android:icon="@drawable/nav_save_48"
+            android:title="@string/navigation_save_as_my" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Edit My Party" />
+            android:id="@+id/nav_edit"
+            android:icon="@drawable/nav_edit_48"
+            android:title="@string/navigation_edit_my_party" />
+        <item
+            android:id="@+id/nav_clear"
+            android:icon="@drawable/nav_refresh_48"
+            android:title="@string/navigation_edit_my_party" />
     </group>
 
     <item android:title="Communicate">

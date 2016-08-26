@@ -1,5 +1,7 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.activity
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,12 +17,9 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.BattleField
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PartyInBattle
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Skill
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
 import kotlinx.android.synthetic.main.activity_expected.*
-import kotlinx.android.synthetic.main.app_bar_home.*
-import java.util.*
 import kotlin.properties.Delegates
 
 class ExpectedActivity : PGLActivity() {
@@ -49,28 +48,28 @@ class ExpectedActivity : PGLActivity() {
 
         //技1の場合
         selectedMine.skill = selectedMine.individual.skillNo1
-        val caseOfSkill1 = BattleCalculator.companion.getResult(selectedMine, selectedOpponent, BattleField())
+        val caseOfSkill1 = BattleCalculator.getResult(selectedMine, selectedOpponent, BattleField())
         skill1_name.text = selectedMine.individual.skillNo1.jname
         skill1_alive.text = caseOfSkill1.winRate()
         skill1_dead.text = caseOfSkill1.loseRate()
 
         //技2の場合
         selectedMine.skill = selectedMine.individual.skillNo2
-        val caseOfSkill2 = BattleCalculator.companion.getResult(selectedMine, selectedOpponent, BattleField())
+        val caseOfSkill2 = BattleCalculator.getResult(selectedMine, selectedOpponent, BattleField())
         skill2_name.text = selectedMine.individual.skillNo2.jname
         skill2_alive.text = caseOfSkill2.winRate()
         skill2_dead.text = caseOfSkill2.loseRate()
 
         //技3の場合
         selectedMine.skill = selectedMine.individual.skillNo3
-        val caseOfSkill3 = BattleCalculator.companion.getResult(selectedMine, selectedOpponent, BattleField())
+        val caseOfSkill3 = BattleCalculator.getResult(selectedMine, selectedOpponent, BattleField())
         skill3_name.text = selectedMine.individual.skillNo3.jname
         skill3_alive.text = caseOfSkill3.winRate()
         skill3_dead.text = caseOfSkill3.loseRate()
 
         //技4の場合
         selectedMine.skill = selectedMine.individual.skillNo4
-        val caseOfSkill4 = BattleCalculator.companion.getResult(selectedMine, selectedOpponent, BattleField())
+        val caseOfSkill4 = BattleCalculator.getResult(selectedMine, selectedOpponent, BattleField())
         skill4_name.text = selectedMine.individual.skillNo4.jname
         skill4_alive.text = caseOfSkill4.winRate()
         skill4_dead.text = caseOfSkill4.loseRate()
@@ -109,18 +108,21 @@ class ExpectedActivity : PGLActivity() {
     }
 
     fun initView(intent: Intent) {
+        my_mega_check.setOnCheckedChangeListener { compoundButton, b -> mine.tempMega = b }
+        oppo_mega_check.setOnCheckedChangeListener { compoundButton, b -> opponent.tempMega = b }
+
         mine.add(get(intent.extras.getInt("member1", 0)))
         mine.add(get(intent.extras.getInt("member2", 0)))
         mine.add(get(intent.extras.getInt("member3", 0)))
 
         my_party1.setOnClickListener(OnPokemonSelectedListener(true, 0))
-        my_party1.setImageBitmap(util.createImage(mine.member[0].individual.master, 120.0f, resources))
+        my_party1.setImageBitmap(util.createImage(mine.member[0].individual.master, 150.0f, resources))
 
         my_party2.setOnClickListener(OnPokemonSelectedListener(true, 1))
-        my_party2.setImageBitmap(util.createImage(mine.member[1].individual.master, 120.0f, resources))
+        my_party2.setImageBitmap(util.createImage(mine.member[1].individual.master, 150.0f, resources))
 
         my_party3.setOnClickListener(OnPokemonSelectedListener(true, 2))
-        my_party3.setImageBitmap(util.createImage(mine.member[2].individual.master, 120.0f, resources))
+        my_party3.setImageBitmap(util.createImage(mine.member[2].individual.master, 150.0f, resources))
 
         opponentHPBar.setOnSeekBarChangeListener(OnHPChangeListener())
         myHPBar.setOnEditorActionListener(OnHPEditListener())
@@ -186,7 +188,11 @@ class ExpectedActivity : PGLActivity() {
         opponentSSpinner.setSelection(6)
         opponentSSpinner.onItemSelectedListener = OnRankSelectedListener(mine, 4)
 
-        expected_fab.setOnClickListener { showBest() }
+        expected_fab.setOnClickListener {
+            showProgress(true)
+            showBest()
+            showProgress(false)
+        }
     }
 
     override fun showParty() {
@@ -198,26 +204,26 @@ class ExpectedActivity : PGLActivity() {
         opponent.add(opponentParty.member6)
 
         oppo_party1.setOnClickListener(OnPokemonSelectedListener(false, 0))
-        oppo_party1.setImageBitmap(util.createImage(opponent.member[0].individual.master, 120.0f, resources))
+        oppo_party1.setImageBitmap(util.createImage(opponent.member[0].individual.master, 150.0f, resources))
 
         oppo_party2.setOnClickListener(OnPokemonSelectedListener(false, 1))
-        oppo_party2.setImageBitmap(util.createImage(opponent.member[1].individual.master, 120.0f, resources))
+        oppo_party2.setImageBitmap(util.createImage(opponent.member[1].individual.master, 150.0f, resources))
 
         oppo_party3.setOnClickListener(OnPokemonSelectedListener(false, 2))
-        oppo_party3.setImageBitmap(util.createImage(opponent.member[2].individual.master, 120.0f, resources))
+        oppo_party3.setImageBitmap(util.createImage(opponent.member[2].individual.master, 150.0f, resources))
 
         oppo_party4.setOnClickListener(OnPokemonSelectedListener(false, 3))
-        oppo_party4.setImageBitmap(util.createImage(opponent.member[3].individual.master, 120.0f, resources))
+        oppo_party4.setImageBitmap(util.createImage(opponent.member[3].individual.master, 150.0f, resources))
 
         oppo_party5.setOnClickListener(OnPokemonSelectedListener(false, 4))
-        oppo_party5.setImageBitmap(util.createImage(opponent.member[4].individual.master, 120.0f, resources))
+        oppo_party5.setImageBitmap(util.createImage(opponent.member[4].individual.master, 150.0f, resources))
 
         oppo_party6.setOnClickListener(OnPokemonSelectedListener(false, 5))
-        oppo_party6.setImageBitmap(util.createImage(opponent.member[5].individual.master, 120.0f, resources))
+        oppo_party6.setImageBitmap(util.createImage(opponent.member[5].individual.master, 150.0f, resources))
     }
 
     inner class OnPokemonSelectedListener(val isMine: Boolean, val position: Int) : View.OnClickListener {
-        val temp = util.createImage(R.drawable.select, 120f, resources)
+        val temp = util.createImage(R.drawable.select, 150f, resources)
         override fun onClick(v: View?) {
             if (isMine) {
                 selected_party1.setImageBitmap(null)
@@ -248,18 +254,14 @@ class ExpectedActivity : PGLActivity() {
     }
 
     inner class OnStatusSelectedListener(val party: PartyInBattle) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-        }
-
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            party.setStatus(position)
+            party.tempStatus = position
         }
     }
 
     inner class OnRankSelectedListener(val party: PartyInBattle, val which: Int) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-        }
-
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             when (which) {
                 0 -> party.setAttackRank(position)
@@ -272,14 +274,10 @@ class ExpectedActivity : PGLActivity() {
     }
 
     inner class OnHPChangeListener() : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        }
-
-        override fun onStartTrackingTouch(seekBar: SeekBar?) {
-        }
-
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            opponent.setHPRatio(seekBar!!.progress)
+            opponent.tempHpRatio = seekBar!!.progress
         }
     }
 
@@ -288,11 +286,30 @@ class ExpectedActivity : PGLActivity() {
             if (actionId === EditorInfo.IME_ACTION_SEND) {
                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(v!!.windowToken, 0)
-                mine.setHP(Integer.parseInt(v.text.toString()))
+                mine.tempHpValue = Integer.parseInt(v.text.toString())
                 return true
             }
             return false
         }
     }
 
+    fun showProgress(show: Boolean) {
+        val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime)
+        coverLayout.visibility = if (show) View.GONE else View.VISIBLE
+        coverLayout.animate().setDuration(shortAnimTime.toLong()).alpha(
+                (if (show) 0 else 1).toFloat()).setListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                coverLayout.visibility = if (show) View.GONE else View.VISIBLE
+            }
+        })
+
+        progress.visibility = if (show) View.VISIBLE else View.GONE
+        progress.animate().setDuration(shortAnimTime.toLong()).alpha(
+                (if (show) 1 else 0).toFloat()).setListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                progress.visibility = if (show) View.VISIBLE else View.GONE
+            }
+        })
+
+    }
 }

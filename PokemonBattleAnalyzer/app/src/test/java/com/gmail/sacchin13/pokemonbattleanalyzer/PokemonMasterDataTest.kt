@@ -5,65 +5,65 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Type
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class PokemonTest {
+class PokemonMasterDataTest {
 
     @Test
     fun testGetHPValue() {
         val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
-        assertEquals(157, kucheat.getHPValue(31, 252))
-        assertEquals(141, kucheat.getHPValue(0, 252))
-        assertEquals(125, kucheat.getHPValue(31, 0))
-        assertEquals(110, kucheat.getHPValue(0, 0))
+        assertEquals(157, kucheat.hp(31, 252))
+        assertEquals(141, kucheat.hp(0, 252))
+        assertEquals(125, kucheat.hp(31, 0))
+        assertEquals(110, kucheat.hp(0, 0))
     }
 
     @Test
     fun testGetAttackValue() {
         val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
-        assertEquals(137, kucheat.getAttackValue(31, 252))
-        assertEquals(121, kucheat.getAttackValue(0, 252))
-        assertEquals(105, kucheat.getAttackValue(31, 0))
-        assertEquals(90, kucheat.getAttackValue(0, 0))
+        assertEquals(137, kucheat.attack(31, 252))
+        assertEquals(121, kucheat.attack(0, 252))
+        assertEquals(105, kucheat.attack(31, 0))
+        assertEquals(90, kucheat.attack(0, 0))
     }
 
     @Test
     fun testGetDefenseValue() {
         val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
-        assertEquals(137, kucheat.getDefenseValue(31, 252))
-        assertEquals(121, kucheat.getDefenseValue(0, 252))
-        assertEquals(105, kucheat.getDefenseValue(31, 0))
-        assertEquals(90, kucheat.getDefenseValue(0, 0))
+        assertEquals(137, kucheat.defense(31, 252))
+        assertEquals(121, kucheat.defense(0, 252))
+        assertEquals(105, kucheat.defense(31, 0))
+        assertEquals(90, kucheat.defense(0, 0))
     }
 
     @Test
     fun testGetSpecialAttackValue() {
         val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
-        assertEquals(107, kucheat.getSpecialAttackValue(31, 252))
-        assertEquals(91, kucheat.getSpecialAttackValue(0, 252))
-        assertEquals(75, kucheat.getSpecialAttackValue(31, 0))
-        assertEquals(60, kucheat.getSpecialAttackValue(0, 0))
+        assertEquals(107, kucheat.specialAttack(31, 252))
+        assertEquals(91, kucheat.specialAttack(0, 252))
+        assertEquals(75, kucheat.specialAttack(31, 0))
+        assertEquals(60, kucheat.specialAttack(0, 0))
     }
 
     @Test
     fun testGetSpecialDefenseValue() {
         val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
-        assertEquals(107, kucheat.getSpecialDefenseValue(31, 252))
-        assertEquals(91, kucheat.getSpecialDefenseValue(0, 252))
-        assertEquals(75, kucheat.getSpecialDefenseValue(31, 0))
-        assertEquals(60, kucheat.getSpecialDefenseValue(0, 0))
+        assertEquals(107, kucheat.specialDefense(31, 252))
+        assertEquals(91, kucheat.specialDefense(0, 252))
+        assertEquals(75, kucheat.specialDefense(31, 0))
+        assertEquals(60, kucheat.specialDefense(0, 0))
     }
 
     @Test
     fun testGetSpeedValue() {
         val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
-        assertEquals(102, kucheat.getSpeedValue(31, 252))
-        assertEquals(86, kucheat.getSpeedValue(0, 252))
-        assertEquals(70, kucheat.getSpeedValue(31, 0))
-        assertEquals(55, kucheat.getSpeedValue(0, 0))
+        assertEquals(102, kucheat.speed(31, 252))
+        assertEquals(86, kucheat.speed(0, 252))
+        assertEquals(70, kucheat.speed(31, 0))
+        assertEquals(55, kucheat.speed(0, 0))
     }
 }
