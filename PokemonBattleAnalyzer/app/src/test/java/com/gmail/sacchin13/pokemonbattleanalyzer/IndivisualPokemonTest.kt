@@ -12,7 +12,7 @@ class IndivisualPokemonTest {
     fun 特性一覧取得の正常系のテスト() {
         val kucheat = IndividualPBAPokemon.create(1,
                 PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
-                "かいりきバサミ", "", "-", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
+                        "かいりきバサミ", "", "-", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
 
         val actual = kucheat.abilities
         assertEquals(2, actual.size)
@@ -37,6 +37,59 @@ class IndivisualPokemonTest {
         kucheat.ability = "ふしぎなまもり"
         actual = kucheat.typeScale(Type.Code.WATER)
         assertEquals(0.0, actual, 0.001)
+    }
+
+    @Test
+    fun 攻撃力計算の正常系のテスト() {
+        val kucheat = IndividualPBAPokemon.create(1,
+                PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+                        "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
+
+        val actual = kucheat.calcAttack()
+        assertEquals(137, actual)
+    }
+
+    @Test
+    fun 防御力計算の正常系のテスト() {
+        val kucheat = IndividualPBAPokemon.create(1,
+                PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+                        "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
+
+        val actual = kucheat.calcDefense()
+        assertEquals(137, actual)
+    }
+
+
+    @Test
+    fun 特殊攻撃力計算の正常系のテスト() {
+        val kucheat = IndividualPBAPokemon.create(1,
+                PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+                        "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
+
+        val actual = kucheat.calcSpecialAttack()
+        assertEquals(107, actual)
+    }
+
+
+    @Test
+    fun 特殊防御力計算の正常系のテスト() {
+        val kucheat = IndividualPBAPokemon.create(1,
+                PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+                        "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
+
+        val actual = kucheat.calcSpecialDefense()
+        assertEquals(107, actual)
+    }
+
+
+    @Test
+    fun 素早さ計算の正常系のテスト() {
+        val kucheat = IndividualPBAPokemon.create(1,
+                PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+                        "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
+
+        val actual = kucheat.calcSpeed()
+        assertEquals(102, actual)
     }
 
 }

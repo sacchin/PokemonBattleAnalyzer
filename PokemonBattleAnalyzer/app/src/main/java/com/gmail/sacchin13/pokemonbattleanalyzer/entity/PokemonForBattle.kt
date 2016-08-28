@@ -1,6 +1,5 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
-import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import kotlin.properties.Delegates
 
@@ -39,7 +38,7 @@ class PokemonForBattle(
         const val UNKNOWN = -1
 
         fun create(side: Int, individual: IndividualPBAPokemon): PokemonForBattle {
-            return PokemonForBattle(side, -1, "", "", "", Skill(), 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, individual)
+            return PokemonForBattle(side, -1, "", "", "", Skill(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, individual)
         }
     }
 
@@ -278,10 +277,10 @@ class PokemonForBattle(
     }
 
     fun calcAttackValue(): Double {
-        if(side == PartyInBattle.MY_SIDE){
+        if (side == PartyInBattle.MY_SIDE) {
             return individual.attackValue.toDouble()
         }
-        return individual.calcAttack().times(Characteristic.correction(characteristic, "A")).toDouble()
+        return Math.floor(individual.calcAttack().times(Characteristic.correction(characteristic, "A")))
     }
 
     fun getAttackRankCorrection(isCritical: Boolean): Double {
@@ -303,10 +302,10 @@ class PokemonForBattle(
     }
 
     fun calcDefenseValue(): Double {
-        if(side == PartyInBattle.MY_SIDE){
+        if (side == PartyInBattle.MY_SIDE) {
             return individual.defenseValue.toDouble()
         }
-        return individual.calcDefense().times(Characteristic.correction(characteristic, "B")).toDouble()
+        return Math.floor(individual.calcDefense().times(Characteristic.correction(characteristic, "B")))
     }
 
     fun calcDefenseValueCorrection(attackSide: PokemonForBattle): Double {
@@ -348,10 +347,10 @@ class PokemonForBattle(
     }
 
     fun calcSpecialAttackValue(): Double {
-        if(side == PartyInBattle.MY_SIDE){
+        if (side == PartyInBattle.MY_SIDE) {
             return individual.specialAttackValue.toDouble()
         }
-        return individual.calcSpecialAttack().times(Characteristic.correction(characteristic, "C")).toDouble()
+        return Math.floor(individual.calcSpecialAttack().times(Characteristic.correction(characteristic, "C")))
     }
 
     fun getSpecialAttackRankCorrection(isCritical: Boolean): Double {
@@ -373,10 +372,10 @@ class PokemonForBattle(
     }
 
     fun calcSpecialDefenseValue(): Double {
-        if(side == PartyInBattle.MY_SIDE){
+        if (side == PartyInBattle.MY_SIDE) {
             return individual.specialDefenseValue.toDouble()
         }
-        return individual.calcSpecialDefense().times(Characteristic.correction(characteristic, "D")).toDouble()
+        return Math.floor(individual.calcSpecialDefense().times(Characteristic.correction(characteristic, "D")))
     }
 
     fun calcSpecialDefenseValueCorrection(): Double {
@@ -417,25 +416,27 @@ class PokemonForBattle(
         }
     }
 
-    fun calcSpeedValue(): Int {
-        var result = if(side == PartyInBattle.MY_SIDE) individual.speedValue
-        else individual.calcSpeed().times(Characteristic.correction(characteristic, "S")).toInt()
+    fun calcSpeedValue(): Double {
+        var result = if (side == PartyInBattle.MY_SIDE) individual.speedValue.toDouble()
+        else individual.calcSpeed().toDouble()
+
+        result = result.times(Characteristic.correction(characteristic, "S"))
 
         if (item.equals("こだわりスカーフ")) {
-            result = result.times(1.5).toInt()
+            result = result.times(1.5)
         }
         if (ability.equals("メタルパウダー")) {
-            result = result.times(1.5).toInt()
+            result = result.times(1.5)
         }
         if (status != StatusAilment.no(StatusAilment.Code.UNKNOWN)) {
             if (ability.equals("ちどりあし")) {
-                result = result.times(1.5).toInt()
+                result = result.times(1.5)
             } else if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS)) {
-                result = result.times(0.25).toInt()
+                result = result.times(0.25)
             }
         }
 
-        return result
+        return Math.floor(result)
     }
 
     fun getSpeedRankCorrection(): Double {
@@ -487,11 +488,11 @@ class PokemonForBattle(
         }
     }
 
-    fun typeBonus(): Float {
+    fun typeBonus(): Double {
         if (skill.type == individual.master.type1 || skill.type == individual.master.type2) {
-            if (ability.equals("てきおうりょく")) return 2f else return 1.5f
+            if (ability.equals("てきおうりょく")) return 2.0 else return 1.5
         }
-        return 1f
+        return 1.0
     }
 
     fun doesntAffect(skill: Skill): Boolean {
@@ -655,6 +656,19 @@ class PokemonForBattle(
         }
     }
 
+    fun dying(damage: Int): Boolean {
+        when (side) {
+            PartyInBattle.MY_SIDE -> {
+                return if (hpValue.minus(damage) < 1) true else false
+            }
+            PartyInBattle.OPPONENT_SIDE -> {
+                val remain = individual.calcHp().times(hpRatio).div(100.0).minus(damage)
+                return if (remain < 1) true else false
+            }
+            else -> return false
+        }
+    }
+
     fun updateRank(affects: Int) {
         val value = Rank.RANK_TABLE[Rank.code(affects)]
         attackRank += value!![0]
@@ -668,34 +682,37 @@ class PokemonForBattle(
     }
 
     fun recoil(damage: Int) {
-        if (ability.equals("いしあたま") || ability.equals("マジックガード")) {
-            return
+        val d = if (ability.equals("いしあたま") || ability.equals("マジックガード")) {
+            0
+        } else {
+            if (skill.jname.equals("アフロブレイク") || skill.jname.equals("じごくぐるま") || skill.jname.equals("とっしん") || skill.jname.equals("ワイルドボルト")) {
+                damage.div(4.0).toInt()
+            } else if (skill.jname.equals("ウッドハンマー") || skill.jname.equals("すてみタックル") ||
+                    skill.jname.equals("フレアドライブ") || skill.jname.equals("ブレイブバード") || skill.jname.equals("ボルテッカー")) {
+                damage.div(3.0).toInt()
+            } else if (skill.jname.equals("もろはのずつき")) {
+                damage.div(2.0).toInt()
+            } else {
+                0
+            }
         }
 
-        if (skill.jname.equals("アフロブレイク") || skill.jname.equals("じごくぐるま") || skill.jname.equals("とっしん") || skill.jname.equals("ワイルドボルト")) {
-            damage.div(4.0)
-
+        val d2 = if (ability.equals("マジックガード")) {
+            0
+        } else if (ability.equals("ちからずく") && skill.aliment == -2) {
+            0
+        } else if (item.equals("いのちのたま")) {
+            if (side == PartyInBattle.MY_SIDE) individual.hpValue.div(10) else individual.calcHp().div(10)
+        } else {
+            0
         }
-        if (skill.jname.equals("ウッドハンマー") || skill.jname.equals("すてみタックル") ||
-                skill.jname.equals("フレアドライブ") || skill.jname.equals("ブレイブバード") || skill.jname.equals("ボルテッカー")) {
-            damage.div(3.0)
 
-        }
-        if (skill.jname.equals("もろはのずつき")) {
-            damage.div(2.0)
-
-        }
-        if (skill.jname.equals("アフロブレイク")) {
-
-        }
-        if (skill.jname.equals("アフロブレイク")) {
-
-        }
-        if (skill.jname.equals("アフロブレイク")) {
-
-        }
-        if (skill.jname.equals("アフロブレイク")) {
-
+        if (side == PartyInBattle.MY_SIDE) {
+            individual.hpValue = individual.hpValue - d - d2
+        } else {
+            val max = individual.calcHp()
+            val now = hp()
+            hpRatio = (now - d - d2).times(100.0).div(max).toInt()
         }
     }
 
@@ -703,7 +720,6 @@ class PokemonForBattle(
         if (ability.equals("ひざげり") || ability.equals("とびひざげり")) {
             return
         }
-
     }
 
     fun clone(): PokemonForBattle {
@@ -718,15 +734,41 @@ class PokemonForBattle(
 
     fun noEffect(skill: Skill): Boolean {
         val result = individual.typeScale(Type.code(skill.type))
-        return if(result < 1) true else false
+        return if (result < 1) true else false
     }
 
-    fun summarizable(): Boolean{
-        if(ability.equals("よわき") || ability.equals("むしのしらせ") || ability.equals("げきりゅう") ||
-                ability.equals("もうか") || ability.equals("しんりょく") || item.equals("オボンのみ")){
+    fun summarizable(): Boolean {
+        if (ability.equals("よわき") || ability.equals("むしのしらせ") || ability.equals("げきりゅう") ||
+                ability.equals("もうか") || ability.equals("しんりょく") || item.equals("オボンのみ")) {
             return false
         }
         return true
+    }
+
+    fun sheerForce(): Boolean {
+        if (ability.equals("ちからずく")) {
+            if (skill.aliment == -1 && skill.myRankUp == -1 && skill.oppoRankUp == -1) {
+                return false
+
+            } else {
+                //ちからずくで無効にしたことを表現するために-2を代入している
+                //fun recoil(damage: Int)にて利用
+                skill.aliment = -2
+                skill.myRankUp = -2
+                skill.oppoRankUp = -2
+                return true
+            }
+        } else {
+            return false
+        }
+    }
+
+    fun useBerry(): Boolean {
+        return false
+    }
+
+    fun statusMove(): Boolean {
+        return false
     }
 
 

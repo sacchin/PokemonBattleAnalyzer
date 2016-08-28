@@ -1,13 +1,11 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
-import java.util.ArrayList
-import java.util.HashMap
-
 import io.realm.RealmObject
 import io.realm.annotations.RealmClass
+import java.util.*
 
 @RealmClass
-public open class IndividualPBAPokemon (
+public open class IndividualPBAPokemon(
         public open var id: Long = -1,
         public open var status: Int = UNKNOWN,
         public open var item: String = "unknown",
@@ -17,21 +15,20 @@ public open class IndividualPBAPokemon (
         public open var skillNo2: Skill = Skill(),
         public open var skillNo3: Skill = Skill(),
         public open var skillNo4: Skill = Skill(),
-        public open var hpRatio: Int = 100,
         public open var hpValue: Int = UNKNOWN,
         public open var attackValue: Int = UNKNOWN,
         public open var defenseValue: Int = UNKNOWN,
         public open var specialAttackValue: Int = UNKNOWN,
         public open var specialDefenseValue: Int = UNKNOWN,
         public open var speedValue: Int = UNKNOWN,
-        public open var master : PokemonMasterData = PokemonMasterData()
-        ): RealmObject() {
+        public open var master: PokemonMasterData = PokemonMasterData()
+) : RealmObject() {
 
     companion object {
         const val UNKNOWN = -1
 
-        fun create(id: Long, master : PokemonMasterData): IndividualPBAPokemon{
-            return IndividualPBAPokemon(id, 0, "", "", "", Skill(), Skill(), Skill(), Skill(), 0, 0, 0, 0, 0, 0, 0, master)
+        fun create(id: Long, master: PokemonMasterData): IndividualPBAPokemon {
+            return IndividualPBAPokemon(id, 0, "", "", "", Skill(), Skill(), Skill(), Skill(), 0, 0, 0, 0, 0, 0, master)
         }
     }
 
@@ -57,13 +54,13 @@ public open class IndividualPBAPokemon (
 
     fun typeScale(type: Type.Code): Double {
         val scale = Type.calculateAffinity(type, master)
-        if(scale < 1){
-            return  0.0
+        if (scale < 1) {
+            return 0.0
         }
 
         val scaleByAbility = Ability.calcTypeScale(ability, type)
-        if(scaleByAbility < 1){
-            return  0.0
+        if (scaleByAbility < 1) {
+            return 0.0
         }
 
         return scale

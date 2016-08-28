@@ -86,7 +86,7 @@ class BattleCalculatorTest {
         garura = PokemonForBattle.create(PartyInBattle.MY_SIDE, IndividualPBAPokemon(
                 0, -1, "ガルーラナイト", "いじっぱり", "せいしんりょく",
                 database["ねこだまし"] as Skill, database["いわなだれ"] as Skill, database["みがわり"] as Skill, database["アイアンヘッド"] as Skill,
-                252, 0, 0, 0, 0, 0, 252, PokemonMasterData("115", "ガルーラ", "Kangaskhan", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
+                212, 212, 137, 40, 80, 100, PokemonMasterData("115", "ガルーラ", "Kangaskhan", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
         garura.skill = database["いわなだれ"] as Skill
         garura.hpValue = 212
         garura.trend = TrendForBattle.create(rankingResponse1.rankingPokemonTrend)
@@ -106,9 +106,12 @@ class BattleCalculatorTest {
         fireallow = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, IndividualPBAPokemon(
                 0, -1, "ゴツゴツメット", "ずぶとい", "はやてのつばさ",
                 database["はねやすめ"] as Skill, database["おにび"] as Skill, database["みがわり"] as Skill, database["ブレイブバード"] as Skill,
-                252, 100, 252, 0, 0, 0, 0, PokemonMasterData("663", "ファイアロー", "Talonflame", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
+                0, 0, 0, 0, 0, 0, PokemonMasterData("663", "ファイアロー", "Talonflame", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
+        fireallow.hpRatio = 100
+        fireallow.skill = database["ブレイブバード"] as Skill
         fireallow.trend = TrendForBattle.create(rankingResponse2.rankingPokemonTrend)
         fireallow.trend.skillList = skills2
+
 
 //        reader = File("testdata/3.txt").absoluteFile
 //        val sb3 = StringBuilder()
@@ -243,6 +246,11 @@ class BattleCalculatorTest {
 //        assertEquals(150, result)
 //    }
 
+
+    @Test
+    fun ダメージ計算の正常系テスト() {
+//        val result = BattleCalculator.doSkill(fireallow, garura, BattleField(), 0.5, false, false)
+    }
 
     @Test
     fun 戦闘シミュレーションの正常系テスト() {

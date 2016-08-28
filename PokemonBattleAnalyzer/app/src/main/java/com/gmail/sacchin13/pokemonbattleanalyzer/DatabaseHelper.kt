@@ -186,7 +186,6 @@ class DatabaseHelper(context: Context) {
         pokemon.skillNo2 = selectUnknownSkill()
         pokemon.skillNo3 = selectUnknownSkill()
         pokemon.skillNo4 = selectUnknownSkill()
-        pokemon.hpRatio = 100
         pokemon.master = selectPokemonMasterData(master.no)
     }
 
