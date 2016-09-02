@@ -32,11 +32,11 @@ public open class IndividualPBAPokemon(
         }
     }
 
-    fun calcHp() = master.hp(31, 252)
-    fun calcAttack() = master.attack(31, 252)
-    fun calcDefense() = master.defense(31, 252)
-    fun calcSpecialAttack() = master.specialAttack(31, 252)
-    fun calcSpecialDefense() = master.specialDefense(31, 252)
+    fun calcHp(ev: Int) = master.hp(31, ev)
+    fun calcAttack(ev: Int) = master.attack(31, ev)
+    fun calcDefense(ev: Int) = master.defense(31, ev)
+    fun calcSpecialAttack(ev: Int) = master.specialAttack(31, ev)
+    fun calcSpecialDefense(ev: Int) = master.specialDefense(31, ev)
     fun calcSpeed() = master.speed(31, 252)
 
     val abilities: List<String>

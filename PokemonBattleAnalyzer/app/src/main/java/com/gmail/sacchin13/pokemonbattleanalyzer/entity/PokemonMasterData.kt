@@ -1,6 +1,7 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
 import io.realm.RealmObject
+import io.realm.annotations.Ignore
 import io.realm.annotations.RealmClass
 
 @RealmClass
@@ -23,6 +24,9 @@ public open class PokemonMasterData(
         public open var megax: MegaPokemonMasterData? = null,
         public open var megay: MegaPokemonMasterData? = null
 ): RealmObject()  {
+
+    @Ignore
+    var cacheSpeedValues = arrayOf<Int>()
 
     fun hp(iv: Int, ev: Int): Int {
         val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
@@ -142,6 +146,25 @@ public open class PokemonMasterData(
     fun speed(iv: Int, ev: Int): Int {
         val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev
         return ((s * 2 + iv + effort / 4) / 2 + 5).toInt()
+    }
+
+    fun speedValues(): Array<Int>{
+        if(cacheSpeedValues.isEmpty()){
+            cacheSpeedValues = arrayOf(
+                    speed(0, 0).times(0.9).toInt(),                 //最遅
+                    speed(31, 0).times(0.9).toInt(),                //無振負補正
+                    speed(31, 0).toInt(),                           //無振無補正
+                    speed(31, 4).toInt(),                           //4振無補正
+                    speed(31, 0).times(1.1).toInt(),                //無振正補正
+                    speed(31, 0).times(0.9).times(1.5).toInt(),     //無振負補正スカーフ
+                    speed(31, 252).toInt(),                         //準速
+                    speed(31, 0).times(1.5).toInt(),                //無振無補正スカーフ
+                    speed(31, 0).times(1.1).times(1.5).toInt(),     //無振正補正スカーフ
+                    speed(31, 252).times(1.1).toInt(),              //最速
+                    speed(31, 252).times(1.5).toInt(),              //準速スカーフ
+                    speed(31, 252).times(1.1).times(1.5).toInt())   //最速スカーフ
+        }
+        return cacheSpeedValues
     }
 
     fun speedX(iv: Int, ev: Int): Int {

@@ -481,4 +481,31 @@ class PokemonForBattleTest {
         assertEquals(Rank.no(Rank.Code.UNKNOWN), fourth.key[2])
         assertEquals(0.63, fourth.value, 0.001)
     }
+
+    @Test
+    fun マヒ時かつ追い風時の素早さ計算のテスト() {
+        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        attackSide.status = StatusAilment.no(StatusAilment.Code.PARALYSIS)
+        attackSide.field.add(BattleField.Field.Tailwind)
+
+        val actual = attackSide.speedValues(BattleField())
+        assertEquals(24, actual[0])
+        assertEquals(34, actual[4])
+        assertEquals(44, actual[10])
+        assertEquals(84, actual[23])
+    }
+
+    @Test
+    fun 砂嵐時の素早さ計算のテスト() {
+        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        attackSide.ability = "すなかき"
+
+        val field = BattleField()
+        field.weather = BattleField.Weather.Sandstorm
+        val actual = attackSide.speedValues(field)
+        assertEquals(98, actual[0])
+        assertEquals(140, actual[4])
+        assertEquals(180, actual[10])
+        assertEquals(336, actual[23])
+    }
 }

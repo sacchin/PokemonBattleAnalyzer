@@ -1,5 +1,7 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
+import android.util.Log
+
 open class Characteristic {
     companion object Code {
         const val SAMISIGARI = 0
@@ -83,7 +85,10 @@ open class Characteristic {
 
         fun correction(code: String, at: String): Double {
             val index = no(code)
-            if (index < 0) return 1.0
+            if (index < 0){
+                Log.e("Characteristic", code + " is not correct")
+                return 1.0
+            }
 
             val tmp = CHARACTERISTIC_TABLE[index]
             when (at) {

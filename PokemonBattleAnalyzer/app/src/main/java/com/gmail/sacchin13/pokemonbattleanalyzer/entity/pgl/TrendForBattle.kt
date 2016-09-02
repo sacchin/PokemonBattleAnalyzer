@@ -33,4 +33,10 @@ data class TrendForBattle(
             }
         }
     }
+
+    fun skillNames(): List<String>{
+        val result = mutableListOf<String>()
+        for(w in skillList) result.add(w.skill.jname)
+        return result
+    }
 }

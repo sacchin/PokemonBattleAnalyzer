@@ -86,8 +86,8 @@ class BattleCalculatorTest {
         garura = PokemonForBattle.create(PartyInBattle.MY_SIDE, IndividualPBAPokemon(
                 0, -1, "ガルーラナイト", "いじっぱり", "せいしんりょく",
                 database["ねこだまし"] as Skill, database["いわなだれ"] as Skill, database["みがわり"] as Skill, database["アイアンヘッド"] as Skill,
-                212, 212, 137, 40, 80, 100, PokemonMasterData("115", "ガルーラ", "Kangaskhan", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
-        garura.skill = database["いわなだれ"] as Skill
+                212, 150, 137, 40, 80, 110, PokemonMasterData("115", "ガルーラ", "Kangaskhan", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
+        garura.skill = database["おんがえし"] as Skill
         garura.hpValue = 212
         garura.trend = TrendForBattle.create(rankingResponse1.rankingPokemonTrend)
         garura.trend.skillList = skills1
@@ -253,10 +253,47 @@ class BattleCalculatorTest {
     }
 
     @Test
-    fun 戦闘シミュレーションの正常系テスト() {
-        val result = BattleCalculator.getResult(garura, fireallow, BattleField())
-        for (temp in result.mayOccur) {
-            println(BattleStatus.name(temp.key) + " = ${temp.value}")
+    fun 戦闘の正常系テスト() {
+//        val result = BattleCalculator.getResult(garura, fireallow, BattleField())
+//        for (temp in result.mayOccur) {
+//            println(BattleStatus.name(temp.key) + " = ${temp.value}")
+//        }
+//
+//        println("${result.coverRate},")
+//        for(v in result.speedOccur) println("${v},")
+//        for(v in result.priority) println("${v},")
+    }
+//
+//    @Test
+//    fun 戦闘シミュレーションの正常系テスト() {
+//        fireallow.item = ""
+//        fireallow.characteristic = ""
+//        fireallow.ability = ""
+//        fireallow.skill = createSkill(43, "おいかぜ", 9, -1, -1, 2, 30, false, false, -1, 0.0, -1, 0.0, -1, 0.0)
+//
+//
+//        val result = BattleCalculator.simulateTurn(1.0, garura, fireallow, BattleField())
+//        for (temp in result.defeatTimes) {
+//            println("${temp.key} = ${temp.value}")
+//        }
+//    }
+
+    @Test
+    fun ダメージツールの正常系テスト() {
+        fireallow.item = ""
+        fireallow.characteristic = "ずぶとい"
+        fireallow.ability = ""
+        fireallow.skill = createSkill(43, "おいかぜ", 9, -1, -1, 2, 30, false, false, -1, 0.0, -1, 0.0, -1, 0.0)
+
+        val index = arrayOf(4, 64, 128, 192, 252)
+
+        for(i in index){
+            for(j in index) {
+                val result = BattleCalculator.simulateTurn(garura, fireallow, BattleField(), i, j)
+                println("${i}, ${j}, ${result.defeatTimes.maxBy { it -> it.value }}")
+            }
         }
     }
+
+
 }

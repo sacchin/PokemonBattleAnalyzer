@@ -29,7 +29,8 @@ import kotlin.properties.Delegates
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     val SELECT_ACTIVITY_CODE = 0
     val AFFINITY_ACTIVITY_CODE = 1
-    val EDIT_ACTIVITY_CODE = 0
+    val EDIT_ACTIVITY_CODE = 2
+    val GRAPH_ACTIVITY_CODE = 3
 
     var serviceStatePreferences: SharedPreferences by Delegates.notNull()
 
@@ -110,6 +111,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             party.clear()
             partyLayout.removeAllViews()
             party.userName = "none"
+        } else if (id == R.id.nav_graph) {
+            startGraphActivity()
         }
 
         return true
@@ -129,15 +132,27 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             MegaPokemonInsertHandler(databaseHelper).run()
 
             val editor = serviceStatePreferences.edit()
-            editor.putBoolean("isFirst", false);
-            editor.apply();
-            Log.i("This is First Time", "create table!");
+            editor.putBoolean("isFirst", false)
+            editor.apply()
+            Log.i("This is First Time", "create table!")
         }
     }
 
     fun startEditActivity() {
         val intent = Intent(this, EditActivity().javaClass)
-        startActivityForResult(intent, EDIT_ACTIVITY_CODE);
+        startActivityForResult(intent, EDIT_ACTIVITY_CODE)
+    }
+
+    fun startGraphActivity() {
+        if (party.member.size < 2) {
+            Snackbar.make(partyLayout, "ポケモンが選択されていません。", Snackbar.LENGTH_SHORT).show()
+            return
+        }
+
+        PartyInsertHandler(databaseHelper, party, false).run()
+
+        val intent = Intent(this, GraphActivity().javaClass)
+        startActivityForResult(intent, GRAPH_ACTIVITY_CODE)
     }
 
     fun startSelectActivity() {

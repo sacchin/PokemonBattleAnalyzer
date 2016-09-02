@@ -45,7 +45,7 @@ class IndivisualPokemonTest {
                 PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
                         "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
 
-        val actual = kucheat.calcAttack()
+        val actual = kucheat.calcAttack(252)
         assertEquals(137, actual)
     }
 
@@ -55,7 +55,7 @@ class IndivisualPokemonTest {
                 PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
                         "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
 
-        val actual = kucheat.calcDefense()
+        val actual = kucheat.calcDefense(252)
         assertEquals(137, actual)
     }
 
@@ -66,7 +66,7 @@ class IndivisualPokemonTest {
                 PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
                         "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
 
-        val actual = kucheat.calcSpecialAttack()
+        val actual = kucheat.calcSpecialAttack(252)
         assertEquals(107, actual)
     }
 
@@ -77,7 +77,7 @@ class IndivisualPokemonTest {
                 PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
                         "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
 
-        val actual = kucheat.calcSpecialDefense()
+        val actual = kucheat.calcSpecialDefense(252)
         assertEquals(107, actual)
     }
 

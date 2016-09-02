@@ -3,7 +3,10 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 object BattleStatus {
 
     enum class Code {
-        WIN, DEFEAT, REVERSE, OWN_HEAD, DRAW, UNKNOWN
+        WIN, DEFEAT, REVERSE, OWN_HEAD, DRAW,
+        MS, NS, SQ, MQ, MQS,
+        UNKNOWN,
+        DEPEND_EV, IMPOSSIBLE, POSSIBLE
     }
 
     fun convertNameToTypeCode(statusName: String): Code {
@@ -12,6 +15,11 @@ object BattleStatus {
          else if ("後勝".equals(statusName)) Code.REVERSE
          else if ("先負".equals(statusName)) Code.OWN_HEAD
          else if ("引分".equals(statusName)) Code.DRAW
+        else if ("最遅".equals(statusName)) Code.MS
+        else if ("無振".equals(statusName)) Code.NS
+        else if ("準速".equals(statusName)) Code.SQ
+        else if ("最速".equals(statusName)) Code.MQ
+        else if ("最ス".equals(statusName)) Code.MQS
          else Code.UNKNOWN
     }
 
@@ -22,6 +30,11 @@ object BattleStatus {
             Code.REVERSE -> return "後勝"
             Code.OWN_HEAD -> return "先負"
             Code.DRAW -> return "引分"
+            Code.MS -> return "最遅"
+            Code.NS -> return "無振"
+            Code.SQ -> return "準速"
+            Code.MQ -> return "最速"
+            Code.MQS -> return "最ス"
             else -> return "UNKNOWN"
         }
     }
@@ -33,6 +46,11 @@ object BattleStatus {
             Code.REVERSE -> return 2
             Code.OWN_HEAD -> return 3
             Code.DRAW -> return 4
+            Code.MS -> return 5
+            Code.NS -> return 6
+            Code.SQ -> return 7
+            Code.MQ -> return 8
+            Code.MQS -> return 9
             else -> return -1
         }
     }
@@ -44,6 +62,11 @@ object BattleStatus {
             2 -> return Code.REVERSE
             3 -> return Code.OWN_HEAD
             4 -> return Code.DRAW
+            5 -> return Code.MS
+            6 -> return Code.NS
+            7 -> return Code.SQ
+            8 -> return Code.MQ
+            9 -> return Code.MQS
             else -> return Code.UNKNOWN
         }
     }

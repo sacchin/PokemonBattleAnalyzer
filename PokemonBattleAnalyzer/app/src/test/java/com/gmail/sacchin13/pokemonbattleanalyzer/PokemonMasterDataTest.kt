@@ -66,4 +66,22 @@ class PokemonMasterDataTest {
         assertEquals(70, kucheat.speed(31, 0))
         assertEquals(55, kucheat.speed(0, 0))
     }
+
+    @Test
+    fun testGetSpeedValues() {
+        val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+                "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
+
+        val actual = kucheat.speedValues()
+        assertEquals(49, actual[0])
+        assertEquals(63, actual[1])
+        assertEquals(70, actual[2])
+        assertEquals(71, actual[3])
+        assertEquals(94, actual[4])
+        assertEquals(102, actual[5])
+        assertEquals(105, actual[6])
+        assertEquals(112, actual[7])
+        assertEquals(153, actual[8])
+        assertEquals(168, actual[9])
+    }
 }
