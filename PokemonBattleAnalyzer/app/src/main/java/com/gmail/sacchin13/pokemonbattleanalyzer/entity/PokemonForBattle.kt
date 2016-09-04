@@ -43,18 +43,18 @@ class PokemonForBattle(
         }
     }
 
-    fun abilityTrend(): List<Info>{
-        if(ability.equals("unknown")) return trend.tokuseiInfo.filterNotNull()
+    fun abilityTrend(): List<Info> {
+        if (ability.equals("unknown")) return trend.tokuseiInfo.filterNotNull()
         return listOf(Info(0, 1.0f, ability, 0))
     }
 
-    fun characteristicTrend(): List<Info>{
-        if(characteristic.equals("unknown")) return trend.seikakuInfo.filterNotNull()
+    fun characteristicTrend(): List<Info> {
+        if (characteristic.equals("unknown")) return trend.seikakuInfo.filterNotNull()
         return listOf(Info(0, 1.0f, characteristic, 0))
     }
 
-    fun itemTrend(): List<Info>{
-        if(item.equals("unknown")) return trend.itemInfo.filterNotNull()
+    fun itemTrend(): List<Info> {
+        if (item.equals("unknown")) return trend.itemInfo.filterNotNull()
         return listOf(Info(0, 1.0f, item, 0))
     }
 
@@ -674,19 +674,19 @@ class PokemonForBattle(
 
     fun defeatTimes(damage: Int): Int {
         var hp = hpValue
-        if (side == PartyInBattle.OPPONENT_SIDE){
+        if (side == PartyInBattle.OPPONENT_SIDE) {
             hp = individual.calcHp(hpEffortValue).times(hpRatio).div(100.0).toInt()
         }
         //println("${hp} - ${damage}")
-        return if (hp < damage){
+        return if (hp < damage) {
             1
-        } else if(hp < damage.times(2)) {
+        } else if (hp < damage.times(2)) {
             2
-        } else if(hp < damage.times(3)) {
+        } else if (hp < damage.times(3)) {
             3
-        } else if(hp < damage.times(4)) {
+        } else if (hp < damage.times(4)) {
             4
-        } else{
+        } else {
             5
         }
     }
@@ -793,25 +793,25 @@ class PokemonForBattle(
         return false
     }
 
-    fun speedValues(allField: BattleField): Array<Int>{
+    fun speedValues(allField: BattleField): Array<Int> {
         val values = individual.master.speedValues()
 
-        for(i in values.indices){
-            if(status == StatusAilment.no(StatusAilment.Code.PARALYSIS)){
+        for (i in values.indices) {
+            if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS)) {
                 values[i] = values[i].toDouble().div(4.0).toInt()
             }
             values[i] = values[i].times(getSpeedRankCorrection()).toInt()
 
-            if(allField.weather == BattleField.Weather.Rainy && ability.equals("すいすい")){
+            if (allField.weather == BattleField.Weather.Rainy && ability.equals("すいすい")) {
                 values[i] = values[i].times(2.0).toInt()
             }
-            if(allField.weather == BattleField.Weather.Sunny && ability.equals("ようりょくそ")){
+            if (allField.weather == BattleField.Weather.Sunny && ability.equals("ようりょくそ")) {
                 values[i] = values[i].times(2.0).toInt()
             }
-            if(allField.weather == BattleField.Weather.Sandstorm && ability.equals("すなかき")){
+            if (allField.weather == BattleField.Weather.Sandstorm && ability.equals("すなかき")) {
                 values[i] = values[i].times(2.0).toInt()
             }
-            if(side == PartyInBattle.MY_SIDE && field.contains(BattleField.Field.Tailwind)){
+            if (side == PartyInBattle.MY_SIDE && field.contains(BattleField.Field.Tailwind)) {
                 values[i] = values[i].times(2.0).toInt()
             }
         }

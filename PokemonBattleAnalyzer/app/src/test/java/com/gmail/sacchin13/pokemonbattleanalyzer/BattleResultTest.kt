@@ -4,7 +4,6 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingPokemonSkill
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
-import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
 import com.squareup.moshi.Moshi
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -14,7 +13,7 @@ import java.io.File
 import java.util.*
 import kotlin.properties.Delegates
 
-class BattleCalculatorTest {
+class BattleResultTest {
 
     var garura: PokemonForBattle by Delegates.notNull()
     var fireallow: PokemonForBattle by Delegates.notNull()
@@ -249,101 +248,26 @@ class BattleCalculatorTest {
 //        assertEquals(150, result)
 //    }
 
-
     @Test
-    fun ダメージ計算の正常系テスト() {
-        val result = BattleCalculator.doSkill(fireallow, garura, BattleField(), 0.5, false, false)
+    fun 優先度技探索の正常系テスト() {
+        val result = BattleResult()
+        result.prioritySkill(fireallow.trend)
 
-        assertEquals(0.0625, result[76]!!, 0.1)
-        assertEquals(0.003125, result[79]!!, 0.1)
-        assertEquals(0.0625, result[87]!!, 0.1)
-        assertEquals(0.03125, result[90]!!, 0.1)
+        var actual = result.prioritySkills["ブレイブバード:はやてのつばさ(1)"]
+        assertNotNull(actual)
+        assertEquals(0.9818019270896912, actual!!, 0.1)
 
-        assertEquals(0.09375, result[51]!!, 0.1)
-        assertEquals(0.09375, result[54]!!, 0.1)
-        assertEquals(0.09375, result[57]!!, 0.1)
-        assertEquals(0.003125, result[60]!!, 0.1)
+        actual = result.prioritySkills["はねやすめ:はやてのつばさ(1)"]
+        assertNotNull(actual)
+        assertEquals(0.9818019270896912, actual!!, 0.1)
+
+        actual = result.prioritySkills["おいかぜ:はやてのつばさ(1)"]
+        assertNotNull(actual)
+        assertEquals(0.9818019270896912, actual!!, 0.1)
+
+        actual = result.prioritySkills["まもる(4)"]
+        assertNotNull(actual)
+        assertEquals(1.0, actual!!, 0.1)
     }
-
-    @Test
-    fun 自分側の確定数を計算する正常系テスト() {
-        val result = BattleCalculator.myAttack(1.0, garura, fireallow, BattleField())
-        assertEquals(2.4765625, result.defeatTimes[1]!!, 0.1)
-        assertEquals(1.5234375, result.defeatTimes[2]!!, 0.1)
-        assertEquals(0.0, result.defeatTimes[3]!!, 0.1)
-        assertEquals(0.0, result.defeatTimes[4]!!, 0.1)
-        assertEquals(0.0, result.defeatTimes[5]!!, 0.1)
-    }
-
-    @Test
-    fun 自分側の確定数がすべて1となる場合の正常系テスト() {
-        //確一にするため威力を操作
-        garura.skill.power = 2000
-        val result = BattleCalculator.myAttack(1.0, garura, fireallow, BattleField())
-
-        assertEquals(1.0, result.defeatTimes[1]!!, 0.1)
-    }
-
-    @Test
-    fun 自分側の確定数がすべて5以上となる場合の正常系テスト() {
-        //確五以上にするため威力を操作
-        garura.skill.power = 1
-        val result = BattleCalculator.myAttack(1.0, garura, fireallow, BattleField())
-
-        assertEquals(3.0, result.defeatTimes[5]!!, 0.1)
-    }
-
-    @Test
-    fun 相手側の確定数を計算する正常系テスト() {
-        val result = BattleCalculator.oppoAttack(1.0, fireallow, garura, BattleField())
-
-        val skill1 = result.defeatedTimes["ブレイブバード"]
-        assertNotNull(skill1)
-        assertEquals(0.0, skill1!![1]!!, 0.1)
-        assertEquals(0.03515625, skill1[2]!!, 0.1)
-        assertEquals(0.67578125, skill1[3]!!, 0.1)
-        assertEquals(0.99609375, skill1[4]!!, 0.1)
-        assertEquals(0.29296875, skill1[5]!!, 0.1)
-
-        val skill2 = result.defeatedTimes["はねやすめ"]
-        assertNotNull(skill1)
-        assertEquals(0.0, skill2!![1]!!, 0.1)
-        assertEquals(0.0, skill2[2]!!, 0.1)
-        assertEquals(0.0, skill2[3]!!, 0.1)
-        assertEquals(0.0, skill2[4]!!, 0.1)
-        assertEquals(2.0, skill2[5]!!, 0.1)
-    }
-
-//    @Test
-//    fun 戦闘シミュレーションの正常系テスト() {
-//        fireallow.item = ""
-//        fireallow.characteristic = ""
-//        fireallow.ability = ""
-//        fireallow.skill = createSkill(43, "おいかぜ", 9, -1, -1, 2, 30, false, false, -1, 0.0, -1, 0.0, -1, 0.0)
-//
-//
-//        val result = BattleCalculator.simulateTurn(1.0, garura, fireallow, BattleField())
-//        for (temp in result.defeatTimes) {
-//            println("${temp.key} = ${temp.value}")
-//        }
-//    }
-
-//    @Test
-//    fun ダメージツールの正常系テスト() {
-//        fireallow.item = ""
-//        fireallow.characteristic = "ずぶとい"
-//        fireallow.ability = ""
-//        fireallow.skill = createSkill(43, "おいかぜ", 9, -1, -1, 2, 30, false, false, -1, 0.0, -1, 0.0, -1, 0.0)
-//
-//        val index = arrayOf(4, 64, 128, 192, 252)
-//
-//        for (i in index) {
-//            for (j in index) {
-//                val result = BattleCalculator.simulateTurn(garura, fireallow, BattleField(), i, j)
-//                println("${i}, ${j}, ${result.defeatTimes.maxBy { it -> it.value }}")
-//            }
-//        }
-//    }
-
 
 }

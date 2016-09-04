@@ -11,211 +11,109 @@ class BattleCalculator {
             "ふくろだだき", "ダメおし", "しぜんのめぐみ", "ウェザーボール",
             "はきだす", "おいうち")
 
-    enum class RiskDegree {
-        SAFE,
-        LGTM,
-        NORMAL,
-        WARN,
-        FATAL
-    }
-
     companion object {
         fun getResult(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
             val result = BattleResult()
 
             var sum = 0.0
+            result.prioritySkill(opponent.trend)
             loop@ for (item in opponent.itemTrend()) {
                 if (item.name.isNullOrEmpty() || item.usageRate < 0.01) continue else println("${item.name}")
                 for (tokusei in opponent.abilityTrend()) {
                     if (tokusei.name.isNullOrEmpty() || tokusei.usageRate < 0.01) continue else println("- ${tokusei.name}")
                     for (seikaku in opponent.characteristicTrend()) {
                         if (seikaku.name.isNullOrEmpty() || seikaku.usageRate < 0.01) continue else println("-- ${seikaku.name}")
-                        val rate = item.usageRate.times(tokusei.usageRate.times(seikaku.usageRate)).div(opponent.trend.skillList.size.toDouble())
+                        val rate = item.usageRate.times(tokusei.usageRate.times(seikaku.usageRate)).toDouble()
+                        sum = sum.plus(rate)
 
                         opponent.item = item.name
                         opponent.ability = tokusei.name
                         opponent.characteristic = seikaku.name
-                        result.add(opponent, rate.times(opponent.trend.skillList.size.toDouble()))
-                        result.add(opponent.trend.skillList)
-
-                        val skip = skipOrder(mine, opponent)
-                        if(skip){
-                            val(first, second) = attackOrder(mine, opponent)
-
-                        }else{
-
-                        }
-                        sum += rate.times(opponent.trend.skillList.size.toDouble())
 
 
+                        result.orderRate(opponent, rate)
+                        result.add(myAttack(rate, mine, opponent, field))
+                        result.add(oppoAttack(rate, opponent, mine, field))
 
-
-//                        for (waza in opponent.trend.skillList.filterNotNull()) {
-//                            if (waza.usageRate < 0.01) continue
-//
-//                            opponent.skill = waza.skill
-//
-//                            println("--- 発生率${rate}: ${first.individual.master.jname}(${first.hp()}), ${first.skill.jname} -> ${second.individual.master.jname}(${second.hp()}), ${second.skill.jname}")
-//                            val resultOfTurn = simulateTurn(rate, first, second, field)
-//
-//                            result.mayOccur[BattleStatus.Code.WIN] = result.mayOccur[BattleStatus.Code.WIN]!!.plus(resultOfTurn.mayOccur[BattleStatus.Code.WIN] as Double)
-//                            result.mayOccur[BattleStatus.Code.DEFEAT] = result.mayOccur[BattleStatus.Code.DEFEAT]!!.plus(resultOfTurn.mayOccur[BattleStatus.Code.DEFEAT] as Double)
-//                            result.mayOccur[BattleStatus.Code.REVERSE] = result.mayOccur[BattleStatus.Code.REVERSE]!!.plus(resultOfTurn.mayOccur[BattleStatus.Code.REVERSE] as Double)
-//                            result.mayOccur[BattleStatus.Code.OWN_HEAD] = result.mayOccur[BattleStatus.Code.OWN_HEAD]!!.plus(resultOfTurn.mayOccur[BattleStatus.Code.OWN_HEAD] as Double)
-//                            result.mayOccur[BattleStatus.Code.DRAW] = result.mayOccur[BattleStatus.Code.DRAW]!!.plus(resultOfTurn.mayOccur[BattleStatus.Code.DRAW] as Double)
-//                        }
-//                        if (0.9 < sum) break@loop
+                        if (0.9 < sum) break@loop
                     }
                 }
             }
 
             result.coverRate = sum
             Log.v("getResult", "${result.coverRate}")
-            Log.v("getResult", "${result.mayOccur[BattleStatus.Code.WIN]}")
-            Log.v("getResult", "${result.mayOccur[BattleStatus.Code.DEFEAT]}")
-            Log.v("getResult", "${result.mayOccur[BattleStatus.Code.REVERSE]}")
-            Log.v("getResult", "${result.mayOccur[BattleStatus.Code.OWN_HEAD]}")
-            Log.v("getResult", "${result.mayOccur[BattleStatus.Code.DRAW]}")
 
             return result
         }
 
-        fun simulateTurn(baseRate: Double, baseFirst: PokemonForBattle, baseSecond: PokemonForBattle, field: BattleField): BattleResult {
+        fun myAttack(baseRate: Double, mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
             val result = BattleResult()
 
-//            val firstAttackSuccessRate = baseRate.times(baseFirst.skillAccuracy())
-//            if (firstAttackSuccessRate < 0.0000000001) return result
+            opponent.defenseEffortValue = 252
+            opponent.specialDefenseEffortValue = 252
+            val d252 = doSkill(mine, opponent, field, mine.calcCriticalRate().toDouble(), true, false)
 
-            baseFirst.attackEffortValue = 0
-            baseFirst.specialAttackEffortValue = 0
-            baseSecond.defenseEffortValue = 0
-            baseSecond.specialDefenseEffortValue = 0
-            val d0to0 = doSkill(baseFirst, baseSecond, field, baseFirst.calcCriticalRate().toDouble(), true, false)
+            opponent.hpEffortValue = 252
+            for (d in d252) result.updateDefeatTimes(opponent.defeatTimes(d.key), baseRate.times(d.value))
 
-            baseFirst.attackEffortValue = 252
-            baseFirst.specialAttackEffortValue = 252
-            baseSecond.defenseEffortValue = 0
-            baseSecond.specialDefenseEffortValue = 0
-            val d252to0 = doSkill(baseFirst, baseSecond, field, baseFirst.calcCriticalRate().toDouble(), true, false)
+            if (result.blow(baseRate)) {
+                println("blow!!")
+                return result
+            }
 
-            baseFirst.attackEffortValue = 0
-            baseFirst.specialAttackEffortValue = 0
-            baseSecond.defenseEffortValue = 252
-            baseSecond.specialDefenseEffortValue = 252
-            val d0to252 = doSkill(baseFirst, baseSecond, field, baseFirst.calcCriticalRate().toDouble(), true, false)
+            opponent.defenseEffortValue = 0
+            opponent.specialDefenseEffortValue = 0
+            val d0 = doSkill(mine, opponent, field, mine.calcCriticalRate().toDouble(), true, false)
+            for (d in d0) result.updateDefeatTimes(opponent.defeatTimes(d.key), baseRate.times(d.value))
 
-            baseFirst.attackEffortValue = 252
-            baseFirst.specialAttackEffortValue = 252
-            baseSecond.defenseEffortValue = 252
-            baseSecond.specialDefenseEffortValue = 252
-            val d252to252 = doSkill(baseFirst, baseSecond, field, baseFirst.calcCriticalRate().toDouble(), true, false)
 
-//            println("---- 成功率${firstAttackSuccessRate}: 先手ダメ${damages1}")
+            opponent.hpEffortValue = 0
+            for (d in d0) result.updateDefeatTimes(opponent.defeatTimes(d.key), baseRate.times(d.value))
 
-            baseSecond.hpEffortValue = 252
-            for (d in d252to252) result.updateDefeatTimes( baseSecond.defeatTimes(d.key), baseRate.times(d.value))
-            for (d in d0to252) result.updateDefeatTimes( baseSecond.defeatTimes(d.key), baseRate.times(d.value))
-            for (d in d252to0) result.updateDefeatTimes( baseSecond.defeatTimes(d.key), baseRate.times(d.value))
-            for (d in d0to0) result.updateDefeatTimes( baseSecond.defeatTimes(d.key), baseRate.times(d.value))
 
-//
-//
-//
-//
-//
-//            else {
-//                    if (copiedSecond.ability.equals("")) {
-//                    }
-//
-//                    val secondAttackSuccessRate = firstAttackSuccessRate.times(d1.value).times(copiedSecond.skillAccuracy())
-//                    if (secondAttackSuccessRate < 0.0000000001) continue
-//                    result.updateDraw(firstAttackSuccessRate.times(d1.value).minus(secondAttackSuccessRate))
-//
-//                    val affects = copiedFirst.skillAffects()
-//                    println("----- ダメ計後 ${copiedFirst.individual.master.jname}(${copiedFirst.hp()}) -> ${copiedSecond.individual.master.jname}(${copiedSecond.hp()})")
-//                    for (case in affects) {
-//                        if (case.value.minus(0.0) < 0.001) {
-//                            //println("------: no affects")
-//                            continue
-//                        }
-//                        val rate = case.value.times(secondAttackSuccessRate)
-//                        copiedSecond.status = case.key[0]
-//                        copiedFirst.updateRank(case.key[1])
-//                        copiedSecond.updateRank(case.key[2])
-//
-//                        val damages2 = doSkill(copiedSecond, copiedFirst, field, copiedSecond.calcCriticalRate().toDouble(), false, false)
-//                        println("------ ${rate}:${StatusAilment.name(copiedSecond.status)}-${case.key[1]}-${case.key[2]}-${damages2}")
-//                        for (d2 in damages2) {
-//                            if (copiedFirst.dying(d2.key)) {
-//                                result.updateReverseOwnHeadDefeat(copiedFirst, copiedSecond, rate.times(d2.value))
-//                            } else {
-//                                result.updateDraw(rate.times(d2.value))
-//                            }
-//                        }
-//                    }
-//                    copiedSecond.firstCheck = false
-//                }
-//            }
-//
-//
-//            val firstAttackFailRate = baseRate.minus(firstAttackSuccessRate)
-//            val copiedFirst = baseFirst.clone()
-//            copiedFirst.recoil()
-//
-//            val copiedSecond = baseSecond.clone()
-//            if (copiedFirst.dying()) {
-////                result.updateWinDefeat(copiedFirst, copiedSecond, firstAttackSuccessRate.times(d1.value))
-//            } else {
-//                if (copiedSecond.ability.equals("")) {
-//
-//                }
-//
-//                val secondAttackSuccessRate = firstAttackFailRate.times(copiedSecond.skillAccuracy())
-//                if (secondAttackSuccessRate < 0.0000000001) return result
-//                result.updateDraw(firstAttackFailRate.minus(secondAttackSuccessRate))
-//
-//                val rate = secondAttackSuccessRate
-//
-//                val damages2 = doSkill(copiedSecond, copiedFirst, field, copiedSecond.calcCriticalRate().toDouble(), false, false)
-//                println("---- 失敗率${secondAttackSuccessRate}: ${copiedFirst.individual.master.jname}(${copiedFirst.hp()}) -> ${copiedSecond.individual.master.jname}(${copiedSecond.hp()})")
-//                for (d2 in damages2) {
-//                    val remain2 = copiedFirst.individual.calcHp().times(copiedFirst.hpRatio).div(100).minus(d2.key)
-//                    if (remain2 < 1) {
-//                        result.updateReverseOwnHeadDefeat(copiedFirst, copiedSecond, rate.times(d2.value))
-//                    } else {
-//                        result.updateDraw(rate.times(d2.value))
-//                    }
-//                }
-//            }
+            if (result.little()) {
+                println("little!!")
+                return result
+            }
+
+            for (d in d252) result.updateDefeatTimes(opponent.defeatTimes(d.key), baseRate.times(d.value))
+
 
             return result
         }
 
-        fun skipOrder(mine: PokemonForBattle, opponent: PokemonForBattle): Boolean{
-            return when {
-                mine.skill.priority < opponent.skill.priority -> true
-                mine.skill.priority > opponent.skill.priority -> true
-                else -> false
-            }
-        }
+        fun oppoAttack(baseRate: Double, opponent: PokemonForBattle, mine: PokemonForBattle, field: BattleField): BattleResult {
+            val result = BattleResult()
 
-        fun attackOrder(mine: PokemonForBattle, opponent: PokemonForBattle): Pair<PokemonForBattle, PokemonForBattle>{
-            return when {
-                mine.skill.priority < opponent.skill.priority -> Pair(opponent, mine)
-                mine.skill.priority > opponent.skill.priority -> Pair(mine, opponent)
-                else -> Pair(opponent, mine)
+            for (skill in opponent.trend.skillList) {
+                opponent.skill = skill.skill
+                opponent.attackEffortValue = 0
+                opponent.specialAttackEffortValue = 0
+                val d0 = doSkill(opponent, mine, field, mine.calcCriticalRate().toDouble(), true, false)
+                for (d in d0) result.updateDefeatedTimes(skill.skill.jname, mine.defeatTimes(d.key), baseRate.times(d.value))
+
+                if (result.blow(baseRate)) {
+                    println("blow!!")
+                    return result
+                }
+
+                opponent.attackEffortValue = 252
+                opponent.specialAttackEffortValue = 252
+                val d252 = doSkill(opponent, mine, field, mine.calcCriticalRate().toDouble(), true, false)
+                for (d in d252) result.updateDefeatedTimes(skill.skill.jname, mine.defeatTimes(d.key), baseRate.times(d.value))
             }
+
+            return result
         }
 
         fun doSkill(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField,
                     criticalRate: Double, first: Boolean, damaged: Boolean): MutableMap<Int, Double> {
             if (attackSide.skill.category == 2) {
-
                 return mutableMapOf(0 to 1.0)
             }
-            if (defenseSide.noEffect(attackSide.skill)) {
-                return mutableMapOf(0 to 1.0)
-            }
+//            if (defenseSide.noEffect(attackSide.skill)) {
+//                return mutableMapOf(0 to 1.0)
+//            }
 
             var attackValue = 0.0
             var attackValueCorrection = 0.0
@@ -710,7 +608,7 @@ class BattleCalculator {
             }
 
             val result = mutableMapOf<Int, Double>()
-            for ((i, value)in randomDamage.withIndex()) {
+            for ((i, value) in randomDamage.withIndex()) {
                 val k = value.toInt()
                 if (result.containsKey(k)) {
                     result[k] = result[k]!!.plus(1)
