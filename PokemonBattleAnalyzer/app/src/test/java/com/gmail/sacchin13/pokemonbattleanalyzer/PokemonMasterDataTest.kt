@@ -9,7 +9,7 @@ class PokemonMasterDataTest {
 
     @Test
     fun testGetHPValue() {
-        val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+        val kucheat = PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
         assertEquals(157, kucheat.hp(31, 252))
         assertEquals(141, kucheat.hp(0, 252))
@@ -19,7 +19,7 @@ class PokemonMasterDataTest {
 
     @Test
     fun testGetAttackValue() {
-        val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+        val kucheat = PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
         assertEquals(137, kucheat.attack(31, 252))
         assertEquals(121, kucheat.attack(0, 252))
@@ -29,7 +29,7 @@ class PokemonMasterDataTest {
 
     @Test
     fun testGetDefenseValue() {
-        val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+        val kucheat = PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
         assertEquals(137, kucheat.defense(31, 252))
         assertEquals(121, kucheat.defense(0, 252))
@@ -39,7 +39,7 @@ class PokemonMasterDataTest {
 
     @Test
     fun testGetSpecialAttackValue() {
-        val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+        val kucheat = PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
         assertEquals(107, kucheat.specialAttack(31, 252))
         assertEquals(91, kucheat.specialAttack(0, 252))
@@ -49,7 +49,7 @@ class PokemonMasterDataTest {
 
     @Test
     fun testGetSpecialDefenseValue() {
-        val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+        val kucheat = PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
         assertEquals(107, kucheat.specialDefense(31, 252))
         assertEquals(91, kucheat.specialDefense(0, 252))
@@ -59,7 +59,7 @@ class PokemonMasterDataTest {
 
     @Test
     fun testGetSpeedValue() {
-        val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+        val kucheat = PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
         assertEquals(102, kucheat.speed(31, 252))
         assertEquals(86, kucheat.speed(0, 252))
@@ -69,7 +69,7 @@ class PokemonMasterDataTest {
 
     @Test
     fun testGetSpeedValues() {
-        val kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+        val kucheat = PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
 
         val actual = kucheat.speedValues()

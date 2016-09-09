@@ -88,7 +88,7 @@ class BattleCalculatorTest {
         garura = PokemonForBattle.create(PartyInBattle.MY_SIDE, IndividualPBAPokemon(
                 0, -1, "ガルーラナイト", "いじっぱり", "せいしんりょく",
                 database["ねこだまし"] as Skill, database["いわなだれ"] as Skill, database["みがわり"] as Skill, database["アイアンヘッド"] as Skill,
-                212, 150, 137, 40, 80, 110, PokemonMasterData("115", "ガルーラ", "Kangaskhan", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
+                212, 150, 137, 40, 80, 110, PokemonMasterData("115", "ガルーラ", "Kangaskhan", "-", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
         garura.skill = database["おんがえし"] as Skill
         garura.skill.power = 200
         garura.hpValue = 212
@@ -109,7 +109,7 @@ class BattleCalculatorTest {
         fireallow = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, IndividualPBAPokemon(
                 0, -1, "ゴツゴツメット", "ずぶとい", "はやてのつばさ",
                 database["はねやすめ"] as Skill, database["おにび"] as Skill, database["みがわり"] as Skill, database["ブレイブバード"] as Skill,
-                0, 0, 0, 0, 0, 0, PokemonMasterData("663", "ファイアロー", "Talonflame", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
+                0, 0, 0, 0, 0, 0, PokemonMasterData("663", "ファイアロー", "Talonflame", "-", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
         fireallow.hpRatio = 100
         fireallow.skill = database["ブレイブバード"] as Skill
         fireallow.trend = TrendForBattle.create(rankingResponse2.rankingPokemonTrend)

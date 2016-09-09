@@ -87,7 +87,7 @@ class BattleResultTest {
         garura = PokemonForBattle.create(PartyInBattle.MY_SIDE, IndividualPBAPokemon(
                 0, -1, "ガルーラナイト", "いじっぱり", "せいしんりょく",
                 database["ねこだまし"] as Skill, database["いわなだれ"] as Skill, database["みがわり"] as Skill, database["アイアンヘッド"] as Skill,
-                212, 150, 137, 40, 80, 110, PokemonMasterData("115", "ガルーラ", "Kangaskhan", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
+                212, 150, 137, 40, 80, 150, PokemonMasterData("115", "ガルーラ", "Kangaskhan", "-", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
         garura.skill = database["おんがえし"] as Skill
         garura.skill.power = 200
         garura.hpValue = 212
@@ -108,7 +108,7 @@ class BattleResultTest {
         fireallow = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, IndividualPBAPokemon(
                 0, -1, "ゴツゴツメット", "ずぶとい", "はやてのつばさ",
                 database["はねやすめ"] as Skill, database["おにび"] as Skill, database["みがわり"] as Skill, database["ブレイブバード"] as Skill,
-                0, 0, 0, 0, 0, 0, PokemonMasterData("663", "ファイアロー", "Talonflame", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
+                0, 0, 0, 0, 0, 0, PokemonMasterData("663", "ファイアロー", "Talonflame", "-", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
         fireallow.hpRatio = 100
         fireallow.skill = database["ブレイブバード"] as Skill
         fireallow.trend = TrendForBattle.create(rankingResponse2.rankingPokemonTrend)
@@ -268,6 +268,63 @@ class BattleResultTest {
         actual = result.prioritySkills["まもる(4)"]
         assertNotNull(actual)
         assertEquals(1.0, actual!!, 0.1)
+    }
+
+    @Test
+    fun 素早さ集計の枠組みを作る正常系テスト() {
+        val result = BattleResult()
+
+        fireallow.characteristic = "ようき"
+        result.orderRate(fireallow, 0.2)
+
+        fireallow.characteristic = "いじっぱり"
+        result.orderRate(fireallow, 0.5)
+
+        fireallow.characteristic = "ゆうかん"
+        result.orderRate(fireallow, 0.3)
+
+        assertEquals(0.15, result.speedOccur[0]!!, 0.1)
+        assertEquals(0.15, result.speedOccur[1]!!, 0.1)
+        assertEquals(0.16666666666666666, result.speedOccur[2]!!, 0.1)
+        assertEquals(0.16666666666666666, result.speedOccur[3]!!, 0.1)
+        assertEquals(0.1, result.speedOccur[4]!!, 0.1)
+        assertEquals(0.0, result.speedOccur[5]!!, 0.1)
+        assertEquals(0.16666666666666666, result.speedOccur[6]!!, 0.1)
+        assertEquals(0.0, result.speedOccur[7]!!, 0.1)
+        assertEquals(0.0, result.speedOccur[8]!!, 0.1)
+        assertEquals(0.1, result.speedOccur[9]!!, 0.1)
+        assertEquals(0.0, result.speedOccur[10]!!, 0.1)
+        assertEquals(0.0, result.speedOccur[11]!!, 0.1)
+//        117
+//        131
+//        146
+//        147
+//        160
+//        197
+//        178
+//        219
+//        240
+//        195
+//        267
+//        293
+    }
+
+    @Test
+    fun 素早さ集計の正常系テスト() {
+        val result = BattleResult()
+
+        fireallow.characteristic = "ようき"
+        result.orderRate(fireallow, 0.2)
+
+        fireallow.characteristic = "いじっぱり"
+        result.orderRate(fireallow, 0.5)
+
+        fireallow.characteristic = "ゆうかん"
+        result.orderRate(fireallow, 0.3)
+
+        val(label, rate) = result.orderResult(garura, fireallow)
+        assertEquals("4振無補正", label)
+        assertEquals(0.6333333333333333, rate, 0.1)
     }
 
 }

@@ -31,7 +31,7 @@ class GraphActivity : PGLActivity(), OnChartValueSelectedListener {
 
     var opponent: PartyInBattle by Delegates.notNull()
     var item: MutableList<String> by Delegates.notNull()
-    var skill: MutableList<Skill?> by Delegates.notNull()
+    var skill: MutableList<Skill> by Delegates.notNull()
 
     init {
         opponent = PartyInBattle(PartyInBattle.OPPONENT_SIDE)

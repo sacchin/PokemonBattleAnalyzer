@@ -12,37 +12,58 @@ class BattleCalculator {
             "はきだす", "おいうち")
 
     companion object {
-        fun getResult(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
+        fun getResultFirst(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
             val result = BattleResult()
 
-            var sum = 0.0
+            result.coverRate = 0.0
             result.prioritySkill(opponent.trend)
             loop@ for (item in opponent.itemTrend()) {
-                if (item.name.isNullOrEmpty() || item.usageRate < 0.01) continue else println("${item.name}")
+                if (item.name.isNullOrEmpty() || item.usageRate < 0.01) continue
                 for (tokusei in opponent.abilityTrend()) {
-                    if (tokusei.name.isNullOrEmpty() || tokusei.usageRate < 0.01) continue else println("- ${tokusei.name}")
+                    if (tokusei.name.isNullOrEmpty() || tokusei.usageRate < 0.01) continue
                     for (seikaku in opponent.characteristicTrend()) {
-                        if (seikaku.name.isNullOrEmpty() || seikaku.usageRate < 0.01) continue else println("-- ${seikaku.name}")
+                        if (seikaku.name.isNullOrEmpty() || seikaku.usageRate < 0.01) continue
                         val rate = item.usageRate.times(tokusei.usageRate.times(seikaku.usageRate)).toDouble()
-                        sum = sum.plus(rate)
+                        result.coverRate = result.coverRate.plus(rate)
 
                         opponent.item = item.name
                         opponent.ability = tokusei.name
                         opponent.characteristic = seikaku.name
 
-
                         result.orderRate(opponent, rate)
                         result.add(myAttack(rate, mine, opponent, field))
                         result.add(oppoAttack(rate, opponent, mine, field))
 
-                        if (0.9 < sum) break@loop
+                        if (0.9 < result.coverRate) break@loop
                     }
                 }
             }
+            result.orderResult(mine, opponent)
 
-            result.coverRate = sum
-            Log.v("getResult", "${result.coverRate}")
+            return result
+        }
 
+        fun getResult(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
+            val result = BattleResult()
+
+            result.coverRate = 0.0
+            loop@ for (item in opponent.itemTrend()) {
+                if (item.name.isNullOrEmpty() || item.usageRate < 0.01) continue
+                for (tokusei in opponent.abilityTrend()) {
+                    if (tokusei.name.isNullOrEmpty() || tokusei.usageRate < 0.01) continue
+                    for (seikaku in opponent.characteristicTrend()) {
+                        if (seikaku.name.isNullOrEmpty() || seikaku.usageRate < 0.01) continue
+                        val rate = item.usageRate.times(tokusei.usageRate.times(seikaku.usageRate)).toDouble()
+                        result.coverRate = result.coverRate.plus(rate)
+                        opponent.item = item.name
+                        opponent.ability = tokusei.name
+                        opponent.characteristic = seikaku.name
+                        result.add(myAttack(rate, mine, opponent, field))
+
+                        if (0.9 < result.coverRate) break@loop
+                    }
+                }
+            }
             return result
         }
 

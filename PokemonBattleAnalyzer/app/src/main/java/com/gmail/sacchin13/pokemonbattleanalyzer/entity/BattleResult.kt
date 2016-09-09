@@ -201,6 +201,21 @@ class BattleResult {
         for (temp in label) speedOccur[temp] = speedOccur[temp]!!.plus(rate.div(label.size))
     }
 
+    fun orderResult(mine: PokemonForBattle, opponent: PokemonForBattle): Pair<String, Double>{
+        var sum = 0.0
+        var label = ""
+        for ((index, speed) in opponent.individual.master.speedValues().withIndex()){
+            if(speed < mine.calcSpeedValue()) {
+                sum += speedOccur[index]!!
+            }else{
+                label = BattleStatus.name(index - 1)
+                break
+            }
+        }
+
+        return Pair(label, sum)
+    }
+
     fun prioritySkill(pokemon: TrendForBattle) {
         for (ability in pokemon.tokuseiInfo) {
             for (skill in pokemon.skillList) {
@@ -219,7 +234,6 @@ class BattleResult {
                 if (0 < priority) prioritySkills[key] = rate
             }
         }
-        if (prioritySkills.isEmpty()) prioritySkills["-"] = 1.0
     }
 
     fun count(): Int {

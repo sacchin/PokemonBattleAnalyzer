@@ -15,13 +15,13 @@ class PokemonForBattleTest {
 
     @Before
     fun init() {
-        kucheat = PokemonMasterData("303", "クチート", "Mawile", 50, 85, 85, 55, 55, 50,
+        kucheat = PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                 "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f)
-        bakuhun = PokemonMasterData("157", "バクフーン", "Typhlosion", 78, 84, 78, 109, 85, 100,
+        bakuhun = PokemonMasterData("157", "バクフーン", "Typhlosion", "-", 78, 84, 78, 109, 85, 100,
                 "もうか", "-", "もらいび", 1, -1, 79.5f)
-        tubotubo = PokemonMasterData("213", "ツボツボ", "Shuckle", 20, 10, 230, 10, 230, 5,
+        tubotubo = PokemonMasterData("213", "ツボツボ", "Shuckle", "-", 20, 10, 230, 10, 230, 5,
                 "がんじょう", "くいしんぼう", "あまのじゃく", 11, 12, 20.5f)
-        tekkanin = PokemonMasterData("291", "テッカニン", "Ninjask", 61, 90, 45, 50, 50, 160,
+        tekkanin = PokemonMasterData("291", "テッカニン", "Ninjask", "-", 61, 90, 45, 50, 50, 160,
                 "かそく", "-", "すりぬけ", 11, 9, 12.0f)
     }
 

@@ -3,8 +3,8 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.insert
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
 
-class MegaPokemonInsertHandler(private val databaseHelper: DatabaseHelper?) : Runnable {
-    override fun run() {
+class MegaPokemonInsertHandler(private val databaseHelper: DatabaseHelper?) {
+    fun run() {
         databaseHelper!!.insertMegaPokemonDataX("003", 80, 100, 123, 122, 120, 80, "あついしぼう", "x")
         databaseHelper.insertMegaPokemonDataX("006", 78, 130, 111, 130, 85, 100, "かたいツメ", "x")
         databaseHelper.insertMegaPokemonDataY("006", 78, 104, 78, 159, 115, 100, "ひでり", "y")

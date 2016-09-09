@@ -9,6 +9,7 @@ public open class PokemonMasterData(
         public open var no: String = "none",
         public open var jname: String = "none",
         public open var ename: String = "none",
+        public open var form: String = "none",
         public open var h: Int = -1,
         public open var a: Int = -1,
         public open var b: Int = -1,
@@ -27,6 +28,20 @@ public open class PokemonMasterData(
 
     @Ignore
     var cacheSpeedValues = arrayOf<Int>()
+
+    fun hx(): Int = megax!!.h
+    fun ax(): Int = megax!!.a
+    fun bx(): Int = megax!!.b
+    fun cx(): Int = megax!!.c
+    fun dx(): Int = megax!!.d
+    fun sx(): Int = megax!!.s
+
+    fun hy(): Int = megay!!.h
+    fun ay(): Int = megay!!.a
+    fun by(): Int = megay!!.b
+    fun cy(): Int = megay!!.c
+    fun dy(): Int = megay!!.d
+    fun sy(): Int = megay!!.s
 
     fun hp(iv: Int, ev: Int): Int {
         val effort = if(ev == IndividualPBAPokemon.UNKNOWN) 252 else ev

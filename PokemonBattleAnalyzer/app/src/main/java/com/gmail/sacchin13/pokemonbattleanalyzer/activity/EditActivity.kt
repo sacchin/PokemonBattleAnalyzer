@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.widget.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
@@ -18,7 +19,7 @@ import kotlin.properties.Delegates
 class EditActivity : AppCompatActivity() {
     var mine: Party by Delegates.notNull()
     var item: MutableList<String> by Delegates.notNull()
-    var skill: MutableList<Skill?> by Delegates.notNull()
+    var skill: MutableList<Skill> by Delegates.notNull()
     var databaseHelper: DatabaseHelper by Delegates.notNull()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,7 @@ class EditActivity : AppCompatActivity() {
         databaseHelper = DatabaseHelper(this)
         item = databaseHelper.selectAllItem()
         skill = databaseHelper.selectAllSkill()
+        for((index, p)in skill.withIndex()) Log.v("PokemonMasterData", "${index}:" + p!!.jname)
     }
 
     public override fun onResume() {

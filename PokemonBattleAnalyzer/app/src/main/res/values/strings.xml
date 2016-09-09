@@ -48,7 +48,7 @@
 
     <string name="expected_activity_vs">VS</string>
     <string name="expected_activity_skill">技</string>
-    <string name="expected_activity_alive">倒す</string>
+    <string name="expected_activity_beat_number">確定数</string>
     <string name="expected_activity_dead">倒される</string>
     <string name="title_activity_login">Sign in</string>
 

@@ -130,6 +130,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             ItemInsertHandler(databaseHelper).run()
             SkillInsertHandler(databaseHelper).run()
             MegaPokemonInsertHandler(databaseHelper).run()
+            PartyInsertHandler(databaseHelper).initInsert()
 
             val editor = serviceStatePreferences.edit()
             editor.putBoolean("isFirst", false)
@@ -149,7 +150,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             return
         }
 
-        PartyInsertHandler(databaseHelper, party, false).run()
+        PartyInsertHandler(databaseHelper).insertOneParty(party)
 
         val intent = Intent(this, GraphActivity().javaClass)
         startActivityForResult(intent, GRAPH_ACTIVITY_CODE)
@@ -236,7 +237,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             return
         }
 
-        PartyInsertHandler(databaseHelper, party, false).run()
+        PartyInsertHandler(databaseHelper).insertOneParty(party)
         startSelectActivity()
     }
 
@@ -247,7 +248,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         party.userName = "mine"
 
-        PartyInsertHandler(databaseHelper, party, false).run()
+        PartyInsertHandler(databaseHelper).insertOneParty(party)
         Snackbar.make(partyLayout, "登録しました。", Snackbar.LENGTH_SHORT).show()
     }
 

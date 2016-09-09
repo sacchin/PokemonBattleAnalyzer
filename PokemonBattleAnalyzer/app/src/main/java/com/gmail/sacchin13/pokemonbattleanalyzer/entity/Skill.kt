@@ -27,10 +27,10 @@ public open class Skill(
 ) : RealmObject() {
 
     object companion {
-        fun skillNameList(list: MutableList<Skill?>): MutableList<String> {
+        fun skillNameList(list: MutableList<Skill>): MutableList<String> {
             val result = ArrayList<String>()
             for (temp in list) {
-                result.add(temp!!.jname)
+                result.add(temp.jname)
             }
             return result
         }

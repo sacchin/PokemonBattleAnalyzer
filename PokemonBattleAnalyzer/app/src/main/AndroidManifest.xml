@@ -29,10 +29,8 @@
         <activity android:name=".activity.SelectActivity" />
         <activity android:name=".activity.ExpectedActivity" />
         <activity android:name=".activity.EditActivity" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
-        <activity android:name=".activity.GraphActivity"></activity>
+        <activity android:name=".activity.DetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
