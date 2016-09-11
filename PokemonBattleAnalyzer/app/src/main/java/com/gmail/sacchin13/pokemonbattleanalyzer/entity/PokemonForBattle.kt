@@ -31,6 +31,7 @@ class PokemonForBattle(
         var individual: IndividualPBAPokemon = IndividualPBAPokemon()
 ) {
 
+    val rank = arrayOf(-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6)
     var trend: TrendForBattle by Delegates.notNull()
     var field: MutableList<BattleField.Field> = mutableListOf()
     var firstCheck = true
@@ -39,7 +40,9 @@ class PokemonForBattle(
         const val UNKNOWN = -1
 
         fun create(side: Int, individual: IndividualPBAPokemon): PokemonForBattle {
-            return PokemonForBattle(side, -1, "unknown", "unknown", "unknown", Skill(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, individual)
+            return PokemonForBattle(side, -1, "unknown", "unknown", "unknown", Skill(), 0, 100, 0,
+                    0, 6, 0, 6, 0, 6, 0, 6, 0, 6,
+                    0, 0, 0, false, individual)
         }
     }
 
@@ -110,11 +113,11 @@ class PokemonForBattle(
         }
 
         if (skill.jname.equals("アシストパワー")) {
-            var sum = if (0 < attackRank) attackRank else 0
-            sum += if (0 < defenseRank) defenseRank else 0
-            sum += if (0 < specialAttackRank) specialAttackRank else 0
-            sum += if (0 < specialDefenseRank) specialDefenseRank else 0
-            sum += if (0 < speedRank) speedRank else 0
+            var sum = if (0 < rank[attackRank]) rank[attackRank] else 0
+            sum += if (0 < rank[defenseRank]) rank[defenseRank] else 0
+            sum += if (0 < rank[specialAttackRank]) rank[specialAttackRank] else 0
+            sum += if (0 < rank[specialDefenseRank]) rank[specialDefenseRank] else 0
+            sum += if (0 < rank[speedRank]) rank[speedRank] else 0
             sum += if (0 < criticalRank) criticalRank else 0
             return sum.times(20)
         }
@@ -137,12 +140,12 @@ class PokemonForBattle(
         }
 
         if (skill.jname.equals("おしおき")) {
-            var sum = if (0 < defenseSide.attackRank) defenseSide.attackRank else 0
-            sum += if (0 < defenseSide.defenseRank) defenseSide.defenseRank else 0
-            sum += if (0 < defenseSide.specialAttackRank) defenseSide.specialAttackRank else 0
-            sum += if (0 < defenseSide.specialDefenseRank) defenseSide.specialDefenseRank else 0
-            sum += if (0 < defenseSide.speedRank) defenseSide.speedRank else 0
-            sum += if (0 < defenseSide.criticalRank) defenseSide.criticalRank else 0
+            var sum = if (0 < rank[defenseSide.attackRank]) rank[defenseSide.attackRank] else 0
+            sum += if (0 < rank[defenseSide.defenseRank]) rank[defenseSide.defenseRank] else 0
+            sum += if (0 < rank[defenseSide.specialAttackRank]) rank[defenseSide.specialAttackRank] else 0
+            sum += if (0 < rank[defenseSide.specialDefenseRank]) rank[defenseSide.specialDefenseRank] else 0
+            sum += if (0 < rank[defenseSide.speedRank]) rank[defenseSide.speedRank] else 0
+            sum += if (0 < rank[defenseSide.criticalRank]) rank[defenseSide.criticalRank] else 0
 
             when (sum) {
                 0 -> return 60
@@ -300,7 +303,7 @@ class PokemonForBattle(
     }
 
     fun getAttackRankCorrection(isCritical: Boolean): Double {
-        when (attackRank) {
+        when (rank[attackRank]) {
             -6 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(9)
             -5 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(8)
             -4 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(7)
@@ -345,7 +348,7 @@ class PokemonForBattle(
     }
 
     fun getDefenseRankCorrection(isCritical: Boolean): Double {
-        when (defenseRank) {
+        when (rank[defenseRank]) {
             -6 -> return 3.toDouble().div(9)
             -5 -> return 3.toDouble().div(8)
             -4 -> return 3.toDouble().div(7)
@@ -370,7 +373,7 @@ class PokemonForBattle(
     }
 
     fun getSpecialAttackRankCorrection(isCritical: Boolean): Double {
-        when (specialAttackRank) {
+        when (rank[specialAttackRank]) {
             -6 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(9)
             -5 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(8)
             -4 -> return if (isCritical) 3.toDouble().div(3) else 3.toDouble().div(7)
@@ -415,7 +418,7 @@ class PokemonForBattle(
     }
 
     fun getSpecialDefenseRankCorrection(isCritical: Boolean): Double {
-        when (specialDefenseRank) {
+        when (rank[specialDefenseRank]) {
             -6 -> return 3.toDouble().div(9)
             -5 -> return 3.toDouble().div(8)
             -4 -> return 3.toDouble().div(7)
@@ -456,7 +459,7 @@ class PokemonForBattle(
     }
 
     fun getSpeedRankCorrection(): Double {
-        when (speedRank) {
+        when (rank[speedRank]) {
             -6 -> return 3.toDouble().div(9)
             -5 -> return 3.toDouble().div(8)
             -4 -> return 3.toDouble().div(7)

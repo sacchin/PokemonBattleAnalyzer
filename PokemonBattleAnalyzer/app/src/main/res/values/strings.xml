@@ -12,6 +12,12 @@
 
     <string name="mine">自分</string>
     <string name="opponent">相手</string>
+    <string name="skill">Skill</string>
+    <string name="item">Item</string>
+    <string name="characteristic">Characteristic</string>
+    <string name="ability">Ability</string>
+    <string name="hp">HP</string>
+
 
     <string name="affinity_fragment_button">Back</string>
     <string name="affinity_fragment_column1title">選択したポケモン</string>
@@ -47,14 +53,13 @@
     <string name="edit_activity_s">S</string>
 
     <string name="expected_activity_vs">VS</string>
-    <string name="expected_activity_skill">技</string>
     <string name="expected_activity_beat_number">確定数</string>
     <string name="expected_activity_dead">倒される</string>
     <string name="title_activity_login">Sign in</string>
 
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
+    <string name="detail_activity_base">Base Status</string>
+    <string name="detail_activity_happened">Happened</string>
+
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
@@ -64,4 +69,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+
 </resources>
