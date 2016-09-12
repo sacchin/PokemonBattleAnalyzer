@@ -30,6 +30,19 @@ object StatusAilment {
         }
     }
 
+    fun name(code: Int): String {
+        when (code) {
+            0 -> return "やけど"
+            1 -> return "こおり"
+            2 -> return "まひ"
+            3 -> return "どく"
+            4 -> return "もうどく"
+            5 -> return "ねむり"
+            6 -> return "ひんし"
+            else -> return "UNKNOWN"
+        }
+    }
+
     fun no(status: Code): Int {
         when (status) {
             Code.BURN -> return 0

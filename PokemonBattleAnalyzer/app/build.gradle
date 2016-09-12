@@ -4,8 +4,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 
 buildscript {
-    ext.kotlin_version = '1.0.2'
+    ext.kotlin_version = '1.0.3'
     repositories {
+        maven { url "https://jitpack.io" }
         jcenter()
     }
     dependencies {
@@ -53,6 +54,8 @@ dependencies {
     compile 'org.jetbrains.anko:anko-sdk15:0.8.2'
     compile 'com.squareup.okhttp3:okhttp:3.3.1'
     compile 'com.squareup.moshi:moshi:1.2.0'
+
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
 }
 
 repositories {

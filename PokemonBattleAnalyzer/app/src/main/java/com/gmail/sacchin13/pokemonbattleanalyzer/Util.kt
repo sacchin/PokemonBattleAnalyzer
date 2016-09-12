@@ -632,11 +632,15 @@ class Util {
     }
 
     fun createImage(p: PokemonMasterData, scale: Float, resource: Resources): Bitmap {
+        return createImage(p.no, scale, resource)
+    }
+
+    fun createImage(no: String, scale: Float, resource: Resources): Bitmap {
         var image = BitmapFactory.decodeResource(resource, R.drawable.noimage)
-        if(pokemonImageResource.contains(p.no)){
-            image = BitmapFactory.decodeResource(resource, pokemonImageResource[p.no]!!.toInt())
+        if(pokemonImageResource.contains(no)){
+            image = BitmapFactory.decodeResource(resource, pokemonImageResource[no]!!.toInt())
             if (image == null) {
-                Log.w("createImage", "${p.jname}'s image is not found.")
+                Log.w("createImage", "${no}'s image is not found.")
             }
         }
         val matrix = Matrix()
@@ -656,5 +660,9 @@ class Util {
         matrix.postScale(scale / image.width.toFloat(), scale / image.height.toFloat())
         image = Bitmap.createBitmap(image, 0, 0, image.width, image.height, matrix, true)
         return image
+    }
+
+    fun percent(rate: Double): String{
+        return String.format("%.1f", rate)
     }
 }

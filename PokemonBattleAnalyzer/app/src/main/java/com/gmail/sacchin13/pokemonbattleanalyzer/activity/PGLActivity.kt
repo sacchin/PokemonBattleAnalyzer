@@ -13,19 +13,12 @@ open class PGLActivity : AppCompatActivity() {
     var databaseHelper: DatabaseHelper by Delegates.notNull()
     var opponentParty: Party by Delegates.notNull()
     var myParty: Party by Delegates.notNull()
+    var finishCount = 0
 
     inner class TrendListener : PokemonTrendDownloader.EventListener {
         override fun onFinish(result: TrendForBattle, index: Int) {
             setTrend(result, index)
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,11 +38,11 @@ open class PGLActivity : AppCompatActivity() {
     }
 
     private fun downloadTrend() {
+        finishCount = 0
         for (i in 0..opponentParty.member.size - 1) {
             val p = opponentParty.member[i]
             val pokemonNo = p.no + "-0"
-            Log.v("downloadTrend", "start $pokemonNo")
-            PokemonTrendDownloader(pokemonNo, i, TrendListener(), databaseHelper).execute()
+            PokemonTrendDownloader(pokemonNo, i, TrendListener()).execute()
         }
     }
 
@@ -66,8 +59,10 @@ open class PGLActivity : AppCompatActivity() {
 //
 //    abstract fun finishAllDownload()
     open fun setTrend(result: TrendForBattle, index: Int) {
+        Log.w("PGLActivity.setTrend", "don't override!")
     }
 
     open fun showParty() {
+        Log.w("PGLActivity.showParty", "don't override!")
     }
 }

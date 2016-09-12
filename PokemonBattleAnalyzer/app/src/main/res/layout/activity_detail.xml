@@ -1,7 +1,239 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/f_detail"
-    android:name="com.gmail.sacchin.pokemonbattleanalyzer.fragment.DetailActivityFragment"
-    tools:layout="@layout/fragment_detail"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.gmail.sacchin13.pokemonbattleanalyzer.activity.ExpectedActivity">
+
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:contentScrim="@color/colorPrimaryDark"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorTextIcons"
+                    android:scaleType="centerCrop"
+                    android:transitionName="image"
+                    app:layout_collapseMode="parallax"/>
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/tool_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"/>
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nested_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TableLayout
+                    android:paddingLeft="@dimen/activity_horizontal_padding"
+                    android:paddingRight="@dimen/activity_horizontal_padding"
+                    android:paddingBottom="@dimen/activity_vertical_padding"
+                    android:paddingTop="@dimen/activity_vertical_padding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="0,1,2,3,4,5,6"
+                    android:id="@+id/inputTable">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <CheckBox
+                            android:id="@+id/my_mega_check"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <EditText
+                            android:id="@+id/myHPBar"
+                            android:inputType="number"
+                            android:layout_width="wrap_content"
+                            android:layout_span="2"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionSend"
+                            android:hint="HP" />
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/myStatusSpinner"
+                            android:layout_span="3"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <CheckBox
+                            android:id="@+id/oppo_mega_check"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <SeekBar
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:progress="100"
+                            android:max="100"
+                            android:id="@+id/opponentHPBar"
+                            android:layout_span="2"/>
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/opponentStatusSpinner"
+                            android:layout_span="3"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/edit_activity_a"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/edit_activity_b"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/edit_activity_c"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/edit_activity_d"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/edit_activity_s"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/myASpinner"/>
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/myBSpinner"/>
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/myCSpinner"/>
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/myDSpinner"/>
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/mySSpinner"/>
+                    </TableRow>
+                </TableLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16sp"
+                    android:text="Base Status"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/statusview"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16sp"
+                    android:text="Skill"/>
+
+                <TableLayout
+                    android:id="@+id/skilltable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16sp"
+                    android:stretchColumns="0,1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16sp"
+                    android:text="Characteristic"/>
+
+                <TableLayout
+                    android:id="@+id/characteristictable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16sp"
+                    android:stretchColumns="0,1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16sp"
+                    android:text="Item"/>
+
+                <TableLayout
+                    android:id="@+id/itemtable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16sp"
+                    android:stretchColumns="0,1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16sp"
+                    android:text="Ability"/>
+
+                <TableLayout
+                    android:id="@+id/abilitytable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16sp"
+                    android:stretchColumns="0,1" />
+
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:src="@drawable/monsterball"
+            app:backgroundTint="@color/colorAccent"
+            app:layout_anchor="@+id/app_bar"
+            app:layout_anchorGravity="bottom|right|end"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</RelativeLayout>

@@ -10,7 +10,7 @@ public open class MegaPokemonMasterData (
     public open var c: Int = 0,
     public open var d: Int = 0,
     public open var s: Int = 0,
-    public open var characteristic: String = "",
+    public open var ability: String = "",
     public open var megaType: String = ""
 ): RealmObject(){
 }

@@ -1,5 +1,7 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl
 
+import android.util.Log
+import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Skill
 import java.util.*
 import kotlin.properties.Delegates
@@ -7,22 +9,34 @@ import kotlin.properties.Delegates
 data class TrendForBattle(
         val seikakuInfo: List<Info>,
         val tokuseiInfo: List<Info>,
-        val itemInfo: List<Info>) {
+        val itemInfo: List<Info>,
+        val wazaInfo: List<WazaInfo>){
 
-    var wazaInfo: MutableList<RankingPokemonSkill> by Delegates.notNull()
+    var skillList: MutableList<RankingPokemonSkill> by Delegates.notNull()
 
     companion object {
-        fun create(rankingPokemonTrend: RankingPokemonTrend, skills: ArrayList<Skill>): TrendForBattle {
+        fun create(rankingPokemonTrend: RankingPokemonTrend): TrendForBattle {
             val result = TrendForBattle(rankingPokemonTrend.seikakuInfo,
                     rankingPokemonTrend.tokuseiInfo,
-                    rankingPokemonTrend.itemInfo)
-
-            result.wazaInfo = mutableListOf()
-            for (temp in 0..rankingPokemonTrend.wazaInfo.size) {
-                result.wazaInfo.add(RankingPokemonSkill.create(rankingPokemonTrend.wazaInfo[temp], skills[temp]))
-            }
+                    rankingPokemonTrend.itemInfo,
+                    rankingPokemonTrend.wazaInfo)
 
             return result
         }
+    }
+
+    fun updateSkills(databaseHelper: DatabaseHelper){
+        skillList = mutableListOf()
+        for (temp in 0..(wazaInfo.size - 2)) {
+            if(!wazaInfo[temp].name.equals("null")){
+                skillList.add(RankingPokemonSkill.create(wazaInfo[temp], databaseHelper.selectSkillByName(wazaInfo[temp].name)))
+            }
+        }
+    }
+
+    fun skillNames(): List<String>{
+        val result = mutableListOf<String>()
+        for(w in skillList) result.add(w.skill.jname)
+        return result
     }
 }

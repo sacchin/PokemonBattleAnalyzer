@@ -79,6 +79,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <TextView
+                        android:text="@string/edit_activity_abi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member1AbiSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:text="@string/edit_activity_abi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2AbiSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
                         android:text="@string/edit_activity_skill1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
@@ -308,6 +328,26 @@
                         android:layout_height="wrap_content"/>
                     <Spinner
                         android:id="@+id/member4CharSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_abi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member3AbiSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:text="@string/edit_activity_abi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4AbiSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -550,6 +590,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <TextView
+                        android:text="@string/edit_activity_abi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member5AbiSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:text="@string/edit_activity_abi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6AbiSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
                         android:text="@string/edit_activity_skill1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
@@ -648,11 +708,13 @@
                     <EditText
                         android:id="@+id/member5A"
                         android:hint="@string/edit_activity_a"
+                        android:layout_span="2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <EditText
                         android:id="@+id/member6A"
                         android:hint="@string/edit_activity_a"
+                        android:layout_span="2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -662,11 +724,13 @@
                     <EditText
                         android:id="@+id/member5B"
                         android:hint="@string/edit_activity_b"
+                        android:layout_span="2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <EditText
                         android:id="@+id/member6B"
                         android:hint="@string/edit_activity_b"
+                        android:layout_span="2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>

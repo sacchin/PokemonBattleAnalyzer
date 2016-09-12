@@ -29,9 +29,9 @@ import kotlin.properties.Delegates
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     val SELECT_ACTIVITY_CODE = 0
     val AFFINITY_ACTIVITY_CODE = 1
-    val EDIT_ACTIVITY_CODE = 0
+    val EDIT_ACTIVITY_CODE = 2
+    val GRAPH_ACTIVITY_CODE = 3
 
-    var buttonEnable: Boolean = true
     var serviceStatePreferences: SharedPreferences by Delegates.notNull()
 
     var databaseHelper: DatabaseHelper by Delegates.notNull()
@@ -103,24 +103,18 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     @SuppressWarnings("StatementWithEmptyBody")
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_save) {
             createMyParty()
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_edit) {
             startEditActivity()
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_clear) {
+            party.clear()
+            partyLayout.removeAllViews()
+            party.userName = "none"
+        } else if (id == R.id.nav_graph) {
+            startGraphActivity()
         }
-//        when (id) {
-//            R.id.action_settings -> {
-//                val serviceStatePreferences = getSharedPreferences("pokemon", MODE_PRIVATE)
-//                val editor = serviceStatePreferences!!.edit()
-//                editor.putBoolean("enable", !serviceStatePreferences.getBoolean("enable", true));
-//                editor.apply();
-//            }
-//        }
-//        drawer_layout!!.closeDrawer(GravityCompat.START)
+
         return true
     }
 
@@ -136,17 +130,30 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             ItemInsertHandler(databaseHelper).run()
             SkillInsertHandler(databaseHelper).run()
             MegaPokemonInsertHandler(databaseHelper).run()
+            PartyInsertHandler(databaseHelper).initInsert()
 
             val editor = serviceStatePreferences.edit()
-            editor.putBoolean("isFirst", false);
-            editor.apply();
-            Log.i("This is First Time", "create table!");
+            editor.putBoolean("isFirst", false)
+            editor.apply()
+            Log.i("This is First Time", "create table!")
         }
     }
 
     fun startEditActivity() {
         val intent = Intent(this, EditActivity().javaClass)
-        startActivityForResult(intent, EDIT_ACTIVITY_CODE);
+        startActivityForResult(intent, EDIT_ACTIVITY_CODE)
+    }
+
+    fun startGraphActivity() {
+        if (party.member.size < 2) {
+            Snackbar.make(partyLayout, "ポケモンが選択されていません。", Snackbar.LENGTH_SHORT).show()
+            return
+        }
+
+        PartyInsertHandler(databaseHelper).insertOneParty(party)
+
+        val intent = Intent(this, GraphActivity().javaClass)
+        startActivityForResult(intent, GRAPH_ACTIVITY_CODE)
     }
 
     fun startSelectActivity() {
@@ -230,7 +237,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             return
         }
 
-        PartyInsertHandler(databaseHelper, party, false).run()
+        PartyInsertHandler(databaseHelper).insertOneParty(party)
         startSelectActivity()
     }
 
@@ -241,7 +248,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         party.userName = "mine"
 
-        PartyInsertHandler(databaseHelper, party, false).run()
+        PartyInsertHandler(databaseHelper).insertOneParty(party)
         Snackbar.make(partyLayout, "登録しました。", Snackbar.LENGTH_SHORT).show()
     }
 
