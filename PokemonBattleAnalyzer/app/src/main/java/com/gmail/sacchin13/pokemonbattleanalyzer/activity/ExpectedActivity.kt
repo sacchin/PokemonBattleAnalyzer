@@ -2,19 +2,18 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.activity
 
 import android.app.ActivityOptions
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.util.Log
 import android.view.View
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.Util
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.BattleField
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PartyInBattle
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.TemporaryStatus
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
 import kotlinx.android.synthetic.main.activity_expected.*
+import org.jetbrains.anko.backgroundColor
 import kotlin.properties.Delegates
 
 class ExpectedActivity : PGLActivity() {
@@ -46,25 +45,25 @@ class ExpectedActivity : PGLActivity() {
         selectedMine.skill = selectedMine.individual.skillNo1
         val caseOfSkill1 = BattleCalculator.getResultFirst(selectedMine, selectedOpponent, BattleField())
 
-        val(label, rate) = caseOfSkill1.orderResult(selectedMine, selectedOpponent)
-        if(label.equals("UNKNOWN")) order.text = "行動順:必ず後手" else  order.text = "行動順:" + label + "(${util.percent(rate)}%)まで抜ける"
-        if(caseOfSkill1.prioritySkills.isEmpty()) {
+        val (label, rate) = caseOfSkill1.orderResult(selectedMine, selectedOpponent)
+        if (label.equals("UNKNOWN")) order.text = "行動順:必ず後手" else order.text = "行動順:" + label + "(${util.percent(rate)}%)まで抜ける"
+        if (caseOfSkill1.prioritySkills.isEmpty()) {
             priority.text = "先制技:なし"
         } else {
-            for(temp in caseOfSkill1.prioritySkills){
+            for (temp in caseOfSkill1.prioritySkills) {
                 order.text = temp.key + " = ${util.percent(temp.value)}%\n"
             }
         }
 
         skill1_name.text = selectedMine.individual.skillNo1.jname
         var skill1_defeat = ""
-        for(temp in caseOfSkill1.defeatTimes.filter { it -> it.value > 0.0 }){
+        for (temp in caseOfSkill1.defeatTimes.filter { it -> it.value > 0.0 }) {
             skill1_defeat += "${temp.key}:${util.percent(temp.value)},"
         }
         skill1_alive.text = skill1_defeat
 
-        for(temp in caseOfSkill1.defeatedTimes){
-            for(pair in temp.value){
+        for (temp in caseOfSkill1.defeatedTimes) {
+            for (pair in temp.value) {
                 Log.v("defeatedTimes", "${pair}")
             }
         }
@@ -74,13 +73,13 @@ class ExpectedActivity : PGLActivity() {
         val caseOfSkill2 = BattleCalculator.getResult(selectedMine, selectedOpponent, BattleField())
         skill2_name.text = selectedMine.individual.skillNo2.jname
         var skill2_defeat = ""
-        for(temp in caseOfSkill2.defeatTimes.filter { it -> it.value > 0.0 }){
+        for (temp in caseOfSkill2.defeatTimes.filter { it -> it.value > 0.0 }) {
             skill2_defeat += "${temp.key}:${util.percent(temp.value)},"
         }
         skill2_alive.text = skill2_defeat
 
-        for(temp in caseOfSkill2.defeatedTimes){
-            for(pair in temp.value){
+        for (temp in caseOfSkill2.defeatedTimes) {
+            for (pair in temp.value) {
                 Log.v("defeatedTimes", "${pair}")
             }
         }
@@ -90,13 +89,13 @@ class ExpectedActivity : PGLActivity() {
         val caseOfSkill3 = BattleCalculator.getResult(selectedMine, selectedOpponent, BattleField())
         skill3_name.text = selectedMine.individual.skillNo3.jname
         var skill3_defeat = ""
-        for(temp in caseOfSkill3.defeatTimes.filter { it -> it.value > 0.0 }){
+        for (temp in caseOfSkill3.defeatTimes.filter { it -> it.value > 0.0 }) {
             skill3_defeat += "${temp.key}:${util.percent(temp.value)},"
         }
         skill3_alive.text = skill3_defeat
 
-        for(temp in caseOfSkill3.defeatedTimes){
-            for(pair in temp.value){
+        for (temp in caseOfSkill3.defeatedTimes) {
+            for (pair in temp.value) {
                 Log.v("defeatedTimes", "${pair}")
             }
         }
@@ -106,13 +105,13 @@ class ExpectedActivity : PGLActivity() {
         val caseOfSkill4 = BattleCalculator.getResult(selectedMine, selectedOpponent, BattleField())
         skill4_name.text = selectedMine.individual.skillNo4.jname
         var skill4_defeat = ""
-        for(temp in caseOfSkill4.defeatTimes.filter { it -> it.value > 0.0 }){
+        for (temp in caseOfSkill4.defeatTimes.filter { it -> it.value > 0.0 }) {
             skill4_defeat += "${temp.key}:${util.percent(temp.value)},"
         }
         skill4_alive.text = skill4_defeat
 
-        for(temp in caseOfSkill4.defeatedTimes){
-            for(pair in temp.value){
+        for (temp in caseOfSkill4.defeatedTimes) {
+            for (pair in temp.value) {
                 Log.v("defeatedTimes", "${pair}")
             }
         }
@@ -142,12 +141,12 @@ class ExpectedActivity : PGLActivity() {
         result.updateSkills(databaseHelper)
         opponent.member[index].trend = result
 
-        if(result.itemInfo.isEmpty() && result.seikakuInfo.isEmpty() &&
-            result.tokuseiInfo.isEmpty() && result.skillList.isEmpty()){
-            Snackbar.make(inputTable, "download failed at $index", Snackbar.LENGTH_SHORT).show()
+        if (result.itemInfo.isEmpty() && result.seikakuInfo.isEmpty() &&
+                result.tokuseiInfo.isEmpty() && result.skillList.isEmpty()) {
+            Snackbar.make(inputTable.parent as View, "download failed at $index", Snackbar.LENGTH_SHORT).show()
         }
-        if(finishCount == opponentParty.member.size){
-            Snackbar.make(inputTable, "download finish", Snackbar.LENGTH_SHORT).show()
+        if (finishCount == opponentParty.member.size) {
+            Snackbar.make(inputTable.parent as View, "download finish", Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -178,16 +177,22 @@ class ExpectedActivity : PGLActivity() {
         opponent.add(opponentParty.member5)
         opponent.add(opponentParty.member6)
         oppo_party1.setOnClickListener(OnPokemonSelectedListener(false, 0))
+        oppo_party1.setOnLongClickListener(OnPokemonLongTapListener(0, opponent.member[0]))
         oppo_party1.setImageBitmap(util.createImage(opponent.member[0].individual.master, 150.0f, resources))
         oppo_party2.setOnClickListener(OnPokemonSelectedListener(false, 1))
+        oppo_party2.setOnLongClickListener(OnPokemonLongTapListener(1, opponent.member[1]))
         oppo_party2.setImageBitmap(util.createImage(opponent.member[1].individual.master, 150.0f, resources))
         oppo_party3.setOnClickListener(OnPokemonSelectedListener(false, 2))
+        oppo_party3.setOnLongClickListener(OnPokemonLongTapListener(2, opponent.member[2]))
         oppo_party3.setImageBitmap(util.createImage(opponent.member[2].individual.master, 150.0f, resources))
         oppo_party4.setOnClickListener(OnPokemonSelectedListener(false, 3))
+        oppo_party4.setOnLongClickListener(OnPokemonLongTapListener(3, opponent.member[3]))
         oppo_party4.setImageBitmap(util.createImage(opponent.member[3].individual.master, 150.0f, resources))
         oppo_party5.setOnClickListener(OnPokemonSelectedListener(false, 4))
+        oppo_party5.setOnLongClickListener(OnPokemonLongTapListener(4, opponent.member[4]))
         oppo_party5.setImageBitmap(util.createImage(opponent.member[4].individual.master, 150.0f, resources))
         oppo_party6.setOnClickListener(OnPokemonSelectedListener(false, 5))
+        oppo_party6.setOnLongClickListener(OnPokemonLongTapListener(5, opponent.member[5]))
         oppo_party6.setImageBitmap(util.createImage(opponent.member[5].individual.master, 150.0f, resources))
     }
 
@@ -198,7 +203,7 @@ class ExpectedActivity : PGLActivity() {
                 selected_party1.setImageBitmap(null)
                 selected_party2.setImageBitmap(null)
                 selected_party3.setImageBitmap(null)
-                when(position){
+                when (position) {
                     0 -> selected_party1.setImageBitmap(temp)
                     1 -> selected_party2.setImageBitmap(temp)
                     2 -> selected_party3.setImageBitmap(temp)
@@ -211,7 +216,7 @@ class ExpectedActivity : PGLActivity() {
                 selected_oppoParty4.setImageBitmap(null)
                 selected_oppoParty5.setImageBitmap(null)
                 selected_oppoParty6.setImageBitmap(null)
-                when(position){
+                when (position) {
                     0 -> selected_oppoParty1.setImageBitmap(temp)
                     1 -> selected_oppoParty2.setImageBitmap(temp)
                     2 -> selected_oppoParty3.setImageBitmap(temp)
@@ -225,6 +230,25 @@ class ExpectedActivity : PGLActivity() {
         }
     }
 
+    inner class OnPokemonLongTapListener(val index: Int, val pokemon: PokemonForBattle) : View.OnLongClickListener {
+        override fun onLongClick(p0: View?): Boolean {
+            val from = when (index) {
+                0 -> oppo_party1
+                1 -> oppo_party2
+                2 -> oppo_party3
+                3 -> oppo_party4
+                4 -> oppo_party5
+                5 -> oppo_party6
+                else -> selected_party1
+            }
+
+            val added = opponent.add(pokemon)
+            val white = Color.parseColor("#64FFFFFF")
+            from.backgroundColor = if (added) white else Color.parseColor("#00000000")
+
+            return true
+        }
+    }
 
 
 //    fun showProgress(show: Boolean) {
@@ -248,10 +272,10 @@ class ExpectedActivity : PGLActivity() {
 //    }
 
     fun startDetailActivity(isMine: Boolean) {
-        val party = if(isMine) mine else opponent
-
-        val num = if(isMine) party.selected else party.selected + 4
-        val from = when(num){
+        val party = if (isMine) mine else opponent
+        party.load()
+        val num = if (isMine) party.selected else party.selected + 4
+        val from = when (num) {
             0 -> selected_party1
             1 -> selected_party2
             2 -> selected_party3
@@ -273,9 +297,11 @@ class ExpectedActivity : PGLActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == DETAIL_CODE){
-            val h = if(data!!.getBooleanExtra("isMine", true)) "" else ""
-            Log.v("ExpectedActivity", data.getParcelableExtra<TemporaryStatus>("edited").toString())
+        if (requestCode == DETAIL_CODE) {
+            val party = if (data!!.getBooleanExtra("isMine", true)) mine else opponent
+            party.temp = data.getParcelableExtra<TemporaryStatus>("edited")
+            party.apply()
+            Log.v("ExpectedActivity", party.temp.toString())
         }
     }
 }

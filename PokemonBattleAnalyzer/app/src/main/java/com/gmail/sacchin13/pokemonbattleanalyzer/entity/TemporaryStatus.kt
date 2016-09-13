@@ -3,37 +3,36 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 import android.os.Parcel
 import android.os.Parcelable
 
-class TemporaryStatus (
-    var tempStatus: Int = StatusAilment.no(StatusAilment.Code.UNKNOWN),
-    var tempHpRatio: Int = 100,
-    var tempHpValue: Int = 0,
-    var tempAttack: Int = 6,
-    var tempDefense: Int = 6,
-    var tempSpecialAttack: Int = 6,
-    var tempSpecialDefense: Int = 6,
-    var tempSpeed: Int = 6,
-    var tempMega: Boolean = false): Parcelable
-{
-    val rank = arrayOf(-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6)
+class TemporaryStatus(
+        var tempStatus: Int = StatusAilment.no(StatusAilment.Code.UNKNOWN),
+        var tempHpRatio: Int = 100,
+        var tempHpValue: Int = 0,
+        var tempAttack: Int = 6,
+        var tempDefense: Int = 6,
+        var tempSpecialAttack: Int = 6,
+        var tempSpecialDefense: Int = 6,
+        var tempSpeed: Int = 6,
+        var tempMega: Boolean = false) : Parcelable {
+
 
     fun setAttackRank(position: Int) {
-        tempAttack = rank[position]
+        tempAttack = position
     }
 
     fun setDefenseRank(position: Int) {
-        tempDefense = rank[position]
+        tempDefense = position
     }
 
     fun setSpecialAttackRank(position: Int) {
-        tempSpecialAttack = rank[position]
+        tempSpecialAttack = position
     }
 
     fun setSpecialDefenseRank(position: Int) {
-        tempSpecialDefense = rank[position]
+        tempSpecialDefense = position
     }
 
     fun setSpeedRank(position: Int) {
-        tempSpeed = rank[position]
+        tempSpeed = position
     }
 
     companion object {
@@ -50,7 +49,8 @@ class TemporaryStatus (
     }
 
     constructor(`in`: Parcel)
-    : this(`in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt() == 0) { }
+    : this(`in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt() == 0) {
+    }
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         dest!!.writeInt(tempStatus)
@@ -61,14 +61,14 @@ class TemporaryStatus (
         dest.writeInt(tempSpecialAttack)
         dest.writeInt(tempSpecialDefense)
         dest.writeInt(tempSpeed)
-        dest.writeInt(if(tempMega) 0 else 1)
+        dest.writeInt(if (tempMega) 0 else 1)
     }
 
     override fun describeContents(): Int {
         return 0
     }
 
-    override  fun toString(): String{
+    override fun toString(): String {
         return "${tempStatus}, ${tempHpRatio}, ${tempHpValue}, ${tempAttack}, ${tempDefense}, ${tempSpecialAttack}, ${tempSpecialDefense}, ${tempSpeed}, ${tempMega}"
     }
 }
