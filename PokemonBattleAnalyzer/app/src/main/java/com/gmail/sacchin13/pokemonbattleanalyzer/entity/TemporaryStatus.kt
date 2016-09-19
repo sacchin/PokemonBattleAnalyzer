@@ -12,8 +12,7 @@ class TemporaryStatus(
         var tempSpecialAttack: Int = 6,
         var tempSpecialDefense: Int = 6,
         var tempSpeed: Int = 6,
-        var tempMega: Boolean = false) : Parcelable {
-
+        var tempMega: Int = IndividualPBAPokemon.NOT_MEGA) : Parcelable {
 
     fun setAttackRank(position: Int) {
         tempAttack = position
@@ -49,7 +48,7 @@ class TemporaryStatus(
     }
 
     constructor(`in`: Parcel)
-    : this(`in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt() == 0) {
+    : this(`in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt()) {
     }
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
@@ -61,7 +60,7 @@ class TemporaryStatus(
         dest.writeInt(tempSpecialAttack)
         dest.writeInt(tempSpecialDefense)
         dest.writeInt(tempSpeed)
-        dest.writeInt(if (tempMega) 0 else 1)
+        dest.writeInt(tempMega)
     }
 
     override fun describeContents(): Int {

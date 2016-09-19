@@ -45,7 +45,7 @@ class IndivisualPokemonTest {
                 PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                         "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
 
-        val actual = kucheat.calcAttack(252)
+        val actual = kucheat.calcAttack(252, IndividualPBAPokemon.NOT_MEGA)
         assertEquals(137, actual)
     }
 
@@ -55,7 +55,7 @@ class IndivisualPokemonTest {
                 PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                         "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
 
-        val actual = kucheat.calcDefense(252)
+        val actual = kucheat.calcDefense(252, IndividualPBAPokemon.NOT_MEGA)
         assertEquals(137, actual)
     }
 
@@ -66,7 +66,7 @@ class IndivisualPokemonTest {
                 PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                         "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
 
-        val actual = kucheat.calcSpecialAttack(252)
+        val actual = kucheat.calcSpecialAttack(252, IndividualPBAPokemon.NOT_MEGA)
         assertEquals(107, actual)
     }
 
@@ -77,7 +77,7 @@ class IndivisualPokemonTest {
                 PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                         "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
 
-        val actual = kucheat.calcSpecialDefense(252)
+        val actual = kucheat.calcSpecialDefense(252, IndividualPBAPokemon.NOT_MEGA)
         assertEquals(107, actual)
     }
 
@@ -88,7 +88,7 @@ class IndivisualPokemonTest {
                 PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                         "かいりきバサミ", "いかく", "ちからずく", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f))
 
-        val actual = kucheat.calcSpeed()
+        val actual = kucheat.calcSpeed(252, IndividualPBAPokemon.NOT_MEGA)
         assertEquals(102, actual)
     }
 

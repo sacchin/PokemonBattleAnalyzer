@@ -1,6 +1,8 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl
 
+import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
+import com.gmail.sacchin13.pokemonbattleanalyzer.Util
 
 data class TrendForBattle(
         val seikakuInfo: List<Info>,
@@ -36,43 +38,63 @@ data class TrendForBattle(
     }
 
 
-    fun createSkillMap(): List<Pair<String, String>> {
+    fun createSkillMap(util: Util): List<Pair<String, String>> {
         val result = mutableListOf<Pair<String, String>>()
-        if (skillList.isEmpty()) {
+        if (wazaInfo.isEmpty()) {
+            Log.v("createSkillMap", "empty")
             result.add(Pair("-", "-"))
             return result
         }
-        for (w in skillList) if (w.skill.jname.isNullOrEmpty().not()) result.add(Pair(w.skill.jname, "${w.usageRate}%"))
+        for (w in wazaInfo) {
+            if (w.name.isNullOrEmpty().not() && 1.0 < w.usageRate) {
+                Log.v("createSkillMap", "${w.name}")
+                result.add(Pair(w.name, util.percent(w.usageRate.times(100.0))))
+            } else {
+                Log.v("createSkillMap", "not")
+            }
+        }
         return result
     }
 
-    fun createCharacteristicMap(): List<Pair<String, String>> {
+    fun createCharacteristicMap(util: Util): List<Pair<String, String>> {
         val result = mutableListOf<Pair<String, String>>()
         if (seikakuInfo.isEmpty()) {
             result.add(Pair("-", "-"))
             return result
         }
-        for (w in seikakuInfo) if (w.name.isNullOrEmpty().not()) result.add(Pair(w.name, "${w.usageRate}%"))
+        for (w in seikakuInfo) {
+            if (w.name.isNullOrEmpty().not() && 1.0 < w.usageRate) {
+                result.add(Pair(w.name, util.percent(w.usageRate.times(100.0))))
+            }
+        }
         return result
     }
 
-    fun createAbilityMap(): List<Pair<String, String>> {
+    fun createAbilityMap(util: Util): List<Pair<String, String>> {
         val result = mutableListOf<Pair<String, String>>()
         if (tokuseiInfo.isEmpty()) {
             result.add(Pair("-", "-"))
             return result
         }
-        for (w in tokuseiInfo) if (w.name.isNullOrEmpty().not()) result.add(Pair(w.name, "${w.usageRate}%"))
+        for (w in tokuseiInfo) {
+            if (w.name.isNullOrEmpty().not() && 1.0 < w.usageRate) {
+                result.add(Pair(w.name, util.percent(w.usageRate.times(100.0))))
+            }
+        }
         return result
     }
 
-    fun createItemMap(): List<Pair<String, String>> {
+    fun createItemMap(util: Util): List<Pair<String, String>> {
         val result = mutableListOf<Pair<String, String>>()
         if (itemInfo.isEmpty()) {
             result.add(Pair("-", "-"))
             return result
         }
-        for (w in itemInfo) if (w.name.isNullOrEmpty().not()) result.add(Pair(w.name, "${w.usageRate}%"))
+        for (w in itemInfo) {
+            if (w.name.isNullOrEmpty().not() && 1.0 < w.usageRate) {
+                result.add(Pair(w.name, util.percent(w.usageRate.times(100.0))))
+            }
+        }
         return result
     }
 }
