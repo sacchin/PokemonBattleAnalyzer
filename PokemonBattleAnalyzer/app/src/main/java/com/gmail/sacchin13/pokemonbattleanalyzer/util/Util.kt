@@ -1,10 +1,11 @@
-package com.gmail.sacchin13.pokemonbattleanalyzer
+package com.gmail.sacchin13.pokemonbattleanalyzer.util
 
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.util.Log
+import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import kotlin.properties.Delegates
 

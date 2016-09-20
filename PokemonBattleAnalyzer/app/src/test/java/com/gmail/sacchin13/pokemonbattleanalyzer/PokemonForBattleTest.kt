@@ -27,7 +27,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 自分側の攻撃力計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.side = PartyInBattle.MY_SIDE
         attackSide.individual.attackValue = 137
 
@@ -37,7 +37,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 相手側の攻撃力計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.characteristic = "いじっぱり"
 
@@ -48,7 +48,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 自分側の防御力計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.side = PartyInBattle.MY_SIDE
         attackSide.individual.defenseValue = 137
 
@@ -58,7 +58,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 相手側の防御力計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.characteristic = "さみしがり"
 
@@ -68,7 +68,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 自分側の特殊攻撃力計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.side = PartyInBattle.MY_SIDE
         attackSide.individual.specialAttackValue = 107
 
@@ -79,7 +79,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 相手側の特殊攻撃力計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.characteristic = "ひかえめ"
 
@@ -90,7 +90,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 自分側の特殊防御力計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.side = PartyInBattle.MY_SIDE
         attackSide.individual.specialDefenseValue = 107
 
@@ -100,7 +100,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 相手側の特殊防御力計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.characteristic = "しんちょう"
 
@@ -110,7 +110,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 自分側の素早さ計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.item = "こだわりスカーフ"
         attackSide.side = PartyInBattle.MY_SIDE
         attackSide.individual.speedValue = 102
@@ -121,7 +121,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 相手側の素早さ計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.item = "こだわりスカーフ"
         attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.characteristic = "ようき"
@@ -132,7 +132,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 攻撃側の攻撃力補正計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
 
         val actual = attackSide.calcAttackValueCorrection(attackSide)
         assertEquals(4096.0, actual, 0.001)
@@ -140,7 +140,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 攻撃側の急所持の攻撃力計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.attackEffortValue = 252
         attackSide.attackRank = -3
 
@@ -152,7 +152,7 @@ class PokemonForBattleTest {
 
 //    @Test
 //    fun 攻撃側の状態異常時における攻撃力計算のテスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
 //        attackSide.attackEffortValue = 252
 //        attackSide.status = StatusAilment.no(StatusAilment.Code.BURN)
 //        attackSide.attackRank = 0
@@ -163,7 +163,7 @@ class PokemonForBattleTest {
 
 //    @Test
 //    fun 攻撃側の状態異常かつこんじょう時における攻撃力計算のテスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
 //        attackSide.attackEffortValue = 252
 //        attackSide.ability = "こんじょう"
 //        attackSide.status = StatusAilment.no(StatusAilment.Code.BURN)
@@ -175,7 +175,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 攻撃側の特殊攻撃力補正計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
 
         val actual = attackSide.calcSpecialAttackValueCorrection(attackSide)
         assertEquals(4096.0, actual, 0.001)
@@ -183,7 +183,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 防御側の状態異常時の防御力計算のテスト() {
-        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         defenseSide.defenseEffortValue = 252
         defenseSide.ability = "ふしぎなうろこ"
         defenseSide.status = StatusAilment.no(StatusAilment.Code.POISON)
@@ -196,7 +196,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 防御側の防御力補正計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
 
         val actual = attackSide.calcDefenseValueCorrection(attackSide)
         assertEquals(4096.0, actual, 0.001)
@@ -205,7 +205,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 防御側の特殊防御力補正計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
 
         val actual = attackSide.calcSpecialDefenseValueCorrection()
         assertEquals(4096.0, actual, 0.001)
@@ -214,7 +214,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 防御側の急所時の特殊防御力計算のテスト() {
-        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         defenseSide.specialDefenseEffortValue = 252
         defenseSide.specialDefenseRank = 6
 
@@ -226,7 +226,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 攻撃側の急所率のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.criticalRank = 1
         attackSide.ability = "きょううん"
 
@@ -236,7 +236,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 攻撃側の最大に詰め込んだ急所率のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.criticalRank = 2
         attackSide.item = "ラッキーパンチ"
         attackSide.ability = "きょううん"
@@ -247,7 +247,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 素早さ計算のテスト() {
-//        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
 //        defenseSide.speedEffortValue = 252
 //        defenseSide.speedRank = 1
 //
@@ -259,27 +259,27 @@ class PokemonForBattleTest {
 
     @Test
     fun ジャイロボールの威力のテスト() {
-        var attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        var attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.skill.jname = "ジャイロボール"
-        var defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        var defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
 
         var result = attackSide.determineSkillPower(defenseSide)
         assertEquals(43, result)
 
 
-        attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, tubotubo))
+        attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, tubotubo))
         attackSide.skill.jname = "ジャイロボール"
-        defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, tekkanin))
+        defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, tekkanin))
         result = attackSide.determineSkillPower(defenseSide)
         assertEquals(150, result)
     }
 
     @Test
     fun 固定2回攻撃技の威力のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.skill.jname = "ダブルアタック"
         attackSide.skill.power = 35
-        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
 
         val result = attackSide.determineSkillPower(defenseSide)
         assertEquals(70, result)
@@ -287,11 +287,11 @@ class PokemonForBattleTest {
 
     @Test
     fun 不定5回攻撃技の威力のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.skill.jname = "スイープビンタ"
         attackSide.skill.power = 25
         attackSide.ability = "スキルリンク"
-        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
 
         val result = attackSide.determineSkillPower(defenseSide)
         assertEquals(125, result)
@@ -299,9 +299,9 @@ class PokemonForBattleTest {
 
     @Test
     fun 重さ依存技の威力のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.skill.jname = "けたぐり"
-        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
 
         val result = attackSide.determineSkillPower(defenseSide)
         assertEquals(80, result)
@@ -309,10 +309,10 @@ class PokemonForBattleTest {
 
     @Test
     fun 攻撃側HP依存技の威力のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.skill.jname = "きしかいせい"
         attackSide.hpRatio = 100
-        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
 
         var result = attackSide.determineSkillPower(defenseSide)
         assertEquals(20, result)
@@ -328,10 +328,10 @@ class PokemonForBattleTest {
 
 //    @Test
 //    fun 防御側HP依存技の威力のテスト1() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
 //        attackSide.skill.jname = "しおみず"
 //        attackSide.skill.power = 65
-//        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
 //        defenseSide.hpRatio = 49
 //
 //        val result = attackSide.determineSkillPower(defenseSide)
@@ -340,9 +340,9 @@ class PokemonForBattleTest {
 
     @Test
     fun 防御側HP依存技の威力のテスト2() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.skill.jname = "しぼりとる"
-        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
         defenseSide.hpRatio = 100
 
         var result = attackSide.determineSkillPower(defenseSide)
@@ -361,9 +361,9 @@ class PokemonForBattleTest {
 
     @Test
     fun 防御側ランク依存技の威力のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.skill.jname = "おしおき"
-        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
         defenseSide.attackRank = 1
         defenseSide.defenseRank = 1
         defenseSide.speedRank = -1
@@ -382,7 +382,7 @@ class PokemonForBattleTest {
     @Test
     fun 攻撃技を無効にするかどうかのテスト() {
         val skill = Skill()
-        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
 
 
         skill.type = Type.no(Type.Code.ELECTRIC)
@@ -408,7 +408,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 状態異常を付加せずRankの変動も発生しない攻撃技の影響のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
         attackSide.skill.aliment = StatusAilment.no(StatusAilment.Code.UNKNOWN)
         attackSide.skill.myRankUp = Rank.no(Rank.Code.UNKNOWN)
         attackSide.skill.oppoRankUp = Rank.no(Rank.Code.UNKNOWN)
@@ -424,7 +424,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 状態異常を付加するがRankの変動は発生しない攻撃技の影響のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
         attackSide.skill.aliment = StatusAilment.no(StatusAilment.Code.BURN)
         attackSide.skill.alimentRate = 0.1
         attackSide.skill.myRankUp = Rank.no(Rank.Code.UNKNOWN)
@@ -447,7 +447,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 状態異常を付加しないがRankの変動が発生する攻撃技の影響のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, bakuhun))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
         attackSide.skill.aliment = StatusAilment.no(StatusAilment.Code.PARALYSIS)
         attackSide.skill.alimentRate = 0.3
         attackSide.skill.myRankUp = Rank.no(Rank.Code.UNKNOWN)
@@ -484,7 +484,7 @@ class PokemonForBattleTest {
 
     @Test
     fun マヒ時かつ追い風時の素早さ計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.status = StatusAilment.no(StatusAilment.Code.PARALYSIS)
         attackSide.field.add(BattleField.Field.Tailwind)
 
@@ -497,7 +497,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 砂嵐時の素早さ計算のテスト() {
-        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon.create(1, kucheat))
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.ability = "すなかき"
 
         val field = BattleField()

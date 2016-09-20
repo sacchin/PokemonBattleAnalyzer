@@ -12,7 +12,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
-import com.gmail.sacchin13.pokemonbattleanalyzer.Util
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
@@ -108,7 +108,7 @@ class ExpectedActivity : PGLActivity() {
         //控え2に交換した場合
     }
 
-    fun get(index: Int): IndividualPBAPokemon {
+    fun get(index: Int): IndividualPokemon {
         when (index) {
             0 -> return myParty.member1
             1 -> return myParty.member2

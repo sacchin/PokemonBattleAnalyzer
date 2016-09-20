@@ -1,9 +1,5 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.insert
 
-import org.json.JSONArray
-import org.json.JSONObject
-
-import com.gmail.sacchin13.pokemonbattleanalyzer.PartyDatabaseHelper
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
 
 import android.util.Log

@@ -12,7 +12,7 @@ class TemporaryStatus(
         var tempSpecialAttack: Int = 6,
         var tempSpecialDefense: Int = 6,
         var tempSpeed: Int = 6,
-        var tempMega: Int = IndividualPBAPokemon.NOT_MEGA) : Parcelable {
+        var tempMega: Int = MegaPokemonMasterData.NOT_MEGA) : Parcelable {
 
     fun setAttackRank(position: Int) {
         tempAttack = position

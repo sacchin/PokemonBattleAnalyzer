@@ -61,7 +61,7 @@ class EditActivity : AppCompatActivity() {
 
     }
 
-    fun addPokemonBlock(pokemon: IndividualPBAPokemon, textView: TextView, charSpinner: Spinner, itemSpinner: Spinner, abiSpinner: Spinner,
+    fun addPokemonBlock(pokemon: IndividualPokemon, textView: TextView, charSpinner: Spinner, itemSpinner: Spinner, abiSpinner: Spinner,
                         skill1Spinner: Spinner, skill2Spinner: Spinner, skill3Spinner: Spinner, skill4Spinner: Spinner,
                         hEdit: EditText, aEdit: EditText, bEdit: EditText, cEdit: EditText, dEdit: EditText, sEdit: EditText) {
         val itemAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, item)
@@ -115,7 +115,7 @@ class EditActivity : AppCompatActivity() {
         sEdit.addTextChangedListener(OnEditText(6, pokemon))
     }
 
-    inner class OnItemSelectedListener(val pokemon: IndividualPBAPokemon) : AdapterView.OnItemSelectedListener {
+    inner class OnItemSelectedListener(val pokemon: IndividualPokemon) : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             databaseHelper.begin()
@@ -124,7 +124,7 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    inner class OnAbilitySelectedListener(val pokemon: IndividualPBAPokemon) : AdapterView.OnItemSelectedListener {
+    inner class OnAbilitySelectedListener(val pokemon: IndividualPokemon) : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             databaseHelper.begin()
@@ -133,7 +133,7 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    inner class OnCharSelectedListener(val pokemon: IndividualPBAPokemon) : AdapterView.OnItemSelectedListener {
+    inner class OnCharSelectedListener(val pokemon: IndividualPokemon) : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             databaseHelper.begin()
@@ -142,7 +142,7 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    inner class OnSkillSelectedListener(val index: Int, val pokemon: IndividualPBAPokemon) : AdapterView.OnItemSelectedListener {
+    inner class OnSkillSelectedListener(val index: Int, val pokemon: IndividualPokemon) : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             databaseHelper.begin()
@@ -156,7 +156,7 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    inner class OnEditText(val type: Int , val pokemon: IndividualPBAPokemon): TextWatcher{
+    inner class OnEditText(val type: Int , val pokemon: IndividualPokemon): TextWatcher{
         override fun afterTextChanged(s: Editable?) {
 
             val ev = s.toString()

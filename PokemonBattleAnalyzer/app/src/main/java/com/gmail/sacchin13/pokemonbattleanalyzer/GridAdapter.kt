@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.gmail.sacchin13.pokemonbattleanalyzer.activity.HomeActivity
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import org.jetbrains.anko.onClick
 import kotlin.properties.Delegates
 
@@ -32,7 +33,7 @@ class GridAdapter(context: HomeActivity, list: MutableList<PokemonMasterData>): 
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         if (convertView == null) {
-            val newConvertView = mLayoutInflater.inflate(R.layout.grid_content, null);
+            val newConvertView = mLayoutInflater.inflate(R.layout.grid_content, null)
             val holder = ViewHolder()
             holder.hueImageView = newConvertView.findViewById(R.id.imageView) as ImageView
             holder.hueTextView = newConvertView.findViewById(R.id.textView) as TextView
@@ -63,7 +64,7 @@ class GridAdapter(context: HomeActivity, list: MutableList<PokemonMasterData>): 
     }
 
     override fun getItem(position: Int): Any? {
-        return pokemonArray[position];
+        return pokemonArray[position]
     }
 
     override fun getItemId(position: Int): Long {

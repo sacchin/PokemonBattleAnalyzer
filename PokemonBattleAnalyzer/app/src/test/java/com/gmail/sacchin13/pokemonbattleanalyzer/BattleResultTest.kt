@@ -84,7 +84,7 @@ class BattleResultTest {
         for (temp in rankingResponse1.rankingPokemonTrend.wazaInfo) {
             if (database.contains(temp.name)) skills1.add(RankingPokemonSkill.create(temp, database[temp.name] as Skill))
         }
-        garura = PokemonForBattle.create(PartyInBattle.MY_SIDE, IndividualPBAPokemon(
+        garura = PokemonForBattle.create(PartyInBattle.MY_SIDE, IndividualPokemon(
                 0, -1, "ガルーラナイト", "いじっぱり", "せいしんりょく",
                 database["ねこだまし"] as Skill, database["いわなだれ"] as Skill, database["みがわり"] as Skill, database["アイアンヘッド"] as Skill,
                 212, 150, 137, 40, 80, 150, PokemonMasterData("115", "ガルーラ", "Kangaskhan", "-", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
@@ -105,7 +105,7 @@ class BattleResultTest {
         for (temp in rankingResponse2.rankingPokemonTrend.wazaInfo) {
             if (database.contains(temp.name)) skills2.add(RankingPokemonSkill.create(temp, database[temp.name] as Skill))
         }
-        fireallow = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, IndividualPBAPokemon(
+        fireallow = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, IndividualPokemon(
                 0, -1, "ゴツゴツメット", "ずぶとい", "はやてのつばさ",
                 database["はねやすめ"] as Skill, database["おにび"] as Skill, database["みがわり"] as Skill, database["ブレイブバード"] as Skill,
                 0, 0, 0, 0, 0, 0, PokemonMasterData("663", "ファイアロー", "Talonflame", "-", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
@@ -177,11 +177,11 @@ class BattleResultTest {
 
 //    @Test
 //    fun タイプ別強化アイテムと先攻後攻のテスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon())
 //        attackSide.item = "くろいメガネ"
 //        attackSide.skill = Skill(197, "しっぺがえし", "", 15, 50, 1.0, 0, 10, 0, true, true)
 //
-//        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon())
 //        val field = BattleField()
 //
 //        val result = BattleCalculator.companion.calcSkillPower(attackSide, defenseSide, field, false, false)
@@ -190,11 +190,11 @@ class BattleResultTest {
 //
 //    @Test
 //    fun タイプ半減特性と非ダメージによる威力上昇技のテスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon())
 //        attackSide.item = "ものしりメガネ"
 //        attackSide.skill = Skill(575, "ゆきなだれ", "", 5, 60, 1.0, 0, 10, 0, true, true)
 //
-//        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon())
 //        defenseSide.ability = "あついしぼう"
 //
 //        val field = BattleField()
@@ -205,12 +205,12 @@ class BattleResultTest {
 //
 //    @Test
 //    fun 物理特殊依存アイテムとテクニシャンのテスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon())
 //        attackSide.item = "ちからのハチマキ"
 //        attackSide.ability = "テクニシャン"
 //        attackSide.skill = Skill(553, "マッハパンチ", "", 6, 40, 1.0, 0, 30, 0, true, true)
 //
-//        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon())
 //
 //        val field = BattleField()
 //
@@ -220,12 +220,12 @@ class BattleResultTest {
 //
 //    @Test
 //    fun HP依存技と非ダメージ側の特性のテスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon())
 //        attackSide.ability = "もうか"
 //        attackSide.hpRatio = 29
 //        attackSide.skill = Skill(494, "ブラストバーン", "", 1, 150, 0.9, 1, 5, 0, false, true)
 //
-//        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon())
 //        defenseSide.ability = "かんそうはだ"
 //
 //        val field = BattleField()
@@ -236,11 +236,11 @@ class BattleResultTest {
 //
 //    @Test
 //    fun HP依存技ふんかの正常系テスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon())
 //        attackSide.hpRatio = 100
 //        attackSide.skill = Skill(440, "ふんか", "", 1, 150, 1.0, 1, 5, 0, false, true)
 //
-//        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon())
 //
 //        val field = BattleField()
 //

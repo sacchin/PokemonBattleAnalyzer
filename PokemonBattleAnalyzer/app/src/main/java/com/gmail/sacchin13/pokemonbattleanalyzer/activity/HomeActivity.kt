@@ -16,7 +16,7 @@ import android.widget.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
 import com.gmail.sacchin13.pokemonbattleanalyzer.GridAdapter
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
-import com.gmail.sacchin13.pokemonbattleanalyzer.Util
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.insert.*
@@ -63,23 +63,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         serviceStatePreferences = getSharedPreferences("pokemon", MODE_PRIVATE)
 
         databaseHelper = DatabaseHelper(this)
-        firstLaunch();
+        firstLaunch()
 
         party = Party(System.currentTimeMillis(), "opponent", "opponent")
-
-//        val createMyParty = Button(getActivity())
-//        createMyParty.text = "My Party"
-//        createMyParty.textSize = 10f
-//        createMyParty.setOnClickListener(OnClickCreateNewPartyButton(this, true))
-//
-//        val showAffinity = Button(getActivity())
-//        showAffinity.text = "Show Affinity Complete"
-//        showAffinity.textSize = 10f
-//        showAffinity.setOnClickListener(OnClickCheckAffinityButton(this))
-//
-//        rootView.findViewById(R.id.button).addView(createMyParty)
-//        rootView.findViewById(R.id.button).addView(showAffinity)
-
     }
 
     override fun onBackPressed() {
@@ -194,26 +180,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val adapter = GridAdapter(this, list)
         gridView.adapter = adapter
     }
-
-//    fun createFrameLayout(p: PBAPokemon, countMap: Map<String, Int>): FrameLayout {
-//        val fl = FrameLayout(this)
-//        fl.setOnClickListener(OnClickFromList(this, p))
-//
-//        val pokemonImage = Util.createImage(p, 200f, resources)
-//        val pokemonView = ImageView(this)
-//        pokemonView.setImageBitmap(pokemonImage)
-//        fl.addView(pokemonView)
-//
-//        val tv = TextView(this)
-//        val c = countMap[p.rowId.toString()]
-//        if (c != null) {
-//            tv.text = c.toString()
-//        } else {
-//            tv.text = "0"
-//        }
-//        fl.addView(tv)
-//        return fl
-//    }
 
     fun removePokemonFromList(pokemon: PokemonMasterData) {
         //throw UnsupportedOperationException()

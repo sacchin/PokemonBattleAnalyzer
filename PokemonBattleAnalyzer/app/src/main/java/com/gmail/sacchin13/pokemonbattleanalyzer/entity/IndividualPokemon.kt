@@ -5,7 +5,7 @@ import io.realm.annotations.RealmClass
 import java.util.*
 
 @RealmClass
-public open class IndividualPBAPokemon(
+public open class IndividualPokemon(
         public open var id: Long = -1,
         public open var status: Int = UNKNOWN,
         public open var item: String = "unknown",
@@ -26,59 +26,56 @@ public open class IndividualPBAPokemon(
 
     companion object {
         const val UNKNOWN = -1
-        const val NOT_MEGA = 0
-        const val MEGA_X = 1
-        const val MEGA_Y = 2
 
-        fun create(id: Long, master: PokemonMasterData): IndividualPBAPokemon {
-            return IndividualPBAPokemon(id, 0, "", "", "", Skill(), Skill(), Skill(), Skill(), 0, 0, 0, 0, 0, 0, master)
+        fun create(id: Long, master: PokemonMasterData): IndividualPokemon {
+            return IndividualPokemon(id, 0, "", "", "", Skill(), Skill(), Skill(), Skill(), 0, 0, 0, 0, 0, 0, master)
         }
     }
 
     fun calcHp(ev: Int, megaType: Int): Int {
         return when (megaType) {
-            MEGA_X -> master.hpX(31, ev)
-            MEGA_Y -> master.hpY(31, ev)
+            MegaPokemonMasterData.MEGA_X -> master.hpX(31, ev)
+            MegaPokemonMasterData.MEGA_Y -> master.hpY(31, ev)
             else -> master.hp(31, ev)
         }
     }
 
     fun calcAttack(ev: Int, megaType: Int): Int {
         return when (megaType) {
-            MEGA_X -> master.attackX(31, ev)
-            MEGA_Y -> master.attackY(31, ev)
+            MegaPokemonMasterData.MEGA_X -> master.attackX(31, ev)
+            MegaPokemonMasterData.MEGA_Y -> master.attackY(31, ev)
             else -> master.attack(31, ev)
         }
     }
 
     fun calcDefense(ev: Int, megaType: Int): Int {
         return when (megaType) {
-            MEGA_X -> master.defenseX(31, ev)
-            MEGA_Y -> master.defenseY(31, ev)
+            MegaPokemonMasterData.MEGA_X -> master.defenseX(31, ev)
+            MegaPokemonMasterData.MEGA_Y -> master.defenseY(31, ev)
             else -> master.defense(31, ev)
         }
     }
 
     fun calcSpecialAttack(ev: Int, megaType: Int): Int {
         return when (megaType) {
-            MEGA_X -> master.specialAttackX(31, ev)
-            MEGA_Y -> master.specialAttackY(31, ev)
+            MegaPokemonMasterData.MEGA_X -> master.specialAttackX(31, ev)
+            MegaPokemonMasterData.MEGA_Y -> master.specialAttackY(31, ev)
             else -> master.specialAttack(31, ev)
         }
     }
 
     fun calcSpecialDefense(ev: Int, megaType: Int): Int {
         return when (megaType) {
-            MEGA_X -> master.specialDefenseX(31, ev)
-            MEGA_Y -> master.specialDefenseY(31, ev)
+            MegaPokemonMasterData.MEGA_X -> master.specialDefenseX(31, ev)
+            MegaPokemonMasterData.MEGA_Y -> master.specialDefenseY(31, ev)
             else -> master.specialDefense(31, ev)
         }
     }
 
     fun calcSpeed(ev: Int, megaType: Int): Int {
         return when (megaType) {
-            MEGA_X -> master.speedX(31, ev)
-            MEGA_Y -> master.speedY(31, ev)
+            MegaPokemonMasterData.MEGA_X -> master.speedX(31, ev)
+            MegaPokemonMasterData.MEGA_Y -> master.speedY(31, ev)
             else -> master.speed(31, ev)
         }
     }
@@ -112,10 +109,9 @@ public open class IndividualPBAPokemon(
 
     fun name(megaType: Int): String {
         return when (megaType) {
-            NOT_MEGA -> master.jname
-            MEGA_X -> "メガ${master.jname}"
-            MEGA_Y -> "メガ${master.jname}Y"
-            else -> "unknown"
+            MegaPokemonMasterData.MEGA_X -> "メガ${master.jname}"
+            MegaPokemonMasterData.MEGA_Y -> "メガ${master.jname}Y"
+            else -> master.jname
         }
     }
 }

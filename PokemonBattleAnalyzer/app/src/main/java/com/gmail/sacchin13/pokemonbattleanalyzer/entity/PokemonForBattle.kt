@@ -28,7 +28,7 @@ class PokemonForBattle(
         var avoidanceRank: Int,
         var criticalRank: Int,
         var mega: Int,
-        var individual: IndividualPBAPokemon = IndividualPBAPokemon()
+        var individual: IndividualPokemon = IndividualPokemon()
 ) {
 
     val rank = arrayOf(-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6)
@@ -39,10 +39,10 @@ class PokemonForBattle(
     companion object {
         const val UNKNOWN = -1
 
-        fun create(side: Int, individual: IndividualPBAPokemon): PokemonForBattle {
+        fun create(side: Int, individual: IndividualPokemon): PokemonForBattle {
             return PokemonForBattle(side, -1, "unknown", "unknown", "unknown", Skill(), 0, 100, 0,
                     0, 6, 0, 6, 0, 6, 0, 6, 0, 6,
-                    0, 0, 0, IndividualPBAPokemon.NOT_MEGA, individual)
+                    0, 0, 0, MegaPokemonMasterData.NOT_MEGA, individual)
         }
     }
 

@@ -2,7 +2,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl
 
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
-import com.gmail.sacchin13.pokemonbattleanalyzer.Util
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 
 data class TrendForBattle(
         val seikakuInfo: List<Info>,

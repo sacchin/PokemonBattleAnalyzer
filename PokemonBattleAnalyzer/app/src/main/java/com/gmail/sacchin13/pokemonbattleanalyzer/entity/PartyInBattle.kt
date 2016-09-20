@@ -19,7 +19,7 @@ class PartyInBattle(val side: Int = 0) {
         member = ArrayList<PokemonForBattle>()
     }
 
-    fun add(pokemon: IndividualPBAPokemon): Int {
+    fun add(pokemon: IndividualPokemon): Int {
         this.member.add(PokemonForBattle.create(side, pokemon))
         return member.size
     }

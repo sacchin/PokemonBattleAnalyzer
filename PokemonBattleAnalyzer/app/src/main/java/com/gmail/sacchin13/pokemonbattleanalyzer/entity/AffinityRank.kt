@@ -14,7 +14,7 @@ import java.util.Comparator
  * 2. すべてのタイプに対して、補完得点を計算し、それを合計する。
  * 3. 合計が低いほど補完として優秀であり、高いほど補完として優秀でない。
  */
-class AffinityRank(point: Int, val pokemon: IndividualPBAPokemon) {
+class AffinityRank(point: Int, val pokemon: IndividualPokemon) {
     var point = 0
     var deviation = 0
 

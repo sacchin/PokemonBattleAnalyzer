@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.Util
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import kotlinx.android.synthetic.main.activity_select.*
 import kotlinx.android.synthetic.main.content_select.*
@@ -15,7 +15,7 @@ import kotlin.properties.Delegates
 
 class SelectActivity : PGLActivity() {
 
-    private var choices: MutableMap<Int, IndividualPBAPokemon> = mutableMapOf()
+    private var choices: MutableMap<Int, IndividualPokemon> = mutableMapOf()
     var opponentList: MutableList<PokemonMasterData> by Delegates.notNull()
 
     var util: Util by Delegates.notNull()
@@ -79,13 +79,13 @@ class SelectActivity : PGLActivity() {
     private fun determineOpponent() {
         //estimate.removeAllViews()
         //val estimated = EstimateOpponentElection.createAllPattern(mine, party)
-        //        for(IndividualPBAPokemon[] p : estimated){
+        //        for(IndividualPokemon[] p : estimated){
         //            addPokemonToOpponentParty(p);
         //        }
         //        addPokemonToOpponentParty(estimated[0]);
     }
 
-    fun addPokemonToList(pokemon: IndividualPBAPokemon, index: Int) {
+    fun addPokemonToList(pokemon: IndividualPokemon, index: Int) {
         if (choices.size == 3) {
             Snackbar.make(my_party1, "すでに3体選択しています。", Snackbar.LENGTH_SHORT).show()
             return
@@ -115,7 +115,7 @@ class SelectActivity : PGLActivity() {
         //        });
 
 //        for (p in pokemons) {
-//            val ip = IndividualPBAPokemon(p)//, 0, new Timestamp(System.currentTimeMillis()), "", "", "", "", "", "", "");
+//            val ip = IndividualPokemon(p)//, 0, new Timestamp(System.currentTimeMillis()), "", "", "", "", "", "", "");
 //
 //            val temp = Util.createImage(p, 120f, resources)
 //            val localView = ImageView(getActivity())

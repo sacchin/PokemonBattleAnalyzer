@@ -3,6 +3,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer
 import android.content.Context
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.Sort
@@ -110,7 +111,7 @@ class DatabaseHelper(context: Context) {
         }
     }
 
-    fun insertMegaPokemonDataX(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, megaType: String) {
+    fun insertMegaPokemonDataX(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, weight: Float) {
         realm.executeTransaction {
             val megaPokemon = realm.createObject(MegaPokemonMasterData::class.java)
             megaPokemon.pokemonNo = no
@@ -121,14 +122,15 @@ class DatabaseHelper(context: Context) {
             megaPokemon.d = d
             megaPokemon.s = s
             megaPokemon.ability = ability
-            megaPokemon.megaType = megaType
+            megaPokemon.weight = weight
+            megaPokemon.megaType = MegaPokemonMasterData.MEGA_X
 
             val master = selectPokemonMasterData(no)
             master.megax = megaPokemon
         }
     }
 
-    fun insertMegaPokemonDataY(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, megaType: String) {
+    fun insertMegaPokemonDataY(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, weight: Float) {
         realm.executeTransaction {
             val megaPokemon = realm.createObject(MegaPokemonMasterData::class.java)
             megaPokemon.pokemonNo = no
@@ -139,7 +141,8 @@ class DatabaseHelper(context: Context) {
             megaPokemon.d = d
             megaPokemon.s = s
             megaPokemon.ability = ability
-            megaPokemon.megaType = megaType
+            megaPokemon.weight = weight
+            megaPokemon.megaType = MegaPokemonMasterData.MEGA_Y
 
             val master = selectPokemonMasterData(no)
             master.megay = megaPokemon
@@ -155,7 +158,7 @@ class DatabaseHelper(context: Context) {
     }
 
     fun countIndividualPBAPokemon(): Long {
-        return realm.where(IndividualPBAPokemon().javaClass).count()
+        return realm.where(IndividualPokemon().javaClass).count()
     }
 
     fun insertPartyData(selectedParty: Party?) {
@@ -181,7 +184,7 @@ class DatabaseHelper(context: Context) {
     }
 
     fun insertIndividualPBAPokemon(id: Long, master: PokemonMasterData) {
-        val pokemon = realm.createObject(IndividualPBAPokemon::class.java)
+        val pokemon = realm.createObject(IndividualPokemon::class.java)
         pokemon.id = id
         pokemon.item = ""
         pokemon.characteristic = ""
@@ -193,8 +196,8 @@ class DatabaseHelper(context: Context) {
         pokemon.master = selectPokemonMasterData(master.no)
     }
 
-    fun selectIndividualPBAPokemon(id: Long): IndividualPBAPokemon {
-        return realm.where(IndividualPBAPokemon().javaClass).equalTo("id", id).findFirst()
+    fun selectIndividualPBAPokemon(id: Long): IndividualPokemon {
+        return realm.where(IndividualPokemon().javaClass).equalTo("id", id).findFirst()
     }
 
     fun selectParty(userName: String): Party {

@@ -1,12 +1,7 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.logic;
 
-import android.util.Log;
-
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPBAPokemon;
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPokemon;
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party;
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonCharacteristic;
-
-import java.util.List;
 
 public class EstimateOpponentElection {
 
@@ -33,8 +28,8 @@ public class EstimateOpponentElection {
             {4,5,6}
     };
 
-    public static IndividualPBAPokemon[][] createAllPattern(Party mine, Party opponent){
-        IndividualPBAPokemon[][] estimated = new IndividualPBAPokemon[20][3];
+    public static IndividualPokemon[][] createAllPattern(Party mine, Party opponent){
+        IndividualPokemon[][] estimated = new IndividualPokemon[20][3];
         for(int i = 0 ; i < 20 ; i++){
             for(int j = 0 ; j < 3 ; j++){
                 //estimated[i][j] = opponent.getMember().get(kumiawase[i][j] - 1);
@@ -43,7 +38,7 @@ public class EstimateOpponentElection {
         return estimated;
     }
 
-    public void calc(IndividualPBAPokemon mine, IndividualPBAPokemon opponent){
+    public void calc(IndividualPokemon mine, IndividualPokemon opponent){
 //        if(opponent.getTrend() != null){
 //            List<PokemonCharacteristic> c = opponent.getTrend().getCharacteristicList();
 //
