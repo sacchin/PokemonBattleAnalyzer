@@ -15,6 +15,8 @@ class BattleCalculator {
         fun getResultFirst(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
             val result = BattleResult()
 
+            Log.e("getResultFirst", mine.name() + " vs " + opponent.name())
+
             result.coverRate = 0.0
             result.prioritySkill(opponent.trend)
             loop@ for (item in opponent.itemTrend()) {
@@ -60,7 +62,7 @@ class BattleCalculator {
                         opponent.characteristic = seikaku.name
                         result.add(myAttack(rate, mine, opponent, field))
 
-                        if (0.9 < result.coverRate) break@loop
+                        //if (0.95 < result.coverRate) break@loop
                     }
                 }
             }

@@ -40,24 +40,16 @@ open class PGLActivity : AppCompatActivity() {
     private fun downloadTrend() {
         finishCount = 0
         for (i in 0..opponentParty.member.size - 1) {
-            val p = opponentParty.member[i]
-            val pokemonNo = p.no + "-0"
-            PokemonTrendDownloader(pokemonNo, i, TrendListener()).execute()
+            if (opponentParty.member[i].no.contains("-")) {
+                PokemonTrendDownloader(opponentParty.member[i].no, i, TrendListener()).execute()
+            } else {
+                val p = opponentParty.member[i].no.toInt()
+                val pokemonNo = "$p-0"
+                PokemonTrendDownloader(pokemonNo, i, TrendListener()).execute()
+            }
         }
     }
 
-    //    fun getIndividualPBAPokemon(index: Int): IndividualPBAPokemon {
-//        return party.getMember().get(index)
-//    }
-//
-//    fun finishDownload(index: Int, trend: RankingPokemonTrend) {
-//        if (party == null || party.getMember() == null || party.getMember().size() < index) {
-//            return
-//        }
-//        //party.getMember().get(index).getMaster().getMasterRecord().setTrend(trend);
-//    }
-//
-//    abstract fun finishAllDownload()
     open fun setTrend(result: TrendForBattle, index: Int) {
         Log.w("PGLActivity.setTrend", "don't override!")
     }

@@ -27,7 +27,7 @@ class PokemonForBattle(
         var hitProbabilityRank: Int,
         var avoidanceRank: Int,
         var criticalRank: Int,
-        var mega: Boolean,
+        var mega: Int,
         var individual: IndividualPBAPokemon = IndividualPBAPokemon()
 ) {
 
@@ -42,7 +42,7 @@ class PokemonForBattle(
         fun create(side: Int, individual: IndividualPBAPokemon): PokemonForBattle {
             return PokemonForBattle(side, -1, "unknown", "unknown", "unknown", Skill(), 0, 100, 0,
                     0, 6, 0, 6, 0, 6, 0, 6, 0, 6,
-                    0, 0, 0, false, individual)
+                    0, 0, 0, IndividualPBAPokemon.NOT_MEGA, individual)
         }
     }
 
@@ -64,7 +64,7 @@ class PokemonForBattle(
     fun hp(): Int {
         when (side) {
             0 -> return hpValue
-            1 -> return individual.calcHp(hpEffortValue).times(hpRatio).div(100.0).toInt()
+            1 -> return individual.calcHp(hpEffortValue, mega).times(hpRatio).div(100.0).toInt()
         }
         return 0
     }
@@ -299,7 +299,7 @@ class PokemonForBattle(
         if (side == PartyInBattle.MY_SIDE) {
             return individual.attackValue.toDouble()
         }
-        return Math.floor(individual.calcAttack(attackEffortValue).times(Characteristic.correction(characteristic, "A")))
+        return Math.floor(individual.calcAttack(attackEffortValue, mega).times(Characteristic.correction(characteristic, "A")))
     }
 
     fun getAttackRankCorrection(isCritical: Boolean): Double {
@@ -324,7 +324,7 @@ class PokemonForBattle(
         if (side == PartyInBattle.MY_SIDE) {
             return individual.defenseValue.toDouble()
         }
-        return Math.floor(individual.calcDefense(defenseEffortValue).times(Characteristic.correction(characteristic, "B")))
+        return Math.floor(individual.calcDefense(defenseEffortValue, mega).times(Characteristic.correction(characteristic, "B")))
     }
 
     fun calcDefenseValueCorrection(attackSide: PokemonForBattle): Double {
@@ -369,7 +369,7 @@ class PokemonForBattle(
         if (side == PartyInBattle.MY_SIDE) {
             return individual.specialAttackValue.toDouble()
         }
-        return Math.floor(individual.calcSpecialAttack(specialAttackEffortValue).times(Characteristic.correction(characteristic, "C")))
+        return Math.floor(individual.calcSpecialAttack(specialAttackEffortValue, mega).times(Characteristic.correction(characteristic, "C")))
     }
 
     fun getSpecialAttackRankCorrection(isCritical: Boolean): Double {
@@ -394,7 +394,7 @@ class PokemonForBattle(
         if (side == PartyInBattle.MY_SIDE) {
             return individual.specialDefenseValue.toDouble()
         }
-        return Math.floor(individual.calcSpecialDefense(specialDefenseEffortValue).times(Characteristic.correction(characteristic, "D")))
+        return Math.floor(individual.calcSpecialDefense(specialDefenseEffortValue, mega).times(Characteristic.correction(characteristic, "D")))
     }
 
     fun calcSpecialDefenseValueCorrection(): Double {
@@ -437,7 +437,7 @@ class PokemonForBattle(
 
     fun calcSpeedValue(): Double {
         var result = if (side == PartyInBattle.MY_SIDE) individual.speedValue.toDouble()
-        else individual.calcSpeed().toDouble()
+        else individual.calcSpeed(252, mega).toDouble()
 
         result = result.times(Characteristic.correction(characteristic, "S"))
 
@@ -657,8 +657,8 @@ class PokemonForBattle(
                 hpValue -= damage
             }
             PartyInBattle.OPPONENT_SIDE -> {
-                val remain = individual.calcHp(252).times(hpRatio).div(100.0).minus(damage)
-                hpRatio = if (remain < 1) 0 else remain.times(100.0).div(individual.calcHp(252)).toInt()
+                val remain = individual.calcHp(252, mega).times(hpRatio).div(100.0).minus(damage)
+                hpRatio = if (remain < 1) 0 else remain.times(100.0).div(individual.calcHp(252, mega)).toInt()
             }
         }
     }
@@ -678,7 +678,7 @@ class PokemonForBattle(
     fun defeatTimes(damage: Int): Int {
         var hp = hpValue
         if (side == PartyInBattle.OPPONENT_SIDE) {
-            hp = individual.calcHp(hpEffortValue).times(hpRatio).div(100.0).toInt()
+            hp = individual.calcHp(hpEffortValue, mega).times(hpRatio).div(100.0).toInt()
         }
         //println("${hp} - ${damage}")
         return if (hp < damage) {
@@ -727,7 +727,7 @@ class PokemonForBattle(
         } else if (ability.equals("ちからずく") && skill.aliment == -2) {
             0
         } else if (item.equals("いのちのたま")) {
-            if (side == PartyInBattle.MY_SIDE) individual.hpValue.div(10) else individual.calcHp(252).div(10)
+            if (side == PartyInBattle.MY_SIDE) individual.hpValue.div(10) else individual.calcHp(252, mega).div(10)
         } else {
             0
         }
@@ -735,7 +735,7 @@ class PokemonForBattle(
         if (side == PartyInBattle.MY_SIDE) {
             individual.hpValue = individual.hpValue - d - d2
         } else {
-            val max = individual.calcHp(252)
+            val max = individual.calcHp(252, mega)
             val now = hp()
             hpRatio = (now - d - d2).times(100.0).div(max).toInt()
         }
@@ -822,4 +822,7 @@ class PokemonForBattle(
     }
 
 
+    fun name(): String {
+        return individual.name(mega)
+    }
 }

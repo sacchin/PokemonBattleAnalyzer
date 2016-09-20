@@ -201,13 +201,13 @@ class BattleResult {
         for (temp in label) speedOccur[temp] = speedOccur[temp]!!.plus(rate.div(label.size))
     }
 
-    fun orderResult(mine: PokemonForBattle, opponent: PokemonForBattle): Pair<String, Double>{
+    fun orderResult(mine: PokemonForBattle, opponent: PokemonForBattle): Pair<String, Double> {
         var sum = 0.0
         var label = ""
-        for ((index, speed) in opponent.individual.master.speedValues().withIndex()){
-            if(speed < mine.calcSpeedValue()) {
+        for ((index, speed) in opponent.individual.master.speedValues().withIndex()) {
+            if (speed < mine.calcSpeedValue()) {
                 sum += speedOccur[index]!!
-            }else{
+            } else {
                 label = BattleStatus.name(index - 1)
                 break
             }
@@ -242,4 +242,17 @@ class BattleResult {
         return sum
     }
 
+    fun arrayForBarChart(): FloatArray {
+        val denominator = defeatTimes.values.sum()
+        if (denominator < 0.1) {
+            return floatArrayOf(0f, 0f, 0f, 0f)
+        }
+
+        val base4 = 100.div(denominator)
+        return floatArrayOf(defeatTimes[1]!!.times(base4).toFloat(),
+                defeatTimes[2]!!.times(base4).toFloat(),
+                defeatTimes[3]!!.times(base4).toFloat(),
+                defeatTimes[4]!!.times(base4).toFloat(),
+                defeatTimes[5]!!.times(base4).toFloat())
+    }
 }

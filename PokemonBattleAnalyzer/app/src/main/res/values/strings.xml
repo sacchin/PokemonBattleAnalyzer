@@ -55,6 +55,9 @@
     <string name="expected_activity_vs">VS</string>
     <string name="expected_activity_beat_number">確定数</string>
     <string name="expected_activity_dead">倒される</string>
+    <string name="expected_activity_covering">網羅率</string>
+    <string name="expected_activity_order">行動順</string>
+    <string name="expected_activity_priority">先制技</string>
     <string name="title_activity_login">Sign in</string>
 
     <string name="detail_activity_base">Base Status</string>

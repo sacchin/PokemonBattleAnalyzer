@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +27,7 @@ class DetailActivity : PGLActivity() {
 
     val util = Util()
     var id: String = ""
+    var isMine = false
     var temp: TemporaryStatus by Delegates.notNull()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,10 +43,12 @@ class DetailActivity : PGLActivity() {
         if (intent != null) {
             this.id = intent.getStringExtra("id")
             this.temp = intent.getParcelableExtra("status")
-            val isMine = intent.getBooleanExtra("isMine", false)
-            init(isMine)
-            Log.e("DetailActivity", temp.toString())
+            isMine = intent.getBooleanExtra("isMine", false)
+            init()
         }
+
+        val resourceId = util.pokemonImageResource[id.split("-")[0]]
+        image.setImageResource(resourceId ?: R.drawable.noimage)
 
         detail_fab.onClick {
             intent.putExtra("edited", temp)
@@ -58,42 +60,47 @@ class DetailActivity : PGLActivity() {
     override fun onResume() {
         super.onResume()
         resetParty(true)
+        if (isMine) showMineStatus()
+    }
 
-//        for(p in myParty.member){
-//            if(p.getId() == this.id){
-//                iv.setImageResource(p.getMaster().getResourceId());
-//                break;
-//            }
-//        }
+    fun showMineStatus() {
+        var p = myParty.member1
+        if (myParty.member2.master.no.split("-")[0].equals(id)) {
+            p = myParty.member2
+        }
+        if (myParty.member3.master.no.split("-")[0].equals(id)) {
+            p = myParty.member3
+        }
 
+        skilltable.addView(createTableRow(arrayOf(p.skillNo1.jname, "-"), 0, Color.TRANSPARENT, Color.BLACK, 12))
+        skilltable.addView(createTableRow(arrayOf(p.skillNo2.jname, "-"), 0, Color.TRANSPARENT, Color.BLACK, 12))
+        skilltable.addView(createTableRow(arrayOf(p.skillNo3.jname, "-"), 0, Color.TRANSPARENT, Color.BLACK, 12))
+        skilltable.addView(createTableRow(arrayOf(p.skillNo4.jname, "-"), 0, Color.TRANSPARENT, Color.BLACK, 12))
+        characteristictable.addView(createTableRow(arrayOf(p.characteristic, "-"), 0, Color.TRANSPARENT, Color.BLACK, 12))
+        itemtable.addView(createTableRow(arrayOf(p.item, "-"), 0, Color.TRANSPARENT, Color.BLACK, 12))
+        abilitytable.addView(createTableRow(arrayOf(p.ability, "-"), 0, Color.TRANSPARENT, Color.BLACK, 12))
     }
 
     override fun setTrend(result: TrendForBattle, index: Int) {
-        finishCount++
         if (result.itemInfo.isEmpty() && result.seikakuInfo.isEmpty() &&
                 result.tokuseiInfo.isEmpty() && result.skillList.isEmpty()) {
             Snackbar.make(base_layout, "download failed at $index", Snackbar.LENGTH_SHORT).show()
         }
-        if (finishCount == opponentParty.member.size) {
+        if (opponentParty.member[index].no.split("-")[0].equals(id)) {
             Snackbar.make(base_layout, "download finish", Snackbar.LENGTH_SHORT).show()
-            for (key in result.createSkillMap()) {
+            for (key in result.createSkillMap(util)) {
                 skilltable.addView(createTableRow(arrayOf(key.first, key.second), 0, Color.TRANSPARENT, Color.BLACK, 12))
             }
-            for (key in result.createCharacteristicMap()) {
-                skilltable.addView(createTableRow(arrayOf(key.first, key.second), 0, Color.TRANSPARENT, Color.BLACK, 12))
+            for (key in result.createCharacteristicMap(util)) {
+                characteristictable.addView(createTableRow(arrayOf(key.first, key.second), 0, Color.TRANSPARENT, Color.BLACK, 12))
             }
-            for (key in result.createItemMap()) {
-                skilltable.addView(createTableRow(arrayOf(key.first, key.second), 0, Color.TRANSPARENT, Color.BLACK, 12))
+            for (key in result.createItemMap(util)) {
+                itemtable.addView(createTableRow(arrayOf(key.first, key.second), 0, Color.TRANSPARENT, Color.BLACK, 12))
             }
-            for (key in result.createAbilityMap()) {
-                skilltable.addView(createTableRow(arrayOf(key.first, key.second), 0, Color.TRANSPARENT, Color.BLACK, 12))
+            for (key in result.createAbilityMap(util)) {
+                abilitytable.addView(createTableRow(arrayOf(key.first, key.second), 0, Color.TRANSPARENT, Color.BLACK, 12))
             }
         }
-
-        skilltable.removeAllViews()
-        characteristictable.removeAllViews()
-        itemtable.removeAllViews()
-        abilitytable.removeAllViews()
     }
 
     fun createTableRow(texts: Array<String>, layoutSpan: Int, bgColor: Int, txtColor: Int, txtSize: Int): TableRow {
@@ -155,6 +162,14 @@ class DetailActivity : PGLActivity() {
         status.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
         status.isStretchAllColumns = true
 
+        val abilities = when (type) {
+            NOT_MEGA -> arrayOf(p.ability1, p.ability2, p.abilityd)
+            MEGA_X -> arrayOf(p.megax!!.ability, "-", "-")
+            MEGA_Y -> arrayOf(p.megay!!.ability, "-", "-")
+            else -> arrayOf("-", "-", "-")
+        }
+        status.addView(createTableRow(abilities, 2, Color.TRANSPARENT, Color.BLACK, 12))
+
         val headers = arrayOf("H", "A", "B", "C", "D", "S")
         status.addView(createTableRow(headers, 0, Color.TRANSPARENT, Color.GRAY, 12))
 
@@ -165,21 +180,11 @@ class DetailActivity : PGLActivity() {
             else -> arrayOf("-", "-", "-", "-", "-")
         }
         status.addView(createTableRow(statuses, 0, Color.TRANSPARENT, Color.BLACK, 18))
-
-        val characteristics = when (type) {
-            NOT_MEGA -> arrayOf(p.ability1, p.ability2, p.abilityd)
-            MEGA_X -> arrayOf(p.megax!!.ability, "-", "-")
-            MEGA_Y -> arrayOf(p.megay!!.ability, "-", "-")
-            else -> arrayOf("-", "-", "-")
-        }
-        status.addView(createTableRow(characteristics, 2, Color.TRANSPARENT, Color.BLACK, 12))
-
         sss.addView(status)
         statusview.addView(sss)
     }
 
-    fun init(isMine: Boolean) {
-
+    fun init() {
         val statusAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
         statusAdapter.add("状態異常")
         statusAdapter.add("やけど")
@@ -222,13 +227,20 @@ class DetailActivity : PGLActivity() {
         mySSpinner.setSelection(temp.tempSpeed)
         mySSpinner.onItemSelectedListener = OnRankSelectedListener(4)
 
+        val megaAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
+        megaAdapter.add("-")
+        megaAdapter.add("X")
+        megaAdapter.add("Y")
+        megaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
         if (isMine) {
             oppo_header.visibility = View.GONE
             myStatusSpinner.adapter = statusAdapter
             myStatusSpinner.setSelection(temp.tempStatus)
             myStatusSpinner.onItemSelectedListener = OnStatusSelectedListener()
-            my_mega_check.isChecked = temp.tempMega
-            my_mega_check.setOnCheckedChangeListener { compoundButton, b -> temp.tempMega = b }
+            my_mega_check.adapter = megaAdapter
+            my_mega_check.setSelection(temp.tempMega)
+            my_mega_check.onItemSelectedListener = OnMegaSelectedListener()
             myHPBar.setText(temp.tempHpValue.toString())
             myHPBar.setOnEditorActionListener(OnHPEditListener())
         } else {
@@ -236,8 +248,9 @@ class DetailActivity : PGLActivity() {
             opponentStatusSpinner.adapter = statusAdapter
             opponentStatusSpinner.setSelection(temp.tempStatus)
             opponentStatusSpinner.onItemSelectedListener = OnStatusSelectedListener()
-            oppo_mega_check.isChecked = temp.tempMega
-            oppo_mega_check.setOnCheckedChangeListener { compoundButton, b -> temp.tempMega = b }
+            oppo_mega_check.adapter = megaAdapter
+            oppo_mega_check.setSelection(temp.tempMega)
+            oppo_mega_check.onItemSelectedListener = OnMegaSelectedListener()
             opponentHPBar.progress = temp.tempHpRatio
             opponentHPBar.setOnSeekBarChangeListener(OnHPChangeListener())
         }
@@ -257,7 +270,6 @@ class DetailActivity : PGLActivity() {
         }
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            Log.e("onItemSelected", id.toString())
             when (which) {
                 0 -> temp.setAttackRank(id.toInt())
                 1 -> temp.setDefenseRank(id.toInt())
@@ -265,6 +277,15 @@ class DetailActivity : PGLActivity() {
                 3 -> temp.setSpecialDefenseRank(id.toInt())
                 4 -> temp.setSpeedRank(id.toInt())
             }
+        }
+    }
+
+    inner class OnMegaSelectedListener() : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            temp.tempMega = id.toInt()
         }
     }
 
