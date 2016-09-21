@@ -10,11 +10,11 @@ class PartyInsertHandler(private val databaseHelper: DatabaseHelper?) {
     fun initInsert() {
         val party = Party(System.currentTimeMillis(), "mine", "mine")
         val list = databaseHelper!!.selectAllPokemonMasterData()
-        party.addMember(list[222])  //クチート
-        party.addMember(list[294])  //バクフーン
-        party.addMember(list[270])  //ハガネール
-        party.addMember(list[91])   //エルフーン
-        party.addMember(list[87])  //ヒヒダルマ
+        party.addMember(list[220])  //クチート
+        party.addMember(list[292])  //バクフーン
+        party.addMember(list[268])  //ハガネール
+        party.addMember(list[89])   //エルフーン
+        party.addMember(list[85])  //ヒヒダルマ
         party.addMember(list[2])  //パンプジン
         databaseHelper.insertPartyData(party)
 

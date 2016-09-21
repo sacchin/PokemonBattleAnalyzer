@@ -503,6 +503,9 @@ class Util {
                 "709" to R.drawable.n709,
                 "700" to R.drawable.n700,
                 "711" to R.drawable.n711,
+                "711-1" to R.drawable.n711_1,
+                "711-2" to R.drawable.n711_2,
+                "711-3" to R.drawable.n711_3,
                 "713" to R.drawable.n713,
                 "715" to R.drawable.n715,
                 "112" to R.drawable.n112,
@@ -663,7 +666,14 @@ class Util {
         return image
     }
 
-    fun percent(rate: Double): String {
-        return String.format("%.1f", rate) + "%"
+    companion object {
+        fun percent(rate: Double): String {
+            return String.format("%.1f", rate) + "%"
+        }
+
+        //五捨五超入
+        fun round5(value: Double): Double {
+            return Math.ceil(value.minus(0.5))
+        }
     }
 }

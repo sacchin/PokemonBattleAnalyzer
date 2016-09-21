@@ -140,6 +140,13 @@ class DetailActivity : PGLActivity() {
         createPBAPokemonStatus(po, NOT_MEGA)
         if (po.megax != null) createPBAPokemonStatus(po, MEGA_X)
         if (po.megay != null) createPBAPokemonStatus(po, MEGA_Y)
+
+        val forms = po.battling()
+        val megaAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, forms)
+        megaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        val megaSpinner = if(isMine) my_mega_check else oppo_mega_check
+        if (forms.size == 1) megaSpinner.visibility = View.GONE else  megaSpinner.adapter = megaAdapter
     }
 
     private fun createPBAPokemonStatus(p: PokemonMasterData, type: Int) {
@@ -149,7 +156,11 @@ class DetailActivity : PGLActivity() {
 
         val temp = when (type) {
             NOT_MEGA -> util.createImage(p, 150f, resources)
-            MEGA_X -> util.createImage(p.no + "mx", 150f, resources)
+            MEGA_X -> when(p.no){
+                "681" -> util.createImage(R.drawable.n681_1, 150f, resources)
+                "555" -> util.createImage(R.drawable.n555_1, 150f, resources)
+                else -> util.createImage(p.no + "mx", 150f, resources)
+            }
             MEGA_Y -> util.createImage(p.no + "my", 150f, resources)
             else -> util.createImage(p, 150f, resources)
         }
@@ -227,18 +238,11 @@ class DetailActivity : PGLActivity() {
         mySSpinner.setSelection(temp.tempSpeed)
         mySSpinner.onItemSelectedListener = OnRankSelectedListener(4)
 
-        val megaAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
-        megaAdapter.add("-")
-        megaAdapter.add("X")
-        megaAdapter.add("Y")
-        megaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
         if (isMine) {
             oppo_header.visibility = View.GONE
             myStatusSpinner.adapter = statusAdapter
             myStatusSpinner.setSelection(temp.tempStatus)
             myStatusSpinner.onItemSelectedListener = OnStatusSelectedListener()
-            my_mega_check.adapter = megaAdapter
             my_mega_check.setSelection(temp.tempMega)
             my_mega_check.onItemSelectedListener = OnMegaSelectedListener()
             myHPBar.setText(temp.tempHpValue.toString())
@@ -248,7 +252,6 @@ class DetailActivity : PGLActivity() {
             opponentStatusSpinner.adapter = statusAdapter
             opponentStatusSpinner.setSelection(temp.tempStatus)
             opponentStatusSpinner.onItemSelectedListener = OnStatusSelectedListener()
-            oppo_mega_check.adapter = megaAdapter
             oppo_mega_check.setSelection(temp.tempMega)
             oppo_mega_check.onItemSelectedListener = OnMegaSelectedListener()
             opponentHPBar.progress = temp.tempHpRatio

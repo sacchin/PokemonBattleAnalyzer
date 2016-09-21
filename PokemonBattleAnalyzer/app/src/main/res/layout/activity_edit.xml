@@ -13,11 +13,6 @@
         android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin"
         android:layout_gravity="top">
-        <LinearLayout
-            android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
             <TableLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -28,12 +23,7 @@
                         android:id="@+id/member1_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_span="2"/>
-                    <TextView
-                        android:id="@+id/member2_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_span="2"/>
+                        android:layout_span="4"/>
                 </TableRow>
                 <TableRow
                     android:layout_width="wrap_content"
@@ -46,12 +36,14 @@
                         android:id="@+id/member1ItemSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_item"
+                    <Spinner
+                        android:id="@+id/member1HSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member2ItemSpinner"
+                    <EditText
+                        android:id="@+id/member1H"
+                        android:hint="@string/edit_activity_h"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -66,12 +58,14 @@
                         android:id="@+id/member1CharSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_char"
+                    <Spinner
+                        android:id="@+id/member1ASpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member2CharSpinner"
+                    <EditText
+                        android:id="@+id/member1A"
+                        android:hint="@string/edit_activity_a"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -86,12 +80,14 @@
                         android:id="@+id/member1AbiSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_abi"
+                    <Spinner
+                        android:id="@+id/member1BSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member2AbiSpinner"
+                    <EditText
+                        android:id="@+id/member1B"
+                        android:hint="@string/edit_activity_b"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -106,12 +102,14 @@
                         android:id="@+id/member1Skill1Spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_skill1"
+                    <Spinner
+                        android:id="@+id/member1CSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member2Skill1Spinner"
+                    <EditText
+                        android:id="@+id/member1C"
+                        android:hint="@string/edit_activity_c"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -126,12 +124,14 @@
                         android:id="@+id/member1Skill2Spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_skill2"
+                    <Spinner
+                        android:id="@+id/member1DSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member2Skill2Spinner"
+                    <EditText
+                        android:id="@+id/member1D"
+                        android:hint="@string/edit_activity_d"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -146,12 +146,14 @@
                         android:id="@+id/member1Skill3Spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_skill3"
+                    <Spinner
+                        android:id="@+id/member1SSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member2Skill3Spinner"
+                    <EditText
+                        android:id="@+id/member1S"
+                        android:hint="@string/edit_activity_s"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -166,6 +168,151 @@
                         android:id="@+id/member1Skill4Spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/member2_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_span="4"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2ItemSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2HSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member2H"
+                        android:hint="@string/edit_activity_h"
+                        
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_char"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2CharSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2ASpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member2A"
+                        android:hint="@string/edit_activity_a"
+                        
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_abi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2AbiSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2BSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member2B"
+                        android:hint="@string/edit_activity_b"
+                        
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_skill1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2Skill1Spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2CSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member2C"
+                        android:hint="@string/edit_activity_c"
+                        
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_skill2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2Skill2Spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2DSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member2D"
+                        android:hint="@string/edit_activity_d"
+                        
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_skill3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2Skill3Spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member2SSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member2S"
+                        android:hint="@string/edit_activity_s"
+                        
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
                     <TextView
                         android:text="@string/edit_activity_skill4"
                         android:layout_width="wrap_content"
@@ -178,118 +325,11 @@
                 <TableRow
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member1H"
-                        android:hint="@string/edit_activity_h"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member2H"
-                        android:hint="@string/edit_activity_h"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member1A"
-                        android:hint="@string/edit_activity_a"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member2A"
-                        android:hint="@string/edit_activity_a"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member1B"
-                        android:hint="@string/edit_activity_b"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member2B"
-                        android:hint="@string/edit_activity_b"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member1C"
-                        android:hint="@string/edit_activity_c"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member2C"
-                        android:hint="@string/edit_activity_c"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member1D"
-                        android:hint="@string/edit_activity_d"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member2D"
-                        android:hint="@string/edit_activity_d"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member1S"
-                        android:hint="@string/edit_activity_s"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member2S"
-                        android:hint="@string/edit_activity_s"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-            </TableLayout>
-
-            <TableLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
                     <TextView
                         android:id="@+id/member3_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_span="2"/>
-                    <TextView
-                        android:id="@+id/member4_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_span="2"/>
+                        android:layout_span="4"/>
                 </TableRow>
                 <TableRow
                     android:layout_width="wrap_content"
@@ -302,12 +342,14 @@
                         android:id="@+id/member3ItemSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_item"
+                    <Spinner
+                        android:id="@+id/member3HSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member4ItemSpinner"
+                    <EditText
+                        android:id="@+id/member3H"
+                        android:hint="@string/edit_activity_h"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -322,12 +364,14 @@
                         android:id="@+id/member3CharSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_char"
+                    <Spinner
+                        android:id="@+id/member3ASpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member4CharSpinner"
+                    <EditText
+                        android:id="@+id/member3A"
+                        android:hint="@string/edit_activity_a"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -342,12 +386,14 @@
                         android:id="@+id/member3AbiSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_abi"
+                    <Spinner
+                        android:id="@+id/member3BSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member4AbiSpinner"
+                    <EditText
+                        android:id="@+id/member3B"
+                        android:hint="@string/edit_activity_b"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -362,12 +408,14 @@
                         android:id="@+id/member3Skill1Spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_skill1"
+                    <Spinner
+                        android:id="@+id/member3CSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member4Skill1Spinner"
+                    <EditText
+                        android:id="@+id/member3C"
+                        android:hint="@string/edit_activity_c"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -382,12 +430,14 @@
                         android:id="@+id/member3Skill2Spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_skill2"
+                    <Spinner
+                        android:id="@+id/member3DSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member4Skill2Spinner"
+                    <EditText
+                        android:id="@+id/member3D"
+                        android:hint="@string/edit_activity_d"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -402,12 +452,14 @@
                         android:id="@+id/member3Skill3Spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_skill3"
+                    <Spinner
+                        android:id="@+id/member3SSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member4Skill3Spinner"
+                    <EditText
+                        android:id="@+id/member3S"
+                        android:hint="@string/edit_activity_s"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -422,6 +474,151 @@
                         android:id="@+id/member3Skill4Spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/member4_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_span="4"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4ItemSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4HSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member4H"
+                        android:hint="@string/edit_activity_h"
+                        
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_char"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4CharSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4ASpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member4A"
+                        android:hint="@string/edit_activity_a"
+                        
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_abi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4AbiSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4BSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member4B"
+                        android:hint="@string/edit_activity_b"
+                        
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_skill1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4Skill1Spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4CSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member4C"
+                        android:hint="@string/edit_activity_c"
+                        
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_skill2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4Skill2Spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4DSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member4D"
+                        android:hint="@string/edit_activity_d"
+                        
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_skill3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4Skill3Spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member4SSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member4S"
+                        android:hint="@string/edit_activity_s"
+                        
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
                     <TextView
                         android:text="@string/edit_activity_skill4"
                         android:layout_width="wrap_content"
@@ -434,117 +631,11 @@
                 <TableRow
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member3H"
-                        android:hint="@string/edit_activity_h"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member4H"
-                        android:hint="@string/edit_activity_h"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member3A"
-                        android:hint="@string/edit_activity_a"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member4A"
-                        android:hint="@string/edit_activity_a"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member3B"
-                        android:hint="@string/edit_activity_b"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member4B"
-                        android:hint="@string/edit_activity_b"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member3C"
-                        android:hint="@string/edit_activity_c"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member4C"
-                        android:hint="@string/edit_activity_c"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member3D"
-                        android:hint="@string/edit_activity_d"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member4D"
-                        android:hint="@string/edit_activity_d"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member3S"
-                        android:hint="@string/edit_activity_s"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member4S"
-                        android:hint="@string/edit_activity_s"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-            </TableLayout>
-
-            <TableLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
                     <TextView
                         android:id="@+id/member5_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_span="2"/>
-                    <TextView
-                        android:id="@+id/member6_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_span="2"/>
+                        android:layout_span="4"/>
                 </TableRow>
                 <TableRow
                     android:layout_width="wrap_content"
@@ -557,12 +648,14 @@
                         android:id="@+id/member5ItemSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_item"
+                    <Spinner
+                        android:id="@+id/member5HSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member6ItemSpinner"
+                    <EditText
+                        android:id="@+id/member5H"
+                        android:hint="@string/edit_activity_h"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -577,12 +670,14 @@
                         android:id="@+id/member5CharSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_char"
+                    <Spinner
+                        android:id="@+id/member5ASpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member6CharSpinner"
+                    <EditText
+                        android:id="@+id/member5A"
+                        android:hint="@string/edit_activity_a"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -597,12 +692,14 @@
                         android:id="@+id/member5AbiSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_abi"
+                    <Spinner
+                        android:id="@+id/member5BSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member6AbiSpinner"
+                    <EditText
+                        android:id="@+id/member5B"
+                        android:hint="@string/edit_activity_b"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -617,12 +714,14 @@
                         android:id="@+id/member5Skill1Spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_skill1"
+                    <Spinner
+                        android:id="@+id/member5CSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member6Skill1Spinner"
+                    <EditText
+                        android:id="@+id/member5C"
+                        android:hint="@string/edit_activity_c"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -637,12 +736,14 @@
                         android:id="@+id/member5Skill2Spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_skill2"
+                    <Spinner
+                        android:id="@+id/member5DSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member6Skill2Spinner"
+                    <EditText
+                        android:id="@+id/member5D"
+                        android:hint="@string/edit_activity_d"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -657,12 +758,14 @@
                         android:id="@+id/member5Skill3Spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/edit_activity_skill3"
+                    <Spinner
+                        android:id="@+id/member5SSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <Spinner
-                        android:id="@+id/member6Skill3Spinner"
+                    <EditText
+                        android:id="@+id/member5S"
+                        android:hint="@string/edit_activity_s"
+                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
@@ -677,6 +780,146 @@
                         android:id="@+id/member5Skill4Spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/member6_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_span="4"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6ItemSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6HSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member6H"
+                        android:hint="@string/edit_activity_h"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_char"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6CharSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6ASpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member6A"
+                        android:hint="@string/edit_activity_a"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_abi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6AbiSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6BSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member6B"
+                        android:hint="@string/edit_activity_b"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_skill1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6Skill1Spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6CSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member6C"
+                        android:hint="@string/edit_activity_c"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_skill2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6Skill2Spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6DSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member6D"
+                        android:hint="@string/edit_activity_d"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/edit_activity_skill3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6Skill3Spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <Spinner
+                        android:id="@+id/member6SSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/member6S"
+                        android:hint="@string/edit_activity_s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
                     <TextView
                         android:text="@string/edit_activity_skill4"
                         android:layout_width="wrap_content"
@@ -686,103 +929,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member5H"
-                        android:hint="@string/edit_activity_h"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member6H"
-                        android:hint="@string/edit_activity_h"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member5A"
-                        android:hint="@string/edit_activity_a"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member6A"
-                        android:hint="@string/edit_activity_a"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member5B"
-                        android:hint="@string/edit_activity_b"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member6B"
-                        android:hint="@string/edit_activity_b"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member5C"
-                        android:hint="@string/edit_activity_c"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member6C"
-                        android:hint="@string/edit_activity_c"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member5D"
-                        android:hint="@string/edit_activity_d"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member6D"
-                        android:hint="@string/edit_activity_d"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/member5S"
-                        android:hint="@string/edit_activity_s"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <EditText
-                        android:id="@+id/member6S"
-                        android:hint="@string/edit_activity_s"
-                        android:layout_span="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </TableRow>
             </TableLayout>
-        </LinearLayout>
     </ScrollView>
 </RelativeLayout>

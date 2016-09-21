@@ -48,7 +48,7 @@ data class TrendForBattle(
         for (w in wazaInfo) {
             if (w.name.isNullOrEmpty().not() && 1.0 < w.usageRate) {
                 Log.v("createSkillMap", "${w.name}")
-                result.add(Pair(w.name, util.percent(w.usageRate.times(100.0))))
+                result.add(Pair(w.name, Util.percent(w.usageRate.times(100.0))))
             } else {
                 Log.v("createSkillMap", "not")
             }
@@ -64,7 +64,7 @@ data class TrendForBattle(
         }
         for (w in seikakuInfo) {
             if (w.name.isNullOrEmpty().not() && 1.0 < w.usageRate) {
-                result.add(Pair(w.name, util.percent(w.usageRate.times(100.0))))
+                result.add(Pair(w.name, Util.percent(w.usageRate.times(100.0))))
             }
         }
         return result
@@ -78,7 +78,7 @@ data class TrendForBattle(
         }
         for (w in tokuseiInfo) {
             if (w.name.isNullOrEmpty().not() && 1.0 < w.usageRate) {
-                result.add(Pair(w.name, util.percent(w.usageRate.times(100.0))))
+                result.add(Pair(w.name, Util.percent(w.usageRate.times(100.0))))
             }
         }
         return result
@@ -92,7 +92,7 @@ data class TrendForBattle(
         }
         for (w in itemInfo) {
             if (w.name.isNullOrEmpty().not() && 1.0 < w.usageRate) {
-                result.add(Pair(w.name, util.percent(w.usageRate.times(100.0))))
+                result.add(Pair(w.name, Util.percent(w.usageRate.times(100.0))))
             }
         }
         return result

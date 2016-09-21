@@ -50,12 +50,12 @@ class ExpectedActivity : PGLActivity() {
 
         coverRate.text = caseOfSkill1.coverRate()
         val (label, rate) = caseOfSkill1.orderResult(selectedMine, selectedOpponent)
-        if (label.equals("UNKNOWN")) order.text = "必ず後手" else order.text = label + "(${util.percent(rate)})まで抜ける"
+        if (label.equals("UNKNOWN") || rate < 0.1) order.text = "必ず後手" else order.text = label + "(${Util.percent(rate)})まで抜ける"
         if (caseOfSkill1.prioritySkills.isEmpty()) {
             priority.text = "なし"
         } else {
             for (temp in caseOfSkill1.prioritySkills) {
-                priority.text = temp.key + " = ${util.percent(temp.value)}\n"
+                priority.text = temp.key + " = ${Util.percent(temp.value)}\n"
             }
         }
 
@@ -136,7 +136,6 @@ class ExpectedActivity : PGLActivity() {
     }
 
     fun initView(intent: Intent) {
-
         mine.add(get(intent.extras.getInt("member1", 0)))
         mine.add(get(intent.extras.getInt("member2", 0)))
         mine.add(get(intent.extras.getInt("member3", 0)))
@@ -160,6 +159,10 @@ class ExpectedActivity : PGLActivity() {
         chart1.xAxis.setDrawAxisLine(true)
         chart1.xAxis.setDrawLabels(false)
         chart1.getAxis(YAxis.AxisDependency.LEFT).setDrawLabels(false)
+
+        val temp = util.createImage(R.drawable.select, 180f, resources)
+        selected_party1.setImageBitmap(temp)
+        selected_oppoParty1.setImageBitmap(temp)
 
         expected_fab.setOnClickListener {
 //            showProgress(true)

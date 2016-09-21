@@ -212,4 +212,17 @@ public open class PokemonMasterData(
         }
     }
 
+    fun battling(): Array<String>{
+        val result = mutableListOf("-")
+
+        if(megax != null) result.add(
+                when(no){
+                "555" -> "D"
+                "681" -> "B"
+                else -> "X"
+            })
+        if(megay != null) result.add("Y")
+
+        return result.toTypedArray()
+    }
 }

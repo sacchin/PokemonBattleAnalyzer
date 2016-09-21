@@ -1,6 +1,7 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.logic
 
 import android.util.Log
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 
 class BattleCalculator {
@@ -77,7 +78,7 @@ class BattleCalculator {
             val d252 = doSkill(mine, opponent, field, mine.calcCriticalRate().toDouble(), true, false)
 
             opponent.hpEffortValue = 252
-            for (d in d252) result.updateDefeatTimes(opponent.defeatTimes(d.key), baseRate.times(d.value))
+            for ((key, value) in d252) result.updateDefeatTimes(opponent.defeatTimes(key), baseRate.times(value))
 
             if (result.blow(baseRate)) {
                 println("blow!!")
@@ -87,20 +88,17 @@ class BattleCalculator {
             opponent.defenseEffortValue = 0
             opponent.specialDefenseEffortValue = 0
             val d0 = doSkill(mine, opponent, field, mine.calcCriticalRate().toDouble(), true, false)
-            for (d in d0) result.updateDefeatTimes(opponent.defeatTimes(d.key), baseRate.times(d.value))
-
+            for ((key, value) in d0) result.updateDefeatTimes(opponent.defeatTimes(key), baseRate.times(value))
 
             opponent.hpEffortValue = 0
-            for (d in d0) result.updateDefeatTimes(opponent.defeatTimes(d.key), baseRate.times(d.value))
-
+            for ((key, value) in d0) result.updateDefeatTimes(opponent.defeatTimes(key), baseRate.times(value))
 
             if (result.little()) {
                 println("little!!")
                 return result
             }
 
-            for (d in d252) result.updateDefeatTimes(opponent.defeatTimes(d.key), baseRate.times(d.value))
-
+            for ((key, value) in d252) result.updateDefeatTimes(opponent.defeatTimes(key), baseRate.times(value))
 
             return result
         }
@@ -113,7 +111,7 @@ class BattleCalculator {
                 opponent.attackEffortValue = 0
                 opponent.specialAttackEffortValue = 0
                 val d0 = doSkill(opponent, mine, field, mine.calcCriticalRate().toDouble(), true, false)
-                for (d in d0) result.updateDefeatedTimes(skill.skill.jname, mine.defeatTimes(d.key), baseRate.times(d.value))
+                for ((key, value) in d0) result.updateDefeatedTimes(skill.skill.jname, mine.defeatTimes(key), baseRate.times(value))
 
                 if (result.blow(baseRate)) {
                     println("blow!!")
@@ -123,7 +121,7 @@ class BattleCalculator {
                 opponent.attackEffortValue = 252
                 opponent.specialAttackEffortValue = 252
                 val d252 = doSkill(opponent, mine, field, mine.calcCriticalRate().toDouble(), true, false)
-                for (d in d252) result.updateDefeatedTimes(skill.skill.jname, mine.defeatTimes(d.key), baseRate.times(d.value))
+                for ((key, value) in d252) result.updateDefeatedTimes(skill.skill.jname, mine.defeatTimes(key), baseRate.times(value))
             }
 
             return result
@@ -174,8 +172,9 @@ class BattleCalculator {
             attackValue = calcAttackValue(attackValue, attackValueCorrection, attackRankCorrectionA, attackSide)
             defenseValue = calcDefenseValue(defenseValue, defenseValueCorrection, defenseRankCorrectionA, attackSide, defenseSide)
 
+            Log.v("doSkill", "${attackValue}, ${attackValueCorrection}")
             var criticalDamage = Math.floor(Math.floor(22.times(skillPower).times(attackValue).div(defenseValue)).toDouble().div(50.0).plus(2.0))
-            //TODO * 3072 / 4096 五捨五超入 複数ダメージ補正
+            // * 3072 / 4096 五捨五超入 複数ダメージ補正
             //TODO * 2048 / 4096 五捨五超入 おやこあい2回目
             //TODO * 6144 / 4096 五捨五超入 天候強化
             //TODO * 2048 / 4096 五捨五超入 天候弱化
@@ -186,7 +185,7 @@ class BattleCalculator {
             defenseValue = calcDefenseValue(defenseValue, defenseValueCorrection, defenseRankCorrectionB, attackSide, defenseSide)
 
             val damage = Math.floor(Math.floor(22.times(skillPower).times(attackValue).div(defenseValue)).toDouble().div(50.0).plus(2.0))
-            //TODO * 3072 / 4096 五捨五超入 複数ダメージ補正
+            // * 3072 / 4096 五捨五超入 複数ダメージ補正
             //TODO * 2048 / 4096 五捨五超入 おやこあい2回目
             //TODO * 6144 / 4096 五捨五超入 天候強化
             //TODO * 2048 / 4096 五捨五超入 天候弱化
@@ -228,15 +227,15 @@ class BattleCalculator {
             val damageCorrectionA = calcDamageCorrection(attackSide, defenseSide, field, true)
             val damageCorrectionB = calcDamageCorrection(attackSide, defenseSide, field, false)
             for (i in 0..(randomDamage.size - 1)) {
-                randomDamage[i] = Math.ceil(randomDamage[i].times(attackSide.typeBonus()).minus(0.5))
+                randomDamage[i] = Util.round5(randomDamage[i].times(attackSide.typeBonus()))
                 randomDamage[i] = Math.floor(randomDamage[i].times(Type.calculateAffinity(Type.code(attackSide.skill.type), defenseSide.individual.master)))
                 if (attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
                     randomDamage[i] = Math.floor(randomDamage[i].times(0.5))
                 }
                 if (i < 16) {
-                    randomDamage[i] = Math.ceil(randomDamage[i].times(damageCorrectionA).div(4096).minus(0.5))
+                    randomDamage[i] = Util.round5(randomDamage[i].times(damageCorrectionA).div(4096))
                 } else {
-                    randomDamage[i] = Math.ceil(randomDamage[i].times(damageCorrectionB).div(4096).minus(0.5))
+                    randomDamage[i] = Util.round5(randomDamage[i].times(damageCorrectionB).div(4096))
                 }
                 if (randomDamage[i] < 1) {
                     randomDamage[i] = 1.0
@@ -260,10 +259,10 @@ class BattleCalculator {
 
         fun calcAttackValue(base: Double, attackValueCorrection: Double, attackRankCorrection: Double, attackSide: PokemonForBattle): Double {
             var result = Math.floor(base.times(attackRankCorrection))
-            if (attackSide.skill.category == 0 && attackSide.ability.equals("はりきり")) {
-                result = Math.ceil(result.times(1.5).minus(0.5)) //五捨五超入
+            if (attackSide.skill.category == 0 && attackSide.ability().equals("はりきり")) {
+                result = Util.round5(result.times(1.5))
             }
-            result = Math.ceil(result.times(attackValueCorrection).div(4096.0).minus(0.5))//五捨五超入
+            result = Util.round5(result.times(attackValueCorrection).div(4096.0))
             return if (result < 1) 1.0 else result
         }
 
@@ -271,99 +270,87 @@ class BattleCalculator {
             var result = Math.floor(base.times(defenseRankCorrection))
             if (attackSide.skill.category == 1 && //ToDo: すなあらし対応
                     (defenseSide.individual.master.type1 == Type.no(Type.Code.ROCK) || defenseSide.individual.master.type2 == Type.no(Type.Code.ROCK))) {
-                result = Math.ceil(result.times(1.5).minus(0.5)) //五捨五超入
+                result = Util.round5(result.times(1.5))
             }
-            return Math.ceil(result.times(defenseValueCorrection).div(4096.0).minus(0.5))//五捨五超入
+            return Util.round5(result.times(defenseValueCorrection).div(4096.0))
         }
 
         fun calcSkillPowerCorrection(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, first: Boolean): Double {
             var initValue = 4096.0
 
-
-            //TODO とうそうしん弱化,オーラブレイク initValue.times(3042).div(4096).toInt()
+            // とうそうしん弱化,オーラブレイク initValue.times(3042).div(4096).toInt()
 
             if ((attackSide.skill.jname.equals("れんぞくパンチ") || attackSide.skill.jname.equals("メガトンパンチ") || attackSide.skill.jname.equals("ほのおのパンチ") || attackSide.skill.jname.equals("れいとうパンチ") || attackSide.skill.jname.equals("かみなりパンチ") || attackSide.skill.jname.equals("ピヨピヨパンチ") ||
                     attackSide.skill.jname.equals("マッハパンチ") || attackSide.skill.jname.equals("ばくれつパンチ") || attackSide.skill.jname.equals("きあいパンチ") || attackSide.skill.jname.equals("コメットパンチ") || attackSide.skill.jname.equals("シャドーパンチ") || attackSide.skill.jname.equals("スカイアッパー") ||
-                    attackSide.skill.jname.equals("アームハンマー") || attackSide.skill.jname.equals("バレットパンチ") || attackSide.skill.jname.equals("ドレインパンチ")) && attackSide.ability.equals("てつのこぶし")) {
+                    attackSide.skill.jname.equals("アームハンマー") || attackSide.skill.jname.equals("バレットパンチ") || attackSide.skill.jname.equals("ドレインパンチ")) && attackSide.ability().equals("てつのこぶし")) {
                 initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
             }
             if ((attackSide.skill.jname.equals("すてみタックル") || attackSide.skill.jname.equals("ウッドハンマー") || attackSide.skill.jname.equals("ブレイブバード") || attackSide.skill.jname.equals("とっしん") || attackSide.skill.jname.equals("じごくぐるま") || attackSide.skill.jname.equals("ボルテッカー") ||
-                    attackSide.skill.jname.equals("フレアドライブ") || attackSide.skill.jname.equals("もろはのずつき") || attackSide.skill.jname.equals("とびげり") || attackSide.skill.jname.equals("とびひざげり")) && attackSide.ability.equals("すてみ")) {
+                    attackSide.skill.jname.equals("フレアドライブ") || attackSide.skill.jname.equals("もろはのずつき") || attackSide.skill.jname.equals("とびげり") || attackSide.skill.jname.equals("とびひざげり")) && attackSide.ability().equals("すてみ")) {
                 initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
             }
 
-            //TODO とうそうしん強化 initValue.times(5120).div(4096).toInt()
+            // とうそうしん強化 initValue.times(5120).div(4096).toInt()
 
             if (attackSide.sheerForce()) {
                 initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
             }
-
-            if (attackSide.ability.equals("すなのちから") && field.weather == BattleField.Weather.Sandstorm &&
+            if (attackSide.ability().equals("すなのちから") && field.weather == BattleField.Weather.Sandstorm &&
                     (attackSide.skill.type == Type.no(Type.Code.ROCK) || attackSide.skill.type == Type.no(Type.Code.STEEL) || attackSide.skill.type == Type.no(Type.Code.GROUND))) {
                 initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
                 attackSide.skill.type = Type.no(Type.Code.FLYING)
             }
-            if (attackSide.ability.equals("スカイスキン") && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
+            if (attackSide.ability().equals("スカイスキン") && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
                 initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
                 attackSide.skill.type = Type.no(Type.Code.FLYING)
             }
-            if (attackSide.ability.equals("フェアリースキン") && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
+            if (attackSide.ability().equals("フェアリースキン") && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
                 initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
                 attackSide.skill.type = Type.no(Type.Code.FAIRY)
             }
-            if (attackSide.ability.equals("フリーズスキン") && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
+            if (attackSide.ability().equals("フリーズスキン") && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
                 initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
                 attackSide.skill.type = Type.no(Type.Code.ICE)
             }
-
-            if (attackSide.ability.equals("かたいツメ") && attackSide.skill.contact) {
+            if (attackSide.ability().equals("かたいツメ") && attackSide.skill.contact) {
+                initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
+            }
+            if (attackSide.ability().equals("アナライズ") && !first) {
                 initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
             }
 
-            if (attackSide.ability.equals("アナライズ") && !first) {
-                initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
-            }
+            //5448 / 4096 四捨五入(※2体以上いても補正は1回のみ) フェアリーオーラ,ダークオーラ
 
-            //TODO 5448 / 4096 四捨五入(※2体以上いても補正は1回のみ) フェアリーオーラ,ダークオーラ
-
-            if (attackSide.ability.equals("ねつぼうそう") && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
+            if (attackSide.ability().equals("ねつぼうそう") && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
                 initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
             }
-            if (attackSide.ability.equals("どくぼうそう") && (attackSide.status == StatusAilment.no(StatusAilment.Code.POISON) || attackSide.status == StatusAilment.no(StatusAilment.Code.BADPOISON))) {
+            if (attackSide.ability().equals("どくぼうそう") && (attackSide.status == StatusAilment.no(StatusAilment.Code.POISON) || attackSide.status == StatusAilment.no(StatusAilment.Code.BADPOISON))) {
                 initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
             }
             if ((attackSide.skill.jname.equals("かみつく") || attackSide.skill.jname.equals("かみくだく") || attackSide.skill.jname.equals("かみなりのキバ") || attackSide.skill.jname.equals("ほのおのキバ") ||
-                    attackSide.skill.jname.equals("こおりのキバ") || attackSide.skill.jname.equals("どくどくのキバ") || attackSide.skill.jname.equals("ひっさつまえば")) && attackSide.ability.equals("がんじょうあご")) {
+                    attackSide.skill.jname.equals("こおりのキバ") || attackSide.skill.jname.equals("どくどくのキバ") || attackSide.skill.jname.equals("ひっさつまえば")) && attackSide.ability().equals("がんじょうあご")) {
                 initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
             }
-
             if ((attackSide.skill.jname.equals("はどうだん") || attackSide.skill.jname.equals("みずのはどう") || attackSide.skill.jname.equals("りゅうのはどう") ||
-                    attackSide.skill.jname.equals("あくのはどう") || attackSide.skill.jname.equals("こんげんのはどう")) && attackSide.ability.equals("メガランチャー")) {
+                    attackSide.skill.jname.equals("あくのはどう") || attackSide.skill.jname.equals("こんげんのはどう")) && attackSide.ability().equals("メガランチャー")) {
                 initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
             }
-
-
-            if ((attackSide.skill.power <= 60) && attackSide.ability.equals("テクニシャン")) {
+            if ((attackSide.skill.power <= 60) && attackSide.ability().equals("テクニシャン")) {
                 initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
             }
-
-            if (Type.code(attackSide.skill.type) == Type.Code.FIRE && defenseSide.ability.equals("たいねつ")) {
+            if (Type.code(attackSide.skill.type) == Type.Code.FIRE && defenseSide.ability().equals("たいねつ")) {
                 initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
             }
-
-            if (Type.code(attackSide.skill.type) == Type.Code.FIRE && defenseSide.ability.equals("かんそうはだ")) {
+            if (Type.code(attackSide.skill.type) == Type.Code.FIRE && defenseSide.ability().equals("かんそうはだ")) {
                 initValue = Math.round(initValue.times(5120.0).div(4096.0)).toDouble()
             }
-
-
             if (attackSide.skill.category == 0 && attackSide.item.equals("ちからのハチマキ")) {
                 initValue = Math.round(initValue.times(4505.0).div(4096.0)).toDouble()
             }
             if (attackSide.skill.category == 1 && attackSide.item.equals("ものしりメガネ")) {
                 initValue = Math.round(initValue.times(4505.0).div(4096.0)).toDouble()
             }
-
-            //ToDo: こうんごうだま、しらたま、はっきんだま対応
+            //こうんごうだま、しらたま、はっきんだま対応
             if (Type.code(attackSide.skill.type) == Type.Code.NORMAL && attackSide.item.equals("シルクのスカーフ")) {
                 initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
             }
@@ -415,18 +402,12 @@ class BattleCalculator {
             if (Type.code(attackSide.skill.type) == Type.Code.DRAGON && (attackSide.item.equals("りゅうのプレート") || attackSide.item.equals("りゅうのキバ"))) {
                 initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
             }
-
-
             //5325 / 4096 四捨五入 ジュエル
-
             if (attackSide.skill.jname.equals("ソーラービーム") && field.weather == BattleField.Weather.Rainy) {
                 initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
             }
-
-            //6144 / 4096 四捨五入 さきどり はたきおとす
-
+            //TODO 6144 / 4096 四捨五入 さきどり はたきおとす
             //8192 / 4096 四捨五入クロスサンダー,クロスフレイム,じゅうでん,かたきうち
-
             if (attackSide.skill.jname.equals("からげんき") && attackSide.status != StatusAilment.no(StatusAilment.Code.UNKNOWN)) {
                 initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
             }
@@ -436,20 +417,16 @@ class BattleCalculator {
             if (attackSide.skill.jname.equals("しおみず") && defenseSide.hpRatio < 50) {
                 initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
             }
-
             //6144 / 4096 四捨五入 てだすけ1
             //9216 / 4096 四捨五入 てだすけ2
-
             if (attackSide.skill.type == Type.no(Type.Code.ELECTRIC) && field.field.contains(BattleField.Field.MudSport)) {
                 initValue = Math.round(initValue.times(1352.0).div(4096.0)).toDouble()
             }
             if (attackSide.skill.type == Type.no(Type.Code.FIRE) && field.field.contains(BattleField.Field.WaterSport)) {
                 initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
             }
-
-            //2048 / 4096 四捨五入 グラスフィールド弱化,ミストフィールド
-            //6144 / 4096 四捨五入 グラスフィールド強化,エレキフィールド
-
+            //TODO 2048 / 4096 四捨五入 グラスフィールド弱化,ミストフィールド
+            //TODO 6144 / 4096 四捨五入 グラスフィールド強化,エレキフィールド
             return initValue
         }
 
@@ -464,8 +441,7 @@ class BattleCalculator {
             }
 
             val skillCorrection = calcSkillPowerCorrection(attackSide, defenseSide, field, first)
-            //五捨五超入
-            val tmp = Math.ceil(skillPower.toDouble().times(skillCorrection).div(4096.0).minus(0.5)).toInt()
+            val tmp = Util.round5(skillPower.toDouble().times(skillCorrection).div(4096.0)).toInt()
             return if (tmp < 1) 1 else tmp
         }
 
@@ -478,24 +454,21 @@ class BattleCalculator {
             if (attackSide.skill.category == 1 && defenseSide.field.contains(BattleField.Field.LightScreen)) {
                 initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
             }
-
-            if (defenseSide.hpRatio == 100 && defenseSide.ability.equals("マルチスケイル")) {
+            if (defenseSide.hpRatio == 100 && defenseSide.ability().equals("マルチスケイル")) {
                 initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
             }
-
             val batsugun = Type.calculateAffinity(Type.code(attackSide.skill.type), defenseSide.individual.master)
-            if (batsugun < 1 && attackSide.ability.equals("いろめがね")) {
+            if (batsugun < 1 && attackSide.ability().equals("いろめがね")) {
                 initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
             }
-
-            if (isCritical && attackSide.ability.equals("スナイパー")) {
+            if (isCritical && attackSide.ability().equals("スナイパー")) {
                 initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
             }
 
             //Todo: フレンドガード1 initValue = Math.round(initValue.times(3072.0).div(4096.0)).toDouble()
             //Todo: フレンドガード2 initValue = Math.round(initValue.times(2304.0).div(4096.0)).toDouble()
 
-            if (batsugun < 1 && (defenseSide.ability.equals("ハードロック") || defenseSide.ability.equals("フィルター"))) {
+            if (batsugun < 1 && (defenseSide.ability().equals("ハードロック") || defenseSide.ability().equals("フィルター"))) {
                 initValue = Math.round(initValue.times(3072.0).div(4096.0)).toDouble()
             }
 
@@ -554,7 +527,7 @@ class BattleCalculator {
             baseSecond.specialDefenseEffortValue = bd
             val damage = doSkill(baseFirst, baseSecond, field, true, false)
             baseSecond.hpEffortValue = h
-            for (d in damage) result.updateDefeatTimes(baseSecond.defeatTimes(d.key), d.value)
+            for ((key, value) in damage) result.updateDefeatTimes(baseSecond.defeatTimes(key), value)
             return result
         }
 
@@ -619,19 +592,19 @@ class BattleCalculator {
 
             val damageCorrectionB = calcDamageCorrection(attackSide, defenseSide, field, false)
             for (i in 0..(randomDamage.size - 1)) {
-                randomDamage[i] = Math.ceil(randomDamage[i].times(attackSide.typeBonus()).minus(0.5))
+                randomDamage[i] = Util.round5(randomDamage[i].times(attackSide.typeBonus()))
                 randomDamage[i] = Math.floor(randomDamage[i].times(Type.calculateAffinity(Type.code(attackSide.skill.type), defenseSide.individual.master)))
                 if (attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
                     randomDamage[i] = Math.floor(randomDamage[i].times(0.5))
                 }
-                randomDamage[i] = Math.ceil(randomDamage[i].times(damageCorrectionB).div(4096).minus(0.5))
+                randomDamage[i] = Util.round5(randomDamage[i].times(damageCorrectionB).div(4096))
                 if (randomDamage[i] < 1) {
                     randomDamage[i] = 1.0
                 }
             }
 
             val result = mutableMapOf<Int, Double>()
-            for ((i, value) in randomDamage.withIndex()) {
+            for (value in randomDamage) {
                 val k = value.toInt()
                 if (result.containsKey(k)) {
                     result[k] = result[k]!!.plus(1)
