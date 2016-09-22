@@ -11,12 +11,21 @@ class PartyInBattle(val side: Int = 0) {
 
     var member: MutableList<PokemonForBattle> by Delegates.notNull()
     var exposed: MutableSet<PokemonForBattle> = mutableSetOf()
+    var field: MutableSet<BattleField.Field> = mutableSetOf()
     var selected = 0
 
     var temp: TemporaryStatus = TemporaryStatus()
 
     init {
         member = ArrayList<PokemonForBattle>()
+    }
+
+    fun add(item: BattleField.Field) {
+        field.add(item)
+    }
+
+    fun remove(item: BattleField.Field) {
+        field.remove(item)
     }
 
     fun add(pokemon: IndividualPokemon): Int {

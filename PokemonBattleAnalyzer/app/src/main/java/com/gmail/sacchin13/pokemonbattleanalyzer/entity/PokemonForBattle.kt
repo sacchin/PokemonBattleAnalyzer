@@ -33,7 +33,6 @@ class PokemonForBattle(
 
     val rank = arrayOf(-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6)
     var trend: TrendForBattle by Delegates.notNull()
-    var field: MutableList<BattleField.Field> = mutableListOf()
     var firstCheck = true
 
     companion object {
@@ -67,10 +66,6 @@ class PokemonForBattle(
             1 -> return individual.calcHp(hpEffortValue, mega).times(hpRatio).div(100.0).toInt()
         }
         return 0
-    }
-
-    fun add(item: BattleField.Field) {
-        field.add(item)
     }
 
     fun getSkillPower(): Int {
@@ -240,7 +235,7 @@ class PokemonForBattle(
         return initValue
     }
 
-    private fun relatedBoth(initValue: Double, defenseSide: PokemonForBattle): Double{
+    private fun relatedBoth(initValue: Double, defenseSide: PokemonForBattle): Double {
         var result = initValue
         if (Type.code(skill.type) == Type.Code.FIRE && ability().equals("もうか") && (hpRatio < 30)) {
             result = Math.round(result.times(6144.0).div(4096.0)).toDouble()
@@ -263,7 +258,7 @@ class PokemonForBattle(
     fun calcAttackValue(): Double {
         val a = if (side == PartyInBattle.MY_SIDE) {
             individual.calcAttack(mega)
-        }else{
+        } else {
             individual.calcAttack(attackEffortValue, mega)
         }
         return Math.floor(a.times(Characteristic.correction(characteristic, "A")))
@@ -290,7 +285,7 @@ class PokemonForBattle(
     fun calcDefenseValue(): Double {
         val d = if (side == PartyInBattle.MY_SIDE) {
             individual.calcDefense(mega)
-        }else{
+        } else {
             individual.calcDefense(defenseEffortValue, mega)
         }
         return Math.floor(d.times(Characteristic.correction(characteristic, "B")))
@@ -337,7 +332,7 @@ class PokemonForBattle(
     fun calcSpecialAttackValue(): Double {
         val sa = if (side == PartyInBattle.MY_SIDE) {
             individual.calcSpecialAttack(mega)
-        }else{
+        } else {
             individual.calcSpecialAttack(specialAttackEffortValue, mega)
         }
         return Math.floor(sa.times(Characteristic.correction(characteristic, "C")))
@@ -364,7 +359,7 @@ class PokemonForBattle(
     fun calcSpecialDefenseValue(): Double {
         val sd = if (side == PartyInBattle.MY_SIDE) {
             individual.calcSpecialDefense(mega)
-        }else{
+        } else {
             individual.calcSpecialDefense(specialDefenseEffortValue, mega)
         }
         return Math.floor(sd.times(Characteristic.correction(characteristic, "D")))
@@ -769,7 +764,7 @@ class PokemonForBattle(
         return false
     }
 
-    fun speedValues(allField: BattleField): Array<Int> {
+    fun speedValues(allField: BattleField, field: MutableSet<BattleField.Field>): Array<Int> {
         val values = individual.master.speedValues()
 
         for (i in values.indices) {
@@ -795,7 +790,7 @@ class PokemonForBattle(
     }
 
     fun ability(): String {
-        return when(side){
+        return when (side) {
             PartyInBattle.MY_SIDE -> individual.ability(mega)
             else -> ability
         }

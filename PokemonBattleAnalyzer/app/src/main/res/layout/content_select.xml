@@ -14,7 +14,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,11 +25,11 @@
                 android:id="@+id/status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:stretchColumns="0,1" >
+                android:stretchColumns="0,1">
 
                 <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -44,23 +44,25 @@
 
                 <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <LinearLayout
                         android:id="@+id/selected"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"/>
+                        android:orientation="horizontal" />
+
                     <LinearLayout
                         android:id="@+id/opponent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                        android:orientation="vertical" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
+
                     <TableLayout
                         android:id="@+id/my_party"
                         android:layout_width="match_parent"
@@ -68,55 +70,21 @@
 
                         <TableRow
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" >
-                            <FrameLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/my_party1" />
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/selected_party1" />
-
-                            </FrameLayout>
-                            <FrameLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/my_party2" />
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/selected_party2" />
-
-                            </FrameLayout>
-                        </TableRow>
-                        <TableRow
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content">
 
                             <FrameLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 
                                 <ImageView
+                                    android:id="@+id/my_party1"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/my_party3" />
+                                    android:layout_height="wrap_content" />
 
                                 <ImageView
+                                    android:id="@+id/selected_party1"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/selected_party3" />
+                                    android:layout_height="wrap_content" />
 
                             </FrameLayout>
 
@@ -125,49 +93,88 @@
                                 android:layout_height="wrap_content">
 
                                 <ImageView
+                                    android:id="@+id/my_party2"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/my_party4" />
+                                    android:layout_height="wrap_content" />
 
                                 <ImageView
+                                    android:id="@+id/selected_party2"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/selected_party4" />
+                                    android:layout_height="wrap_content" />
 
                             </FrameLayout>
                         </TableRow>
+
                         <TableRow
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content">
 
                             <FrameLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 
                                 <ImageView
+                                    android:id="@+id/my_party3"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/my_party5" />
+                                    android:layout_height="wrap_content" />
 
                                 <ImageView
+                                    android:id="@+id/selected_party3"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/selected_party5" />
+                                    android:layout_height="wrap_content" />
 
                             </FrameLayout>
+
                             <FrameLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 
                                 <ImageView
+                                    android:id="@+id/my_party4"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/my_party6" />
+                                    android:layout_height="wrap_content" />
 
                                 <ImageView
+                                    android:id="@+id/selected_party4"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/selected_party6" />
+                                    android:layout_height="wrap_content" />
+
+                            </FrameLayout>
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <FrameLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/my_party5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+
+                                <ImageView
+                                    android:id="@+id/selected_party5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+
+                            </FrameLayout>
+
+                            <FrameLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/my_party6"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+
+                                <ImageView
+                                    android:id="@+id/selected_party6"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
 
                             </FrameLayout>
                         </TableRow>
@@ -180,49 +187,57 @@
 
                         <TableRow
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content">
 
                             <ImageView
+                                android:id="@+id/opponent_party1"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/opponent_party1" />
+                                android:layout_height="wrap_content" />
 
                             <ImageView
+                                android:id="@+id/opponent_party2"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/opponent_party2" />
+                                android:layout_height="wrap_content" />
                         </TableRow>
+
                         <TableRow
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content">
 
                             <ImageView
+                                android:id="@+id/opponent_party3"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/opponent_party3" />
+                                android:layout_height="wrap_content" />
 
                             <ImageView
+                                android:id="@+id/opponent_party4"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/opponent_party4" />
+                                android:layout_height="wrap_content" />
                         </TableRow>
+
                         <TableRow
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content">
 
                             <ImageView
+                                android:id="@+id/opponent_party5"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/opponent_party5" />
+                                android:layout_height="wrap_content" />
 
                             <ImageView
+                                android:id="@+id/opponent_party6"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/opponent_party6" />
+                                android:layout_height="wrap_content" />
                         </TableRow>
                     </TableLayout>
                 </TableRow>
             </TableLayout>
+
+            <LinearLayout
+                android:id="@+id/warning_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
         </LinearLayout>
     </ScrollView>
 

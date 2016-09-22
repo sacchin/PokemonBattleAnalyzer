@@ -58,6 +58,35 @@
     <string name="expected_activity_covering">網羅率</string>
     <string name="expected_activity_order">行動順</string>
     <string name="expected_activity_priority">先制技</string>
+
+    <string name="expected_activity_weather_sunny">晴</string>
+    <string name="expected_activity_weather_rainy">雨</string>
+    <string name="expected_activity_weather_sandstorm">砂嵐</string>
+    <string name="expected_activity_weather_hailstone">霰</string>
+
+    <string name="expected_activity_room_trick">トリック</string>
+    <string name="expected_activity_room_magic">マジック</string>
+    <string name="expected_activity_room_wander">ワンダー</string>
+
+    <string name="expected_activity_terrain_electric">エレキ</string>
+    <string name="expected_activity_terrain_grass">グラス</string>
+    <string name="expected_activity_terrain_misty">ミスト</string>
+
+    <string name="expected_activity_field_lightScreen">光壁</string>
+    <string name="expected_activity_field_reflect">物壁</string>
+    <string name="expected_activity_field_tailwind">追風</string>
+    <string name="expected_activity_field_stealthRock">隠岩</string>
+    <string name="expected_activity_field_safeGuard">神秘</string>
+    <string name="expected_activity_field_gravity">重力</string>
+    <string name="expected_activity_field_matBlock">畳返</string>
+    <string name="expected_activity_field_spike">撒菱</string>
+    <string name="expected_activity_field_toxicSpike">毒菱</string>
+    <string name="expected_activity_field_stickyWeb">蜘巣</string>
+    <string name="expected_activity_field_mud">泥遊</string>
+    <string name="expected_activity_field_water">水遊</string>
+    <string name="expected_activity_field_luckyChant">急所</string>
+    <string name="expected_activity_field_mist">白霧</string>
+
     <string name="title_activity_login">Sign in</string>
 
     <string name="detail_activity_base">Base Status</string>

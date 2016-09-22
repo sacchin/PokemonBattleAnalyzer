@@ -2,20 +2,26 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.activity
 
 import android.app.ActivityOptions
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.util.Log
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.CompoundButton
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
-import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import kotlinx.android.synthetic.main.activity_expected.*
 import org.jetbrains.anko.backgroundColor
 import kotlin.properties.Delegates
@@ -26,6 +32,7 @@ class ExpectedActivity : PGLActivity() {
     var util: Util by Delegates.notNull()
     var opponent: PartyInBattle by Delegates.notNull()
     var mine: PartyInBattle by Delegates.notNull()
+    var allFeild = BattleField()
 
     init {
         util = Util()
@@ -46,7 +53,7 @@ class ExpectedActivity : PGLActivity() {
         val selectedMine = mine.apply()
 
         selectedMine.skill = selectedMine.individual.skillNo1
-        val caseOfSkill1 = BattleCalculator.getResultFirst(selectedMine, selectedOpponent, BattleField())
+        val caseOfSkill1 = BattleCalculator.getResultFirst(selectedMine, selectedOpponent, allFeild)
 
         coverRate.text = caseOfSkill1.coverRate()
         val (label, rate) = caseOfSkill1.orderResult(selectedMine, selectedOpponent)
@@ -164,6 +171,64 @@ class ExpectedActivity : PGLActivity() {
         selected_party1.setImageBitmap(temp)
         selected_oppoParty1.setImageBitmap(temp)
 
+
+        val weatherAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("-", "晴", "雨", "砂", "霰"))
+        weatherAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        weather.adapter = weatherAdapter
+        weather.onItemSelectedListener = OnWeatherSelectedListener()
+
+        val roomAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("-", "トリック", "マジック", "ワンダー"))
+        roomAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        room.adapter = roomAdapter
+        room.onItemSelectedListener = OnRoomSelectedListener()
+
+        val terrainAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("-", "エレキ", "グラス", "ミスト"))
+        terrainAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        terrain.adapter = terrainAdapter
+        terrain.onItemSelectedListener = OnTerrainSelectedListener()
+
+        my_lightScreen.setOnCheckedChangeListener(OnFieldCheckListener(1, true))
+        oppo_lightScreen.setOnCheckedChangeListener(OnFieldCheckListener(1, false))
+        my_reflect.setOnCheckedChangeListener(OnFieldCheckListener(2, true))
+        oppo_reflect.setOnCheckedChangeListener(OnFieldCheckListener(2, false))
+        my_tail.setOnCheckedChangeListener(OnFieldCheckListener(3, true))
+        oppo_tail.setOnCheckedChangeListener(OnFieldCheckListener(3, false))
+        my_stealth.setOnCheckedChangeListener(OnFieldCheckListener(4, true))
+        oppo_stealth.setOnCheckedChangeListener(OnFieldCheckListener(4, false))
+        my_safe.setOnCheckedChangeListener(OnFieldCheckListener(5, true))
+        oppo_safe.setOnCheckedChangeListener(OnFieldCheckListener(5, false))
+        my_gravity.setOnCheckedChangeListener(OnFieldCheckListener(6, true))
+        oppo_gravity.setOnCheckedChangeListener(OnFieldCheckListener(6, false))
+        my_spike.setOnCheckedChangeListener(OnFieldCheckListener(7, true))
+        oppo_spike.setOnCheckedChangeListener(OnFieldCheckListener(7, false))
+        my_toxic.setOnCheckedChangeListener(OnFieldCheckListener(8, true))
+        oppo_toxic.setOnCheckedChangeListener(OnFieldCheckListener(8, false))
+        my_mat.setOnCheckedChangeListener(OnFieldCheckListener(9, true))
+        oppo_mat.setOnCheckedChangeListener(OnFieldCheckListener(9, false))
+        my_stickyWeb.setOnCheckedChangeListener(OnFieldCheckListener(10, true))
+        oppo_stickyWeb.setOnCheckedChangeListener(OnFieldCheckListener(10, false))
+        my_mud.setOnCheckedChangeListener(OnFieldCheckListener(11, true))
+        oppo_mud.setOnCheckedChangeListener(OnFieldCheckListener(11, false))
+        my_water.setOnCheckedChangeListener(OnFieldCheckListener(12, true))
+        oppo_water.setOnCheckedChangeListener(OnFieldCheckListener(12, false))
+        my_luckyChant.setOnCheckedChangeListener(OnFieldCheckListener(13, true))
+        oppo_luckyChant.setOnCheckedChangeListener(OnFieldCheckListener(13, false))
+        my_mist.setOnCheckedChangeListener(OnFieldCheckListener(14, true))
+        oppo_mist.setOnCheckedChangeListener(OnFieldCheckListener(14, false))
+
+        open.setImageBitmap(BitmapFactory.decodeResource(resources, android.R.drawable.ic_input_add))
+        open.setOnClickListener {
+            val inAnimation = AnimationUtils.loadAnimation(this, R.anim.in_animation)
+            val outAnimation = AnimationUtils.loadAnimation(this, R.anim.out_animation)
+            if (field_container.visibility == View.GONE) {
+                inAnimation.setAnimationListener(OnAnimationListener(true))
+                field_container.startAnimation(inAnimation)
+            } else {
+                outAnimation.setAnimationListener(OnAnimationListener(false))
+                field_container.startAnimation(outAnimation)
+            }
+        }
+
         expected_fab.setOnClickListener {
 //            showProgress(true)
             showBest()
@@ -252,6 +317,71 @@ class ExpectedActivity : PGLActivity() {
         }
     }
 
+    inner class OnFieldCheckListener(val index: Int, val isMine: Boolean) : CompoundButton.OnCheckedChangeListener {
+        override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
+            val party = if (isMine) mine else opponent
+            when (index) {
+                1 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.LightScreen)
+                2 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.Reflect)
+                3 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.Tailwind)
+                4 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.StealthRock)
+                5 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.Safeguard)
+                6 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.Gravity)
+                7 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.Spikes)
+                8 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.ToxicSpikes)
+                9 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.MatBlock)
+                10 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.StickyWeb)
+                11 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.MudSport)
+                12 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.WaterSport)
+                13 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.LuckyChant)
+                14 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.Mist)
+                else -> Log.e("OnFieldCheckListener", "UNKNOWN")
+            }
+        }
+    }
+
+    inner class OnWeatherSelectedListener() : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            when (position) {
+                1 -> allFeild.weather = BattleField.Weather.Sunny
+                2 -> allFeild.weather = BattleField.Weather.Rainy
+                3 -> allFeild.weather = BattleField.Weather.Sandstorm
+                4 -> allFeild.weather = BattleField.Weather.Hailstone
+                else -> allFeild.weather = BattleField.Weather.Unknown
+            }
+        }
+    }
+
+    inner class OnRoomSelectedListener() : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            when (position) {
+                1 -> allFeild.room = BattleField.Room.Trick
+                2 -> allFeild.room = BattleField.Room.Magic
+                3 -> allFeild.room = BattleField.Room.Wander
+                else -> allFeild.room = BattleField.Room.Unknown
+            }
+        }
+    }
+
+    inner class OnTerrainSelectedListener() : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            when (position) {
+                1 -> allFeild.terrain = BattleField.Terrain.ElectricTerrain
+                2 -> allFeild.terrain = BattleField.Terrain.GrassyTerrain
+                3 -> allFeild.terrain = BattleField.Terrain.MistyTerrain
+                else -> allFeild.terrain = BattleField.Terrain.Unknown
+            }
+        }
+    }
 
 //    fun showProgress(show: Boolean) {
 //        val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime)
@@ -328,4 +458,26 @@ class ExpectedActivity : PGLActivity() {
 
         chart1.animateY(2000)
     }
+
+
+    inner class OnAnimationListener(val isOpen: Boolean) : Animation.AnimationListener {
+        override fun onAnimationRepeat(p0: Animation?) {
+        }
+
+        override fun onAnimationEnd(p0: Animation?) {
+            if (isOpen) {
+                field_container.visibility = View.VISIBLE
+                open.setImageBitmap(BitmapFactory.decodeResource(resources, android.R.drawable.ic_input_delete))
+            } else {
+                field_container.visibility = View.GONE
+                open.setImageBitmap(BitmapFactory.decodeResource(resources, android.R.drawable.ic_input_add))
+
+            }
+        }
+
+        override fun onAnimationStart(p0: Animation?) {
+        }
+    }
+
+
 }

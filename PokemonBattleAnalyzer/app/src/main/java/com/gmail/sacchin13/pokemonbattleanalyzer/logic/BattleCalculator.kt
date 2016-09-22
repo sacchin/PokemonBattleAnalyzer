@@ -448,12 +448,12 @@ class BattleCalculator {
         fun calcDamageCorrection(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, isCritical: Boolean): Double {
             var initValue = 4096.0
 
-            if (attackSide.skill.category == 0 && defenseSide.field.contains(BattleField.Field.Reflect)) {
-                initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-            }
-            if (attackSide.skill.category == 1 && defenseSide.field.contains(BattleField.Field.LightScreen)) {
-                initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-            }
+//            if (attackSide.skill.category == 0 && defenseSide.field.contains(BattleField.Field.Reflect)) {
+//                initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+//            }
+//            if (attackSide.skill.category == 1 && defenseSide.field.contains(BattleField.Field.LightScreen)) {
+//                initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+//            }
             if (defenseSide.hpRatio == 100 && defenseSide.ability().equals("マルチスケイル")) {
                 initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
             }

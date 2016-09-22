@@ -6,6 +6,7 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.RealmResults
 import io.realm.Sort
 import java.util.*
 import kotlin.properties.Delegates
@@ -56,6 +57,14 @@ class DatabaseHelper(context: Context) {
 
     fun selectPokemonMasterData(pokemonNo: String?): PokemonMasterData {
         val pokemon = realm.where(PokemonMasterData().javaClass).equalTo("no", pokemonNo).findFirst()
+        if (pokemon != null) {
+            return pokemon
+        }
+        return realm.where(PokemonMasterData().javaClass).equalTo("no", "000").findFirst()
+    }
+
+    fun selectPokemonByName(pokemonName: String): PokemonMasterData {
+        val pokemon = realm.where(PokemonMasterData().javaClass).equalTo("jname", pokemonName).findFirst()
         if (pokemon != null) {
             return pokemon
         }
@@ -149,6 +158,30 @@ class DatabaseHelper(context: Context) {
         }
     }
 
+    fun insertConstruction(name: String, type: Construction.Type, list: Array<String>, advantage: Array<String>, warning: String) {
+        realm.executeTransaction {
+
+            val construction = realm.createObject(Construction::class.java)
+            for (pokemonName in list) {
+                val pokemon = selectPokemonByName(pokemonName)
+                construction.list.add(pokemon)
+            }
+
+            for (pokemonName in advantage) {
+                val pokemon = selectPokemonByName(pokemonName)
+                construction.advantage.add(pokemon)
+            }
+
+            construction.type = Construction.no(type)
+            construction.name = name
+            construction.warning = warning
+        }
+    }
+
+    fun selectConstruction(): RealmResults<Construction> {
+        return realm.where(Construction().javaClass).findAll()
+    }
+
     fun selectSkillByName(name: String): Skill {
         return realm.where(Skill().javaClass).equalTo("jname", name).findFirst()
     }
@@ -230,7 +263,7 @@ class DatabaseHelper(context: Context) {
         return list
     }
 
-    fun updateMyParty(){
+    fun updateMyParty() {
         realm.executeTransaction {
             val inserted = selectParty("mine")
             val skill = selectAllSkill()
