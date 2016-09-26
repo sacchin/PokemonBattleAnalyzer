@@ -120,7 +120,7 @@ class DatabaseHelper(context: Context) {
         }
     }
 
-    fun insertMegaPokemonDataX(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, weight: Float) {
+    fun insertMegaPokemonDataX(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, type1:Int, type2: Int, ability: String, weight: Float) {
         realm.executeTransaction {
             val megaPokemon = realm.createObject(MegaPokemonMasterData::class.java)
             megaPokemon.pokemonNo = no
@@ -130,6 +130,8 @@ class DatabaseHelper(context: Context) {
             megaPokemon.c = c
             megaPokemon.d = d
             megaPokemon.s = s
+            megaPokemon.type1 = type1
+            megaPokemon.type2 = type2
             megaPokemon.ability = ability
             megaPokemon.weight = weight
             megaPokemon.megaType = MegaPokemonMasterData.MEGA_X
@@ -139,7 +141,11 @@ class DatabaseHelper(context: Context) {
         }
     }
 
-    fun insertMegaPokemonDataY(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, weight: Float) {
+    fun insertMegaPokemonDataX(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, weight: Float) {
+        insertMegaPokemonDataX(no, h, a, b, c, d, s, Type.no(Type.Code.UNKNOWN), Type.no(Type.Code.UNKNOWN), ability, weight)
+    }
+
+    fun insertMegaPokemonDataY(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, type1:Int, type2: Int, ability: String, weight: Float) {
         realm.executeTransaction {
             val megaPokemon = realm.createObject(MegaPokemonMasterData::class.java)
             megaPokemon.pokemonNo = no
@@ -149,6 +155,8 @@ class DatabaseHelper(context: Context) {
             megaPokemon.c = c
             megaPokemon.d = d
             megaPokemon.s = s
+            megaPokemon.type1 = type1
+            megaPokemon.type2 = type2
             megaPokemon.ability = ability
             megaPokemon.weight = weight
             megaPokemon.megaType = MegaPokemonMasterData.MEGA_Y
@@ -156,6 +164,10 @@ class DatabaseHelper(context: Context) {
             val master = selectPokemonMasterData(no)
             master.megay = megaPokemon
         }
+    }
+
+    fun insertMegaPokemonDataY(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, weight: Float) {
+        insertMegaPokemonDataY(no, h, a, b, c, d, s, Type.no(Type.Code.UNKNOWN), Type.no(Type.Code.UNKNOWN), ability, weight)
     }
 
     fun insertConstruction(name: String, type: Construction.Type, list: Array<String>, advantage: Array<String>, warning: String) {

@@ -55,125 +55,38 @@ public open class PokemonMasterData(
         }
     }
 
-    fun hp(iv: Int, ev: Int): Int {
-        val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-        return (h * 2 + iv + effort / 4) / 2 + 60
+    private fun hpFormula(bs: Int, iv: Int, ev: Int): Int{
+        val baseStat = if(bs < 0) 1 else bs
+        val effort = if(ev < 0 || 252 < ev) 0 else ev
+        val individual = if(iv < 0 || 31 < iv) 0 else iv
+        return (baseStat * 2 + individual + effort / 4) / 2 + 60
     }
 
-    fun hpX(iv: Int, ev: Int): Int {
-        if(megax!= null){
-            val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-            return (megax!!.h * 2 + iv + effort / 4) / 2 + 60
-        }else{
-            return hp(iv, ev)
-        }
+    private fun otherFormula(bs: Int, iv: Int, ev: Int): Int {
+        val baseStat = if(bs < 0) 1 else bs
+        val effort = if(ev < 0 || 252 < ev) 0 else ev
+        val individual = if(iv < 0 || 31 < iv) 0 else iv
+        return ((baseStat * 2 + individual + effort / 4) / 2 + 5).toInt()
     }
 
-    fun hpY(iv: Int, ev: Int): Int {
-        if(megay!= null){
-            val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-            return (megay!!.h * 2 + iv + effort / 4) / 2 + 60
-        }else{
-            return hp(iv, ev)
-        }
-    }
-
-    fun attack(iv: Int, ev: Int): Int {
-        val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-        return ((a * 2 + iv + effort / 4) / 2 + 5).toInt()
-    }
-
-    fun attackX(iv: Int, ev: Int): Int {
-        if(megax!= null) {
-            val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-            return ((megax!!.a * 2 + iv + effort / 4) / 2 + 5).toInt()
-        } else {
-            return attack(iv, ev)
-        }
-    }
-
-    fun attackY(iv: Int, ev: Int): Int {
-        if(megay!= null) {
-            val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-            return ((megay!!.a * 2 + iv + effort / 4) / 2 + 5).toInt()
-        } else {
-            return attack(iv, ev)
-        }
-    }
-
-    fun defense(iv: Int, ev: Int): Int {
-        val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-        return ((b * 2 + iv + effort / 4) / 2 + 5).toInt()
-    }
-
-    fun defenseX(iv: Int, ev: Int): Int {
-        if(megax!= null) {
-            val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-            return ((megax!!.b * 2 + iv + effort / 4) / 2 + 5).toInt()
-        } else {
-            return defense(iv, ev)
-        }
-    }
-
-    fun defenseY(iv: Int, ev: Int): Int {
-        if(megay!= null) {
-            val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-            return ((megay!!.b * 2 + iv + effort / 4) / 2 + 5).toInt()
-        } else {
-            return defense(iv, ev)
-        }
-    }
-
-    fun specialAttack(iv: Int, ev: Int): Int {
-        val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-        return ((c * 2 + iv + effort / 4) / 2 + 5).toInt()
-    }
-
-    fun specialAttackX(iv: Int, ev: Int): Int {
-        if(megax!= null) {
-            val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-            return ((megax!!.c * 2 + iv + effort / 4) / 2 + 5).toInt()
-        }else{
-            return specialAttack(iv, ev)
-        }
-    }
-
-    fun specialAttackY(iv: Int, ev: Int): Int {
-        if(megay!= null) {
-            val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-            return ((megay!!.c * 2 + iv + effort / 4) / 2 + 5).toInt()
-        }else{
-            return specialAttack(iv, ev)
-        }
-    }
-
-    fun specialDefense(iv: Int, ev: Int): Int {
-        val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-        return ((d * 2 + iv + effort / 4) / 2 + 5).toInt()
-    }
-
-    fun specialDefenseX(iv: Int, ev: Int): Int {
-        if(megax!= null) {
-            val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-            return ((megax!!.d * 2 + iv + effort / 4) / 2 + 5).toInt()
-        }else{
-            return specialDefense(iv, ev)
-        }
-    }
-
-    fun specialDefenseY(iv: Int, ev: Int): Int {
-        if(megay!= null) {
-            val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-            return ((megay!!.d * 2 + iv + effort / 4) / 2 + 5).toInt()
-        }else{
-            return specialDefense(iv, ev)
-        }
-    }
-
-    fun speed(iv: Int, ev: Int): Int {
-        val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-        return ((s * 2 + iv + effort / 4) / 2 + 5).toInt()
-    }
+    fun hp(iv: Int, ev: Int): Int = hpFormula(h, iv, ev)
+    fun hpX(iv: Int, ev: Int): Int = if(megax != null) hpFormula(megax!!.h, iv, ev) else hp(iv, ev)
+    fun hpY(iv: Int, ev: Int): Int = if(megay != null) hpFormula(megay!!.h, iv, ev) else hp(iv, ev)
+    fun attack(iv: Int, ev: Int): Int = otherFormula(a, iv, ev)
+    fun attackX(iv: Int, ev: Int): Int = if(megax != null) otherFormula(megax!!.a, iv, ev) else attack(iv, ev)
+    fun attackY(iv: Int, ev: Int): Int = if(megay != null) otherFormula(megay!!.a, iv, ev) else attack(iv, ev)
+    fun defense(iv: Int, ev: Int): Int = otherFormula(b, iv, ev)
+    fun defenseX(iv: Int, ev: Int): Int = if(megax != null) otherFormula(megax!!.b, iv, ev) else defense(iv, ev)
+    fun defenseY(iv: Int, ev: Int): Int = if(megay != null) otherFormula(megay!!.b, iv, ev) else defense(iv, ev)
+    fun specialAttack(iv: Int, ev: Int): Int = otherFormula(c, iv, ev)
+    fun specialAttackX(iv: Int, ev: Int): Int = if(megax != null) otherFormula(megax!!.c, iv, ev) else specialAttack(iv, ev)
+    fun specialAttackY(iv: Int, ev: Int): Int = if(megay != null) otherFormula(megay!!.c, iv, ev) else specialAttack(iv, ev)
+    fun specialDefense(iv: Int, ev: Int): Int = otherFormula(d, iv, ev)
+    fun specialDefenseX(iv: Int, ev: Int): Int = if(megax != null) otherFormula(megax!!.d, iv, ev) else specialDefense(iv, ev)
+    fun specialDefenseY(iv: Int, ev: Int): Int = if(megay != null) otherFormula(megay!!.d, iv, ev) else specialDefense(iv, ev)
+    fun speed(iv: Int, ev: Int): Int = otherFormula(s, iv, ev)
+    fun speedX(iv: Int, ev: Int): Int = if(megax != null) otherFormula(megax!!.s, iv, ev) else speed(iv, ev)
+    fun speedY(iv: Int, ev: Int): Int = if(megay != null) otherFormula(megay!!.s, iv, ev) else speed(iv, ev)
 
     fun speedValues(): Array<Int>{
         if(cacheSpeedValues.isEmpty()){
@@ -194,27 +107,8 @@ public open class PokemonMasterData(
         return cacheSpeedValues
     }
 
-    fun speedX(iv: Int, ev: Int): Int {
-        if(megax!= null) {
-            val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-            return ((megax!!.s * 2 + iv + effort / 4) / 2 + 5).toInt()
-        }else{
-            return speed(iv, ev)
-        }
-    }
-
-    fun speedY(iv: Int, ev: Int): Int {
-        if(megay!= null) {
-            val effort = if(ev == IndividualPokemon.UNKNOWN) 252 else ev
-            return ((megay!!.s * 2 + iv + effort / 4) / 2 + 5).toInt()
-        }else{
-            return speed(iv, ev)
-        }
-    }
-
     fun battling(): Array<String>{
         val result = mutableListOf("-")
-
         if(megax != null) result.add(
                 when(no){
                 "555" -> "D"

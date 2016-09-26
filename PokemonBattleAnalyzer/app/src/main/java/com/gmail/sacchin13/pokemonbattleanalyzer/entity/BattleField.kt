@@ -4,7 +4,9 @@ class BattleField(
         var weather: Weather = BattleField.Weather.Unknown,
         var room: Room = BattleField.Room.Unknown,
         var terrain: Terrain = BattleField.Terrain.Unknown,
-        var field: MutableList<Field> = mutableListOf()
+        var field: MutableList<Field> = mutableListOf(),
+        var attackSide: MutableList<Field> = mutableListOf(),
+        var defenseSide: MutableList<Field> = mutableListOf()
     ){
 
     enum class Weather {
@@ -23,30 +25,39 @@ class BattleField(
         MudSport, WaterSport, Gravity, Tailwind, LuckyChant, Mist, Safeguard, StealthRock, MatBlock, ToxicSpikes, StickyWeb, LightScreen, Spikes, Reflect, Unknown
     }
 
+    fun resetAttackSide(side: MutableSet<Field>){
+        attackSide.clear()
+        attackSide.addAll(side)
+    }
+
+    fun resetDefenseSide(side: MutableSet<Field>){
+        defenseSide.clear()
+        defenseSide.addAll(side)
+    }
+
     fun update(attackSide: PokemonForBattle, defenseSide: PokemonForBattle){
-        if(attackSide.skill.jname.equals("あまごい")) weather = Weather.Rainy
-        if(attackSide.skill.jname.equals("あられ")) weather = Weather.Hailstone
-        if(attackSide.skill.jname.equals("にほんばれ")) weather = Weather.Sunny
-        if(attackSide.skill.jname.equals("すなあらし")) weather = Weather.Sandstorm
-
-        if(attackSide.skill.jname.equals("トリックルーム")) {
-            if(room == Room.Trick) room = Room.Unknown else room = Room.Trick
-        }
-        if(attackSide.skill.jname.equals("マジックルーム")) {
-            if(room == Room.Magic) room = Room.Unknown else room = Room.Magic
-        }
-        if(attackSide.skill.jname.equals("ワンダールーム")) {
-            if(room == Room.Wander) room = Room.Unknown else room = Room.Wander
-        }
-
-        if(attackSide.skill.jname.equals("エレキフィールド")) terrain = Terrain.ElectricTerrain
-        if(attackSide.skill.jname.equals("グラスフィールド")) terrain = Terrain.GrassyTerrain
-        if(attackSide.skill.jname.equals("ミストフィールド")) terrain = Terrain.MistyTerrain
-
-        if(attackSide.skill.jname.equals("どろあそび")) field.add(Field.MudSport)
-        if(attackSide.skill.jname.equals("みずあそび")) field.add(Field.WaterSport)
-        if(attackSide.skill.jname.equals("じゅうりょく")) field.add(Field.Gravity)
-
+//        if(attackSide.skill.jname.equals("あまごい")) weather = Weather.Rainy
+//        if(attackSide.skill.jname.equals("あられ")) weather = Weather.Hailstone
+//        if(attackSide.skill.jname.equals("にほんばれ")) weather = Weather.Sunny
+//        if(attackSide.skill.jname.equals("すなあらし")) weather = Weather.Sandstorm
+//
+//        if(attackSide.skill.jname.equals("トリックルーム")) {
+//            if(room == Room.Trick) room = Room.Unknown else room = Room.Trick
+//        }
+//        if(attackSide.skill.jname.equals("マジックルーム")) {
+//            if(room == Room.Magic) room = Room.Unknown else room = Room.Magic
+//        }
+//        if(attackSide.skill.jname.equals("ワンダールーム")) {
+//            if(room == Room.Wander) room = Room.Unknown else room = Room.Wander
+//        }
+//
+//        if(attackSide.skill.jname.equals("エレキフィールド")) terrain = Terrain.ElectricTerrain
+//        if(attackSide.skill.jname.equals("グラスフィールド")) terrain = Terrain.GrassyTerrain
+//        if(attackSide.skill.jname.equals("ミストフィールド")) terrain = Terrain.MistyTerrain
+//
+//        if(attackSide.skill.jname.equals("どろあそび")) field.add(Field.MudSport)
+//        if(attackSide.skill.jname.equals("みずあそび")) field.add(Field.WaterSport)
+//        if(attackSide.skill.jname.equals("じゅうりょく")) field.add(Field.Gravity)
 //        if(attackSide.skill.jname.equals("まきびし")) defenseSide.field.add(BattleField.Field.Spikes)
 //        if(attackSide.skill.jname.equals("どくびし")) defenseSide.field.add(BattleField.Field.ToxicSpikes)
 //        if(attackSide.skill.jname.equals("ステルスロック")) defenseSide.field.add(BattleField.Field.StealthRock)

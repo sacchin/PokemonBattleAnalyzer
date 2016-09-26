@@ -10,6 +10,8 @@ public open class MegaPokemonMasterData (
     public open var c: Int = 0,
     public open var d: Int = 0,
     public open var s: Int = 0,
+    public open var type1: Int = -1,
+    public open var type2: Int = -1,
     public open var weight: Float = 0f,
     public open var ability: String = "",
     public open var megaType: Int = MEGA_X
@@ -20,9 +22,9 @@ public open class MegaPokemonMasterData (
         const val MEGA_X = 1
         const val MEGA_Y = 2
 
-        fun create(pokemonNo: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int,
+        fun create(pokemonNo: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, type1: Int, type2: Int,
                    weight: Float, ability: String, megaType: Int): MegaPokemonMasterData{
-            return MegaPokemonMasterData(pokemonNo, h, a, b, c, d, s, weight, ability, megaType)
+            return MegaPokemonMasterData(pokemonNo, h, a, b, c, d, s, type1, type2, weight, ability, megaType)
         }
     }
 }

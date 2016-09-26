@@ -49,7 +49,7 @@ public open class IndividualPokemon(
         return when (megaType) {
             MegaPokemonMasterData.MEGA_X -> master.hpX(hpIv, ev)
             MegaPokemonMasterData.MEGA_Y -> master.hpY(hpIv, ev)
-            else -> master.hp(31, ev)
+            else -> master.hp(hpIv, ev)
         }
     }
 
@@ -57,7 +57,7 @@ public open class IndividualPokemon(
         return when (megaType) {
             MegaPokemonMasterData.MEGA_X -> master.attackX(attackIv, ev)
             MegaPokemonMasterData.MEGA_Y -> master.attackY(attackIv, ev)
-            else -> master.attack(31, ev)
+            else -> master.attack(attackIv, ev)
         }
     }
 
@@ -65,7 +65,7 @@ public open class IndividualPokemon(
         return when (megaType) {
             MegaPokemonMasterData.MEGA_X -> master.defenseX(defenseIv, ev)
             MegaPokemonMasterData.MEGA_Y -> master.defenseY(defenseIv, ev)
-            else -> master.defense(31, ev)
+            else -> master.defense(defenseIv, ev)
         }
     }
 
@@ -73,7 +73,7 @@ public open class IndividualPokemon(
         return when (megaType) {
             MegaPokemonMasterData.MEGA_X -> master.specialAttackX(specialAttackIv, ev)
             MegaPokemonMasterData.MEGA_Y -> master.specialAttackY(specialAttackIv, ev)
-            else -> master.specialAttack(31, ev)
+            else -> master.specialAttack(specialAttackIv, ev)
         }
     }
 
@@ -81,7 +81,7 @@ public open class IndividualPokemon(
         return when (megaType) {
             MegaPokemonMasterData.MEGA_X -> master.specialDefenseX(specialDefenseIv, ev)
             MegaPokemonMasterData.MEGA_Y -> master.specialDefenseY(specialDefenseIv, ev)
-            else -> master.specialDefense(31, ev)
+            else -> master.specialDefense(specialDefenseIv, ev)
         }
     }
 
@@ -89,7 +89,7 @@ public open class IndividualPokemon(
         return when (megaType) {
             MegaPokemonMasterData.MEGA_X -> master.speedX(speedIv, ev)
             MegaPokemonMasterData.MEGA_Y -> master.speedY(speedIv, ev)
-            else -> master.speed(31, ev)
+            else -> master.speed(speedIv, ev)
         }
     }
 
@@ -106,15 +106,44 @@ public open class IndividualPokemon(
             return temp
         }
 
-    fun typeScale(type: Type.Code, megaType: Int): Double {
-        val scale = Type.calculateAffinity(type, master)
-        if (scale < 1) {
+    fun typeScale(type: Type.Code, megaType: Int, katayaburi: Boolean): Double {
+        var type1 = 0
+        var type2 = 0
+        when(megaType){
+            MegaPokemonMasterData.MEGA_X -> {
+                if(master.megax == null || (master.megax!!.type1 == -1 && master.megax!!.type2 == -1)){
+                    type1 = master.type1
+                    type2 = master.type2
+                }else{
+                    type1 = master.megax!!.type1
+                    type2 = master.megax!!.type2
+                }
+            }
+            MegaPokemonMasterData.MEGA_Y -> {
+                if(master.megay == null || (master.megay!!.type1 == -1 && master.megay!!.type2 == -1)){
+                    type1 = master.type1
+                    type2 = master.type2
+                }else{
+                    type1 = master.megay!!.type1
+                    type2 = master.megay!!.type2
+                }
+            }
+            else -> {
+                type1 = master.type1
+                type2 = master.type2
+            }
+        }
+
+        val scale = Type.calculateAffinity(type, Type.code(type1), Type.code(type2))
+        if (scale < 0.1) {
             return 0.0
         }
 
-        val scaleByAbility = Ability.calcTypeScale(ability(megaType), type)
-        if (scaleByAbility < 1) {
-            return 0.0
+        if(katayaburi.not()) {
+            val scaleByAbility = Ability.calcTypeScale(ability(megaType), type)
+            if (scaleByAbility < 0.1) {
+                return 0.0
+            }
         }
 
         return scale

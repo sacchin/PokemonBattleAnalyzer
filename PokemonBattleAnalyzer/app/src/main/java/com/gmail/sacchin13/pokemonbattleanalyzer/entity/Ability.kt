@@ -5,7 +5,11 @@ import org.json.JSONObject
 
 import java.util.HashMap
 
-class Ability(val ranking: Int = 0, val usageRate: Double = 0.0, val name: String = "", val sequenceNumber: Int = 0) {
+class Ability(val ranking: Int = 0,
+              val usageRate: Double = 0.0,
+              val name: String = "", val
+              sequenceNumber: Int = 0
+) {
 
     companion object {
         private var invalidAbility: MutableMap<Type.Code, Array<String>> = HashMap<Type.Code, Array<String>>()
@@ -39,10 +43,10 @@ class Ability(val ranking: Int = 0, val usageRate: Double = 0.0, val name: Strin
         }
 
         fun calcTypeScale(ability: String, type: Type.Code): Double {
-            val list: Array<String>? = invalidAbility[type]
-            if (list != null && list.contains(ability)) return 0.0
+            val list: Array<String> = invalidAbility[type] ?: arrayOf("")
+            if (list.contains(ability)) return 0.0
 
-            if ("ふしぎなまもり".equals(ability)) {
+            if ("ふしぎなまもり" == ability) {
                 if (type === Type.Code.FIRE || type === Type.Code.GHOST || type === Type.Code.FLYING ||
                         type === Type.Code.ROCK || type === Type.Code.DARK) {
                     return  2.0

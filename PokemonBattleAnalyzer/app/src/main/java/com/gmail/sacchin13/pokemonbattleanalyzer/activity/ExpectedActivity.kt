@@ -53,6 +53,8 @@ class ExpectedActivity : PGLActivity() {
         val selectedMine = mine.apply()
 
         selectedMine.skill = selectedMine.individual.skillNo1
+        allFeild.resetAttackSide(mine.field)
+        allFeild.resetDefenseSide(opponent.field)
         val caseOfSkill1 = BattleCalculator.getResultFirst(selectedMine, selectedOpponent, allFeild)
 
         coverRate.text = caseOfSkill1.coverRate()

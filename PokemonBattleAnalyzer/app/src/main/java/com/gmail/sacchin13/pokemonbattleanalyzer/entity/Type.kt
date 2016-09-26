@@ -124,19 +124,19 @@ object Type {
         return Code.values()
     }
 
-    fun calculateAffinity(attackType: Code, p: PokemonMasterData): Double {
-        if (attackType.equals(Type.Code.UNKNOWN)) return -1.0
+    fun calculateAffinity(attackType: Code, defenseType1: Code, defenseType2: Code): Double {
+        if (attackType == Type.Code.UNKNOWN || (defenseType1 == Code.UNKNOWN && defenseType2 == Code.UNKNOWN)) return -1.0
 
         val attackNo = no(attackType)
-        val type1 = Type.code(p.type1)
-        val type2 = Type.code(p.type2)
+        val type1 = Type.no(defenseType1)
+        val type2 = Type.no(defenseType2)
 
-        if (type1 != Code.UNKNOWN && type2 == Code.UNKNOWN) {
-            return AFFINITY_TABLE[attackNo][p.type1].toDouble()
-        } else if (type1 == Code.UNKNOWN && type2 != Code.UNKNOWN) {
-            return AFFINITY_TABLE[attackNo][p.type2].toDouble()
+        if (defenseType1 != Code.UNKNOWN && defenseType2 == Code.UNKNOWN) {
+            return AFFINITY_TABLE[attackNo][type1].toDouble()
+        } else if (defenseType1 == Code.UNKNOWN && defenseType2 != Code.UNKNOWN) {
+            return AFFINITY_TABLE[attackNo][type2].toDouble()
         } else {
-            return AFFINITY_TABLE[attackNo][p.type1].times(AFFINITY_TABLE[attackNo][p.type2]).toDouble()
+            return AFFINITY_TABLE[attackNo][type1].times(AFFINITY_TABLE[attackNo][type2]).toDouble()
         }
     }
 }

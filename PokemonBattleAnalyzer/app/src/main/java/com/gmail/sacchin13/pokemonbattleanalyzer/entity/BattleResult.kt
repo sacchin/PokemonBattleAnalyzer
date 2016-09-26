@@ -17,6 +17,8 @@ class BattleResult {
 
     var defeatedTimes = mutableMapOf<String, MutableMap<Int, Double>>()
 
+    var didAttack = false
+
     var defeatTimes = mutableMapOf<Int, Double>(
             1 to 0.0, 2 to 0.0, 3 to 0.0, 4 to 0.0, 5 to 0.0
     )
@@ -147,20 +149,22 @@ class BattleResult {
     }
 
     fun add(result: BattleResult) {
-        for (key in defeatTimes.keys) {
-            defeatTimes[key] = defeatTimes[key]!!.plus(result.defeatTimes[key]!!)
-        }
+        if(result.didAttack){
+            for (key in defeatTimes.keys) {
+                defeatTimes[key] = defeatTimes[key]!!.plus(result.defeatTimes[key]!!)
+            }
 
-        for (temp in result.defeatedTimes) {
-            if (defeatedTimes[temp.key] == null) {
-                defeatedTimes.put(temp.key, temp.value)
-            } else {
-                val r = defeatedTimes[temp.key] as MutableMap<Int, Double>
-                r[1] = r[1]!!.plus(temp.value[1]!!)
-                r[2] = r[2]!!.plus(temp.value[2]!!)
-                r[3] = r[3]!!.plus(temp.value[3]!!)
-                r[4] = r[4]!!.plus(temp.value[4]!!)
-                r[5] = r[5]!!.plus(temp.value[5]!!)
+            for (temp in result.defeatedTimes) {
+                if (defeatedTimes[temp.key] == null) {
+                    defeatedTimes.put(temp.key, temp.value)
+                } else {
+                    val r = defeatedTimes[temp.key] as MutableMap<Int, Double>
+                    r[1] = r[1]!!.plus(temp.value[1]!!)
+                    r[2] = r[2]!!.plus(temp.value[2]!!)
+                    r[3] = r[3]!!.plus(temp.value[3]!!)
+                    r[4] = r[4]!!.plus(temp.value[4]!!)
+                    r[5] = r[5]!!.plus(temp.value[5]!!)
+                }
             }
         }
 
@@ -175,21 +179,21 @@ class BattleResult {
         val type = Characteristic.correction(opponent.characteristic, "S").times(10).toInt()
         val label = when (type) {
             9 -> {
-                if (opponent.item.equals("こだわりスカーフ")) {
+                if (opponent.item == "こだわりスカーフ") {
                     arrayOf(5)
                 } else {
                     arrayOf(0, 1)
                 }
             }
             10 -> {
-                if (opponent.item.equals("こだわりスカーフ")) {
+                if (opponent.item == "こだわりスカーフ") {
                     arrayOf(7, 10)
                 } else {
                     arrayOf(2, 3, 6)
                 }
             }
             11 -> {
-                if (opponent.item.equals("こだわりスカーフ")) {
+                if (opponent.item == "こだわりスカーフ") {
                     arrayOf(8, 11)
                 } else {
                     arrayOf(4, 9)
@@ -222,9 +226,9 @@ class BattleResult {
                 var priority = skill.skill.priority
                 var key = skill.skill.jname
                 var rate = 1.0
-                if ((ability.name.equals("いたずらごころ") && skill.skill.category == 2) ||
-                        (ability.name.equals("はやてのつばさ") && skill.skill.type.equals(Type.no(Type.Code.FLYING))) ||
-                        (ability.name.equals("ヒーリングシフト"))) {
+                if ((ability.name == "いたずらごころ" && skill.skill.category == 2) ||
+                        (ability.name == "はやてのつばさ" && skill.skill.type == Type.no(Type.Code.FLYING)) ||
+                        (ability.name == "ヒーリングシフト")) {
                     priority += 1
                     key += ":${ability.name}(${priority})"
                     rate = ability.usageRate.toDouble()
