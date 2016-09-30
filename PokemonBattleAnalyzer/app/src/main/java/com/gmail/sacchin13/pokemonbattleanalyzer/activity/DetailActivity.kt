@@ -65,10 +65,10 @@ class DetailActivity : PGLActivity() {
 
     fun showMineStatus() {
         var p = myParty.member1
-        if (myParty.member2.master.no.split("-")[0].equals(id)) {
+        if (myParty.member2.master.no.split("-")[0] == id) {
             p = myParty.member2
         }
-        if (myParty.member3.master.no.split("-")[0].equals(id)) {
+        if (myParty.member3.master.no.split("-")[0] == id) {
             p = myParty.member3
         }
 
@@ -86,7 +86,7 @@ class DetailActivity : PGLActivity() {
                 result.tokuseiInfo.isEmpty() && result.skillList.isEmpty()) {
             Snackbar.make(base_layout, "download failed at $index", Snackbar.LENGTH_SHORT).show()
         }
-        if (opponentParty.member[index].no.split("-")[0].equals(id)) {
+        if (opponentParty.member[index].no.split("-")[0] == id) {
             Snackbar.make(base_layout, "download finish", Snackbar.LENGTH_SHORT).show()
             for (key in result.createSkillMap(util)) {
                 skilltable.addView(createTableRow(arrayOf(key.first, key.second), 0, Color.TRANSPARENT, Color.BLACK, 12))
@@ -133,8 +133,8 @@ class DetailActivity : PGLActivity() {
 
     override fun showParty() {
         var po = myParty.member[0]
-        for (p in myParty.member) if (p.no.equals(id)) po = p
-        for (p in opponentParty.member) if (p.no.equals(id)) po = p
+        for (p in myParty.member) if (p.no == id) po = p
+        for (p in opponentParty.member) if (p.no == id) po = p
 
         statusview.removeAllViews()
         createPBAPokemonStatus(po, NOT_MEGA)
@@ -196,31 +196,33 @@ class DetailActivity : PGLActivity() {
     }
 
     fun init() {
-        val statusAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
-        statusAdapter.add("状態異常")
-        statusAdapter.add("やけど")
-        statusAdapter.add("こおり")
-        statusAdapter.add("まひ")
-        statusAdapter.add("どく")
-        statusAdapter.add("もうどく")
-        statusAdapter.add("ねむり")
-        statusAdapter.add("ひんし")
+        val s = arrayOf("状態異常","やけど", "こおり", "まひ", "どく", "もうどく", "ねむり", "ひんし")
+        val statusAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, s)
+//        statusAdapter.add("状態異常")
+//        statusAdapter.add("やけど")
+//        statusAdapter.add("こおり")
+//        statusAdapter.add("まひ")
+//        statusAdapter.add("どく")
+//        statusAdapter.add("もうどく")
+//        statusAdapter.add("ねむり")
+//        statusAdapter.add("ひんし")
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        val rankAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
-        rankAdapter.add("6")
-        rankAdapter.add("5")
-        rankAdapter.add("4")
-        rankAdapter.add("3")
-        rankAdapter.add("2")
-        rankAdapter.add("1")
-        rankAdapter.add("0")
-        rankAdapter.add("-1")
-        rankAdapter.add("-2")
-        rankAdapter.add("-3")
-        rankAdapter.add("-4")
-        rankAdapter.add("-5")
-        rankAdapter.add("-6")
+        val r = arrayOf("6","5", "4", "3", "2", "1", "0", "-1", "-2", "-3", "-4", "-5", "-6")
+        val rankAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, r)
+//        rankAdapter.add("6")
+//        rankAdapter.add("5")
+//        rankAdapter.add("4")
+//        rankAdapter.add("3")
+//        rankAdapter.add("2")
+//        rankAdapter.add("1")
+//        rankAdapter.add("0")
+//        rankAdapter.add("-1")
+//        rankAdapter.add("-2")
+//        rankAdapter.add("-3")
+//        rankAdapter.add("-4")
+//        rankAdapter.add("-5")
+//        rankAdapter.add("-6")
         rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         myASpinner.adapter = rankAdapter
         myASpinner.setSelection(temp.tempAttack)
@@ -317,7 +319,6 @@ class DetailActivity : PGLActivity() {
             return false
         }
     }
-
 }
 
 

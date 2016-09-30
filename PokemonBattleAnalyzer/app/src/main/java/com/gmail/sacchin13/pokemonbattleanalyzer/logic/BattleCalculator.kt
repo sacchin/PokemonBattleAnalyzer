@@ -459,7 +459,7 @@ class BattleCalculator {
         fun calcSkillPower(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, first: Boolean, damaged: Boolean): Int {
             //first と damagedを利用して技の威力を計算するもののみ、attackSide.determineSkillPower(defenseSide)の外側で計算
             var skillPower = attackSide.determineSkillPower(defenseSide)
-            if (attackSide.skill.jname == "しっぺがえし" && !first) {
+            if ((attackSide.skill.jname == "しっぺがえし" || attackSide.ability() == "アナライズ")&& !first) {
                 skillPower = skillPower.times(2)
             }
             if (attackSide.skill.jname == "ゆきなだれ" || attackSide.skill.jname == "リベンジ" && damaged) {

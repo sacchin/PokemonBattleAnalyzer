@@ -59,7 +59,7 @@ class ExpectedActivity : PGLActivity() {
 
         coverRate.text = caseOfSkill1.coverRate()
         val (label, rate) = caseOfSkill1.orderResult(selectedMine, selectedOpponent)
-        if (label.equals("UNKNOWN") || rate < 0.1) order.text = "必ず後手" else order.text = label + "(${Util.percent(rate)})まで抜ける"
+        if (label == "UNKNOWN" || rate < 0.1) order.text = "必ず後手" else order.text = label + "(${Util.percent(rate)})まで抜ける"
         if (caseOfSkill1.prioritySkills.isEmpty()) {
             priority.text = "なし"
         } else {

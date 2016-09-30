@@ -59,10 +59,18 @@ class PokemonForBattle(
         return listOf(Info(0, 1.0f, item, 0))
     }
 
-    fun hp(): Int {
+    fun hpValue(): Int {
         when (side) {
-            0 -> return hpValue
-            1 -> return individual.calcHp(hpEffortValue, mega).times(hpRatio).div(100.0).toInt()
+            PartyInBattle.MY_SIDE -> return hpValue
+            PartyInBattle.OPPONENT_SIDE -> return individual.calcHp(hpEffortValue, mega).times(hpRatio).div(100.0).toInt()
+        }
+        return 0
+    }
+
+    fun hpRatio(): Int {
+        when (side) {
+            PartyInBattle.MY_SIDE -> return hpValue.times(100.0).div(individual.calcHp(hpEffortValue, mega)).toInt()
+            PartyInBattle.OPPONENT_SIDE -> return hpRatio
         }
         return 0
     }
@@ -490,90 +498,6 @@ class PokemonForBattle(
         return 1.0
     }
 
-    fun doesntAffect(skill: Skill): Boolean {
-        val skillType = Type.code(skill.type)
-
-        if ("ふしぎなまもり" == ability()) {
-            return if (skillType == Type.Code.FIRE ||
-                    skillType == Type.Code.GHOST ||
-                    skillType == Type.Code.FLYING ||
-                    skillType == Type.Code.ROCK ||
-                    skillType == Type.Code.DARK) false else true
-        } else if ("もらいび" == ability()) {
-            return if (skillType == Type.Code.FIRE) true else false
-        } else if ("よびみず" == ability()) {
-            return if (skillType == Type.Code.WATER) true else false
-        } else if ("ちょすい" == ability()) {
-            return if (skillType == Type.Code.WATER) true else false
-        } else if ("そうしょく" == ability()) {
-            return if (skillType == Type.Code.GRASS) true else false
-        } else if ("ふゆう" == ability()) {
-            return if (skillType == Type.Code.GROUND) true else false
-        } else if ("ちくでん" == ability()) {
-            return if (skillType == Type.Code.ELECTRIC) true else false
-        } else if ("でんきエンジン" == ability()) {
-            return if (skillType == Type.Code.ELECTRIC) true else false
-        } else if ("かんそうはだ" == ability()) {
-            return if (skillType == Type.Code.WATER) true else false
-        } else if ("ぼうおん" == ability()) {
-            return if (skill.jname == "いにしえのうた" ||
-                    skill.jname == "いびき" ||
-                    skill.jname == "いやなおと" ||
-                    skill.jname == "うたう" ||
-                    skill.jname == "エコーボイス" ||
-                    skill.jname == "おしゃべり" ||
-                    skill.jname == "おたけび" ||
-                    skill.jname == "きんぞくおん" ||
-                    skill.jname == "くさぶえ" ||
-                    skill.jname == "さわぐ" ||
-                    skill.jname == "すてゼリフ" ||
-                    skill.jname == "ダークパニック" ||
-                    skill.jname == "チャームボイス" ||
-                    skill.jname == "ちょうおんぱ" ||
-                    skill.jname == "ないしょばなし" ||
-                    skill.jname == "なきごえ" ||
-                    skill.jname == "ハイパーボイス" ||
-                    skill.jname == "バークアウト" ||
-                    skill.jname == "ばくおんぱ" ||
-                    skill.jname == "ほえる" ||
-                    skill.jname == "ほろびのうた" ||
-                    skill.jname == "むしのさざめき" ||
-                    skill.jname == "りんしょう") true else false
-        } else if ("ぼうじん" == ability()) {
-            return if (skill.jname == "ねむりごな" ||
-                    skill.jname == "しびれごな" ||
-                    skill.jname == "どくのこな" ||
-                    skill.jname == "キノコのほうし" ||
-                    skill.jname == "わたほうし" ||
-                    skill.jname == "いかりのこな" ||
-                    skill.jname == "ふんじん") true else false
-        } else if ("ぼうだん" == ability()) {
-            return if (skill.jname == "アイスボール" ||
-                    skill.jname == "アシッドボム" ||
-                    skill.jname == "ウェザーボール" ||
-                    skill.jname == "エナジーボール" ||
-                    skill.jname == "エレキボール" ||
-                    skill.jname == "オクタンほう" ||
-                    skill.jname == "かえんだん" ||
-                    skill.jname == "がんせきほう" ||
-                    skill.jname == "きあいだま" ||
-                    skill.jname == "ジャイロボール" ||
-                    skill.jname == "シャドーボール" ||
-                    skill.jname == "タネマシンガン" ||
-                    skill.jname == "タネばくだん" ||
-                    skill.jname == "タマゴばくだん" ||
-                    skill.jname == "たまなげ" ||
-                    skill.jname == "でんじほう" ||
-                    skill.jname == "どろばくだん" ||
-                    skill.jname == "はどうだん" ||
-                    skill.jname == "ヘドロばくだん" ||
-                    skill.jname == "マグネットボム" ||
-                    skill.jname == "ミストボール") true else false
-        } else {
-            return true
-        }
-    }
-
     fun skillAffects(): MutableMap<Array<Int>, Double> {
         val result = mutableMapOf<Array<Int>, Double>()
         if (skill.aliment == StatusAilment.no(StatusAilment.Code.UNKNOWN)) {
@@ -676,7 +600,7 @@ class PokemonForBattle(
             hpValue = hpValue - d - d2
         } else {
             val max = individual.calcHp(252, mega)
-            val now = hp()
+            val now = hpValue()
             hpRatio = (now - d - d2).times(100.0).div(max).toInt()
         }
     }
@@ -688,33 +612,56 @@ class PokemonForBattle(
     }
 
     fun noEffect(skill: Skill, attackSide: PokemonForBattle): Boolean {
+        val kimottama = attackSide.ability() == "きもったま"
+        if(kimottama && (Type.code(skill.type) ==Type.Code.NORMAL || Type.code(skill.type) == Type.Code.FIGHTING)){
+            return (individual.master.type1 == Type.no(Type.Code.GHOST) || individual.master.type2 == Type.no(Type.Code.GHOST)).not()
+        }
         val katayaburi = attackSide.ability() == "かたやぶり"
         val result = individual.typeScale(Type.code(skill.type), mega, katayaburi)
         if (result < 0.1) {
             return true
         }
 
+
         if((skill.jname == "ねむりごな" || skill.jname == "しびれごな" || skill.jname == "どくのこな" || skill.jname == "キノコのほうし" ||
                 skill.jname == "やどりぎのタネ" || skill.jname == "いかりのこな" || skill.jname == "ふんじん" || skill.jname == "わたほうし") &&
                 (individual.master.type1 == Type.no(Type.Code.GRASS) || individual.master.type2 == Type.no(Type.Code.GRASS))){
             return true
         }
-
         if(skill.jname == "でんじは" &&
                 (individual.master.type1 == Type.no(Type.Code.ELECTRIC) || individual.master.type2 == Type.no(Type.Code.ELECTRIC))){
             return true
         }
-
         if(skill.jname == "おにび" &&
                 (individual.master.type1 == Type.no(Type.Code.FIRE) || individual.master.type2 == Type.no(Type.Code.FIRE))){
             return true
         }
-
         if(skill.jname == "どくどく" &&
                 (individual.master.type1 == Type.no(Type.Code.POISON) || individual.master.type2 == Type.no(Type.Code.POISON))){
             return true
         }
 
+
+        if ("ぼうおん" == ability() && katayaburi.not()) {
+            return if (skill.jname == "いにしえのうた" || skill.jname == "いびき" || skill.jname == "いやなおと" || skill.jname == "うたう" ||
+                    skill.jname == "エコーボイス" || skill.jname == "おしゃべり" || skill.jname == "おたけび" || skill.jname == "きんぞくおん" ||
+                    skill.jname == "くさぶえ" || skill.jname == "さわぐ" || skill.jname == "すてゼリフ" || skill.jname == "ダークパニック" ||
+                    skill.jname == "チャームボイス" || skill.jname == "ちょうおんぱ" || skill.jname == "ないしょばなし" || skill.jname == "なきごえ" ||
+                    skill.jname == "ハイパーボイス" || skill.jname == "バークアウト" || skill.jname == "ばくおんぱ" || skill.jname == "ほえる" ||
+                    skill.jname == "ほろびのうた" || skill.jname == "むしのさざめき" || skill.jname == "りんしょう") true else false
+        }
+        if ("ぼうじん" == ability() && katayaburi.not()) {
+            return if (skill.jname == "ねむりごな" || skill.jname == "しびれごな" || skill.jname == "どくのこな" ||
+                    skill.jname == "キノコのほうし" || skill.jname == "わたほうし" || skill.jname == "いかりのこな" || skill.jname == "ふんじん") true else false
+        }
+        if ("ぼうだん" == ability() && katayaburi.not()) {
+            return if (skill.jname == "アイスボール" || skill.jname == "アシッドボム" || skill.jname == "ウェザーボール" || skill.jname == "エナジーボール" ||
+                    skill.jname == "エレキボール" || skill.jname == "オクタンほう" || skill.jname == "かえんだん" || skill.jname == "がんせきほう" ||
+                    skill.jname == "きあいだま" || skill.jname == "ジャイロボール" || skill.jname == "シャドーボール" || skill.jname == "タネマシンガン" ||
+                    skill.jname == "タネばくだん" || skill.jname == "タマゴばくだん" || skill.jname == "たまなげ" || skill.jname == "でんじほう" ||
+                    skill.jname == "どろばくだん" || skill.jname == "はどうだん" || skill.jname == "ヘドロばくだん" || skill.jname == "マグネットボム" ||
+                    skill.jname == "ミストボール") true else false
+        }
         return false
     }
 

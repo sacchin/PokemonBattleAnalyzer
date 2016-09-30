@@ -79,15 +79,6 @@ class SelectActivity : PGLActivity() {
         my_party6.setOnClickListener { addPokemonToList(myParty.member6, 5) }
     }
 
-    private fun determineOpponent() {
-        //estimate.removeAllViews()
-        //val estimated = EstimateOpponentElection.createAllPattern(mine, party)
-        //        for(IndividualPokemon[] p : estimated){
-        //            addPokemonToOpponentParty(p);
-        //        }
-        //        addPokemonToOpponentParty(estimated[0]);
-    }
-
     fun addPokemonToList(pokemon: IndividualPokemon, index: Int) {
         if (choices.size == 3) {
             Snackbar.make(my_party1, "すでに3体選択しています。", Snackbar.LENGTH_SHORT).show()
@@ -106,29 +97,6 @@ class SelectActivity : PGLActivity() {
         }
     }
 
-    fun addPokemonToOpponentParty(pokemons: Array<PokemonMasterData>) {
-//        val l = LinearLayout(getActivity())
-//        l.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-//        l.orientation = LinearLayout.HORIZONTAL
-        //        l.setOnClickListener(new View.OnClickListener() {
-        //            @Override
-        //            public void onClick(View view) {
-        //                Snackbar.make(view, pokemons[2].getJname(), Snackbar.LENGTH_SHORT).show();
-        //            }
-        //        });
-
-//        for (p in pokemons) {
-//            val ip = IndividualPokemon(p)//, 0, new Timestamp(System.currentTimeMillis()), "", "", "", "", "", "", "");
-//
-//            val temp = Util.createImage(p, 120f, resources)
-//            val localView = ImageView(getActivity())
-//            localView.setImageBitmap(temp)
-//
-//            l.addView(localView)
-//        }
-//        estimate.addView(l)
-    }
-
     fun removePokemonFromList(index: Int) {
         choices.remove(index)
         when (index) {
@@ -145,7 +113,6 @@ class SelectActivity : PGLActivity() {
         createPartyList()
         checkOpponentParty()
     }
-
 
     fun createLinearLayout(texts: Array<String>, layoutSpan: Int, bgColor: Int, txtColor: Int, txtSize: Int): LinearLayout {
         val container = LinearLayout(this)
@@ -193,8 +160,4 @@ class SelectActivity : PGLActivity() {
             startActivityForResult(intent, 1)
         }
     }
-
-//    override fun finishAllDownload() {
-//        determineOpponent()
-//    }
 }

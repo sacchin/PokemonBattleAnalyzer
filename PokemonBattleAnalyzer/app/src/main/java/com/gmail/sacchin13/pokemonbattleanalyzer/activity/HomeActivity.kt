@@ -81,7 +81,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Snackbar.make(partyLayout, "OK", Snackbar.LENGTH_SHORT).show()
             } else {
-                Snackbar.make(partyLayout, "NG。", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(partyLayout, "NG", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
