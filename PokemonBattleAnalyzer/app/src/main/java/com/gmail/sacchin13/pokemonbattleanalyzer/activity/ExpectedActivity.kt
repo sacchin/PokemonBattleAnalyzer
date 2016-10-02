@@ -57,15 +57,35 @@ class ExpectedActivity : PGLActivity() {
         allFeild.resetDefenseSide(opponent.field)
         val caseOfSkill1 = BattleCalculator.getResultFirst(selectedMine, selectedOpponent, allFeild)
 
+
         coverRate.text = caseOfSkill1.coverRate()
-        val (label, rate) = caseOfSkill1.orderResult(selectedMine, selectedOpponent)
-        if (label == "UNKNOWN" || rate < 0.1) order.text = "必ず後手" else order.text = label + "(${Util.percent(rate)})まで抜ける"
+        val orderResult = caseOfSkill1.orderResult(selectedMine, selectedOpponent, allFeild,
+                mine.field.contains(BattleField.Field.Tailwind), opponent.field.contains(BattleField.Field.Tailwind))
+
+        if (orderResult.isEmpty()) {
+            priority.text = "-"
+        } else {
+            var t = ""
+            for ((key, value) in orderResult) {
+                if (key == "mine") t += "---> $value <---\n"
+                else t += "$key($value)\n"
+            }
+            order.text = t
+        }
+
+        correctionRate.text = "0.9(${Util.percent(caseOfSkill1.correctionRate[0].times(100.0))})\n" +
+                "1.1(${Util.percent(caseOfSkill1.correctionRate[2].times(100.0))})"
+        scarf.text = Util.percent(caseOfSkill1.scarfRate.times(100.0))
+        orderAbility.text = "${Util.percent(caseOfSkill1.orderAbilityRate.times(100.0))}"
+//        if (label == "UNKNOWN" || rate < 0.1) order.text = "必ず後手" else order.text = label + "(${Util.percent(rate)})まで抜ける"
         if (caseOfSkill1.prioritySkills.isEmpty()) {
             priority.text = "なし"
         } else {
+            var t = ""
             for (temp in caseOfSkill1.prioritySkills) {
-                priority.text = temp.key + " = ${Util.percent(temp.value)}\n"
+                t += temp.key + " = ${Util.percent(temp.value)}\n"
             }
+            priority.text = t
         }
 
         //技1の場合
@@ -324,19 +344,19 @@ class ExpectedActivity : PGLActivity() {
             val party = if (isMine) mine else opponent
             when (index) {
                 1 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.LightScreen)
-                2 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.Reflect)
-                3 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.Tailwind)
-                4 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.StealthRock)
-                5 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.Safeguard)
-                6 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.Gravity)
-                7 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.Spikes)
-                8 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.ToxicSpikes)
-                9 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.MatBlock)
-                10 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.StickyWeb)
-                11 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.MudSport)
-                12 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.WaterSport)
-                13 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.LuckyChant)
-                14 -> if (p1) party.add(BattleField.Field.LightScreen) else party.remove(BattleField.Field.Mist)
+                2 -> if (p1) party.add(BattleField.Field.Reflect) else party.remove(BattleField.Field.Reflect)
+                3 -> if (p1) party.add(BattleField.Field.Tailwind) else party.remove(BattleField.Field.Tailwind)
+                4 -> if (p1) party.add(BattleField.Field.StealthRock) else party.remove(BattleField.Field.StealthRock)
+                5 -> if (p1) party.add(BattleField.Field.Safeguard) else party.remove(BattleField.Field.Safeguard)
+                6 -> if (p1) party.add(BattleField.Field.Gravity) else party.remove(BattleField.Field.Gravity)
+                7 -> if (p1) party.add(BattleField.Field.Spikes) else party.remove(BattleField.Field.Spikes)
+                8 -> if (p1) party.add(BattleField.Field.ToxicSpikes) else party.remove(BattleField.Field.ToxicSpikes)
+                9 -> if (p1) party.add(BattleField.Field.MatBlock) else party.remove(BattleField.Field.MatBlock)
+                10 -> if (p1) party.add(BattleField.Field.StickyWeb) else party.remove(BattleField.Field.StickyWeb)
+                11 -> if (p1) party.add(BattleField.Field.MudSport) else party.remove(BattleField.Field.MudSport)
+                12 -> if (p1) party.add(BattleField.Field.WaterSport) else party.remove(BattleField.Field.WaterSport)
+                13 -> if (p1) party.add(BattleField.Field.LuckyChant) else party.remove(BattleField.Field.LuckyChant)
+                14 -> if (p1) party.add(BattleField.Field.Mist) else party.remove(BattleField.Field.Mist)
                 else -> Log.e("OnFieldCheckListener", "UNKNOWN")
             }
         }

@@ -5,29 +5,29 @@ import io.realm.annotations.RealmClass
 import java.util.*
 
 @RealmClass
-public open class IndividualPokemon(
-        public open var id: Long = -1,
-        public open var status: Int = UNKNOWN,
-        public open var item: String = "unknown",
-        public open var characteristic: String = "unknown",
-        public open var ability: String = "unknown",
-        public open var skillNo1: Skill = Skill(),
-        public open var skillNo2: Skill = Skill(),
-        public open var skillNo3: Skill = Skill(),
-        public open var skillNo4: Skill = Skill(),
-        public open var hpEv: Int = UNKNOWN,
-        public open var attackEv: Int = UNKNOWN,
-        public open var defenseEv: Int = UNKNOWN,
-        public open var specialAttackEv: Int = UNKNOWN,
-        public open var specialDefenseEv: Int = UNKNOWN,
-        public open var speedEv: Int = UNKNOWN,
-        public open var hpIv: Int = UNKNOWN,
-        public open var attackIv: Int = UNKNOWN,
-        public open var defenseIv: Int = UNKNOWN,
-        public open var specialAttackIv: Int = UNKNOWN,
-        public open var specialDefenseIv: Int = UNKNOWN,
-        public open var speedIv: Int = UNKNOWN,
-        public open var master: PokemonMasterData = PokemonMasterData()
+open class IndividualPokemon(
+        open var id: Long = -1,
+        open var status: Int = UNKNOWN,
+        open var item: String = "unknown",
+        open var characteristic: String = "unknown",
+        open var ability: String = "unknown",
+        open var skillNo1: Skill = Skill(),
+        open var skillNo2: Skill = Skill(),
+        open var skillNo3: Skill = Skill(),
+        open var skillNo4: Skill = Skill(),
+        open var hpEv: Int = UNKNOWN,
+        open var attackEv: Int = UNKNOWN,
+        open var defenseEv: Int = UNKNOWN,
+        open var specialAttackEv: Int = UNKNOWN,
+        open var specialDefenseEv: Int = UNKNOWN,
+        open var speedEv: Int = UNKNOWN,
+        open var hpIv: Int = UNKNOWN,
+        open var attackIv: Int = UNKNOWN,
+        open var defenseIv: Int = UNKNOWN,
+        open var specialAttackIv: Int = UNKNOWN,
+        open var specialDefenseIv: Int = UNKNOWN,
+        open var speedIv: Int = UNKNOWN,
+        open var master: PokemonMasterData = PokemonMasterData()
 ) : RealmObject() {
 
     companion object {
@@ -93,6 +93,14 @@ public open class IndividualPokemon(
         }
     }
 
+    fun speedValues(megaType: Int): Array<Int> {
+        return when (megaType) {
+            MegaPokemonMasterData.MEGA_X -> master.speedValuesX()
+            MegaPokemonMasterData.MEGA_Y -> master.speedValuesY()
+            else -> master.speedValues()
+        }
+    }
+
     val abilities: List<String>
         get() {
             val temp = ArrayList<String>()
@@ -109,21 +117,21 @@ public open class IndividualPokemon(
     fun typeScale(type: Type.Code, megaType: Int, katayaburi: Boolean): Double {
         var type1 = 0
         var type2 = 0
-        when(megaType){
+        when (megaType) {
             MegaPokemonMasterData.MEGA_X -> {
-                if(master.megax == null || (master.megax!!.type1 == -1 && master.megax!!.type2 == -1)){
+                if (master.megax == null || (master.megax!!.type1 == -1 && master.megax!!.type2 == -1)) {
                     type1 = master.type1
                     type2 = master.type2
-                }else{
+                } else {
                     type1 = master.megax!!.type1
                     type2 = master.megax!!.type2
                 }
             }
             MegaPokemonMasterData.MEGA_Y -> {
-                if(master.megay == null || (master.megay!!.type1 == -1 && master.megay!!.type2 == -1)){
+                if (master.megay == null || (master.megay!!.type1 == -1 && master.megay!!.type2 == -1)) {
                     type1 = master.type1
                     type2 = master.type2
-                }else{
+                } else {
                     type1 = master.megay!!.type1
                     type2 = master.megay!!.type2
                 }
@@ -139,7 +147,7 @@ public open class IndividualPokemon(
             return 0.0
         }
 
-        if(katayaburi.not()) {
+        if (katayaburi.not()) {
             val scaleByAbility = Ability.calcTypeScale(ability(megaType), type)
             if (scaleByAbility < 0.1) {
                 return 0.0

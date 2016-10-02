@@ -120,7 +120,7 @@ class DatabaseHelper(context: Context) {
         }
     }
 
-    fun insertMegaPokemonDataX(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, type1:Int, type2: Int, ability: String, weight: Float) {
+    fun insertMegaPokemonDataX(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, type1: Int, type2: Int, ability: String, weight: Float) {
         realm.executeTransaction {
             val megaPokemon = realm.createObject(MegaPokemonMasterData::class.java)
             megaPokemon.pokemonNo = no
@@ -145,7 +145,7 @@ class DatabaseHelper(context: Context) {
         insertMegaPokemonDataX(no, h, a, b, c, d, s, Type.no(Type.Code.UNKNOWN), Type.no(Type.Code.UNKNOWN), ability, weight)
     }
 
-    fun insertMegaPokemonDataY(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, type1:Int, type2: Int, ability: String, weight: Float) {
+    fun insertMegaPokemonDataY(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, type1: Int, type2: Int, ability: String, weight: Float) {
         realm.executeTransaction {
             val megaPokemon = realm.createObject(MegaPokemonMasterData::class.java)
             megaPokemon.pokemonNo = no
@@ -278,127 +278,126 @@ class DatabaseHelper(context: Context) {
     fun updateMyParty() {
         realm.executeTransaction {
             val inserted = selectParty("mine")
-            val skill = selectAllSkill()
 
             inserted.member1.ability = "いかく"
-            inserted.member1.characteristic = "いじっぱり"
+            inserted.member1.characteristic = "ようき"
             inserted.member1.item = "クチートナイト"
-            inserted.member1.skillNo1 = skill[300]//ふいうち
-            inserted.member1.skillNo2 = skill[384]//アイアンヘッド
-            inserted.member1.skillNo3 = skill[157]//じゃれつく
-            inserted.member1.skillNo4 = skill[210]//つるぎのまい
-            inserted.member1.hpEv = 252
+            inserted.member1.skillNo1 = selectSkillByName("ふいうち")
+            inserted.member1.skillNo2 = selectSkillByName("みがわり")
+            inserted.member1.skillNo3 = selectSkillByName("じゃれつく")
+            inserted.member1.skillNo4 = selectSkillByName("つるぎのまい")
+            inserted.member1.hpEv = 4
             inserted.member1.attackEv = 252
             inserted.member1.defenseEv = 0
             inserted.member1.specialAttackEv = 0
             inserted.member1.specialDefenseEv = 0
-            inserted.member1.speedEv = 4
-            inserted.member1.hpIv = 31
+            inserted.member1.speedEv = 252
+            inserted.member1.hpIv = 15
             inserted.member1.attackIv = 31
             inserted.member1.defenseIv = 31
-            inserted.member1.specialAttackIv = 31
+            inserted.member1.specialAttackIv = 15
             inserted.member1.specialDefenseIv = 31
             inserted.member1.speedIv = 31
 
-            inserted.member2.ability = "もうか"
-            inserted.member2.characteristic = "おくびょう"
-            inserted.member2.item = "こだわりスカーフ"
-            inserted.member2.skillNo1 = skill[65]//かえんほうしゃ
-            inserted.member2.skillNo2 = skill[308]//ふんか
-            inserted.member2.skillNo3 = skill[4]//あくのはどう
-            inserted.member2.skillNo4 = skill[353]//めざめるパワー
-            inserted.member2.hpEv = 4
-            inserted.member2.attackEv = 0
-            inserted.member2.defenseEv = 252
+            inserted.member2.ability = "クリアボディ"
+            inserted.member2.characteristic = "いじっぱり"
+            inserted.member2.item = "とつげきチョッキ"
+            inserted.member2.skillNo1 = selectSkillByName("ステルスロック")
+            inserted.member2.skillNo2 = selectSkillByName("ストーンエッジ")
+            inserted.member2.skillNo3 = selectSkillByName("じならし")
+            inserted.member2.skillNo4 = selectSkillByName("ドレインパンチ")
+            inserted.member2.hpEv = 252
+            inserted.member2.attackEv = 252
+            inserted.member2.defenseEv = 0
             inserted.member2.specialAttackEv = 0
-            inserted.member2.specialDefenseEv = 0
-            inserted.member2.speedEv = 252
-            inserted.member2.hpIv = 31
-            inserted.member2.attackIv = 31
+            inserted.member2.specialDefenseEv = 4
+            inserted.member2.speedEv = 0
+            inserted.member2.hpIv = 15
+            inserted.member2.attackIv = 15
             inserted.member2.defenseIv = 31
-            inserted.member2.specialAttackIv = 31
+            inserted.member2.specialAttackIv = 15
             inserted.member2.specialDefenseIv = 31
             inserted.member2.speedIv = 31
 
-            inserted.member3.ability = "がんじょう"
-            inserted.member3.characteristic = "ずぶとい"
-            inserted.member3.item = "ハガネールナイト"
-            inserted.member3.skillNo1 = skill[469]//ステルスロック
-            inserted.member3.skillNo2 = skill[383]//アイアンテール
-            inserted.member3.skillNo3 = skill[470]//ストーンエッジ
-            inserted.member3.skillNo4 = skill[152]//じしん
-            inserted.member3.hpEv = 252
+            inserted.member3.ability = "あまのじゃく"
+            inserted.member3.characteristic = "おくびょう"
+            inserted.member3.item = "ゴツゴツメット"
+            inserted.member3.skillNo1 = selectSkillByName("リフレクター")
+            inserted.member3.skillNo2 = selectSkillByName("リーフストーム")
+            inserted.member3.skillNo3 = selectSkillByName("へびにらみ")
+            inserted.member3.skillNo4 = selectSkillByName("こうごうせい")
+            inserted.member3.hpEv = 156
             inserted.member3.attackEv = 0
-            inserted.member3.defenseEv = 252
+            inserted.member3.defenseEv = 180
             inserted.member3.specialAttackEv = 0
-            inserted.member3.specialDefenseEv = 4
-            inserted.member3.speedEv = 0
+            inserted.member3.specialDefenseEv = 0
+            inserted.member3.speedEv = 172
             inserted.member3.hpIv = 31
-            inserted.member3.attackIv = 31
+            inserted.member3.attackIv = 15
             inserted.member3.defenseIv = 31
-            inserted.member3.specialAttackIv = 31
+            inserted.member3.specialAttackIv = 15
             inserted.member3.specialDefenseIv = 31
             inserted.member3.speedIv = 31
 
-            inserted.member4.ability = "いたずらごころ"
-            inserted.member4.characteristic = "ずぶとい"
-            inserted.member4.item = "たべのこし"
-            inserted.member4.skillNo1 = skill[359]//やどりぎのタネ
-            inserted.member4.skillNo2 = skill[334]//みがわり
-            inserted.member4.skillNo3 = skill[325]//ぼうふう
-            inserted.member4.skillNo4 = skill[423]//ギガドレイン
-            inserted.member4.hpEv = 0
+            inserted.member4.ability = "いかく"
+            inserted.member4.characteristic = "やんちゃ"
+            inserted.member4.item = "こだわりスカーフ"
+            inserted.member4.skillNo1 = selectSkillByName("りゅうせいぐん")
+            inserted.member4.skillNo2 = selectSkillByName("かえんほうしゃ")
+            inserted.member4.skillNo3 = selectSkillByName("じしん")
+            inserted.member4.skillNo4 = selectSkillByName("いわなだれ")
+            inserted.member4.hpEv = 104
             inserted.member4.attackEv = 0
-            inserted.member4.defenseEv = 252
+            inserted.member4.defenseEv = 0
             inserted.member4.specialAttackEv = 252
             inserted.member4.specialDefenseEv = 0
-            inserted.member4.speedEv = 4
+            inserted.member4.speedEv = 156
             inserted.member4.hpIv = 31
             inserted.member4.attackIv = 31
             inserted.member4.defenseIv = 31
             inserted.member4.specialAttackIv = 31
-            inserted.member4.specialDefenseIv = 31
-            inserted.member4.speedIv = 31
+            inserted.member4.specialDefenseIv = 15
+            inserted.member4.speedIv = 15
 
-            inserted.member5.ability = "ダルマモード"
-            inserted.member5.characteristic = "しんちょう"
-            inserted.member5.item = "とつげきチョッキ"
-            inserted.member5.skillNo1 = skill[551]//フレアドライブ
-            inserted.member5.skillNo2 = skill[235]//とんぼがえり
-            inserted.member5.skillNo3 = skill[291]//ばかじから
-            inserted.member5.skillNo4 = skill[152]//じしん
-            inserted.member5.hpEv = 252
+            inserted.member5.ability = "かそく"
+            inserted.member5.characteristic = "ようき"
+            inserted.member5.item = "サメハダーナイト"
+            inserted.member5.skillNo1 = selectSkillByName("かみくだく")
+            inserted.member5.skillNo2 = selectSkillByName("こおりのキバ")
+            inserted.member5.skillNo3 = selectSkillByName("どくどくのキバ")
+            inserted.member5.skillNo4 = selectSkillByName("まもる")
+            inserted.member5.hpEv = 4
             inserted.member5.attackEv = 252
             inserted.member5.defenseEv = 0
             inserted.member5.specialAttackEv = 0
             inserted.member5.specialDefenseEv = 0
-            inserted.member5.speedEv = 4
-            inserted.member5.hpIv = 31
+            inserted.member5.speedEv = 252
+            inserted.member5.hpIv = 15
             inserted.member5.attackIv = 31
             inserted.member5.defenseIv = 31
-            inserted.member5.specialAttackIv = 31
+            inserted.member5.specialAttackIv = 15
             inserted.member5.specialDefenseIv = 31
             inserted.member5.speedIv = 31
 
-            inserted.member6.ability = "おみとおし"
-            inserted.member6.characteristic = "ずぶとい"
-            inserted.member6.item = "ゴツゴツメット"
-            inserted.member6.skillNo1 = skill[37]//いわなだれ
-            inserted.member6.skillNo2 = skill[477]//タネばくだん
-            inserted.member6.skillNo3 = skill[68]//かげうち
-            inserted.member6.skillNo4 = skill[55]//おにび
+            inserted.member6.ability = "すなおこし"
+            inserted.member6.characteristic = "ゆうかん"
+            inserted.member6.item = "ラムのみ"
+            inserted.member6.skillNo1 = selectSkillByName("じしん")
+            inserted.member6.skillNo2 = selectSkillByName("あくび")
+            inserted.member6.skillNo3 = selectSkillByName("なまける")
+            inserted.member6.skillNo4 = selectSkillByName("かみくだく")
             inserted.member6.hpEv = 252
-            inserted.member6.attackEv = 0
-            inserted.member6.defenseEv = 252
+            inserted.member6.attackEv = 252
+            inserted.member6.defenseEv = 0
             inserted.member6.specialAttackEv = 0
             inserted.member6.specialDefenseEv = 0
             inserted.member6.speedEv = 4
-            inserted.member6.hpIv = 31
-            inserted.member6.attackIv = 31
-            inserted.member6.defenseIv = 31
-            inserted.member6.specialAttackIv = 31
-            inserted.member6.specialDefenseIv = 31
-            inserted.member6.speedIv = 31
+            inserted.member6.hpIv = 15
+            inserted.member6.attackIv = 15
+            inserted.member6.defenseIv = 15
+            inserted.member6.specialAttackIv = 15
+            inserted.member6.specialDefenseIv = 15
+            inserted.member6.speedIv = 15
         }
     }
 }

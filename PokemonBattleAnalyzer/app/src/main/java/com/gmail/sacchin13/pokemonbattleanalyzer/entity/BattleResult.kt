@@ -15,6 +15,12 @@ class BattleResult {
             8 to 0.0, 9 to 0.0, 10 to 0.0, 11 to 0.0
     )
 
+    val correctionRate = arrayOf<Double>(0.0, 0.0, 0.0)
+
+    var scarfRate = 0.0
+
+    var orderAbilityRate = 0.0
+
     var defeatedTimes = mutableMapOf<String, MutableMap<Int, Double>>()
 
     var didAttack = false
@@ -149,7 +155,7 @@ class BattleResult {
     }
 
     fun add(result: BattleResult) {
-        if(result.didAttack){
+        if (result.didAttack) {
             for (key in defeatTimes.keys) {
                 defeatTimes[key] = defeatTimes[key]!!.plus(result.defeatTimes[key]!!)
             }
@@ -177,47 +183,38 @@ class BattleResult {
 
     fun orderRate(opponent: PokemonForBattle, rate: Double) {
         val type = Characteristic.correction(opponent.characteristic, "S").times(10).toInt()
-        val label = when (type) {
-            9 -> {
-                if (opponent.item == "こだわりスカーフ") {
-                    arrayOf(5)
-                } else {
-                    arrayOf(0, 1)
-                }
-            }
-            10 -> {
-                if (opponent.item == "こだわりスカーフ") {
-                    arrayOf(7, 10)
-                } else {
-                    arrayOf(2, 3, 6)
-                }
-            }
-            11 -> {
-                if (opponent.item == "こだわりスカーフ") {
-                    arrayOf(8, 11)
-                } else {
-                    arrayOf(4, 9)
-                }
-            }
-            else -> arrayOf()
+        when (type) {
+            9 -> correctionRate[0] = correctionRate[0] + rate
+            11 -> correctionRate[1] = correctionRate[1] + rate
+            else -> correctionRate[2] = correctionRate[2] + rate
         }
 
-        for (temp in label) speedOccur[temp] = speedOccur[temp]!!.plus(rate.div(label.size))
+        if (opponent.item == "こだわりスカーフ") scarfRate += rate
+        if (opponent.ability == "すなかき" || opponent.ability == "ようりょくそ"
+                || opponent.ability == "すいすい") orderAbilityRate += rate
     }
 
-    fun orderResult(mine: PokemonForBattle, opponent: PokemonForBattle): Pair<String, Double> {
-        var sum = 0.0
-        var label = ""
-        for ((index, speed) in opponent.individual.master.speedValues().withIndex()) {
-            if (speed < mine.calcSpeedValue()) {
-                sum += speedOccur[index]!!
+    fun orderResult(mine: PokemonForBattle, opponent: PokemonForBattle,
+                    field: BattleField, myTailWind: Boolean, oppoTailWind: Boolean): Map<String, Int> {
+        var before = 0
+        val result = mutableMapOf<String, Int>()
+        val mySpeed = mine.calcSpeedValue(field, myTailWind, false)
+        for ((index, speed) in opponent.speedValues(oppoTailWind).withIndex()) {
+            val label = BattleStatus.name(index)
+
+            if (before < mySpeed && mySpeed < speed) {
+                result.put("mine", mySpeed)
+                result.put(label, speed)
             } else {
-                label = BattleStatus.name(index - 1)
-                break
+                result.put(label, speed)
             }
+
+            before = speed
         }
 
-        return Pair(label, sum)
+        if (before < mySpeed) result.put("mine", mySpeed)
+
+        return result
     }
 
     fun prioritySkill(pokemon: TrendForBattle) {

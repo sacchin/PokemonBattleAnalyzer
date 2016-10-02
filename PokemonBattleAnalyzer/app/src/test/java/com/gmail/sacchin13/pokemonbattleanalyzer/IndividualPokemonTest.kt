@@ -96,4 +96,43 @@ class IndividualPokemonTest {
         assertEquals(102, kucheat.calcSpeed(252, MegaPokemonMasterData.MEGA_X))
     }
 
+    @Test
+    fun メガシンカXした場合の素早さ表計算の正常系のテスト() {
+        val actual = kucheat.speedValues(MegaPokemonMasterData.MEGA_X)
+        assertEquals(49, actual[0])
+        assertEquals(63, actual[1])
+        assertEquals(70, actual[2])
+        assertEquals(71, actual[3])
+        assertEquals(77, actual[4])
+        assertEquals(78, actual[5])
+        assertEquals(102, actual[6])
+        assertEquals(112, actual[7])
+    }
+
+    @Test
+    fun メガシンカYした場合の素早さ表計算の正常系のテスト() {
+        val actual = kucheat.speedValues(MegaPokemonMasterData.MEGA_Y)
+        assertEquals(49, actual[0])
+        assertEquals(63, actual[1])
+        assertEquals(70, actual[2])
+        assertEquals(71, actual[3])
+        assertEquals(77, actual[4])
+        assertEquals(78, actual[5])
+        assertEquals(102, actual[6])
+        assertEquals(112, actual[7])
+    }
+
+    @Test
+    fun メガシンカしていない場合の素早さ表計算の正常系のテスト() {
+        val actual = kucheat.speedValues(MegaPokemonMasterData.NOT_MEGA)
+        assertEquals(49, actual[0])
+        assertEquals(63, actual[1])
+        assertEquals(70, actual[2])
+        assertEquals(71, actual[3])
+        assertEquals(77, actual[4])
+        assertEquals(78, actual[5])
+        assertEquals(102, actual[6])
+        assertEquals(112, actual[7])
+    }
+
 }

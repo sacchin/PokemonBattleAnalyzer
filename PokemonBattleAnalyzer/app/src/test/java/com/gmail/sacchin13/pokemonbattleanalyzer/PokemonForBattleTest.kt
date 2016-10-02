@@ -1,8 +1,6 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.Info
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -219,15 +217,15 @@ class PokemonForBattleTest {
 
 
         attackSide.characteristic = "ずぶとい"
-        assertEquals(70.0, attackSide.calcSpeedValue(), 0.001)
+        assertEquals(70, attackSide.calcSpeedValue(BattleField(), false, false))
 
         attackSide.characteristic = "がんばりや"
         attackSide.speedEffortValue = 252
-        assertEquals(70.0, attackSide.calcSpeedValue(), 0.001)
+        assertEquals(70, attackSide.calcSpeedValue(BattleField(), false, false))
 
         attackSide.characteristic = "いじっぱり"
         attackSide.mega = MegaPokemonMasterData.NOT_MEGA
-        assertEquals(70.0, attackSide.calcSpeedValue(), 0.001)
+        assertEquals(70, attackSide.calcSpeedValue(BattleField(), false, false))
     }
 
     @Test
@@ -241,15 +239,15 @@ class PokemonForBattleTest {
         attackSide.mega = MegaPokemonMasterData.MEGA_X
 
         attackSide.characteristic = "おくびょう"
-        assertEquals(112.0, attackSide.calcSpeedValue(), 0.001)
+        assertEquals(112, attackSide.calcSpeedValue(BattleField(), false, false))
 
         attackSide.characteristic = "ひかえめ"
-        assertEquals(102.0, attackSide.calcSpeedValue(), 0.001)
+        assertEquals(102, attackSide.calcSpeedValue(BattleField(), false, false))
 
         attackSide.characteristic = "おだやか"
         attackSide.speedEffortValue = 252
         attackSide.mega = MegaPokemonMasterData.NOT_MEGA
-        assertEquals(102.0, attackSide.calcSpeedValue(), 0.001)
+        assertEquals(102, attackSide.calcSpeedValue(BattleField(), false, false))
     }
 
     @Test
@@ -677,28 +675,37 @@ class PokemonForBattleTest {
 
     @Test
     fun マヒ時かつ追い風時の素早さ計算のテスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
-//        attackSide.status = StatusAilment.no(StatusAilment.Code.PARALYSIS)
-//        attackSide.field.add(BattleField.Field.Tailwind)
-//
-//        val actual = attackSide.speedValues(BattleField())
-//        assertEquals(24, actual[0])
-//        assertEquals(34, actual[4])
-//        assertEquals(44, actual[10])
-//        assertEquals(84, actual[23])
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
+        attackSide.status = StatusAilment.no(StatusAilment.Code.PARALYSIS)
+
+        val actual = attackSide.speedValues(true)
+        assertEquals(24, actual[0])
+        assertEquals(30, actual[1])
+        assertEquals(34, actual[2])
+        assertEquals(34, actual[3])
+        assertEquals(38, actual[4])
+        assertEquals(46, actual[5])
+        assertEquals(50, actual[6])
+        assertEquals(52, actual[7])
     }
 
     @Test
     fun 砂嵐時の素早さ計算のテスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
-//        attackSide.ability = "すなかき"
-//
-//        val field = BattleField()
-//        field.weather = BattleField.Weather.Sandstorm
-//        val actual = attackSide.speedValues(field)
-//        assertEquals(98, actual[0])
-//        assertEquals(140, actual[4])
-//        assertEquals(180, actual[10])
-//        assertEquals(336, actual[23])
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
+        attackSide.side = PartyInBattle.OPPONENT_SIDE
+        attackSide.ability = "すなかき"
+
+        val field = BattleField()
+        field.weather = BattleField.Weather.Sandstorm
+
+        val actual = attackSide.speedValues(false)
+        assertEquals(98, actual[0])
+        assertEquals(126, actual[1])
+        assertEquals(140, actual[2])
+        assertEquals(142, actual[3])
+        assertEquals(154, actual[4])
+        assertEquals(188, actual[5])
+        assertEquals(204, actual[6])
+        assertEquals(210, actual[7])
     }
 }

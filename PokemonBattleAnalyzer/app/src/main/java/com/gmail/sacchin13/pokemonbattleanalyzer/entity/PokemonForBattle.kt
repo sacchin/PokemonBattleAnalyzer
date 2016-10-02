@@ -173,12 +173,13 @@ class PokemonForBattle(
                 (200.1 < tmp) -> return 120
             }
         }
+        val temp = BattleField()
         if (skill.jname == "ジャイロボール") {
-            val tmp = (25 * defenseSide.calcSpeedValue() / calcSpeedValue()).toInt() + 1
+            val tmp = (25 * defenseSide.calcSpeedValue(temp, false, false) / calcSpeedValue(temp, false, false)).toInt() + 1
             return if (150 < tmp) 150 else tmp
         }
         if (skill.jname == "エレキボール") {
-            val tmp = calcSpeedValue().toDouble() / defenseSide.calcSpeedValue().toDouble()
+            val tmp = calcSpeedValue(temp, false, false).toDouble() / defenseSide.calcSpeedValue(temp, false, false).toDouble()
             when {
                 (tmp < 1) -> return 40
                 (1 <= tmp && tmp < 2) -> return 60
@@ -420,27 +421,45 @@ class PokemonForBattle(
         }
     }
 
-    fun calcSpeedValue(): Double {
-        var result = if (side == PartyInBattle.MY_SIDE) individual.calcSpeed(mega).toDouble()
-        else individual.calcSpeed(252, mega).toDouble()
+    fun calcSpeedValue(allField: BattleField, tailWind: Boolean, onlyStatus: Boolean): Int {
+        var result = when (side) {
+            PartyInBattle.MY_SIDE -> individual.calcSpeed(mega)
+            else -> individual.calcSpeed(252, mega)
+        }
 
-        result = result.times(Characteristic.correction(characteristic, "S"))
+        result = Math.floor(result.times(Characteristic.correction(characteristic, "S"))).toInt()
+        if (onlyStatus) return result
+
+
+        if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS) && ability() == "ちどりあし") {
+            result = Math.round(result.times(1.5)).toInt()
+        }
+        if (allField.weather == BattleField.Weather.Sunny && ability() == "ようりょくそ") {
+            result = result.times(2)
+        }
+        if (allField.weather == BattleField.Weather.Rainy && ability() == "すいすい") {
+            result = result.times(2)
+        }
+        if (allField.weather == BattleField.Weather.Sandstorm && ability() == "すなかき") {
+            result = result.times(2)
+        }
 
         if (item == "こだわりスカーフ") {
-            result = result.times(1.5)
+            result = Math.round(result.times(1.5)).toInt()
         }
         if (item == "メタルパウダー") {
-            result = result.times(1.5)
-        }
-        if (status != StatusAilment.no(StatusAilment.Code.UNKNOWN)) {
-            if (ability() == "ちどりあし") {
-                result = result.times(1.5)
-            } else if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS)) {
-                result = result.times(0.25)
-            }
+            result = Math.round(result.times(1.5)).toInt()
         }
 
-        return Math.floor(result)
+        result = Math.floor(result.times(getSpeedRankCorrection())).toInt()
+
+        if (tailWind) result = result.times(2)
+
+        if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS) && ability() != "ちどりあし") {
+            result = Math.floor(result.times(0.25)).toInt()
+        }
+
+        return result
     }
 
     fun getSpeedRankCorrection(): Double {
@@ -613,7 +632,7 @@ class PokemonForBattle(
 
     fun noEffect(skill: Skill, attackSide: PokemonForBattle): Boolean {
         val kimottama = attackSide.ability() == "きもったま"
-        if(kimottama && (Type.code(skill.type) ==Type.Code.NORMAL || Type.code(skill.type) == Type.Code.FIGHTING)){
+        if (kimottama && (Type.code(skill.type) == Type.Code.NORMAL || Type.code(skill.type) == Type.Code.FIGHTING)) {
             return (individual.master.type1 == Type.no(Type.Code.GHOST) || individual.master.type2 == Type.no(Type.Code.GHOST)).not()
         }
         val katayaburi = attackSide.ability() == "かたやぶり"
@@ -623,21 +642,21 @@ class PokemonForBattle(
         }
 
 
-        if((skill.jname == "ねむりごな" || skill.jname == "しびれごな" || skill.jname == "どくのこな" || skill.jname == "キノコのほうし" ||
+        if ((skill.jname == "ねむりごな" || skill.jname == "しびれごな" || skill.jname == "どくのこな" || skill.jname == "キノコのほうし" ||
                 skill.jname == "やどりぎのタネ" || skill.jname == "いかりのこな" || skill.jname == "ふんじん" || skill.jname == "わたほうし") &&
-                (individual.master.type1 == Type.no(Type.Code.GRASS) || individual.master.type2 == Type.no(Type.Code.GRASS))){
+                (individual.master.type1 == Type.no(Type.Code.GRASS) || individual.master.type2 == Type.no(Type.Code.GRASS))) {
             return true
         }
-        if(skill.jname == "でんじは" &&
-                (individual.master.type1 == Type.no(Type.Code.ELECTRIC) || individual.master.type2 == Type.no(Type.Code.ELECTRIC))){
+        if (skill.jname == "でんじは" &&
+                (individual.master.type1 == Type.no(Type.Code.ELECTRIC) || individual.master.type2 == Type.no(Type.Code.ELECTRIC))) {
             return true
         }
-        if(skill.jname == "おにび" &&
-                (individual.master.type1 == Type.no(Type.Code.FIRE) || individual.master.type2 == Type.no(Type.Code.FIRE))){
+        if (skill.jname == "おにび" &&
+                (individual.master.type1 == Type.no(Type.Code.FIRE) || individual.master.type2 == Type.no(Type.Code.FIRE))) {
             return true
         }
-        if(skill.jname == "どくどく" &&
-                (individual.master.type1 == Type.no(Type.Code.POISON) || individual.master.type2 == Type.no(Type.Code.POISON))){
+        if (skill.jname == "どくどく" &&
+                (individual.master.type1 == Type.no(Type.Code.POISON) || individual.master.type2 == Type.no(Type.Code.POISON))) {
             return true
         }
 
@@ -683,27 +702,20 @@ class PokemonForBattle(
         }
     }
 
-    fun speedValues(allField: BattleField, field: MutableSet<BattleField.Field>): Array<Int> {
-        val values = individual.master.speedValues()
+    fun speedValues(tailWind: Boolean): Array<Int> {
+        val values = individual.speedValues(mega)
 
         for (i in values.indices) {
-            if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS)) {
-                values[i] = values[i].toDouble().div(4.0).toInt()
-            }
-            values[i] = values[i].times(getSpeedRankCorrection()).toInt()
+            values[i] = Math.floor(values[i].times(getSpeedRankCorrection())).toInt()
 
-            if (allField.weather == BattleField.Weather.Rainy && ability() == "すいすい") {
-                values[i] = values[i].times(2.0).toInt()
+            if (tailWind) {
+                values[i] = values[i].times(2)
             }
-            if (allField.weather == BattleField.Weather.Sunny && ability() == "ようりょくそ") {
-                values[i] = values[i].times(2.0).toInt()
+
+            if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS)) {
+                values[i] = Math.floor(values[i].toDouble().div(4.0)).toInt()
             }
-            if (allField.weather == BattleField.Weather.Sandstorm && ability() == "すなかき") {
-                values[i] = values[i].times(2.0).toInt()
-            }
-            if (side == PartyInBattle.MY_SIDE && field.contains(BattleField.Field.Tailwind)) {
-                values[i] = values[i].times(2.0).toInt()
-            }
+
         }
         return values
     }

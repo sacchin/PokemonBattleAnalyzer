@@ -4,8 +4,7 @@ object BattleStatus {
 
     enum class Order {
         IV0EV0CHM, IV31EV0CHM, IV31EV0CH, IV31EV4CH,
-        IV31EV0CHP, IV31EV0CHMS, IV31EV252CH, IV31EV0CHS,
-        IV31EV0CHPS, IV31EV252CHP, IV31EV252CHS, IV31EV252CHPS, UNKNOWN
+        IV31EV0CHP, IV31EV4CHP, IV31EV252CH, IV31EV252CHP, UNKNOWN
     }
 
     enum class Code {
@@ -15,20 +14,6 @@ object BattleStatus {
         DEPEND_EV, IMPOSSIBLE, POSSIBLE
     }
 
-    fun convertNameToTypeCode(statusName: String): Code {
-        return if ("先勝".equals(statusName)) Code.WIN
-        else if ("後負".equals(statusName)) Code.DEFEAT
-         else if ("後勝".equals(statusName)) Code.REVERSE
-         else if ("先負".equals(statusName)) Code.OWN_HEAD
-         else if ("引分".equals(statusName)) Code.DRAW
-        else if ("最遅".equals(statusName)) Code.MS
-        else if ("無振".equals(statusName)) Code.NS
-        else if ("準速".equals(statusName)) Code.SQ
-        else if ("最速".equals(statusName)) Code.MQ
-        else if ("最ス".equals(statusName)) Code.MQS
-         else Code.UNKNOWN
-    }
-
     fun name(code: Order): String {
         when (code) {
             Order.IV0EV0CHM -> return "最遅"
@@ -36,13 +21,9 @@ object BattleStatus {
             Order.IV31EV0CH -> return "無振無補正"
             Order.IV31EV4CH -> return "4振無補正"
             Order.IV31EV0CHP -> return "無振正補正"
-            Order.IV31EV0CHMS -> return "無振負補正スカーフ"
+            Order.IV31EV4CHP -> return "4振負補正"
             Order.IV31EV252CH -> return "準速"
-            Order.IV31EV0CHS -> return "無振無補正スカーフ"
-            Order.IV31EV0CHPS -> return "無振正補正スカーフ"
             Order.IV31EV252CHP -> return "最速"
-            Order.IV31EV252CHS -> return "準速スカーフ"
-            Order.IV31EV252CHPS -> return "最速スカーフ"
             else -> return "UNKNOWN"
         }
     }
@@ -54,13 +35,9 @@ object BattleStatus {
             2 -> return "無振無補正"
             3 -> return "4振無補正"
             4 -> return "無振正補正"
-            5 -> return "無振負補正スカーフ"
+            5 -> return "4振正補正"
             6 -> return "準速"
-            7 -> return "無振無補正スカーフ"
-            8 -> return "無振正補正スカーフ"
-            9 -> return "最速"
-            10 -> return "準速スカーフ"
-            11 -> return "最速スカーフ"
+            7 -> return "最速"
             else -> return "UNKNOWN"
         }
     }
@@ -88,13 +65,9 @@ object BattleStatus {
             Order.IV31EV0CH -> return 2
             Order.IV31EV4CH -> return 3
             Order.IV31EV0CHP -> return 4
-            Order.IV31EV0CHMS -> return 5
+            Order.IV31EV4CHP -> return 5
             Order.IV31EV252CH -> return 6
-            Order.IV31EV0CHS -> return 7
-            Order.IV31EV0CHPS -> return 8
-            Order.IV31EV252CHP -> return 9
-            Order.IV31EV252CHS -> return 9
-            Order.IV31EV252CHPS -> return 9
+            Order.IV31EV252CHP -> return 7
             else -> return -1
         }
     }

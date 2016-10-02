@@ -58,6 +58,9 @@
     <string name="expected_activity_covering">網羅率</string>
     <string name="expected_activity_order">行動順</string>
     <string name="expected_activity_priority">先制技</string>
+    <string name="expected_activity_order_ability">特性</string>
+    <string name="expected_activity_correction_rate">性格</string>
+    <string name="expected_activity_scarf_rate">スカーフ</string>
 
     <string name="expected_activity_weather_sunny">晴</string>
     <string name="expected_activity_weather_rainy">雨</string>

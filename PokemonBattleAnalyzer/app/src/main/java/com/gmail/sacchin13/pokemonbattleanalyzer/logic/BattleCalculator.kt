@@ -1,8 +1,8 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.logic
 
 import android.util.Log
-import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 
 class BattleCalculator {
 
@@ -16,7 +16,9 @@ class BattleCalculator {
         fun getResultFirst(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
             val result = BattleResult()
 
-            Log.e("getResultFirst", mine.name() + " vs " + opponent.name())
+            Log.e("getResultFirst", mine.name() + "(${mine.ability()}) vs " + opponent.name() + "(${opponent.ability()})")
+            Log.e("getResultFirst", "(${mine.ability()}) vs " + opponent.name() + "(${opponent.ability()})")
+            Log.e("getResultFirst", "(${mine.calcAttackValue()}) vs " + opponent.name() + "(${opponent.ability()})")
 
             result.coverRate = 0.0
             result.prioritySkill(opponent.trend)
@@ -41,7 +43,6 @@ class BattleCalculator {
                     }
                 }
             }
-            result.orderResult(mine, opponent)
 
             return result
         }
@@ -251,25 +252,25 @@ class BattleCalculator {
             return result
         }
 
-        fun fieldCorrection(attackSide: PokemonForBattle, field: BattleField): Double{
+        fun fieldCorrection(attackSide: PokemonForBattle, field: BattleField): Double {
             var initValue = 1.0
 
-            if(attackSide.skill.type == Type.no(Type.Code.FIRE) && field.weather == BattleField.Weather.Sunny){
+            if (attackSide.skill.type == Type.no(Type.Code.FIRE) && field.weather == BattleField.Weather.Sunny) {
                 initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
             }
-            if(attackSide.skill.type == Type.no(Type.Code.WATER) && field.weather == BattleField.Weather.Sunny){
+            if (attackSide.skill.type == Type.no(Type.Code.WATER) && field.weather == BattleField.Weather.Sunny) {
                 initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
             }
 
-            if(attackSide.skill.type == Type.no(Type.Code.WATER) && field.weather == BattleField.Weather.Rainy){
+            if (attackSide.skill.type == Type.no(Type.Code.WATER) && field.weather == BattleField.Weather.Rainy) {
                 initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
             }
-            if(attackSide.skill.type == Type.no(Type.Code.FIRE) && field.weather == BattleField.Weather.Rainy){
+            if (attackSide.skill.type == Type.no(Type.Code.FIRE) && field.weather == BattleField.Weather.Rainy) {
                 initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
             }
 
-            if(attackSide.skill.jname == "ソーラービーム" && (field.weather == BattleField.Weather.Rainy ||
-                field.weather == BattleField.Weather.Hailstone || field.weather == BattleField.Weather.Sandstorm)){
+            if (attackSide.skill.jname == "ソーラービーム" && (field.weather == BattleField.Weather.Rainy ||
+                    field.weather == BattleField.Weather.Hailstone || field.weather == BattleField.Weather.Sandstorm)) {
                 initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
             }
 
@@ -459,7 +460,7 @@ class BattleCalculator {
         fun calcSkillPower(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField, first: Boolean, damaged: Boolean): Int {
             //first と damagedを利用して技の威力を計算するもののみ、attackSide.determineSkillPower(defenseSide)の外側で計算
             var skillPower = attackSide.determineSkillPower(defenseSide)
-            if ((attackSide.skill.jname == "しっぺがえし" || attackSide.ability() == "アナライズ")&& !first) {
+            if ((attackSide.skill.jname == "しっぺがえし" || attackSide.ability() == "アナライズ") && !first) {
                 skillPower = skillPower.times(2)
             }
             if (attackSide.skill.jname == "ゆきなだれ" || attackSide.skill.jname == "リベンジ" && damaged) {
@@ -483,7 +484,7 @@ class BattleCalculator {
             if (defenseSide.hpRatio == 100 && defenseSide.ability() == "マルチスケイル") {
                 initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
             }
-            val batsugun = Type.calculateAffinity(Type.code(attackSide.skill.type), Type.code(defenseSide.individual.master.type1) , Type.code(defenseSide.individual.master.type2))
+            val batsugun = Type.calculateAffinity(Type.code(attackSide.skill.type), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))
             if (batsugun < 1 && attackSide.ability() == "いろめがね") {
                 initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
             }
