@@ -95,9 +95,10 @@ class GraphActivity : PGLActivity(), OnChartValueSelectedListener {
         list.add(BubbleEntry(0.toFloat(), 1.toFloat(), 1f))
         list.add(BubbleEntry(6.toFloat(), 1.toFloat(), 1f))
 
+        val calc = BattleCalculator()
         for((y, h) in index.withIndex()){
             for((x, bd)in index.withIndex()) {
-                val result = BattleCalculator.simulateTurn(opponent.member[0], opponent.member[1], BattleField(), h, bd)
+                val result = calc.simulateTurn(opponent.member[0], opponent.member[1], BattleField(), h, bd)
                 val pair = result.defeatTimes.filterValues { it -> 0.9 < it.minus(0.0)}.maxBy { it -> it.key }
                 val rate = pair!!.value.toDouble().div(result.count().toDouble())
 

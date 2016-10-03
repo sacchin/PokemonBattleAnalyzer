@@ -38,7 +38,7 @@ class PokemonForBattle(
         const val UNKNOWN = -1
 
         fun create(side: Int, individual: IndividualPokemon): PokemonForBattle {
-            return PokemonForBattle(side, -1, "unknown", "unknown", "unknown", Skill(), 0, 100, 0,
+            return PokemonForBattle(side, UNKNOWN, "unknown", "unknown", "unknown", Skill(), 0, 100, 0,
                     0, 6, 0, 6, 0, 6, 0, 6, 0, 6,
                     0, 0, 0, MegaPokemonMasterData.NOT_MEGA, individual)
         }
@@ -631,6 +631,7 @@ class PokemonForBattle(
     }
 
     fun noEffect(skill: Skill, attackSide: PokemonForBattle): Boolean {
+
         val kimottama = attackSide.ability() == "きもったま"
         if (kimottama && (Type.code(skill.type) == Type.Code.NORMAL || Type.code(skill.type) == Type.Code.FIGHTING)) {
             return (individual.master.type1 == Type.no(Type.Code.GHOST) || individual.master.type2 == Type.no(Type.Code.GHOST)).not()
@@ -640,7 +641,6 @@ class PokemonForBattle(
         if (result < 0.1) {
             return true
         }
-
 
         if ((skill.jname == "ねむりごな" || skill.jname == "しびれごな" || skill.jname == "どくのこな" || skill.jname == "キノコのほうし" ||
                 skill.jname == "やどりぎのタネ" || skill.jname == "いかりのこな" || skill.jname == "ふんじん" || skill.jname == "わたほうし") &&
@@ -659,7 +659,6 @@ class PokemonForBattle(
                 (individual.master.type1 == Type.no(Type.Code.POISON) || individual.master.type2 == Type.no(Type.Code.POISON))) {
             return true
         }
-
 
         if ("ぼうおん" == ability() && katayaburi.not()) {
             return if (skill.jname == "いにしえのうた" || skill.jname == "いびき" || skill.jname == "いやなおと" || skill.jname == "うたう" ||

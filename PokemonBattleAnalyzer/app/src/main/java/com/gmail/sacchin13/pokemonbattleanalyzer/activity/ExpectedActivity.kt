@@ -49,13 +49,14 @@ class ExpectedActivity : PGLActivity() {
     }
 
     fun showBest() {
+        val calc = BattleCalculator()
         val selectedOpponent = opponent.apply()
         val selectedMine = mine.apply()
 
         selectedMine.skill = selectedMine.individual.skillNo1
         allFeild.resetAttackSide(mine.field)
         allFeild.resetDefenseSide(opponent.field)
-        val caseOfSkill1 = BattleCalculator.getResultFirst(selectedMine, selectedOpponent, allFeild)
+        val caseOfSkill1 = calc.getResultFirst(selectedMine, selectedOpponent, allFeild)
 
 
         coverRate.text = caseOfSkill1.coverRate()
@@ -98,7 +99,7 @@ class ExpectedActivity : PGLActivity() {
 
         //技2の場合
         selectedMine.skill = selectedMine.individual.skillNo2
-        val caseOfSkill2 = BattleCalculator.getResult(selectedMine, selectedOpponent, BattleField())
+        val caseOfSkill2 = calc.getResult(selectedMine, selectedOpponent, BattleField())
         skill2_name.text = selectedMine.individual.skillNo2.jname
         for (temp in caseOfSkill2.defeatedTimes) {
             for (pair in temp.value) {
@@ -108,7 +109,7 @@ class ExpectedActivity : PGLActivity() {
 
         //技3の場合
         selectedMine.skill = selectedMine.individual.skillNo3
-        val caseOfSkill3 = BattleCalculator.getResult(selectedMine, selectedOpponent, BattleField())
+        val caseOfSkill3 = calc.getResult(selectedMine, selectedOpponent, BattleField())
         skill3_name.text = selectedMine.individual.skillNo3.jname
         for (temp in caseOfSkill3.defeatedTimes) {
             for (pair in temp.value) {
@@ -118,7 +119,7 @@ class ExpectedActivity : PGLActivity() {
 
         //技4の場合
         selectedMine.skill = selectedMine.individual.skillNo4
-        val caseOfSkill4 = BattleCalculator.getResult(selectedMine, selectedOpponent, BattleField())
+        val caseOfSkill4 = calc.getResult(selectedMine, selectedOpponent, BattleField())
         skill4_name.text = selectedMine.individual.skillNo4.jname
         for (temp in caseOfSkill4.defeatedTimes) {
             for (pair in temp.value) {

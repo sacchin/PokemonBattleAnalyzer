@@ -120,7 +120,7 @@ class PokemonInsertHandler(private val databaseHelper: DatabaseHelper?) {
         databaseHelper.insertPokemonMasterData("110", "マタドガス", "Weezing", 65, 90, 120, 85, 70, 60, "ふゆう", "-", "-", 7, -1, 9.5)
         databaseHelper.insertPokemonMasterData("111", "サイホーン", "-", 0, 0, 0, 0, 0, 0, "-", "-", "-", 8, 12, 115.0)
         databaseHelper.insertPokemonMasterData("112", "サイドン", "-", 105, 130, 120, 45, 45, 40, "ひらいしん", "いしあたま", "すてみ", 8, 12, 120.0)
-        databaseHelper.insertPokemonMasterData("113", "ラッキー", "-", 0, 0, 0, 0, 0, 0, "-", "-", "-", 0, -1, 34.6)
+        databaseHelper.insertPokemonMasterData("113", "ラッキー", "-", 250, 5, 5, 35, 105, 50, "しぜんかいふく", "てんのめぐみ", "いやしのこころ", 0, -1, 34.6)
         databaseHelper.insertPokemonMasterData("114", "モンジャラ", "-", 65, 55, 115, 100, 40, 60, "ようりょくそ", "リーフガード", "さいせいりょく", 4, -1, 35.0)
         databaseHelper.insertPokemonMasterData("115", "ガルーラ", "Kangaskhan", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0)
         databaseHelper.insertPokemonMasterData("116", "タッツー", "-", 0, 0, 0, 0, 0, 0, "-", "-", "-", 2, -1, 8.0)
@@ -733,6 +733,9 @@ class PokemonInsertHandler(private val databaseHelper: DatabaseHelper?) {
         databaseHelper.insertPokemonMasterData("713", "クレベース", "Avalugg", 95, 117, 184, 44, 46, 28, "マイペース", "アイスボディ", "がんじょう", 5, -1, 505.0)
         databaseHelper.insertPokemonMasterData("714", "オンバット", "-", 0, 0, 0, 0, 0, 0, "-", "-", "-", 14, 9, 8.0)
         databaseHelper.insertPokemonMasterData("715", "オンバーン", "Noivern", 85, 70, 80, 97, 80, 123, "おみとおし", "すりぬけ", "テレパシー", 14, 9, 85.0)
+        databaseHelper.insertPokemonMasterData("716", "ゼルネアス", "-", 126, 131, 95, 131, 98, 99, "フェアリーオーラ", "-", "-", 17, -1, 215.0)
+        databaseHelper.insertPokemonMasterData("717", "イベルタル", "-", 126, 131, 95, 131, 98, 99, "ダークオーラ", "-", "-", 15, 9, 203.0)
+        databaseHelper.insertPokemonMasterData("718", "ジガルデ", "-", 108, 100, 121, 81, 95, 95, "オーラブレイク", "-", "-", 8, 14, 305.0)
 
         Log.i("PokemonInsertHandler", "ポケモンの種族データOK!")
     }
