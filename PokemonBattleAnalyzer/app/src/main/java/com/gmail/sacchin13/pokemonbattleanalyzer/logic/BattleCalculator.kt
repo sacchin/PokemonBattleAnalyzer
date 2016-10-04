@@ -145,10 +145,13 @@ class BattleCalculator(
         var defenseRankCorrectionA = 0.0
         var attackRankCorrectionB = 0.0
         var defenseRankCorrectionB = 0.0
+        var ignore = false
         when (attackSide.skill.category) {
             0 -> {
                 attackValue = attackSide.calcAttackValue()
-                attackValueCorrection = attackSide.calcAttackValueCorrection(defenseSide, field)
+                val temp = attackSide.calcAttackValueCorrection(defenseSide, field)
+                attackValueCorrection = temp.first
+                ignore = temp.second
                 attackRankCorrectionA = attackSide.getAttackRankCorrection(true)
                 attackRankCorrectionB = attackSide.getAttackRankCorrection(false)
                 defenseValue = defenseSide.calcDefenseValue()
@@ -226,9 +229,9 @@ class BattleCalculator(
         println("$attackValue, $attackValueCorrection, $defenseValue, $defenseValueCorrection, $attackRankCorrectionA, " +
                 "$defenseRankCorrectionA, $attackRankCorrectionB, $defenseRankCorrectionB, $damageCorrectionA, $damageCorrectionB")
         for (i in 0..(randomDamage.size - 1)) {
-            randomDamage[i] = Util.round5(randomDamage[i].times(attackSide.typeBonus()))
+            randomDamage[i] =  Util.round5(randomDamage[i].times(attackSide.typeBonus()))
             randomDamage[i] = Math.floor(randomDamage[i].times(Type.calculateAffinity(Type.code(attackSide.skill.type), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))))
-            if (attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
+            if (ignore.not() && attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
                 randomDamage[i] = Math.floor(randomDamage[i].times(0.5))
             }
             if (i < 16) {
@@ -568,10 +571,13 @@ class BattleCalculator(
         var defenseValueCorrection = 0.0
         var attackRankCorrectionB = 0.0
         var defenseRankCorrectionB = 0.0
+        var ignore = false
         when (attackSide.skill.category) {
             0 -> {
                 attackValue = attackSide.calcAttackValue()
-                attackValueCorrection = attackSide.calcAttackValueCorrection(defenseSide, field)
+                val temp = attackSide.calcAttackValueCorrection(defenseSide, field)
+                attackValueCorrection = temp.first
+                ignore = temp.second
                 attackRankCorrectionB = attackSide.getAttackRankCorrection(false)
                 defenseValue = defenseSide.calcDefenseValue()
                 defenseValueCorrection = defenseSide.calcDefenseValueCorrection(attackSide)
@@ -623,7 +629,7 @@ class BattleCalculator(
         for (i in 0..(randomDamage.size - 1)) {
             randomDamage[i] = Util.round5(randomDamage[i].times(attackSide.typeBonus()))
             randomDamage[i] = Math.floor(randomDamage[i].times(Type.calculateAffinity(Type.code(attackSide.skill.type), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))))
-            if (attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
+            if (ignore.not() && attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
                 randomDamage[i] = Math.floor(randomDamage[i].times(0.5))
             }
             randomDamage[i] = Util.round5(randomDamage[i].times(damageCorrectionB).div(4096))

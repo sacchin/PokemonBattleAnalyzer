@@ -316,29 +316,29 @@ class PokemonForBattleTest {
         attackSide.side = PartyInBattle.OPPONENT_SIDE
 
         attackSide.item = "ふといホネ"
-        assertEquals(8192.0, attackSide.calcAttackValueCorrection(attackSide, f), 0.001)
+        assertEquals(8192.0, attackSide.calcAttackValueCorrection(attackSide, f).first, 0.001)
 
         attackSide.item = ""
         attackSide.ability = "ヨガパワー"
-        assertEquals(8192.0, attackSide.calcAttackValueCorrection(attackSide, f), 0.001)
+        assertEquals(8192.0, attackSide.calcAttackValueCorrection(attackSide, f).first, 0.001)
 
         attackSide.ability = "こんじょう"
         attackSide.status = StatusAilment.no(StatusAilment.Code.BURN)
-        assertEquals(6144.0, attackSide.calcAttackValueCorrection(attackSide, f), 0.001)
+        assertEquals(6144.0, attackSide.calcAttackValueCorrection(attackSide, f).first, 0.001)
 
         attackSide.ability = "フラワーギフト"
         attackSide.status = StatusAilment.no(StatusAilment.Code.UNKNOWN)
         f.weather = BattleField.Weather.Sunny
-        assertEquals(6144.0, attackSide.calcAttackValueCorrection(attackSide, f), 0.001)
+        assertEquals(6144.0, attackSide.calcAttackValueCorrection(attackSide, f).first, 0.001)
 
         attackSide.ability = "しんりょく"
         attackSide.skill.type = Type.no(Type.Code.GRASS)
         attackSide.hpRatio = 10
-        assertEquals(6144.0, attackSide.calcAttackValueCorrection(attackSide, f), 0.001)
+        assertEquals(6144.0, attackSide.calcAttackValueCorrection(attackSide, f).first, 0.001)
 
         attackSide.side = PartyInBattle.MY_SIDE
         attackSide.hpRatio = 10
-        assertEquals(6144.0, attackSide.calcAttackValueCorrection(attackSide, f), 0.001)
+        assertEquals(6144.0, attackSide.calcAttackValueCorrection(attackSide, f).first, 0.001)
     }
 
     @Test

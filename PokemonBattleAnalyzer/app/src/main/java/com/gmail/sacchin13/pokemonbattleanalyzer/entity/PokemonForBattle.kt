@@ -195,8 +195,9 @@ class PokemonForBattle(
         return skillPower
     }
 
-    fun calcAttackValueCorrection(defenseSide: PokemonForBattle, field: BattleField): Double {
+    fun calcAttackValueCorrection(defenseSide: PokemonForBattle, field: BattleField): Pair<Double, Boolean> {
         var initValue = 4096.0
+        var ignore = false
 
         //TODO よわき, スロースタート: initValue = initValue.times(2048).div(4096).toInt()
         //TODO プラス,マイナス,もらいび: initValue = initValue.times(6144).div(4096).toInt()
@@ -205,12 +206,9 @@ class PokemonForBattle(
             initValue = initValue.times(6144).div(4096)
         }
         initValue = relatedBoth(initValue, defenseSide)
-        if (status != StatusAilment.no(StatusAilment.Code.UNKNOWN)) {
-            if (ability() == "こんじょう") {
-                initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
-            } else if (status == StatusAilment.no(StatusAilment.Code.BURN)) {
-                initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
-            }
+        if (status != StatusAilment.no(StatusAilment.Code.UNKNOWN) && ability() == "こんじょう") {
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+            ignore = true
         }
         if (ability() == "ヨガパワー" || ability() == "ちからもち") {
             initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
@@ -224,7 +222,7 @@ class PokemonForBattle(
         if (item == "ふといホネ") {
             initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
         }
-        return initValue
+        return Pair(initValue, ignore)
     }
 
     fun calcSpecialAttackValueCorrection(defenseSide: PokemonForBattle, field: BattleField): Double {
