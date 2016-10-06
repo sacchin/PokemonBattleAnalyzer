@@ -277,38 +277,25 @@ class BattleResultTest {
         val result = BattleResult()
 
         fireallow.characteristic = "ようき"
+        fireallow.item = "こだわりスカーフ"
+        fireallow.ability = "いかく"
         result.orderRate(fireallow, 0.2)
 
         fireallow.characteristic = "いじっぱり"
+        fireallow.item = "たべのこし"
+        fireallow.ability = "すいすい"
         result.orderRate(fireallow, 0.5)
 
         fireallow.characteristic = "ゆうかん"
+        fireallow.item = "たべのこし"
+        fireallow.ability = "ようりょくそ"
         result.orderRate(fireallow, 0.3)
 
-        assertEquals(0.15, result.speedOccur[0]!!, 0.1)
-        assertEquals(0.15, result.speedOccur[1]!!, 0.1)
-        assertEquals(0.16666666666666666, result.speedOccur[2]!!, 0.1)
-        assertEquals(0.16666666666666666, result.speedOccur[3]!!, 0.1)
-        assertEquals(0.1, result.speedOccur[4]!!, 0.1)
-        assertEquals(0.0, result.speedOccur[5]!!, 0.1)
-        assertEquals(0.16666666666666666, result.speedOccur[6]!!, 0.1)
-        assertEquals(0.0, result.speedOccur[7]!!, 0.1)
-        assertEquals(0.0, result.speedOccur[8]!!, 0.1)
-        assertEquals(0.1, result.speedOccur[9]!!, 0.1)
-        assertEquals(0.0, result.speedOccur[10]!!, 0.1)
-        assertEquals(0.0, result.speedOccur[11]!!, 0.1)
-//        117
-//        131
-//        146
-//        147
-//        160
-//        197
-//        178
-//        219
-//        240
-//        195
-//        267
-//        293
+        assertEquals(0.3, result.correctionRate[0], 0.001)
+        assertEquals(0.2, result.correctionRate[1], 0.001)
+        assertEquals(0.5, result.correctionRate[2], 0.001)
+        assertEquals(0.2, result.scarfRate, 0.001)
+        assertEquals(0.8, result.orderAbilityRate, 0.001)
     }
 
     @Test

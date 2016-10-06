@@ -91,7 +91,7 @@ class PokemonForBattle(
             if (ability() == "スキルリンク") return skill.power * 5 else return skill.power * 3
         }
         if (skill.jname == "じたばた" || skill.jname == "きしかいせい") {
-            val tmp = hpRatio.div(100f).times(48f)
+            val tmp = hpRatio().div(100f).times(48f)
             when {
                 (0f <= tmp && tmp < 1f) -> return 200
                 (1f <= tmp && tmp < 4f) -> return 150
@@ -101,8 +101,8 @@ class PokemonForBattle(
                 (31 <= tmp && tmp <= 48f) -> return 20
             }
         }
-        if (skill.jname == "ふんか" && skill.jname == "しおふき" && (hpRatio < 30)) {
-            val r = hpRatio.toFloat().div(100f).times(150).toInt()
+        if (skill.jname == "ふんか" && skill.jname == "しおふき" && (hpRatio() < 30)) {
+            val r = hpRatio().toFloat().div(100f).times(150).toInt()
             return if (r < 1) 1 else r
         }
         if (skill.jname == "アクロバット") {
@@ -252,16 +252,16 @@ class PokemonForBattle(
 
     private fun relatedBoth(initValue: Double, defenseSide: PokemonForBattle): Double {
         var result = initValue
-        if (Type.code(skill.type) == Type.Code.FIRE && ability() == "もうか" && (hpRatio < 30)) {
+        if (Type.code(skill.type) == Type.Code.FIRE && ability() == "もうか" && (hpRatio() < 30)) {
             result = Math.round(result.times(6144.0).div(4096.0)).toDouble()
         }
-        if (Type.code(skill.type) == Type.Code.WATER && ability() == "げきりゅう" && (hpRatio < 30)) {
+        if (Type.code(skill.type) == Type.Code.WATER && ability() == "げきりゅう" && (hpRatio() < 30)) {
             result = Math.round(result.times(6144.0).div(4096.0)).toDouble()
         }
-        if (Type.code(skill.type) == Type.Code.GRASS && ability() == "しんりょく" && (hpRatio < 30)) {
+        if (Type.code(skill.type) == Type.Code.GRASS && ability() == "しんりょく" && (hpRatio() < 30)) {
             result = Math.round(result.times(6144.0).div(4096.0)).toDouble()
         }
-        if (Type.code(skill.type) == Type.Code.BUG && ability() == "むしのしらせ" && (hpRatio < 30)) {
+        if (Type.code(skill.type) == Type.Code.BUG && ability() == "むしのしらせ" && (hpRatio() < 30)) {
             result = Math.round(result.times(6144.0).div(4096.0)).toDouble()
         }
         if ((Type.code(skill.type) == Type.Code.FIRE || Type.code(skill.type) == Type.Code.ICE) && defenseSide.ability() == "あついしぼう") {
@@ -428,10 +428,8 @@ class PokemonForBattle(
         result = Math.floor(result.times(Characteristic.correction(characteristic, "S"))).toInt()
         if (onlyStatus) return result
 
+        result = Math.floor(result.times(getSpeedRankCorrection())).toInt()
 
-        if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS) && ability() == "ちどりあし") {
-            result = Math.round(result.times(1.5)).toInt()
-        }
         if (allField.weather == BattleField.Weather.Sunny && ability() == "ようりょくそ") {
             result = result.times(2)
         }
@@ -445,17 +443,19 @@ class PokemonForBattle(
         if (item == "こだわりスカーフ") {
             result = Math.round(result.times(1.5)).toInt()
         }
-        if (item == "メタルパウダー") {
+        if (item == "スピードパウダー") {
             result = Math.round(result.times(1.5)).toInt()
         }
-
-        result = Math.floor(result.times(getSpeedRankCorrection())).toInt()
-
-        if (tailWind) result = result.times(2)
 
         if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS) && ability() != "ちどりあし") {
             result = Math.floor(result.times(0.25)).toInt()
         }
+
+        if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS) && ability() == "ちどりあし") {
+            result = Math.round(result.times(1.5)).toInt()
+        }
+
+        if (tailWind) result = result.times(2)
 
         return result
     }
@@ -571,7 +571,7 @@ class PokemonForBattle(
     fun defeatTimes(damage: Int): Int {
         var hp = hpValue
         if (side == PartyInBattle.OPPONENT_SIDE) {
-            hp = individual.calcHp(hpEffortValue, mega).times(hpRatio).div(100.0).toInt()
+            hp = individual.calcHp(hpEffortValue, mega).times(hpRatio()).div(100.0).toInt()
         }
         //println("${hp} - ${damage}"
         return if (hp < damage) {

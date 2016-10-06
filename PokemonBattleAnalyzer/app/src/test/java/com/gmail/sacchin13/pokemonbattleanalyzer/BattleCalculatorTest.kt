@@ -12,6 +12,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Matchers
 import org.mockito.Mockito
 import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
@@ -710,7 +711,6 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(4096.0, false))
 
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
-        for(d in damages) println(d)
         assertTrue(damages.containsKey(98))
     }
 
@@ -747,7 +747,6 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(4096.0, false))
 
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
-        for(d in damages) println(d)
         assertTrue(damages.containsKey(22))
         assertTrue(damages.containsKey(23))
         assertTrue(damages.containsKey(24))
@@ -787,7 +786,6 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcSpecialAttackValueCorrection(defenseSide, field)).thenReturn(4096.0)
 
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
-        for(d in damages) println(d)
         assertTrue(damages.containsKey(54))
         assertTrue(damages.containsKey(57))
         assertTrue(damages.containsKey(58))
@@ -828,7 +826,6 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcSpecialAttackValueCorrection(defenseSide, field)).thenReturn(4096.0)
 
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
-        for(d in damages) println(d)
         assertTrue(damages.containsKey(22))
         assertTrue(damages.containsKey(24))
         assertTrue(damages.containsKey(25))
@@ -870,7 +867,6 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(4096.0, false))
 
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
-        for(d in damages) println(d)
         assertTrue(damages.containsKey(64))
         assertTrue(damages.containsKey(66))
         assertTrue(damages.containsKey(67))
@@ -917,7 +913,6 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(4096.0, false))
 
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
-        for(d in damages) println(d)
         assertTrue(damages.containsKey(109))
         assertTrue(damages.containsKey(106))
         assertTrue(damages.containsKey(114))
@@ -959,10 +954,9 @@ class BattleCalculatorTest {
                 PokemonMasterData("113", "ラッキー", "-", "-", 250, 5, 5, 35, 105, 50, "しぜんかいふく", "てんのめぐみ", "いやしのこころ", 0, -1, 34.6f)))
 
         Mockito.`when`(attackSide.determineSkillPower(defenseSide)).thenReturn(120)
-        Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(4096.0, false))
+        Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(6144.0, false))
 
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
-        for(d in damages) println(d)
         assertTrue(damages.containsKey(136))
         assertTrue(damages.containsKey(139))
         assertTrue(damages.containsKey(143))
@@ -1002,10 +996,9 @@ class BattleCalculatorTest {
                 PokemonMasterData("113", "ラッキー", "-", "-", 250, 5, 5, 35, 105, 50, "しぜんかいふく", "てんのめぐみ", "いやしのこころ", 0, -1, 34.6f)))
 
         Mockito.`when`(attackSide.determineSkillPower(defenseSide)).thenReturn(120)
-        Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(6144.0, false))
+        Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(Math.round(4096.0.times(6144.0).div(4096.0).times(6144.0).div(4096.0)).toDouble(), false))
 
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
-        for(d in damages) println(d)
         assertTrue(damages.containsKey(140))
         assertTrue(damages.containsKey(147))
         assertTrue(damages.containsKey(153))
@@ -1014,4 +1007,41 @@ class BattleCalculatorTest {
         assertTrue(damages.containsKey(204))//
         assertTrue(damages.containsKey(230))//
     }
+
+    @Test
+    fun 検証スレテストケースその17() {
+        val calc = BattleCalculator(50)
+        val field = BattleField()
+
+        val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
+        Mockito.`when`(attackSide.calcAttackValue()).thenReturn(90.0)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.5)
+        Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
+        Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
+        Mockito.`when`(attackSide.status).thenReturn(StatusAilment.no(StatusAilment.Code.UNKNOWN))
+        Mockito.`when`(attackSide.skill).thenReturn(Skill(255, "ジャイロボール", "-", 16, -1, 100.0, 0, 5, 0, true, true, -1, 0.0, -1, 0.0, -1, 0.0))
+        Mockito.`when`(attackSide.individual).thenReturn(IndividualPokemon(
+                0, -1, "unknown", "unknown", "unknown",  Skill(), Skill(), Skill(), Skill(),
+                252, 252, 0, 0, 0, 4, 31, 31, 31, 31, 31, 31,
+                PokemonMasterData("413-2", "ミノマダム", "-", "ゴミのミノ", 60, 69, 95, 69, 95, 36, "きけんよち", "ぼうじん", "-", 11, 16, 6.5f)))
+
+        val defenseSide = PowerMockito.mock(PokemonForBattle::class.java)
+        Mockito.`when`(defenseSide.calcDefenseValue()).thenReturn(71.0)
+        Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(4096.0)
+        Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
+        Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
+                0, -1, "unknown", "unknown", "unknown",  Skill(), Skill(), Skill(), Skill(),
+                252, 252, 0, 0, 0, 4, 31, 31, 31, 31, 31, 31,
+                PokemonMasterData("132", "メタモン", "Ditto", "-", 48, 48, 48, 48, 48, 48, "じゅうなん", "-", "かわりもの", 0, -1, 4.0f)))
+
+        Mockito.`when`(attackSide.determineSkillPower(defenseSide)).thenReturn(51)
+        Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(4096.0, false))
+
+        val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
+        for(d in damages) println(d)
+        assertTrue(damages.containsKey(45))
+    }
+
 }

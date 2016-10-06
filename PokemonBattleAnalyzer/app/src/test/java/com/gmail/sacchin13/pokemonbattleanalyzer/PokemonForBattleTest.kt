@@ -230,8 +230,8 @@ class PokemonForBattleTest {
 
     @Test
     fun 相手側の素早さ計算のテスト() {
-        kucheatIndividual.specialDefenseEv = 252
-        kucheatIndividual.specialDefenseIv = 31
+        kucheatIndividual.speedEv = 252
+        kucheatIndividual.speedIv = 31
 
         val attackSide = PokemonForBattle.create(0, kucheatIndividual)
         attackSide.side = PartyInBattle.OPPONENT_SIDE
@@ -337,7 +337,7 @@ class PokemonForBattleTest {
         assertEquals(6144.0, attackSide.calcAttackValueCorrection(attackSide, f).first, 0.001)
 
         attackSide.side = PartyInBattle.MY_SIDE
-        attackSide.hpRatio = 10
+        attackSide.hpValue = 100
         assertEquals(6144.0, attackSide.calcAttackValueCorrection(attackSide, f).first, 0.001)
     }
 
@@ -358,22 +358,56 @@ class PokemonForBattleTest {
     @Test
     fun 防御側の防御力補正計算のテスト() {
         val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
+        attackSide.side = PartyInBattle.OPPONENT_SIDE
+        attackSide.skill.category = 0
 
-        val actual = attackSide.calcDefenseValueCorrection(attackSide)
-        assertEquals(4096.0, actual, 0.001)
+        attackSide.item = "しんかのきせき"
+        attackSide.ability = "ファーコート"
+        assertEquals(12288.0, attackSide.calcDefenseValueCorrection(attackSide), 0.001)
+
+        attackSide.item = "メタルパウダー"
+        attackSide.ability = "ふしぎなうろこ"
+        attackSide.status = 1
+        assertEquals(12288.0, attackSide.calcDefenseValueCorrection(attackSide), 0.001)
     }
 
     @Test
     fun 防御側の特殊防御力補正計算のテスト() {
         val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
+        attackSide.side = PartyInBattle.OPPONENT_SIDE
+        attackSide.skill.category = 0
 
-        val actual = attackSide.calcSpecialDefenseValueCorrection(BattleField())
-        assertEquals(4096.0, actual, 0.001)
+        val field = BattleField()
+        field.weather = BattleField.Weather.Sunny
+
+        attackSide.item = "しんかのきせき"
+        attackSide.ability = "こころのしずく"
+        assertEquals(9216.0, attackSide.calcSpecialDefenseValueCorrection(field), 0.001)
+
+        attackSide.item = "とつげきチョッキ"
+        attackSide.ability = "フラワーギフト"
+        attackSide.status = 1
+        assertEquals(9216.0, attackSide.calcSpecialDefenseValueCorrection(field), 0.001)
     }
 
     @Test
     fun 防御側の急所時の特殊防御力計算のテスト() {
         assertEquals(1, 1)
+    }
+
+    @Test
+    fun 攻撃技のタイプ補正のテスト() {
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
+        attackSide.side = PartyInBattle.OPPONENT_SIDE
+
+        attackSide.skill.type = Type.no(Type.Code.WATER)
+        assertEquals(1.0, attackSide.typeBonus(), 0.001)
+
+        attackSide.skill.type = Type.no(Type.Code.FIRE)
+        assertEquals(1.5, attackSide.typeBonus(), 0.001)
+
+        attackSide.ability = "てきおうりょく"
+        assertEquals(2.0, attackSide.typeBonus(), 0.001)
     }
 
     @Test
@@ -453,6 +487,7 @@ class PokemonForBattleTest {
     @Test
     fun 攻撃側HP依存技の威力のテスト() {
         val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
+        attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.skill.jname = "きしかいせい"
         attackSide.hpRatio = 100
         val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
@@ -469,17 +504,17 @@ class PokemonForBattleTest {
         assertEquals(200, result)
     }
 
-//    @Test
-//    fun 防御側HP依存技の威力のテスト1() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
-//        attackSide.skill.jname = "しおみず"
-//        attackSide.skill.power = 65
-//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
-//        defenseSide.hpRatio = 49
-//
-//        val result = attackSide.determineSkillPower(defenseSide)
-//        assertEquals(130, result)
-//    }
+    @Test
+    fun 防御側HP依存技の威力のテスト1() {
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
+        attackSide.skill.jname = "しおみず"
+        attackSide.skill.power = 65
+        val defenseSide = PokemonForBattle.create(0, IndividualPokemon.create(1, bakuhun))
+        defenseSide.hpRatio = 49
+
+        val result = attackSide.determineSkillPower(defenseSide)
+        assertEquals(130, result)
+    }
 
     @Test
     fun 防御側HP依存技の威力のテスト2() {
@@ -690,22 +725,92 @@ class PokemonForBattleTest {
     }
 
     @Test
-    fun 砂嵐時の素早さ計算のテスト() {
+    fun HPの実数値を計算するテスト() {
         val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
+
+        attackSide.side = PartyInBattle.MY_SIDE
+        attackSide.hpValue = 200
+        assertEquals(200, attackSide.hpValue())
+
         attackSide.side = PartyInBattle.OPPONENT_SIDE
-        attackSide.ability = "すなかき"
-
-        val field = BattleField()
-        field.weather = BattleField.Weather.Sandstorm
-
-        val actual = attackSide.speedValues(false)
-        assertEquals(98, actual[0])
-        assertEquals(126, actual[1])
-        assertEquals(140, actual[2])
-        assertEquals(142, actual[3])
-        assertEquals(154, actual[4])
-        assertEquals(188, actual[5])
-        assertEquals(204, actual[6])
-        assertEquals(210, actual[7])
+        attackSide.hpRatio = 50
+        assertEquals(75, attackSide.hpValue())
     }
+
+    @Test
+    fun HPの比率を計算するテスト() {
+        val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
+
+        attackSide.side = PartyInBattle.MY_SIDE
+        attackSide.hpValue = 200
+        assertEquals(200, attackSide.hpValue())
+
+        attackSide.side = PartyInBattle.OPPONENT_SIDE
+        attackSide.hpRatio = 50
+        assertEquals(50, attackSide.hpValue())
+    }
+
+//
+//    fun calcSpeedValue(allField: BattleField, tailWind: Boolean, onlyStatus: Boolean): Int {
+//        var result = when (side) {
+//            PartyInBattle.MY_SIDE -> individual.calcSpeed(mega)
+//            else -> individual.calcSpeed(252, mega)
+//        }
+//
+//        result = Math.floor(result.times(Characteristic.correction(characteristic, "S"))).toInt()
+//        if (onlyStatus) return result
+//
+//
+//        if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS) && ability() == "ちどりあし") {
+//            result = Math.round(result.times(1.5)).toInt()
+//        }
+//        if (allField.weather == BattleField.Weather.Sunny && ability() == "ようりょくそ") {
+//            result = result.times(2)
+//        }
+//        if (allField.weather == BattleField.Weather.Rainy && ability() == "すいすい") {
+//            result = result.times(2)
+//        }
+//        if (allField.weather == BattleField.Weather.Sandstorm && ability() == "すなかき") {
+//            result = result.times(2)
+//        }
+//
+//        if (item == "こだわりスカーフ") {
+//            result = Math.round(result.times(1.5)).toInt()
+//        }
+//        if (item == "メタルパウダー") {
+//            result = Math.round(result.times(1.5)).toInt()
+//        }
+//
+//        result = Math.floor(result.times(getSpeedRankCorrection())).toInt()
+//
+//        if (tailWind) result = result.times(2)
+//
+//        if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS) && ability() != "ちどりあし") {
+//            result = Math.floor(result.times(0.25)).toInt()
+//        }
+//
+//        return result
+//    }
+//
+//    fun speedValues(tailWind: Boolean): Array<Int> {
+//        val values = individual.speedValues(mega)
+//
+//        for (i in values.indices) {
+//            values[i] = Math.floor(values[i].times(getSpeedRankCorrection())).toInt()
+//
+//            if (tailWind) {
+//                values[i] = values[i].times(2)
+//            }
+//
+//            if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS)) {
+//                values[i] = Math.floor(values[i].toDouble().div(4.0)).toInt()
+//            }
+//
+//        }
+//        return values
+//    }
+
+
+
+
 }
