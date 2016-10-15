@@ -8,9 +8,9 @@ import java.util.*
 open class IndividualPokemon(
         open var id: Long = -1,
         open var status: Int = UNKNOWN,
-        open var item: String = "unknown",
-        open var characteristic: String = "unknown",
-        open var ability: String = "unknown",
+        open var item: String = UNSPECIFIED,
+        open var characteristic: String = UNSPECIFIED,
+        open var ability: String = UNSPECIFIED,
         open var skillNo1: Skill = Skill(),
         open var skillNo2: Skill = Skill(),
         open var skillNo3: Skill = Skill(),
@@ -31,20 +31,15 @@ open class IndividualPokemon(
 ) : RealmObject() {
 
     companion object {
+        const val UNSPECIFIED = "unspecified"
         const val UNKNOWN = -1
 
         fun create(id: Long, master: PokemonMasterData): IndividualPokemon {
-            return IndividualPokemon(id, 0, "", "", "", Skill(), Skill(), Skill(), Skill(), 0, 0, 0, 0, 0, 0, 31, 31, 31, 31, 31, 31, master)
+            return IndividualPokemon(id, 0, UNSPECIFIED, UNSPECIFIED, UNSPECIFIED, Skill(), Skill(), Skill(), Skill(), 0, 0, 0, 0, 0, 0, 31, 31, 31, 31, 31, 31, master)
         }
     }
 
     fun calcHp(megaType: Int): Int = calcHp(hpEv, megaType)
-    fun calcAttack(megaType: Int): Int = calcAttack(attackEv, megaType)
-    fun calcDefense(megaType: Int): Int = calcDefense(defenseEv, megaType)
-    fun calcSpecialAttack(megaType: Int): Int = calcSpecialAttack(specialAttackEv, megaType)
-    fun calcSpecialDefense(megaType: Int): Int = calcSpecialDefense(specialDefenseEv, megaType)
-    fun calcSpeed(megaType: Int): Int = calcSpeed(speedEv, megaType)
-
     fun calcHp(ev: Int, megaType: Int): Int {
         return when (megaType) {
             MegaPokemonMasterData.MEGA_X -> master.hpX(hpIv, ev)
@@ -53,6 +48,7 @@ open class IndividualPokemon(
         }
     }
 
+    fun calcAttack(megaType: Int): Int = calcAttack(attackEv, megaType)
     fun calcAttack(ev: Int, megaType: Int): Int {
         return when (megaType) {
             MegaPokemonMasterData.MEGA_X -> master.attackX(attackIv, ev)
@@ -61,6 +57,7 @@ open class IndividualPokemon(
         }
     }
 
+    fun calcDefense(megaType: Int): Int = calcDefense(defenseEv, megaType)
     fun calcDefense(ev: Int, megaType: Int): Int {
         return when (megaType) {
             MegaPokemonMasterData.MEGA_X -> master.defenseX(defenseIv, ev)
@@ -69,6 +66,7 @@ open class IndividualPokemon(
         }
     }
 
+    fun calcSpecialAttack(megaType: Int): Int = calcSpecialAttack(specialAttackEv, megaType)
     fun calcSpecialAttack(ev: Int, megaType: Int): Int {
         return when (megaType) {
             MegaPokemonMasterData.MEGA_X -> master.specialAttackX(specialAttackIv, ev)
@@ -77,6 +75,7 @@ open class IndividualPokemon(
         }
     }
 
+    fun calcSpecialDefense(megaType: Int): Int = calcSpecialDefense(specialDefenseEv, megaType)
     fun calcSpecialDefense(ev: Int, megaType: Int): Int {
         return when (megaType) {
             MegaPokemonMasterData.MEGA_X -> master.specialDefenseX(specialDefenseIv, ev)
@@ -85,6 +84,7 @@ open class IndividualPokemon(
         }
     }
 
+    fun calcSpeed(megaType: Int): Int = calcSpeed(speedEv, megaType)
     fun calcSpeed(ev: Int, megaType: Int): Int {
         return when (megaType) {
             MegaPokemonMasterData.MEGA_X -> master.speedX(speedIv, ev)
@@ -104,43 +104,31 @@ open class IndividualPokemon(
     val abilities: List<String>
         get() {
             val temp = ArrayList<String>()
-            temp.add(master.ability1)
-            if (master.ability2 != "-") {
+            if (master.ability1.isNullOrBlank().not() && master.ability1 != UNSPECIFIED && master.ability1 != "-") {
+                temp.add(master.ability1)
+            }
+            if (master.ability2.isNullOrBlank().not() && master.ability2 != UNSPECIFIED && master.ability2 != "-") {
                 temp.add(master.ability2)
             }
-            if (master.abilityd != "-") {
+            if (master.abilityd.isNullOrBlank().not() && master.abilityd != UNSPECIFIED && master.abilityd != "-") {
                 temp.add(master.abilityd)
             }
             return temp
         }
 
     fun typeScale(type: Type.Code, megaType: Int, katayaburi: Boolean): Double {
-        var type1 = 0
-        var type2 = 0
-        when (megaType) {
-            MegaPokemonMasterData.MEGA_X -> {
-                if (master.megax == null || (master.megax!!.type1 == -1 && master.megax!!.type2 == -1)) {
-                    type1 = master.type1
-                    type2 = master.type2
+        val (type1, type2) =
+                if ((megaType == MegaPokemonMasterData.MEGA_X &&
+                        master.megax != null &&
+                        master.megax!!.type1 != -1 && master.megax!!.type2 != -1)) {
+                    Pair(master.megax!!.type1, master.megax!!.type2)
+                } else if (megaType == MegaPokemonMasterData.MEGA_Y &&
+                        master.megay != null &&
+                        master.megay!!.type1 != -1 && master.megay!!.type2 != -1) {
+                    Pair(master.megay!!.type1, master.megay!!.type2)
                 } else {
-                    type1 = master.megax!!.type1
-                    type2 = master.megax!!.type2
+                    Pair(master.type1, master.type2)
                 }
-            }
-            MegaPokemonMasterData.MEGA_Y -> {
-                if (master.megay == null || (master.megay!!.type1 == -1 && master.megay!!.type2 == -1)) {
-                    type1 = master.type1
-                    type2 = master.type2
-                } else {
-                    type1 = master.megay!!.type1
-                    type2 = master.megay!!.type2
-                }
-            }
-            else -> {
-                type1 = master.type1
-                type2 = master.type2
-            }
-        }
 
         val scale = Type.calculateAffinity(type, Type.code(type1), Type.code(type2))
         if (scale < 0.1) {
@@ -159,7 +147,7 @@ open class IndividualPokemon(
 
     fun name(megaType: Int): String {
         return when (megaType) {
-            MegaPokemonMasterData.MEGA_X -> "メガ${master.jname}"
+            MegaPokemonMasterData.MEGA_X -> "メガ${master.jname}X"
             MegaPokemonMasterData.MEGA_Y -> "メガ${master.jname}Y"
             else -> master.jname
         }

@@ -187,10 +187,12 @@ class EditActivity : AppCompatActivity() {
     }
 
     inner class OnIvSelectedListener(val index: Int, val pokemon: IndividualPokemon) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {}
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             databaseHelper.begin()
-            when(index){
+            when (index) {
                 1 -> pokemon.hpIv = iv[position].toInt()
                 2 -> pokemon.attackIv = iv[position].toInt()
                 3 -> pokemon.defenseIv = iv[position].toInt()
@@ -203,7 +205,7 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    inner class OnEditText(val type: Int , val pokemon: IndividualPokemon): TextWatcher{
+    inner class OnEditText(val type: Int, val pokemon: IndividualPokemon) : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
 
             val ev = s.toString()

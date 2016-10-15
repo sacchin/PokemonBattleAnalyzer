@@ -1,9 +1,6 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
-import org.json.JSONException
-import org.json.JSONObject
-
-import java.util.HashMap
+import java.util.*
 
 class Ability(val ranking: Int = 0,
               val usageRate: Double = 0.0,
@@ -28,30 +25,18 @@ class Ability(val ranking: Int = 0,
             invalidAbility.put(Type.Code.GROUND, GRAND_INVALID_ABILITY)
         }
 
-        fun createAbility(tokusei: JSONObject): Ability {
-            try {
-                val name = tokusei.getString("name")
-                if (name == null || name == "null") {
-                    return Ability()
-                }
-                return Ability(tokusei.getInt("ranking"), tokusei.getDouble("usageRate"), tokusei.getString("name"), tokusei.getInt("sequenceNumber"))
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-
-            return Ability()
-        }
-
         fun calcTypeScale(ability: String, type: Type.Code): Double {
+            if (ability.isNullOrEmpty() || type == Type.Code.UNKNOWN) return 1.0
+
             val list: Array<String> = invalidAbility[type] ?: arrayOf("")
             if (list.isNotEmpty() && list.contains(ability)) return 0.0
 
             if ("ふしぎなまもり" == ability) {
                 if (type === Type.Code.FIRE || type === Type.Code.GHOST || type === Type.Code.FLYING ||
                         type === Type.Code.ROCK || type === Type.Code.DARK) {
-                    return  2.0
+                    return 2.0
                 } else {
-                    return  0.0
+                    return 0.0
                 }
             }
             return 1.0

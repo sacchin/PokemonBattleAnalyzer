@@ -36,9 +36,11 @@ class PokemonForBattle(
 
     companion object {
         const val UNKNOWN = -1
+        const val NOT_USED = "used"
+        const val NOT_CHANGED = "notchanged"
 
         fun create(side: Int, individual: IndividualPokemon): PokemonForBattle {
-            return PokemonForBattle(side, UNKNOWN, "unknown", "unknown", "unknown", Skill(), 0, 100, 0,
+            return PokemonForBattle(side, UNKNOWN, NOT_USED, "unknown", NOT_CHANGED, Skill(), 0, 100, 0,
                     0, 6, 0, 6, 0, 6, 0, 6, 0, 6,
                     0, 0, 0, MegaPokemonMasterData.NOT_MEGA, individual)
         }
@@ -222,6 +224,7 @@ class PokemonForBattle(
         if (item == "ふといホネ") {
             initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
         }
+
         return Pair(initValue, ignore)
     }
 
@@ -590,17 +593,15 @@ class PokemonForBattle(
     fun recoil(damage: Int) {
         val d = if (ability() == "いしあたま" || ability() == "マジックガード") {
             0
+        } else if (skill.jname == "アフロブレイク" || skill.jname == "じごくぐるま" || skill.jname == "とっしん" || skill.jname == "ワイルドボルト") {
+            damage.div(4.0).toInt()
+        } else if (skill.jname == "ウッドハンマー" || skill.jname == "すてみタックル" ||
+                skill.jname == "フレアドライブ" || skill.jname == "ブレイブバード" || skill.jname == "ボルテッカー") {
+            damage.div(3.0).toInt()
+        } else if (skill.jname == "もろはのずつき") {
+            damage.div(2.0).toInt()
         } else {
-            if (skill.jname == "アフロブレイク" || skill.jname == "じごくぐるま" || skill.jname == "とっしん" || skill.jname == "ワイルドボルト") {
-                damage.div(4.0).toInt()
-            } else if (skill.jname == "ウッドハンマー" || skill.jname == "すてみタックル" ||
-                    skill.jname == "フレアドライブ" || skill.jname == "ブレイブバード" || skill.jname == "ボルテッカー") {
-                damage.div(3.0).toInt()
-            } else if (skill.jname == "もろはのずつき") {
-                damage.div(2.0).toInt()
-            } else {
-                0
-            }
+            0
         }
 
         val d2 = if (ability() == "マジックガード") {
@@ -658,26 +659,9 @@ class PokemonForBattle(
             return true
         }
 
-        if ("ぼうおん" == ability() && katayaburi.not()) {
-            return if (skill.jname == "いにしえのうた" || skill.jname == "いびき" || skill.jname == "いやなおと" || skill.jname == "うたう" ||
-                    skill.jname == "エコーボイス" || skill.jname == "おしゃべり" || skill.jname == "おたけび" || skill.jname == "きんぞくおん" ||
-                    skill.jname == "くさぶえ" || skill.jname == "さわぐ" || skill.jname == "すてゼリフ" || skill.jname == "ダークパニック" ||
-                    skill.jname == "チャームボイス" || skill.jname == "ちょうおんぱ" || skill.jname == "ないしょばなし" || skill.jname == "なきごえ" ||
-                    skill.jname == "ハイパーボイス" || skill.jname == "バークアウト" || skill.jname == "ばくおんぱ" || skill.jname == "ほえる" ||
-                    skill.jname == "ほろびのうた" || skill.jname == "むしのさざめき" || skill.jname == "りんしょう") true else false
-        }
-        if ("ぼうじん" == ability() && katayaburi.not()) {
-            return if (skill.jname == "ねむりごな" || skill.jname == "しびれごな" || skill.jname == "どくのこな" ||
-                    skill.jname == "キノコのほうし" || skill.jname == "わたほうし" || skill.jname == "いかりのこな" || skill.jname == "ふんじん") true else false
-        }
-        if ("ぼうだん" == ability() && katayaburi.not()) {
-            return if (skill.jname == "アイスボール" || skill.jname == "アシッドボム" || skill.jname == "ウェザーボール" || skill.jname == "エナジーボール" ||
-                    skill.jname == "エレキボール" || skill.jname == "オクタンほう" || skill.jname == "かえんだん" || skill.jname == "がんせきほう" ||
-                    skill.jname == "きあいだま" || skill.jname == "ジャイロボール" || skill.jname == "シャドーボール" || skill.jname == "タネマシンガン" ||
-                    skill.jname == "タネばくだん" || skill.jname == "タマゴばくだん" || skill.jname == "たまなげ" || skill.jname == "でんじほう" ||
-                    skill.jname == "どろばくだん" || skill.jname == "はどうだん" || skill.jname == "ヘドロばくだん" || skill.jname == "マグネットボム" ||
-                    skill.jname == "ミストボール") true else false
-        }
+        if ("ぼうおん" == ability() && katayaburi.not()) return Skill.voiceSkill(skill.jname)
+        if ("ぼうじん" == ability() && katayaburi.not()) return Skill.powderSkill(skill.jname)
+        if ("ぼうだん" == ability() && katayaburi.not()) return Skill.bomSkill(skill.jname)
         return false
     }
 
