@@ -24,6 +24,7 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import kotlinx.android.synthetic.main.activity_expected.*
 import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.textColor
 import kotlin.properties.Delegates
 
 class ExpectedActivity : PGLActivity() {
@@ -52,80 +53,58 @@ class ExpectedActivity : PGLActivity() {
         val calc = BattleCalculator()
         val selectedOpponent = opponent.apply()
         val selectedMine = mine.apply()
-
-        selectedMine.skill = selectedMine.individual.skillNo1
         allFeild.resetAttackSide(mine.field)
         allFeild.resetDefenseSide(opponent.field)
-        val caseOfSkill1 = calc.getResultFirst(selectedMine, selectedOpponent, allFeild)
 
-
-        coverRate.text = caseOfSkill1.coverRate()
-        val orderResult = caseOfSkill1.orderResult(selectedMine, selectedOpponent, allFeild,
+        val general = calc.getGeneralResult(selectedMine, selectedOpponent, allFeild)
+        coverRate.text = general.coverRate()
+        order.text = general.orderResult(selectedMine, selectedOpponent, allFeild,
                 mine.field.contains(BattleField.Field.Tailwind), opponent.field.contains(BattleField.Field.Tailwind))
+        correctionRate.text = "0.9(${Util.percent(general.correctionRate[0].times(100.0))})\n" +
+                "1.1(${Util.percent(general.correctionRate[2].times(100.0))})"
+        scarf.text = Util.percent(general.scarfRate.times(100.0))
+        orderAbility.text = Util.percent(general.orderAbilityRate.times(100.0))
 
-        if (orderResult.isEmpty()) {
-            priority.text = "-"
-        } else {
-            var t = ""
-            for ((key, value) in orderResult) {
-                if (key == "mine") t += "---> $value <---\n"
-                else t += "$key($value)\n"
-            }
-            order.text = t
-        }
-
-        correctionRate.text = "0.9(${Util.percent(caseOfSkill1.correctionRate[0].times(100.0))})\n" +
-                "1.1(${Util.percent(caseOfSkill1.correctionRate[2].times(100.0))})"
-        scarf.text = Util.percent(caseOfSkill1.scarfRate.times(100.0))
-        orderAbility.text = "${Util.percent(caseOfSkill1.orderAbilityRate.times(100.0))}"
-//        if (label == "UNKNOWN" || rate < 0.1) order.text = "必ず後手" else order.text = label + "(${Util.percent(rate)})まで抜ける"
-        if (caseOfSkill1.prioritySkills.isEmpty()) {
+        if (general.prioritySkills.isEmpty()) {
             priority.text = "なし"
         } else {
             var t = ""
-            for (temp in caseOfSkill1.prioritySkills) {
-                t += temp.key + " = ${Util.percent(temp.value)}\n"
+            for ((key, value) in general.prioritySkills) {
+                t += key + " = ${Util.percent(value)}\n"
             }
             priority.text = t
         }
 
-        //技1の場合
-        skill1_name.text = selectedMine.individual.skillNo1.jname
-        for (temp in caseOfSkill1.defeatedTimes) {
-            for (pair in temp.value) {
-                Log.v("defeatedTimes", "${pair}")
+        for ((key, value) in general.defeatedTimes) {
+            for (pair in value) {
+                Log.v("defeatedTimes", "$pair")
             }
         }
+
+
+        //技1の場合
+        selectedMine.skill = selectedMine.individual.skillNo1
+        val caseOfSkill1 = calc.getResultFirst(selectedMine, selectedOpponent, allFeild)
+        skill1_name.text = selectedMine.individual.skillNo1.jname
+        skill1_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo1.jname)) Color.RED else Color.DKGRAY
 
         //技2の場合
         selectedMine.skill = selectedMine.individual.skillNo2
         val caseOfSkill2 = calc.getResult(selectedMine, selectedOpponent, BattleField())
         skill2_name.text = selectedMine.individual.skillNo2.jname
-        for (temp in caseOfSkill2.defeatedTimes) {
-            for (pair in temp.value) {
-                Log.v("defeatedTimes", "${pair}")
-            }
-        }
+        skill2_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo2.jname)) Color.RED else Color.DKGRAY
 
         //技3の場合
         selectedMine.skill = selectedMine.individual.skillNo3
         val caseOfSkill3 = calc.getResult(selectedMine, selectedOpponent, BattleField())
         skill3_name.text = selectedMine.individual.skillNo3.jname
-        for (temp in caseOfSkill3.defeatedTimes) {
-            for (pair in temp.value) {
-                Log.v("defeatedTimes", "${pair}")
-            }
-        }
+        skill3_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo3.jname)) Color.RED else Color.DKGRAY
 
         //技4の場合
         selectedMine.skill = selectedMine.individual.skillNo4
         val caseOfSkill4 = calc.getResult(selectedMine, selectedOpponent, BattleField())
         skill4_name.text = selectedMine.individual.skillNo4.jname
-        for (temp in caseOfSkill4.defeatedTimes) {
-            for (pair in temp.value) {
-                Log.v("defeatedTimes", "${pair}")
-            }
-        }
+        skill4_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo4.jname)) Color.RED else Color.DKGRAY
 
         val yValues = mutableListOf<BarEntry>()
         yValues.add(BarEntry(2.toFloat(), caseOfSkill4.arrayForBarChart()))

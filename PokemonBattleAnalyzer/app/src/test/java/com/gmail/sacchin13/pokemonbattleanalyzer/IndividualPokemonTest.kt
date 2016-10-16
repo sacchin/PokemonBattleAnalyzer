@@ -20,14 +20,20 @@ class IndividualPokemonTest {
         kucheat = IndividualPokemon.create(1,
                 PokemonMasterData("303", "クチート", "Mawile", "-", 50, 85, 85, 55, 55, 50,
                         "かいりきバサミ", "", "-", Type.no(Type.Code.STEEL), Type.no(Type.Code.FAIRY), 23.5f, megaKucheat))
+        kucheat.ability = "いかく"
+    }
+
+    @Test
+    fun 特性取得の正常系のテスト() {
+        assertEquals("ちからずく", kucheat.ability(MegaPokemonMasterData.MEGA_X))
+        assertEquals("いかく", kucheat.ability(MegaPokemonMasterData.NOT_MEGA))
     }
 
     @Test
     fun 特性一覧取得の正常系のテスト() {
         val actual = kucheat.abilities
-        assertEquals(2, actual.size)
-        assertEquals("かいりきバサミ", actual[0])
-        assertEquals("", actual[1])
+        assertEquals(1, actual.size)
+        assertEquals("いかく", actual[0])
     }
 
     @Test

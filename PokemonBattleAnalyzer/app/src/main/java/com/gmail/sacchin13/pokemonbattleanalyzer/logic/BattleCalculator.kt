@@ -14,13 +14,8 @@ class BattleCalculator(
             "ふくろだだき", "ダメおし", "しぜんのめぐみ", "ウェザーボール",
             "はきだす", "おいうち")
 
-
-    fun getResultFirst(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
+    fun getGeneralResult(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
         val result = BattleResult()
-
-        Log.e("getResultFirst", mine.name() + "(${mine.ability()}) vs " + opponent.name() + "(${opponent.ability()})")
-        Log.e("getResultFirst", "(${mine.ability()}) vs " + opponent.name() + "(${opponent.ability()})")
-        Log.e("getResultFirst", "(${mine.calcAttackValue()}) vs " + opponent.name() + "(${opponent.ability()})")
 
         result.coverRate = 0.0
         result.prioritySkill(opponent.trend)
@@ -38,8 +33,34 @@ class BattleCalculator(
                     opponent.characteristic = seikaku.name
 
                     result.orderRate(opponent, rate)
-                    result.add(myAttack(rate, mine, opponent, field))
                     result.add(oppoAttack(rate, opponent, mine, field))
+
+                    if (0.9 < result.coverRate) break@loop
+                }
+            }
+        }
+
+        return result
+    }
+
+    fun getResultFirst(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
+        val result = BattleResult()
+
+        result.coverRate = 0.0
+        loop@ for (item in opponent.itemTrend()) {
+            if (item.name.isNullOrEmpty() || item.usageRate < 0.01) continue
+            for (tokusei in opponent.abilityTrend()) {
+                if (tokusei.name.isNullOrEmpty() || tokusei.usageRate < 0.01) continue
+                for (seikaku in opponent.characteristicTrend()) {
+                    if (seikaku.name.isNullOrEmpty() || seikaku.usageRate < 0.01) continue
+                    val rate = item.usageRate.times(tokusei.usageRate.times(seikaku.usageRate)).toDouble()
+                    result.coverRate = result.coverRate.plus(rate)
+
+                    opponent.item = item.name
+                    opponent.ability = tokusei.name
+                    opponent.characteristic = seikaku.name
+
+                    result.add(myAttack(rate, mine, opponent, field))
 
                     if (0.9 < result.coverRate) break@loop
                 }
@@ -76,6 +97,8 @@ class BattleCalculator(
     fun myAttack(baseRate: Double, mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
         val result = BattleResult()
         if (mine.skill.category == 2) return result else result.didAttack = true
+        Log.e("myAttack", "${mine.skill.jname}(${mine.skill.category}):" + mine.name() + "(${mine.ability()}) vs " + opponent.name() + "(${opponent.ability()})")
+
 
         opponent.defenseEffortValue = 252
         opponent.specialDefenseEffortValue = 252
@@ -133,6 +156,7 @@ class BattleCalculator(
 
     fun doSkill(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField,
                 criticalRate: Double, first: Boolean, damaged: Boolean): MutableMap<Int, Double> {
+        Log.e("doSkill", "noEffect(${defenseSide.noEffect(attackSide.skill, attackSide)})")
         if (defenseSide.noEffect(attackSide.skill, attackSide)) {
             return mutableMapOf(0 to 1.0)
         }
@@ -226,10 +250,10 @@ class BattleCalculator(
 
         val damageCorrectionA = calcDamageCorrection(attackSide, defenseSide, field, true)
         val damageCorrectionB = calcDamageCorrection(attackSide, defenseSide, field, false)
-        println("$attackValue, $attackValueCorrection, $defenseValue, $defenseValueCorrection, $attackRankCorrectionA, " +
+        println("${attackSide.individual.master.jname}(${attackSide.skill.jname}), $attackValue, $attackValueCorrection, $defenseValue, $defenseValueCorrection, $attackRankCorrectionA, " +
                 "$defenseRankCorrectionA, $attackRankCorrectionB, $defenseRankCorrectionB, $damageCorrectionA, $damageCorrectionB")
         for (i in 0..(randomDamage.size - 1)) {
-            randomDamage[i] =  Util.round5(randomDamage[i].times(attackSide.typeBonus()))
+            randomDamage[i] = Util.round5(randomDamage[i].times(attackSide.typeBonus()))
             randomDamage[i] = Math.floor(randomDamage[i].times(Type.calculateAffinity(Type.code(attackSide.skill.type), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))))
             if (ignore.not() && attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
                 randomDamage[i] = Math.floor(randomDamage[i].times(0.5))
@@ -296,12 +320,10 @@ class BattleCalculator(
 
     fun calcDefenseValue(base: Double, defenseValueCorrection: Double, defenseRankCorrection: Double, attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField): Double {
         var result = Math.floor(base.times(defenseRankCorrection))
-        println("---- $base, $defenseRankCorrection, $result")
         if (attackSide.skill.category == 1 && field.weather == BattleField.Weather.Sandstorm &&
                 (defenseSide.individual.master.type1 == Type.no(Type.Code.ROCK) || defenseSide.individual.master.type2 == Type.no(Type.Code.ROCK))) {
             result = Util.round5(result.times(1.5))
         }
-        println("---- $result, ${Util.round5(result.times(defenseValueCorrection).div(4096.0))}")
 
         return Util.round5(result.times(defenseValueCorrection).div(4096.0))
     }
@@ -650,7 +672,18 @@ class BattleCalculator(
         return result
     }
 
-    fun levelValue(): Int{
+    fun levelValue(): Int {
         return Math.floor(2.times(level).div(5.0).plus(2)).toInt()
+    }
+
+    fun noEffectAlert(attackSide: PokemonForBattle, opponent: PartyInBattle): List<PokemonForBattle> {
+        val result = mutableListOf<PokemonForBattle>()
+        for (m in opponent.member) {
+            for (a in m.abilityTrend()) {
+                m.ability = a.name
+                if (m.noEffect(attackSide.skill, attackSide)) result.add(m)
+            }
+        }
+        return result
     }
 }

@@ -93,7 +93,10 @@
     <string name="title_activity_login">Sign in</string>
 
     <string name="detail_activity_base">Base Status</string>
-    <string name="detail_activity_happened">Happened</string>
+    <string name="detail_activity_hp">残HP</string>
+    <string name="detail_activity_mega">メガ</string>
+    <string name="detail_activity_migawari">身代</string>
+    <string name="detail_activity_aliminent">状態異常</string>
 
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>

@@ -48,7 +48,8 @@ class TemporaryStatus(
     }
 
     constructor(`in`: Parcel)
-    : this(`in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt()) {
+    : this(`in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(),
+            `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt()) {
     }
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
@@ -68,6 +69,7 @@ class TemporaryStatus(
     }
 
     override fun toString(): String {
-        return "${tempStatus}, ${tempHpRatio}, ${tempHpValue}, ${tempAttack}, ${tempDefense}, ${tempSpecialAttack}, ${tempSpecialDefense}, ${tempSpeed}, ${tempMega}"
+        return "${tempStatus}, ${tempHpRatio}, ${tempHpValue}, ${tempAttack}, ${tempDefense}, ${tempSpecialAttack}, " +
+                "${tempSpecialDefense}, ${tempSpeed}, ${tempMega}"
     }
 }

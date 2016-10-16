@@ -1,16 +1,15 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.activity
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
-import android.view.*
+import android.view.View
 import android.widget.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
-
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import kotlinx.android.synthetic.main.activity_edit.*
@@ -74,7 +73,7 @@ class EditActivity : AppCompatActivity() {
                         hEdit: EditText, aEdit: EditText, bEdit: EditText, cEdit: EditText, dEdit: EditText, sEdit: EditText) {
         val itemAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, item)
         itemAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        val skillAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Skill.companion.skillNameList(skill))
+        val skillAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Skill.skillNameList(skill))
         skillAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         val charAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, PokemonCharacteristic.CHARACTERISTIC.toMutableList())
         charAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -146,7 +145,9 @@ class EditActivity : AppCompatActivity() {
     }
 
     inner class OnItemSelectedListener(val pokemon: IndividualPokemon) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {}
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             databaseHelper.begin()
             pokemon.item = item[position]
@@ -155,7 +156,9 @@ class EditActivity : AppCompatActivity() {
     }
 
     inner class OnAbilitySelectedListener(val pokemon: IndividualPokemon) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {}
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             databaseHelper.begin()
             pokemon.ability = pokemon.abilities[position]
@@ -164,7 +167,9 @@ class EditActivity : AppCompatActivity() {
     }
 
     inner class OnCharSelectedListener(val pokemon: IndividualPokemon) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {}
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             databaseHelper.begin()
             pokemon.characteristic = PokemonCharacteristic.CHARACTERISTIC.toMutableList()[position]
@@ -173,10 +178,12 @@ class EditActivity : AppCompatActivity() {
     }
 
     inner class OnSkillSelectedListener(val index: Int, val pokemon: IndividualPokemon) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {}
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             databaseHelper.begin()
-            when(index){
+            when (index) {
                 1 -> pokemon.skillNo1 = skill[position]
                 2 -> pokemon.skillNo2 = skill[position]
                 3 -> pokemon.skillNo3 = skill[position]
@@ -216,7 +223,7 @@ class EditActivity : AppCompatActivity() {
             try {
                 val value = Integer.parseInt(ev)
                 databaseHelper.begin()
-                when(type){
+                when (type) {
                     1 -> pokemon.hpEv = value
                     2 -> pokemon.attackEv = value
                     3 -> pokemon.defenseEv = value
@@ -232,7 +239,11 @@ class EditActivity : AppCompatActivity() {
                 return
             }
         }
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        }
     }
 }

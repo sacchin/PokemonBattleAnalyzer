@@ -662,6 +662,9 @@ class PokemonForBattle(
         if ("ぼうおん" == ability() && katayaburi.not()) return Skill.voiceSkill(skill.jname)
         if ("ぼうじん" == ability() && katayaburi.not()) return Skill.powderSkill(skill.jname)
         if ("ぼうだん" == ability() && katayaburi.not()) return Skill.bomSkill(skill.jname)
+        if (("ビビッドボディ" == ability() || "じょおうのいげん" == ability()) && katayaburi.not()) {
+            return 0 < skill.priority
+        }
         return false
     }
 
@@ -703,7 +706,7 @@ class PokemonForBattle(
 
     fun ability(): String {
         return when (side) {
-            PartyInBattle.MY_SIDE -> individual.ability(mega)
+            PartyInBattle.MY_SIDE -> if (ability == NOT_CHANGED) individual.ability(mega) else ability
             else -> ability
         }
     }

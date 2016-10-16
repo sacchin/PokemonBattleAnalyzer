@@ -12,10 +12,10 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
-import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.TemporaryStatus
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import kotlinx.android.synthetic.main.activity_detail.*
 import org.jetbrains.anko.onClick
 import kotlin.properties.Delegates
@@ -145,8 +145,8 @@ class DetailActivity : PGLActivity() {
         val megaAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, forms)
         megaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        val megaSpinner = if(isMine) my_mega_check else oppo_mega_check
-        if (forms.size == 1) megaSpinner.visibility = View.GONE else  megaSpinner.adapter = megaAdapter
+        val megaSpinner = if (isMine) my_mega_check else oppo_mega_check
+        if (forms.size == 1) megaSpinner.visibility = View.GONE else megaSpinner.adapter = megaAdapter
     }
 
     private fun createPBAPokemonStatus(p: PokemonMasterData, type: Int) {
@@ -156,7 +156,7 @@ class DetailActivity : PGLActivity() {
 
         val temp = when (type) {
             NOT_MEGA -> util.createImage(p, 150f, resources)
-            MEGA_X -> when(p.no){
+            MEGA_X -> when (p.no) {
                 "681" -> util.createImage(R.drawable.n681_1, 150f, resources)
                 "555" -> util.createImage(R.drawable.n555_1, 150f, resources)
                 else -> util.createImage(p.no + "mx", 150f, resources)
@@ -196,7 +196,7 @@ class DetailActivity : PGLActivity() {
     }
 
     fun init() {
-        val s = arrayOf("状態異常","やけど", "こおり", "まひ", "どく", "もうどく", "ねむり", "ひんし")
+        val s = arrayOf("状態異常", "やけど", "こおり", "まひ", "どく", "もうどく", "ねむり", "ひんし")
         val statusAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, s)
 //        statusAdapter.add("状態異常")
 //        statusAdapter.add("やけど")
@@ -208,7 +208,7 @@ class DetailActivity : PGLActivity() {
 //        statusAdapter.add("ひんし")
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        val r = arrayOf("6","5", "4", "3", "2", "1", "0", "-1", "-2", "-3", "-4", "-5", "-6")
+        val r = arrayOf("6", "5", "4", "3", "2", "1", "0", "-1", "-2", "-3", "-4", "-5", "-6")
         val rankAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, r)
 //        rankAdapter.add("6")
 //        rankAdapter.add("5")

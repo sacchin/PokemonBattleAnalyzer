@@ -53,14 +53,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:paddingEnd="@dimen/activity_horizontal_margin"
-                    android:paddingStart="@dimen/activity_horizontal_margin"
-                    android:text="@string/detail_activity_happened" />
-
                 <TableLayout
                     android:id="@+id/inputTable"
                     android:layout_width="match_parent"
@@ -68,6 +60,27 @@
                     android:paddingEnd="@dimen/activity_horizontal_margin"
                     android:paddingStart="@dimen/activity_horizontal_margin"
                     android:stretchColumns="0,1,2,3,4,5,6">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/detail_activity_mega" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/detail_activity_hp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/detail_activity_aliminent" />
+
+                    </TableRow>
 
                     <TableRow
                         android:id="@+id/my_header"
@@ -118,6 +131,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_span="3" />
+
+                        <RadioButton android:id="@+id/oppoMigawariRadio" />
                     </TableRow>
 
                     <TableRow
