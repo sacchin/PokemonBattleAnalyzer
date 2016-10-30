@@ -473,17 +473,25 @@ class BattleCalculator(
         if (attackSide.skill.type == Type.no(Type.Code.FIRE) && field.field.contains(BattleField.Field.WaterSport)) {
             initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
         }
-        if (attackSide.skill.type == Type.no(Type.Code.DRAGON) && field.terrain == BattleField.Terrain.MistyTerrain) {
-            initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-        }
+
         if ((attackSide.skill.jname == "じならし" || attackSide.skill.jname == "じしん" || attackSide.skill.jname == "マグニチュード") &&
-                field.terrain == BattleField.Terrain.GrassyTerrain) {
+                (field.terrain == BattleField.Terrain.GrassyTerrain && defenseSide.floating().not())) {
             initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
         }
-        if (attackSide.skill.type == Type.no(Type.Code.GRASS) && field.terrain == BattleField.Terrain.GrassyTerrain) {
+        if (attackSide.skill.type == Type.no(Type.Code.GRASS) && field.terrain == BattleField.Terrain.GrassyTerrain &&
+                attackSide.floating().not()) {
             initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
         }
-        if (attackSide.skill.type == Type.no(Type.Code.ELECTRIC) && field.terrain == BattleField.Terrain.ElectricTerrain) {
+        if (attackSide.skill.type == Type.no(Type.Code.ELECTRIC) && field.terrain == BattleField.Terrain.ElectricTerrain &&
+                attackSide.floating().not()) {
+            initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
+        }
+        if (attackSide.skill.type == Type.no(Type.Code.DRAGON) && field.terrain == BattleField.Terrain.MistyTerrain &&
+                defenseSide.floating().not()) {
+            initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+        }
+        if (attackSide.skill.type == Type.no(Type.Code.PSYCHIC) && field.terrain == BattleField.Terrain.PsycoTerrain &&
+                attackSide.floating().not()) {
             initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
         }
 

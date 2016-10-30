@@ -160,4 +160,12 @@ open class IndividualPokemon(
             else -> ability
         }
     }
+
+    fun types(megaType: Int): Pair<Int, Int> {
+        return when (megaType) {
+            MegaPokemonMasterData.MEGA_X -> Pair(master.megax!!.type1, master.megax!!.type2)
+            MegaPokemonMasterData.MEGA_Y -> Pair(master.megay!!.type1, master.megay!!.type2)
+            else -> Pair(master.type1, master.type2)
+        }
+    }
 }

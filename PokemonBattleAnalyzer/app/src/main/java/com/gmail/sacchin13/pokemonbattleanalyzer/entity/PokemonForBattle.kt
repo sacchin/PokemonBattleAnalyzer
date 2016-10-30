@@ -629,7 +629,7 @@ class PokemonForBattle(
                 speedEffortValue, speedRank, hitProbabilityRank, avoidanceRank, criticalRank, mega, individual)
     }
 
-    fun noEffect(skill: Skill, attackSide: PokemonForBattle): Boolean {
+    fun noEffect(skill: Skill, attackSide: PokemonForBattle, field: BattleField): Boolean {
 
         val kimottama = attackSide.ability() == "きもったま"
         if (kimottama && (Type.code(skill.type) == Type.Code.NORMAL || Type.code(skill.type) == Type.Code.FIGHTING)) {
@@ -639,6 +639,14 @@ class PokemonForBattle(
         val result = individual.typeScale(Type.code(skill.type), mega, katayaburi)
         if (result < 0.1) {
             return true
+        }
+
+        if (0 < attackSide.skill.priority) {
+            if ((ability() == "じょおうのいげん" || ability() == "ビビッドボディ") && katayaburi.not()) {
+                return true
+            } else if (field.equals(BattleField.Terrain.PsycoTerrain)) {
+                return true
+            }
         }
 
         if ((skill.jname == "ねむりごな" || skill.jname == "しびれごな" || skill.jname == "どくのこな" || skill.jname == "キノコのほうし" ||
@@ -666,6 +674,12 @@ class PokemonForBattle(
             return 0 < skill.priority
         }
         return false
+    }
+
+    fun floating(): Boolean {
+        return (ability() == "ふゆう" || individual.types(mega).first == Type.no(Type.Code.FLYING) ||
+                individual.types(mega).second == Type.no(Type.Code.FLYING) ||
+                item == "ふうせん")
     }
 
     fun sheerForce(): Boolean {
