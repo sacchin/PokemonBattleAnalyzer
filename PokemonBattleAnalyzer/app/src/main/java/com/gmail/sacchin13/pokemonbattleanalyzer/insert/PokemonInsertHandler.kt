@@ -762,14 +762,18 @@ class PokemonInsertHandler(private val databaseHelper: DatabaseHelper?) {
         databaseHelper.insertPokemonMasterData("719", "ジジーロン", "-", 108, 100, 121, 81, 95, 95, "ぎゃくじょう", "そうしょく", "-", 0, 14, 185.0)
         databaseHelper.insertPokemonMasterData("719", "ハギギシリ", "-", 108, 100, 121, 81, 95, 95, "ビビッドボディ", "がんじょうあご", "-", 2, 10, 19.0)
         databaseHelper.insertPokemonMasterData("719", "アブリー", "-", 108, 100, 121, 81, 95, 95, "みつあつめ", "りんぷん", "-", 11, 17, 0.2)
+        databaseHelper.insertPokemonMasterData("719", "アブリボン", "-", 108, 100, 121, 81, 95, 95, "みつあつめ", "りんぷん", "-", 11, 17, 0.5)
+        databaseHelper.insertPokemonMasterData("719", "コスモッグ", "-", 108, 100, 121, 81, 95, 95, "てんねん", "-", "-", 10, -1, 0.1)
         databaseHelper.insertPokemonMasterData("719", "トゲデマル", "-", 108, 100, 121, 81, 95, 95, "てつのトゲ", "ひらいしん", "-", 3, 16, 3.3)
         databaseHelper.insertPokemonMasterData("719", "イワンコ", "-", 108, 100, 121, 81, 95, 95, "するどいめ", "やるき", "-", 12, -1, 9.2)
-        databaseHelper.insertPokemonMasterData("719", "ルガルガン", "まひるのすがた", 108, 100, 121, 81, 95, 95, "", "-", "-", 12, -1, 10.0)
-        databaseHelper.insertPokemonMasterData("719", "ルガルガン", "よるのすがた", 108, 100, 121, 81, 95, 95, "", "-", "-", 12, -1, 10.0)
+        databaseHelper.insertPokemonMasterData("719", "ルガルガン", "まひるのすがた", 108, 100, 121, 81, 95, 95, "するどいめ", "すなかき", "-", 12, -1, 25.0)
+        databaseHelper.insertPokemonMasterData("719-1", "ルガルガン", "まよなかのすがた", 108, 100, 121, 81, 95, 95, "するどいめ", "やるき", "", 12, -1, 25.0)
         databaseHelper.insertPokemonMasterData("719", "ネッコアラ", "-", 108, 100, 121, 81, 95, 95, "ぜったいねむり", "-", "-", 0, -1, 19.9)
         databaseHelper.insertPokemonMasterData("719", "ヤトウモリ", "-", 108, 100, 121, 81, 95, 95, "ふしょく", "-", "-", 7, 1, 4.8)
         databaseHelper.insertPokemonMasterData("719", "コソクムシ", "-", 108, 100, 121, 81, 95, 95, "にげごし", "-", "-", 2, 11, 12.0)
         databaseHelper.insertPokemonMasterData("719", "アマカジ", "-", 108, 100, 121, 81, 95, 95, "リーフガード", "どんかん", "-", 4, -1, 3.2)
+        databaseHelper.insertPokemonMasterData("719", "アママイコ", "-", 108, 100, 121, 81, 95, 95, "リーフガード", "どんかん", "-", 4, -1, 8.2)
+        databaseHelper.insertPokemonMasterData("719", "アマージョ", "-", 108, 100, 121, 81, 95, 95, "リーフガード", "じょおうのいげん", "-", 4, -1, 21.4)
         databaseHelper.insertPokemonMasterData("719", "キュワワー", "-", 108, 100, 121, 81, 95, 95, "フラワーベール", "ヒーリングシフト", "-", 17, -1, 0.3)
         databaseHelper.insertPokemonMasterData("719", "ドロバンコ", "-", 108, 100, 121, 81, 95, 95, "マイペース", "じきゅうりょく", "-", 8, -1, 110.0)
         databaseHelper.insertPokemonMasterData("719", "バンバドロ", "-", 108, 100, 121, 81, 95, 95, "マイペース", "じきゅうりょく", "-", 8, -1, 920.0)
@@ -777,9 +781,9 @@ class PokemonInsertHandler(private val databaseHelper: DatabaseHelper?) {
         databaseHelper.insertPokemonMasterData("719", "ヌイコグマ", "-", 108, 100, 121, 81, 95, 95, "もふもふ", "ぶきよう", "-", 0, 6, 6.8)
         databaseHelper.insertPokemonMasterData("719", "キテルグマ", "-", 108, 100, 121, 81, 95, 95, "もふもふ", "ぶきよう", "-", 0, 6, 135.0)
         databaseHelper.insertPokemonMasterData("719", "オドリドリ", "めらめらスタイル", 108, 100, 121, 81, 95, 95, "おどりこ", "-", "-", 1, 9, 3.4)
-        databaseHelper.insertPokemonMasterData("719", "オドリドリ", "ぱちぱちスタイル", 108, 100, 121, 81, 95, 95, "おどりこ", "-", "-", 3, 9, 3.4)
-        databaseHelper.insertPokemonMasterData("719", "オドリドリ", "ふらふらスタイル", 108, 100, 121, 81, 95, 95, "おどりこ", "-", "-", 10, 9, 3.4)
-        databaseHelper.insertPokemonMasterData("719", "オドリドリ", "まいまいスタイル", 108, 100, 121, 81, 95, 95, "おどりこ", "-", "-", 13, 9, 3.4)
+        databaseHelper.insertPokemonMasterData("719-1", "オドリドリ", "ぱちぱちスタイル", 108, 100, 121, 81, 95, 95, "おどりこ", "-", "-", 3, 9, 3.4)
+        databaseHelper.insertPokemonMasterData("719-2", "オドリドリ", "ふらふらスタイル", 108, 100, 121, 81, 95, 95, "おどりこ", "-", "-", 10, 9, 3.4)
+        databaseHelper.insertPokemonMasterData("719-3", "オドリドリ", "まいまいスタイル", 108, 100, 121, 81, 95, 95, "おどりこ", "-", "-", 13, 9, 3.4)
         databaseHelper.insertPokemonMasterData("719", "メテノ", "-", 108, 100, 121, 81, 95, 95, "リミットシールド", "-", "-", 12, 9, 40.0)
         databaseHelper.insertPokemonMasterData("719", "カリキリ", "-", 108, 100, 121, 81, 95, 95, "リーフガード", "-", "-", 4, -1, 1.5)
         databaseHelper.insertPokemonMasterData("719", "ラランテス", "-", 108, 100, 121, 81, 95, 95, "リーフガード", "-", "-", 4, -1, 18.5)
@@ -790,52 +794,38 @@ class PokemonInsertHandler(private val databaseHelper: DatabaseHelper?) {
         databaseHelper.insertPokemonMasterData("719", "シロデスナ", "-", 108, 100, 121, 81, 95, 95, "みずがため", "-", "-", 13, 8, 10.0)
         databaseHelper.insertPokemonMasterData("719", "バクガメス", "-", 108, 100, 121, 81, 95, 95, "シェルアーマー", "-", "-", 1, 14, 212.0)
         databaseHelper.insertPokemonMasterData("719", "マケンカニ", "-", 108, 100, 121, 81, 95, 95, "かいりきバサミ", "てつのこぶし", "-", 6, -1, 7.0)
-
-        //        Type.Code.NORMAL -> return 0  Type.Code.FIRE -> return 1
-//        Type.Code.WATER -> return 2 Type.Code.ELECTRIC -> return 3
-//        Type.Code.GRASS -> return 4 Type.Code.ICE -> return 5
-//        Type.Code.FIGHTING -> return 6 Type.Code.POISON -> return 7
-//        Type.Code.GROUND -> return 8 Type.Code.FLYING -> return 9
-//        Type.Code.PSYCHIC -> return 10 Type.Code.BUG -> return 11
-//        Type.Code.ROCK -> return 12 Type.Code.GHOST -> return 13
-//        Type.Code.DRAGON -> return 14 Type.Code.DARK -> return 15
-//        Type.Code.STEEL -> return 16 Type.Code.FAIRY -> return 17
-
         databaseHelper.insertPokemonMasterData("719", "タイプ：ヌル", "-", 108, 100, 121, 81, 95, 95, "カブトアーマー", "-", "-", 0, -1, 120.5)
-//        databaseHelper.insertPokemonMasterData("719", "シルバルディ", "-", 108, 100, 121, 81, 95, 95, "", "-", "-", , , 10.0)
+        databaseHelper.insertPokemonMasterData("719", "シルバルディ", "-", 108, 100, 121, 81, 95, 95, "ＡＲシステム", "-", "-", 0, -1, 100.5)
         databaseHelper.insertPokemonMasterData("719", "ジャラコ", "-", 108, 100, 121, 81, 95, 95, "ぼうだん", "ぼうおん", "-", 14, -1, 29.7)
-        databaseHelper.insertPokemonMasterData("719", "ジャランガ", "-", 108, 100, 121, 81, 95, 95, "ぼうだん", "ぼうおん", "-", 14, -1, 10.0)
-        databaseHelper.insertPokemonMasterData("719", "ジャララガン", "-", 108, 100, 121, 81, 95, 95, "ぼうだん", "ぼうおん", "-", 14, 6, 10.0)
+        databaseHelper.insertPokemonMasterData("719", "ジャランガ", "-", 108, 100, 121, 81, 95, 95, "ぼうだん", "ぼうおん", "-", 14, 6, 47.0)
+        databaseHelper.insertPokemonMasterData("719", "ジャララガン", "-", 108, 100, 121, 81, 95, 95, "ぼうだん", "ぼうおん", "-", 14, 6, 78.2)
         databaseHelper.insertPokemonMasterData("719", "ナゲツケサル", "-", 108, 100, 121, 81, 95, 95, "レシーバー", "-", "-", 6, -1, 82.8)
-//        databaseHelper.insertPokemonMasterData("719", "ヤレユータン", "-", 108, 100, 121, 81, 95, 95, "", "-", "-", , , 10.0)
-//        databaseHelper.insertPokemonMasterData("719", "", "-", 108, 100, 121, 81, 95, 95, "", "-", "-", , , 10.0)
-//        databaseHelper.insertPokemonMasterData("719", "", "-", 108, 100, 121, 81, 95, 95, "", "-", "-", , , 10.0)
-
-
-        databaseHelper.insertPokemonMasterData("019", "コラッタ", "-", "アローラのすがた", 0, 0, 0, 0, 0, 0, "-", "-", "-", 0, -1, 3.5)
-        databaseHelper.insertPokemonMasterData("020", "ラッタ", "Raticate", "アローラのすがた", 55, 81, 60, 50, 70, 97, "にげあし", "こんじょう", "はりきり", 0, -1, 18.5)
-        databaseHelper.insertPokemonMasterData("026", "ライチュウ", "Raichu", "アローラのすがた", 60, 90, 55, 90, 80, 110, "せいでんき", "-", "ひらいしん", 3, -1, 30.0)
-        databaseHelper.insertPokemonMasterData("027", "サンド", "-", "アローラのすがた", 0, 0, 0, 0, 0, 0, "-", "-", "-", 8, -1, 12.0)
-        databaseHelper.insertPokemonMasterData("028", "サンドパン", "Sandslash", "アローラのすがた", 75, 100, 110, 45, 55, 65, "すながくれ", "-", "すなかき", 8, -1, 29.5)
-        databaseHelper.insertPokemonMasterData("037", "ロコン", "-", "アローラのすがた", 0, 0, 0, 0, 0, 0, "-", "-", "-", 1, -1, 9.9)
-        databaseHelper.insertPokemonMasterData("038", "キュウコン", "Ninetales", "アローラのすがた", 73, 76, 75, 81, 100, 100, "もらいび", "-", "ひでり", 1, -1, 19.9)
-        databaseHelper.insertPokemonMasterData("050", "ディグダ", "-", "アローラのすがた", 0, 0, 0, 0, 0, 0, "-", "-", "-", 8, -1, 0.8)
-        databaseHelper.insertPokemonMasterData("051", "ダグトリオ", "Dugtrio", "アローラのすがた", 35, 80, 50, 50, 70, 120, "すながくれ", "ありじごく", "すなのちから", 8, -1, 33.3)
-        databaseHelper.insertPokemonMasterData("052", "ニャース", "-", "アローラのすがた", 0, 0, 0, 0, 0, 0, "-", "-", "-", 0, -1, 4.2)
-        databaseHelper.insertPokemonMasterData("053", "ペルシアン", "Persian", "アローラのすがた", 65, 70, 60, 65, 65, 115, "じゅうなん", "テクニシャン", "きんちょうかん", 0, -1, 32.0)
-        databaseHelper.insertPokemonMasterData("088", "ベトベター", "-", "アローラのすがた", 0, 0, 0, 0, 0, 0, "-", "-", "-", 7, -1, 30.0)
-        databaseHelper.insertPokemonMasterData("089", "ベトベトン", "Muk", "アローラのすがた", 105, 105, 75, 65, 100, 50, "あくしゅう", "ねんちゃく", "どくしゅ", 7, -1, 30.0)
-        databaseHelper.insertPokemonMasterData("103", "ナッシー", "Exeggutor", "アローラのすがた", 95, 95, 85, 125, 65, 55, "ようりょくそ", "-", "しゅうかく", 4, 10, 120.0)
-        databaseHelper.insertPokemonMasterData("105", "ガラガラ", "Marowak", "アローラのすがた", 60, 80, 110, 50, 80, 45, "ひらいしん", "いしあたま", "カブトアーマー", 8, -1, 45.0)
-
-
+        databaseHelper.insertPokemonMasterData("719", "ヤレユータン", "-", 108, 100, 121, 81, 95, 95, "せいしんりょく", "テレパシー", "-", 0, 10, 76.0)
         databaseHelper.insertPokemonMasterData("719", "カプ・コケコ", "-", 108, 100, 121, 81, 95, 95, "エレキメーカー", "-", "-", 3, 17, 20.5)
-        databaseHelper.insertPokemonMasterData("719", "・コケコ", "-", 108, 100, 121, 81, 95, 95, "サイコメイカー", "-", "-", 10, 17, 10.0)
-        databaseHelper.insertPokemonMasterData("719", "・コケコ", "-", 108, 100, 121, 81, 95, 95, "グラスメイカー", "-", "-", 4, 17, 10.0)
-        databaseHelper.insertPokemonMasterData("719", "・コケコ", "-", 108, 100, 121, 81, 95, 95, "ミストメイカー", "-", "-", 2, 17, 10.0)
-
+        databaseHelper.insertPokemonMasterData("719", "カプ・テテフ", "-", 108, 100, 121, 81, 95, 95, "サイコメイカー", "-", "-", 10, 17, 10.0)
+        databaseHelper.insertPokemonMasterData("719", "カプ・ブルル", "-", 108, 100, 121, 81, 95, 95, "グラスメイカー", "-", "-", 4, 17, 10.0)
+        databaseHelper.insertPokemonMasterData("719", "カプ・レヒレ", "-", 108, 100, 121, 81, 95, 95, "ミストメイカー", "-", "-", 2, 17, 10.0)
         databaseHelper.insertPokemonMasterData("719", "ソルガレオ", "-", 108, 100, 121, 81, 95, 95, "メタルプロテクト", "-", "-", 10, 16, 230.0)
         databaseHelper.insertPokemonMasterData("719", "ルナアーラ", "-", 108, 100, 121, 81, 95, 95, "ファントムガード", "-", "-", 10, 13, 120.0)
+
+        databaseHelper.insertPokemonMasterData("019-1", "コラッタ", "-", "アローラのすがた", 0, 0, 0, 0, 0, 0, "くいしんぼう", "はりきり", "-", 15, 0, 3.8)
+        databaseHelper.insertPokemonMasterData("020-1", "ラッタ", "Raticate", "アローラのすがた", 55, 81, 60, 50, 70, 97, "くいしんぼう", "はりきり", "-", 15, 0, 25.5)
+        databaseHelper.insertPokemonMasterData("026-1", "ライチュウ", "Raichu", "アローラのすがた", 60, 90, 55, 90, 80, 110, "サーフテール", "-", "-", 3, 10, 21.0)
+        databaseHelper.insertPokemonMasterData("027-1", "サンド", "-", "アローラのすがた", 0, 0, 0, 0, 0, 0, "ゆきがくれ", "-", "-", 5, 16, 40.0)
+        databaseHelper.insertPokemonMasterData("028-1", "サンドパン", "Sandslash", "アローラのすがた", 75, 100, 110, 45, 55, 65, "ゆきがくれ", "-", "-", 5, 16, 55.0)
+        databaseHelper.insertPokemonMasterData("037-1", "ロコン", "-", "アローラのすがた", 0, 0, 0, 0, 0, 0, "ゆきがくれ", "-", "-", 5, -1, 9.9)
+        databaseHelper.insertPokemonMasterData("038-1", "キュウコン", "Ninetales", "アローラのすがた", 73, 76, 75, 81, 100, 100, "ゆきがくれ", "-", "-", 5, 17, 19.9)
+        databaseHelper.insertPokemonMasterData("052-1", "ニャース", "-", "アローラのすがた", 0, 0, 0, 0, 0, 0, "ものひろい", "テクニシャン", "-", 15, -1, 4.2)
+        databaseHelper.insertPokemonMasterData("053-1", "ペルシアン", "Persian", "アローラのすがた", 65, 70, 60, 65, 65, 115, "ファーコート", "テクニシャン", "-", 15, -1, 33.0)
+        databaseHelper.insertPokemonMasterData("088-1", "ベトベター", "-", "アローラのすがた", 0, 0, 0, 0, 0, 0, "どくしゅ", "くいしんぼう", "-", 7, 15, 42.0)
+        databaseHelper.insertPokemonMasterData("089-1", "ベトベトン", "Muk", "アローラのすがた", 105, 105, 75, 65, 100, 50, "どくしゅ", "くいしんぼう", "-", 7, 15, 52.0)
+        databaseHelper.insertPokemonMasterData("103-1", "ナッシー", "Exeggutor", "アローラのすがた", 95, 95, 85, 125, 65, 55, "おみとおし", "-", "-", 4, 14, 415.6)
+        databaseHelper.insertPokemonMasterData("105-1", "ガラガラ", "Marowak", "アローラのすがた", 60, 80, 110, 50, 80, 45, "のろわれボディ", "ひらいしん", "-", 1, 13, 34.0)
+
+
+        databaseHelper.insertPokemonMasterData("050", "ディグダ", "-", "アローラのすがた", 0, 0, 0, 0, 0, 0, "-", "-", "-", 8, -1, 0.8)
+        databaseHelper.insertPokemonMasterData("051", "ダグトリオ", "Dugtrio", "アローラのすがた", 35, 80, 50, 50, 70, 120, "すながくれ", "ありじごく", "すなのちから", 8, -1, 33.3)
+
 
 
 
