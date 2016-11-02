@@ -8,6 +8,7 @@ class PokemonForBattle(
         var side: Int,
         var status: Int,
         var item: String,
+        var itemUsed: Boolean,
         var characteristic: String,
         var ability: String,
         var skill: Skill,
@@ -36,11 +37,10 @@ class PokemonForBattle(
 
     companion object {
         const val UNKNOWN = -1
-        const val NOT_USED = "used"
         const val NOT_CHANGED = "notchanged"
 
         fun create(side: Int, individual: IndividualPokemon): PokemonForBattle {
-            return PokemonForBattle(side, UNKNOWN, NOT_USED, "unknown", NOT_CHANGED, Skill(), 0, 100, 0,
+            return PokemonForBattle(side, UNKNOWN, NOT_CHANGED, false, "unknown", NOT_CHANGED, Skill(), 0, 100, 0,
                     0, 6, 0, 6, 0, 6, 0, 6, 0, 6,
                     0, 0, 0, MegaPokemonMasterData.NOT_MEGA, individual)
         }
@@ -215,13 +215,13 @@ class PokemonForBattle(
         if (ability() == "ヨガパワー" || ability() == "ちからもち") {
             initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
         }
-        if (item == "こだわりハチマキ") {
+        if (item() == "こだわりハチマキ") {
             initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
         }
-        if (item == "でんきだま") {
+        if (item() == "でんきだま") {
             initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
         }
-        if (item == "ふといホネ") {
+        if (item() == "ふといホネ") {
             initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
         }
 
@@ -241,13 +241,13 @@ class PokemonForBattle(
             initValue = initValue.times(6144).div(4096)
         }
         initValue = relatedBoth(initValue, defenseSide)
-        if (item == "しんかいのキバ") {
+        if (item() == "しんかいのキバ") {
             initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
         }
-        if (item == "こころのしずく") {
+        if (item() == "こころのしずく") {
             initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
         }
-        if (item == "こだわりメガネ") {
+        if (item() == "こだわりメガネ") {
             initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
         }
         return initValue
@@ -319,10 +319,10 @@ class PokemonForBattle(
         if (ability() == "ファーコート" && attackSide.skill.category == 0) {
             initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
         }
-        if (item == "しんかのきせき") {
+        if (item() == "しんかのきせき") {
             initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
         }
-        if (item == "メタルパウダー") {
+        if (item() == "メタルパウダー") {
             initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
         }
 
@@ -389,16 +389,16 @@ class PokemonForBattle(
         if (ability() == "フラワーギフト" && field.weather == BattleField.Weather.Sunny) {
             initValue = initValue.times(6144).div(4096)
         }
-        if (item == "しんかのきせき") {
+        if (item() == "しんかのきせき") {
             initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
         }
-        if (item == "とつげきチョッキ") {
+        if (item() == "とつげきチョッキ") {
             initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
         }
         if (ability() == "こころのしずく") {
             initValue = Math.round(initValue.times(6144.0).div(4096.0)).toDouble()
         }
-        if (item == "しんかいのウロコ") {
+        if (item() == "しんかいのウロコ") {
             initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
         }
         return initValue
@@ -443,15 +443,15 @@ class PokemonForBattle(
             result = result.times(2)
         }
 
-        if (item == "こだわりスカーフ") {
+        if (item() == "こだわりスカーフ") {
             result = Math.round(result.times(1.5)).toInt()
         }
-        if (item == "スピードパウダー") {
+        if (item() == "スピードパウダー") {
             result = Math.round(result.times(1.5)).toInt()
         }
 
         if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS) && ability() != "ちどりあし") {
-            result = Math.floor(result.times(0.25)).toInt()
+            result = Math.floor(result.times(0.5)).toInt()
         }
 
         if (status == StatusAilment.no(StatusAilment.Code.PARALYSIS) && ability() == "ちどりあし") {
@@ -486,10 +486,10 @@ class PokemonForBattle(
             return 1.0
         }
         var rank = criticalRank
-        if (item == "ピントレンズ" || item == "するどいツメ") {
+        if (item() == "ピントレンズ" || item() == "するどいツメ") {
             rank += 1
         }
-        if (item == "ラッキーパンチ" || item == "ながねぎ") {
+        if (item() == "ラッキーパンチ" || item() == "ながねぎ") {
             rank += 1
         }
         if (ability() == "きょううん") {
@@ -608,7 +608,7 @@ class PokemonForBattle(
             0
         } else if (ability() == "ちからずく" && skill.aliment == -2) {
             0
-        } else if (item == "いのちのたま") {
+        } else if (item() == "いのちのたま") {
             if (side == PartyInBattle.MY_SIDE) individual.calcHp(mega).div(10) else individual.calcHp(252, mega).div(10)
         } else {
             0
@@ -621,12 +621,6 @@ class PokemonForBattle(
             val now = hpValue()
             hpRatio = (now - d - d2).times(100.0).div(max).toInt()
         }
-    }
-
-    fun clone(): PokemonForBattle {
-        return PokemonForBattle(side, status, item, characteristic, ability, skill, hpEffortValue, hpRatio, hpValue, attackEffortValue, attackRank,
-                defenseEffortValue, defenseRank, specialAttackEffortValue, specialAttackRank, specialDefenseEffortValue, specialDefenseRank,
-                speedEffortValue, speedRank, hitProbabilityRank, avoidanceRank, criticalRank, mega, individual)
     }
 
     fun noEffect(skill: Skill, attackSide: PokemonForBattle, field: BattleField): Boolean {
@@ -644,7 +638,7 @@ class PokemonForBattle(
         if (0 < attackSide.skill.priority) {
             if ((ability() == "じょおうのいげん" || ability() == "ビビッドボディ") && katayaburi.not()) {
                 return true
-            } else if (field.equals(BattleField.Terrain.PsycoTerrain)) {
+            } else if (field.terrain == BattleField.Terrain.PsycoTerrain) {
                 return true
             }
         }
@@ -679,7 +673,7 @@ class PokemonForBattle(
     fun floating(): Boolean {
         return (ability() == "ふゆう" || individual.types(mega).first == Type.no(Type.Code.FLYING) ||
                 individual.types(mega).second == Type.no(Type.Code.FLYING) ||
-                item == "ふうせん")
+                item() == "ふうせん")
     }
 
     fun sheerForce(): Boolean {
@@ -722,6 +716,13 @@ class PokemonForBattle(
         return when (side) {
             PartyInBattle.MY_SIDE -> if (ability == NOT_CHANGED) individual.ability(mega) else ability
             else -> ability
+        }
+    }
+
+    fun item(): String {
+        return if(itemUsed) "" else when (side) {
+            PartyInBattle.MY_SIDE -> if (item == NOT_CHANGED) individual.item else item
+            else -> item
         }
     }
 

@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 class TemporaryStatus(
+        var tempItem: Int = 0,
         var tempStatus: Int = StatusAilment.no(StatusAilment.Code.UNKNOWN),
         var tempHpRatio: Int = 100,
         var tempHpValue: Int = 0,
@@ -12,6 +13,10 @@ class TemporaryStatus(
         var tempSpecialAttack: Int = 6,
         var tempSpecialDefense: Int = 6,
         var tempSpeed: Int = 6,
+        var tempHitProbability: Int = 6,
+        var tempAvoidance: Int = 6,
+        var tempCritical: Int = 6,
+        var tempMigawari: Int = 0,
         var tempMega: Int = MegaPokemonMasterData.NOT_MEGA) : Parcelable {
 
     fun setAttackRank(position: Int) {
@@ -34,6 +39,18 @@ class TemporaryStatus(
         tempSpeed = position
     }
 
+    fun setHitProbabilityRank(position: Int) {
+        tempHitProbability = position
+    }
+
+    fun setAvoidanceRank(position: Int) {
+        tempAvoidance = position
+    }
+
+    fun setCriticalRank(position: Int) {
+        tempCritical = position
+    }
+
     companion object {
         @JvmField
         val CREATOR: Parcelable.Creator<TemporaryStatus> = object : Parcelable.Creator<TemporaryStatus> {
@@ -48,12 +65,13 @@ class TemporaryStatus(
     }
 
     constructor(`in`: Parcel)
-    : this(`in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(),
-            `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt()) {
+    : this(`in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(),
+            `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt()) {
     }
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest!!.writeInt(tempStatus)
+        dest!!.writeInt(tempItem)
+        dest.writeInt(tempStatus)
         dest.writeInt(tempHpRatio)
         dest.writeInt(tempHpValue)
         dest.writeInt(tempAttack)
@@ -61,6 +79,10 @@ class TemporaryStatus(
         dest.writeInt(tempSpecialAttack)
         dest.writeInt(tempSpecialDefense)
         dest.writeInt(tempSpeed)
+        dest.writeInt(tempHitProbability)
+        dest.writeInt(tempAvoidance)
+        dest.writeInt(tempCritical)
+        dest.writeInt(tempMigawari)
         dest.writeInt(tempMega)
     }
 

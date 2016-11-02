@@ -156,8 +156,8 @@ class BattleCalculator(
 
     fun doSkill(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField,
                 criticalRate: Double, first: Boolean, damaged: Boolean): MutableMap<Int, Double> {
-        Log.e("doSkill", "noEffect(${defenseSide.noEffect(attackSide.skill, attackSide)})")
-        if (defenseSide.noEffect(attackSide.skill, attackSide)) {
+        Log.e("doSkill", "noEffect(${defenseSide.noEffect(attackSide.skill, attackSide, field)})")
+        if (defenseSide.noEffect(attackSide.skill, attackSide, field)) {
             return mutableMapOf(0 to 1.0)
         }
 
@@ -392,62 +392,62 @@ class BattleCalculator(
         if (Type.code(attackSide.skill.type) == Type.Code.FIRE && defenseSide.ability() == "かんそうはだ") {
             initValue = Math.round(initValue.times(5120.0).div(4096.0)).toDouble()
         }
-        if (attackSide.skill.category == 0 && attackSide.item == "ちからのハチマキ") {
+        if (attackSide.skill.category == 0 && attackSide.item() == "ちからのハチマキ") {
             initValue = Math.round(initValue.times(4505.0).div(4096.0)).toDouble()
         }
-        if (attackSide.skill.category == 1 && attackSide.item == "ものしりメガネ") {
+        if (attackSide.skill.category == 1 && attackSide.item() == "ものしりメガネ") {
             initValue = Math.round(initValue.times(4505.0).div(4096.0)).toDouble()
         }
         //こうんごうだま、しらたま、はっきんだま対応
-        if (Type.code(attackSide.skill.type) == Type.Code.NORMAL && attackSide.item == "シルクのスカーフ") {
+        if (Type.code(attackSide.skill.type) == Type.Code.NORMAL && attackSide.item() == "シルクのスカーフ") {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.FLYING && (attackSide.item == "あおぞらプレート" || attackSide.item == "するどいくちばし")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.FLYING && (attackSide.item() == "あおぞらプレート" || attackSide.item() == "するどいくちばし")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.ELECTRIC && (attackSide.item == "いかずちプレート" || attackSide.item == "じしゃく")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.ELECTRIC && (attackSide.item() == "いかずちプレート" || attackSide.item() == "じしゃく")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.ROCK && (attackSide.item == "がんせきプレート" || attackSide.item == "かたいいし" || attackSide.item == "がんせきおこう")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.ROCK && (attackSide.item() == "がんせきプレート" || attackSide.item() == "かたいいし" || attackSide.item() == "がんせきおこう")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.STEEL && (attackSide.item == "こうてつプレート" || attackSide.item == "メタルコート")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.STEEL && (attackSide.item() == "こうてつプレート" || attackSide.item() == "メタルコート")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.FIGHTING && (attackSide.item == "こぶしのプレート" || attackSide.item == "くろおび")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.FIGHTING && (attackSide.item() == "こぶしのプレート" || attackSide.item() == "くろおび")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.DARK && (attackSide.item == "こわもてプレート" || attackSide.item == "くろいメガネ")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.DARK && (attackSide.item() == "こわもてプレート" || attackSide.item() == "くろいメガネ")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.WATER && (attackSide.item == "しずくプレート" || attackSide.item == "しんぴのしずく" || attackSide.item == "うしおのおこう" || attackSide.item == "さざなみのおこう")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.WATER && (attackSide.item() == "しずくプレート" || attackSide.item() == "しんぴのしずく" || attackSide.item() == "うしおのおこう" || attackSide.item() == "さざなみのおこう")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.GROUND && (attackSide.item == "だいちのプレート" || attackSide.item == "やわらかいすな")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.GROUND && (attackSide.item() == "だいちのプレート" || attackSide.item() == "やわらかいすな")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.BUG && (attackSide.item == "たまむしプレート" || attackSide.item == "ぎんのこな")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.BUG && (attackSide.item() == "たまむしプレート" || attackSide.item() == "ぎんのこな")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.ICE && (attackSide.item == "つららのプレート" || attackSide.item == "とけないこおり")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.ICE && (attackSide.item() == "つららのプレート" || attackSide.item() == "とけないこおり")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.FIRE && (attackSide.item == "ひのたまプレート" || attackSide.item == "もくたん")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.FIRE && (attackSide.item() == "ひのたまプレート" || attackSide.item() == "もくたん")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.PSYCHIC && (attackSide.item == "ふしぎのプレート" || attackSide.item == "まがったスプーン" || attackSide.item == "あやしいおこう")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.PSYCHIC && (attackSide.item() == "ふしぎのプレート" || attackSide.item() == "まがったスプーン" || attackSide.item() == "あやしいおこう")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.GRASS && (attackSide.item == "みどりのプレート" || attackSide.item == "きせきのタネ" || attackSide.item == "おはなのおこう")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.GRASS && (attackSide.item() == "みどりのプレート" || attackSide.item() == "きせきのタネ" || attackSide.item() == "おはなのおこう")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.POISON && (attackSide.item == "もうどくプレート" || attackSide.item == "どくバリ")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.POISON && (attackSide.item() == "もうどくプレート" || attackSide.item() == "どくバリ")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.GHOST && (attackSide.item == "もののけプレート" || attackSide.item == "のろいのおふだ")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.GHOST && (attackSide.item() == "もののけプレート" || attackSide.item() == "のろいのおふだ")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (Type.code(attackSide.skill.type) == Type.Code.DRAGON && (attackSide.item == "りゅうのプレート" || attackSide.item == "りゅうのキバ")) {
+        if (Type.code(attackSide.skill.type) == Type.Code.DRAGON && (attackSide.item() == "りゅうのプレート" || attackSide.item() == "りゅうのキバ")) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
         //5325 / 4096 四捨五入 ジュエル
@@ -538,34 +538,34 @@ class BattleCalculator(
             initValue = Math.round(initValue.times(3072.0).div(4096.0)).toDouble()
         }
         //ToDo: メトロノーム initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble() 4096 から 819 ずつ上がる。6回目以降：8196
-        if (batsugun < 1 && attackSide.item == "たつじんのおび") {
+        if (batsugun < 1 && attackSide.item() == "たつじんのおび") {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
-        if (attackSide.item == "いのちのたま") {
+        if (attackSide.item() == "いのちのたま") {
             initValue = Math.round(initValue.times(5324.0).div(4096.0)).toDouble()
         }
         if (1 < batsugun) {
             when (attackSide.skill.type) {
-                Type.no(Type.Code.FIRE) -> if (defenseSide.item == "オッカのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.WATER) -> if (defenseSide.item == "イトケのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.ELECTRIC) -> if (defenseSide.item == "ソクノのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.GRASS) -> if (defenseSide.item == "リンドのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.ICE) -> if (defenseSide.item == "ヤチェのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.FIGHTING) -> if (defenseSide.item == "ヨプのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.POISON) -> if (defenseSide.item == "ビアーのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.GROUND) -> if (defenseSide.item == "シュカのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.FLYING) -> if (defenseSide.item == "バコウのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.PSYCHIC) -> if (defenseSide.item == "ウタンのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.BUG) -> if (defenseSide.item == "タンガのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.ROCK) -> if (defenseSide.item == "ヨロギのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.GHOST) -> if (defenseSide.item == "カシブのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.DRAGON) -> if (defenseSide.item == "ハバンのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.DARK) -> if (defenseSide.item == "ナモのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.STEEL) -> if (defenseSide.item == "リリバのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
-                Type.no(Type.Code.FAIRY) -> if (defenseSide.item == "ロゼルのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.FIRE) -> if (defenseSide.item() == "オッカのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.WATER) -> if (defenseSide.item() == "イトケのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.ELECTRIC) -> if (defenseSide.item() == "ソクノのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.GRASS) -> if (defenseSide.item() == "リンドのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.ICE) -> if (defenseSide.item() == "ヤチェのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.FIGHTING) -> if (defenseSide.item() == "ヨプのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.POISON) -> if (defenseSide.item() == "ビアーのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.GROUND) -> if (defenseSide.item() == "シュカのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.FLYING) -> if (defenseSide.item() == "バコウのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.PSYCHIC) -> if (defenseSide.item() == "ウタンのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.BUG) -> if (defenseSide.item() == "タンガのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.ROCK) -> if (defenseSide.item() == "ヨロギのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.GHOST) -> if (defenseSide.item() == "カシブのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.DRAGON) -> if (defenseSide.item() == "ハバンのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.DARK) -> if (defenseSide.item() == "ナモのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.STEEL) -> if (defenseSide.item() == "リリバのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
+                Type.no(Type.Code.FAIRY) -> if (defenseSide.item() == "ロゼルのみ") initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
             }
         }
-        if (attackSide.skill.type == Type.no(Type.Code.NORMAL) && defenseSide.item == "ホズのみ") {
+        if (attackSide.skill.type == Type.no(Type.Code.NORMAL) && defenseSide.item() == "ホズのみ") {
             initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
         }
 
@@ -684,14 +684,14 @@ class BattleCalculator(
         return Math.floor(2.times(level).div(5.0).plus(2)).toInt()
     }
 
-    fun noEffectAlert(attackSide: PokemonForBattle, opponent: PartyInBattle): List<PokemonForBattle> {
-        val result = mutableListOf<PokemonForBattle>()
-        for (m in opponent.member) {
-            for (a in m.abilityTrend()) {
-                m.ability = a.name
-                if (m.noEffect(attackSide.skill, attackSide)) result.add(m)
-            }
-        }
-        return result
-    }
+//    fun noEffectAlert(attackSide: PokemonForBattle, opponent: PartyInBattle): List<PokemonForBattle> {
+//        val result = mutableListOf<PokemonForBattle>()
+//        for (m in opponent.member) {
+//            for (a in m.abilityTrend()) {
+//                m.ability = a.name
+//                if (m.noEffect(attackSide.skill, attackSide, field)) result.add(m)
+//            }
+//        }
+//        return result
+//    }
 }

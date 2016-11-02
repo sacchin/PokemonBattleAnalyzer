@@ -43,6 +43,7 @@ class PartyInBattle(val side: Int = 0) {
 
     fun apply(): PokemonForBattle {
         member[selected].mega = temp.tempMega
+        if(temp.tempItem == 1) member[selected].item = PokemonForBattle.NOT_USED
         member[selected].status = temp.tempStatus
         member[selected].hpRatio = temp.tempHpRatio
         member[selected].hpValue = temp.tempHpValue
@@ -51,6 +52,9 @@ class PartyInBattle(val side: Int = 0) {
         member[selected].specialAttackRank = temp.tempSpecialAttack
         member[selected].specialDefenseRank = temp.tempSpecialDefense
         member[selected].speedRank = temp.tempSpeed
+        member[selected].hitProbabilityRank = temp.tempHitProbability
+        member[selected].avoidanceRank = temp.tempAvoidance
+        member[selected].criticalRank = temp.tempCritical
 
         return member[selected]
     }
@@ -65,7 +69,24 @@ class PartyInBattle(val side: Int = 0) {
         temp.tempSpecialAttack = member[selected].specialAttackRank
         temp.tempSpecialDefense = member[selected].specialDefenseRank
         temp.tempSpeed = member[selected].speedRank
+        temp.tempHitProbability = member[selected].hitProbabilityRank
+        temp.tempAvoidance = member[selected].avoidanceRank
+        temp.tempCritical = member[selected].criticalRank
 
         return member[selected]
     }
+
+    fun resetWithChange(): PokemonForBattle {
+        member[selected].attackRank = 6
+        member[selected].defenseRank = 6
+        member[selected].specialAttackRank = 6
+        member[selected].specialDefenseRank = 6
+        member[selected].speedRank = 6
+        member[selected].hitProbabilityRank = 6
+        member[selected].avoidanceRank = 6
+        member[selected].criticalRank = 6
+
+        return member[selected]
+    }
+
 }

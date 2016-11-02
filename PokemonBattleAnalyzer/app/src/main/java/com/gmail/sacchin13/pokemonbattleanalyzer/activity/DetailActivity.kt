@@ -17,6 +17,7 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.entity.TemporaryStatus
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import kotlinx.android.synthetic.main.activity_detail.*
+import org.jetbrains.anko.onCheckedChange
 import org.jetbrains.anko.onClick
 import kotlin.properties.Delegates
 
@@ -198,31 +199,11 @@ class DetailActivity : PGLActivity() {
     fun init() {
         val s = arrayOf("状態異常", "やけど", "こおり", "まひ", "どく", "もうどく", "ねむり", "ひんし")
         val statusAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, s)
-//        statusAdapter.add("状態異常")
-//        statusAdapter.add("やけど")
-//        statusAdapter.add("こおり")
-//        statusAdapter.add("まひ")
-//        statusAdapter.add("どく")
-//        statusAdapter.add("もうどく")
-//        statusAdapter.add("ねむり")
-//        statusAdapter.add("ひんし")
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         val r = arrayOf("6", "5", "4", "3", "2", "1", "0", "-1", "-2", "-3", "-4", "-5", "-6")
         val rankAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, r)
-//        rankAdapter.add("6")
-//        rankAdapter.add("5")
-//        rankAdapter.add("4")
-//        rankAdapter.add("3")
-//        rankAdapter.add("2")
-//        rankAdapter.add("1")
-//        rankAdapter.add("0")
-//        rankAdapter.add("-1")
-//        rankAdapter.add("-2")
-//        rankAdapter.add("-3")
-//        rankAdapter.add("-4")
-//        rankAdapter.add("-5")
-//        rankAdapter.add("-6")
+
         rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         myASpinner.adapter = rankAdapter
         myASpinner.setSelection(temp.tempAttack)
@@ -239,6 +220,15 @@ class DetailActivity : PGLActivity() {
         mySSpinner.adapter = rankAdapter
         mySSpinner.setSelection(temp.tempSpeed)
         mySSpinner.onItemSelectedListener = OnRankSelectedListener(4)
+        myHSpinner.adapter = rankAdapter
+        myHSpinner.setSelection(temp.tempSpeed)
+        myHSpinner.onItemSelectedListener = OnRankSelectedListener(5)
+        myAVSpinner.adapter = rankAdapter
+        myAVSpinner.setSelection(temp.tempSpeed)
+        myAVSpinner.onItemSelectedListener = OnRankSelectedListener(6)
+        myCRSpinner.adapter = rankAdapter
+        myCRSpinner.setSelection(temp.tempSpeed)
+        myCRSpinner.onItemSelectedListener = OnRankSelectedListener(7)
 
         if (isMine) {
             oppo_header.visibility = View.GONE
@@ -249,6 +239,10 @@ class DetailActivity : PGLActivity() {
             my_mega_check.onItemSelectedListener = OnMegaSelectedListener()
             myHPBar.setText(temp.tempHpValue.toString())
             myHPBar.setOnEditorActionListener(OnHPEditListener())
+            if(temp.tempMigawari == 1) myMigawari.isChecked = true
+            myMigawari.onCheckedChange { compoundButton, b -> temp.tempMigawari = if(b) 1 else 0 }
+            if(temp.tempItem == 1) myItemUsed.isChecked = true
+            myItemUsed.onCheckedChange { compoundButton, b -> temp.tempItem = if(b) 1 else 0 }
         } else {
             my_header.visibility = View.GONE
             opponentStatusSpinner.adapter = statusAdapter
@@ -258,6 +252,10 @@ class DetailActivity : PGLActivity() {
             oppo_mega_check.onItemSelectedListener = OnMegaSelectedListener()
             opponentHPBar.progress = temp.tempHpRatio
             opponentHPBar.setOnSeekBarChangeListener(OnHPChangeListener())
+            if(temp.tempMigawari == 1) oppoMigawari.isChecked = true
+            oppoMigawari.onCheckedChange { compoundButton, b -> temp.tempMigawari = if(b) 1 else 0 }
+            if(temp.tempItem == 1) oppoItemUsed.isChecked = true
+            oppoItemUsed.onCheckedChange { compoundButton, b -> temp.tempItem = if(b) 1 else 0 }
         }
     }
 
@@ -281,6 +279,9 @@ class DetailActivity : PGLActivity() {
                 2 -> temp.setSpecialAttackRank(id.toInt())
                 3 -> temp.setSpecialDefenseRank(id.toInt())
                 4 -> temp.setSpeedRank(id.toInt())
+                5 -> temp.setHitProbabilityRank(id.toInt())
+                6 -> temp.setAvoidanceRank(id.toInt())
+                7 -> temp.setCriticalRank(id.toInt())
             }
         }
     }
