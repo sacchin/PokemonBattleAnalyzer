@@ -29,6 +29,8 @@ class BattleResult {
             1 to 0.0, 2 to 0.0, 3 to 0.0, 4 to 0.0, 5 to 0.0
     )
 
+    var breakMigawari: Int = -1 //-1: not migawari, 0: break migawari, 1: depends on ev, 2: not break
+
     fun updateDefeatTimes(key: Int, value: Double) {
         defeatTimes[key] = defeatTimes[key]!!.plus(value)
     }
@@ -42,6 +44,21 @@ class BattleResult {
 
         val a = defeatedTimes[skillName] as MutableMap<Int, Double>
         a[key] = a[key]!!.plus(value)
+    }
+
+    fun calcBreakMigawari(checked: Boolean, skillName: String){
+        if(checked.not() || Skill.migawariSkill(skillName)){
+            breakMigawari = -1
+        }else if (Math.abs(defeatTimes[5]!!.minus(0.0)) < 0.001) {
+            breakMigawari = 0
+        }else if (Math.abs(defeatTimes[1]!!.minus(0.0)) < 0.001 &&
+                Math.abs(defeatTimes[2]!!.minus(0.0)) < 0.001 &&
+                Math.abs(defeatTimes[3]!!.minus(0.0)) < 0.001 &&
+                Math.abs(defeatTimes[4]!!.minus(0.0)) < 0.001) {
+            breakMigawari = 2
+        }else{
+            breakMigawari = 1
+        }
     }
 
     fun blow(baseRate: Double): Boolean {

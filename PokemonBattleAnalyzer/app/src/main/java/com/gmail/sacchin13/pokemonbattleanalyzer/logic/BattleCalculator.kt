@@ -91,6 +91,7 @@ class BattleCalculator(
                 }
             }
         }
+        result.calcBreakMigawari(opponent.migawari, mine.skill.jname)
         return result
     }
 
@@ -105,26 +106,30 @@ class BattleCalculator(
         val d252 = doSkill(mine, opponent, field, mine.calcCriticalRate().toDouble(), true, false)
 
         opponent.hpEffortValue = 252
+        //H=252, B(or D)=252の場合の確定数
         for ((key, value) in d252) result.updateDefeatTimes(opponent.defeatTimes(key), baseRate.times(value))
 
         if (result.blow(baseRate)) {
-            println("blow!!")
+            println("H and B(or D)=252: blow!!")
             return result
         }
 
         opponent.defenseEffortValue = 0
         opponent.specialDefenseEffortValue = 0
         val d0 = doSkill(mine, opponent, field, mine.calcCriticalRate().toDouble(), true, false)
+        //H=252, B(or D)が0の場合の確定数
         for ((key, value) in d0) result.updateDefeatTimes(opponent.defeatTimes(key), baseRate.times(value))
 
         opponent.hpEffortValue = 0
+        //H=0, B(or D)が0の場合の確定数
         for ((key, value) in d0) result.updateDefeatTimes(opponent.defeatTimes(key), baseRate.times(value))
 
         if (result.little()) {
-            println("little!!")
+            println("H and B(or D)=0: can not blow!!")
             return result
         }
 
+        //H=0, B(or D)が252の場合の確定数
         for ((key, value) in d252) result.updateDefeatTimes(opponent.defeatTimes(key), baseRate.times(value))
 
         return result

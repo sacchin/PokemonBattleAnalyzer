@@ -43,7 +43,7 @@ class PartyInBattle(val side: Int = 0) {
 
     fun apply(): PokemonForBattle {
         member[selected].mega = temp.tempMega
-        if(temp.tempItem == 1) member[selected].item = PokemonForBattle.NOT_USED
+        member[selected].itemUsed = (temp.tempItem == 1)
         member[selected].status = temp.tempStatus
         member[selected].hpRatio = temp.tempHpRatio
         member[selected].hpValue = temp.tempHpValue
@@ -55,12 +55,14 @@ class PartyInBattle(val side: Int = 0) {
         member[selected].hitProbabilityRank = temp.tempHitProbability
         member[selected].avoidanceRank = temp.tempAvoidance
         member[selected].criticalRank = temp.tempCritical
+        member[selected].migawari = (temp.tempMigawari == 1)
 
         return member[selected]
     }
 
     fun load(): PokemonForBattle {
         temp.tempMega = member[selected].mega
+        temp.tempItem = if(member[selected].itemUsed) 1 else 0
         temp.tempStatus = member[selected].status
         temp.tempHpRatio = member[selected].hpRatio
         temp.tempHpValue = member[selected].hpValue
@@ -72,6 +74,7 @@ class PartyInBattle(val side: Int = 0) {
         temp.tempHitProbability = member[selected].hitProbabilityRank
         temp.tempAvoidance = member[selected].avoidanceRank
         temp.tempCritical = member[selected].criticalRank
+        temp.tempMigawari = if(member[selected].migawari) 1 else 0
 
         return member[selected]
     }
@@ -85,6 +88,7 @@ class PartyInBattle(val side: Int = 0) {
         member[selected].hitProbabilityRank = 6
         member[selected].avoidanceRank = 6
         member[selected].criticalRank = 6
+        member[selected].migawari = false
 
         return member[selected]
     }

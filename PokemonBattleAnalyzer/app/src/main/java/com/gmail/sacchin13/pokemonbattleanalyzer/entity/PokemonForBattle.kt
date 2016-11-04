@@ -28,6 +28,7 @@ class PokemonForBattle(
         var hitProbabilityRank: Int,
         var avoidanceRank: Int,
         var criticalRank: Int,
+        var migawari: Boolean,
         var mega: Int,
         var individual: IndividualPokemon = IndividualPokemon()
 ) {
@@ -42,7 +43,7 @@ class PokemonForBattle(
         fun create(side: Int, individual: IndividualPokemon): PokemonForBattle {
             return PokemonForBattle(side, UNKNOWN, NOT_CHANGED, false, "unknown", NOT_CHANGED, Skill(), 0, 100, 0,
                     0, 6, 0, 6, 0, 6, 0, 6, 0, 6,
-                    0, 0, 0, MegaPokemonMasterData.NOT_MEGA, individual)
+                    0, 0, 0, false, MegaPokemonMasterData.NOT_MEGA, individual)
         }
     }
 
