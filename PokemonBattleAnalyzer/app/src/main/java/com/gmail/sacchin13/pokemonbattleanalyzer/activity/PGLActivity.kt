@@ -39,12 +39,11 @@ open class PGLActivity : AppCompatActivity() {
 
     private fun downloadTrend() {
         finishCount = 0
-        for (i in 0..opponentParty.member.size - 1) {
-            if (opponentParty.member[i].no.contains("-")) {
-                PokemonTrendDownloader(opponentParty.member[i].no, i, TrendListener()).execute()
+        for ((i, value) in opponentParty.member.withIndex()) {
+            if (value.no.contains("-")) {
+                PokemonTrendDownloader(value.no, i, TrendListener()).execute()
             } else {
-                val p = opponentParty.member[i].no.toInt()
-                val pokemonNo = "$p-0"
+                val pokemonNo = "${value.no}-0"
                 PokemonTrendDownloader(pokemonNo, i, TrendListener()).execute()
             }
         }

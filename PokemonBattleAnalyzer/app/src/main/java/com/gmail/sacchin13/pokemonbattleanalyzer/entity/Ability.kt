@@ -28,7 +28,7 @@ class Ability(val ranking: Int = 0,
         fun calcTypeScale(ability: String, type: Type.Code): Double {
             if (ability.isNullOrEmpty() || type == Type.Code.UNKNOWN) return 1.0
 
-            val list: Array<String> = invalidAbility[type] ?: arrayOf("")
+            val list = invalidAbility[type] ?: arrayOf("")
             if (list.isNotEmpty() && list.contains(ability)) return 0.0
 
             if ("ふしぎなまもり" == ability) {

@@ -45,7 +45,7 @@ class PokemonTrendDownloader(
             val response = httpClient.newCall(request).execute()
             str = response.body().string()
 
-            if (str.equals("error")) {
+            if (str == "error") {
                 Log.v("PokemonTrendDownloader", "stop $str")
             } else {
                 val moshi = Moshi.Builder().build()

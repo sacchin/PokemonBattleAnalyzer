@@ -100,7 +100,6 @@ class BattleCalculator(
         if (mine.skill.category == 2) return result else result.didAttack = true
         Log.e("myAttack", "${mine.skill.jname}(${mine.skill.category}):" + mine.name() + "(${mine.ability()}) vs " + opponent.name() + "(${opponent.ability()})")
 
-
         opponent.defenseEffortValue = 252
         opponent.specialDefenseEffortValue = 252
         val d252 = doSkill(mine, opponent, field, mine.calcCriticalRate().toDouble(), true, false)
@@ -676,11 +675,7 @@ class BattleCalculator(
         val result = mutableMapOf<Int, Double>()
         for (value in randomDamage) {
             val k = value.toInt()
-            if (result.containsKey(k)) {
-                result[k] = result[k]!!.plus(1)
-            } else {
-                result[k] = 1.0
-            }
+            result[k] = result[k]?.let { it.plus(1) } ?: 1.0
         }
         return result
     }

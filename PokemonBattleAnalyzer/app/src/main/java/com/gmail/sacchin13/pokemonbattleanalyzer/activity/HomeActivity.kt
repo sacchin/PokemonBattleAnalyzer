@@ -187,8 +187,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun addPokemonToList(pokemon: PokemonMasterData, image: Bitmap) {
         val index = party.addMember(pokemon)
-        if (index == -1) Snackbar.make(partyLayout, "すでに6体選択しています。", Snackbar.LENGTH_SHORT).show()
-        else {
+        if (index == -1) {
+            Snackbar.make(partyLayout, "すでに6体選択しています。", Snackbar.LENGTH_SHORT).show()
+        } else {
             val localView = ImageView(this)
             localView.setImageBitmap(image)
             localView.setOnClickListener{ removePokemonFromList(pokemon) }

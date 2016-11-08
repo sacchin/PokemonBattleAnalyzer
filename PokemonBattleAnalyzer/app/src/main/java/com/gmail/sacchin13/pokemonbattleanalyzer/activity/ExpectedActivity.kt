@@ -33,7 +33,7 @@ class ExpectedActivity : PGLActivity() {
     var util: Util by Delegates.notNull()
     var opponent: PartyInBattle by Delegates.notNull()
     var mine: PartyInBattle by Delegates.notNull()
-    var allFeild = BattleField()
+    var allField = BattleField()
 
     init {
         util = Util()
@@ -53,12 +53,12 @@ class ExpectedActivity : PGLActivity() {
         val calc = BattleCalculator()
         val selectedOpponent = opponent.apply()
         val selectedMine = mine.apply()
-        allFeild.resetAttackSide(mine.field)
-        allFeild.resetDefenseSide(opponent.field)
+        allField.resetAttackSide(mine.field)
+        allField.resetDefenseSide(opponent.field)
 
-        val general = calc.getGeneralResult(selectedMine, selectedOpponent, allFeild)
+        val general = calc.getGeneralResult(selectedMine, selectedOpponent, allField)
         coverRate.text = general.coverRate()
-        order.text = general.orderResult(selectedMine, selectedOpponent, allFeild,
+        order.text = general.orderResult(selectedMine, selectedOpponent, allField,
                 mine.field.contains(BattleField.Field.Tailwind), opponent.field.contains(BattleField.Field.Tailwind))
         correctionRate.text = "0.9(${Util.percent(general.correctionRate[0].times(100.0))})\n" +
                 "1.1(${Util.percent(general.correctionRate[2].times(100.0))})"
@@ -84,7 +84,7 @@ class ExpectedActivity : PGLActivity() {
 
         //技1の場合
         selectedMine.skill = selectedMine.individual.skillNo1
-        val caseOfSkill1 = calc.getResultFirst(selectedMine, selectedOpponent, allFeild)
+        val caseOfSkill1 = calc.getResultFirst(selectedMine, selectedOpponent, allField)
         skill1_name.text = selectedMine.individual.skillNo1.jname
         skill1_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo1.jname)) Color.RED else Color.DKGRAY
 
@@ -172,7 +172,6 @@ class ExpectedActivity : PGLActivity() {
         val temp = util.createImage(R.drawable.select, 180f, resources)
         selected_party1.setImageBitmap(temp)
         selected_oppoParty1.setImageBitmap(temp)
-
 
         val weatherAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("-", "晴", "雨", "砂", "霰"))
         weatherAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -348,11 +347,11 @@ class ExpectedActivity : PGLActivity() {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             when (position) {
-                1 -> allFeild.weather = BattleField.Weather.Sunny
-                2 -> allFeild.weather = BattleField.Weather.Rainy
-                3 -> allFeild.weather = BattleField.Weather.Sandstorm
-                4 -> allFeild.weather = BattleField.Weather.Hailstone
-                else -> allFeild.weather = BattleField.Weather.Unknown
+                1 -> allField.weather = BattleField.Weather.Sunny
+                2 -> allField.weather = BattleField.Weather.Rainy
+                3 -> allField.weather = BattleField.Weather.Sandstorm
+                4 -> allField.weather = BattleField.Weather.Hailstone
+                else -> allField.weather = BattleField.Weather.Unknown
             }
         }
     }
@@ -363,10 +362,10 @@ class ExpectedActivity : PGLActivity() {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             when (position) {
-                1 -> allFeild.room = BattleField.Room.Trick
-                2 -> allFeild.room = BattleField.Room.Magic
-                3 -> allFeild.room = BattleField.Room.Wander
-                else -> allFeild.room = BattleField.Room.Unknown
+                1 -> allField.room = BattleField.Room.Trick
+                2 -> allField.room = BattleField.Room.Magic
+                3 -> allField.room = BattleField.Room.Wander
+                else -> allField.room = BattleField.Room.Unknown
             }
         }
     }
@@ -377,10 +376,10 @@ class ExpectedActivity : PGLActivity() {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             when (position) {
-                1 -> allFeild.terrain = BattleField.Terrain.ElectricTerrain
-                2 -> allFeild.terrain = BattleField.Terrain.GrassyTerrain
-                3 -> allFeild.terrain = BattleField.Terrain.MistyTerrain
-                else -> allFeild.terrain = BattleField.Terrain.Unknown
+                1 -> allField.terrain = BattleField.Terrain.ElectricTerrain
+                2 -> allField.terrain = BattleField.Terrain.GrassyTerrain
+                3 -> allField.terrain = BattleField.Terrain.MistyTerrain
+                else -> allField.terrain = BattleField.Terrain.Unknown
             }
         }
     }
@@ -473,7 +472,6 @@ class ExpectedActivity : PGLActivity() {
             } else {
                 field_container.visibility = View.GONE
                 open.setImageBitmap(BitmapFactory.decodeResource(resources, android.R.drawable.ic_input_add))
-
             }
         }
 

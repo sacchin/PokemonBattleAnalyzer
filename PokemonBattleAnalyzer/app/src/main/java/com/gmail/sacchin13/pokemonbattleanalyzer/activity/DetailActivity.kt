@@ -36,17 +36,14 @@ class DetailActivity : PGLActivity() {
         setContentView(R.layout.activity_detail)
 
         val toolbar = findViewById(R.id.tool_bar) as Toolbar?
-        toolbar!!.title = "Pokemon Battle Tool"
-        toolbar.setTitleTextColor(Color.WHITE)
+        toolbar?.title = "Pokemon Battle Tool"
+        toolbar?.setTitleTextColor(Color.WHITE)
         setSupportActionBar(toolbar)
 
-        val intent = intent
-        if (intent != null) {
-            this.id = intent.getStringExtra("id")
-            this.temp = intent.getParcelableExtra("status")
-            isMine = intent.getBooleanExtra("isMine", false)
-            init()
-        }
+        this.id = intent?.getStringExtra("id") ?: ""
+        this.temp = intent?.getParcelableExtra("status") ?: TemporaryStatus()
+        isMine = intent?.getBooleanExtra("isMine", false) ?: false
+        init()
 
         val resourceId = util.pokemonImageResource[id.split("-")[0]]
         image.setImageResource(resourceId ?: R.drawable.noimage)
@@ -187,8 +184,8 @@ class DetailActivity : PGLActivity() {
 
         val statuses = when (type) {
             NOT_MEGA -> arrayOf(p.h.toString(), p.a.toString(), p.b.toString(), p.c.toString(), p.d.toString(), p.s.toString())
-            MEGA_X -> arrayOf(p.megax!!.h.toString(), p.megax!!.a.toString(), p.megax!!.b.toString(), p.megax!!.c.toString(), p.megax!!.d.toString(), p.megax!!.s.toString())
-            MEGA_Y -> arrayOf(p.megay!!.h.toString(), p.megay!!.a.toString(), p.megay!!.b.toString(), p.megay!!.c.toString(), p.megay!!.d.toString(), p.megay!!.s.toString())
+            MEGA_X -> arrayOf(p.megax?.h.toString(), p.megax?.a.toString(), p.megax?.b.toString(), p.megax?.c.toString(), p.megax?.d.toString(), p.megax?.s.toString())
+            MEGA_Y -> arrayOf(p.megay?.h.toString(), p.megay?.a.toString(), p.megay?.b.toString(), p.megay?.c.toString(), p.megay?.d.toString(), p.megay?.s.toString())
             else -> arrayOf("-", "-", "-", "-", "-")
         }
         status.addView(createTableRow(statuses, 0, Color.TRANSPARENT, Color.BLACK, 18))
@@ -303,7 +300,7 @@ class DetailActivity : PGLActivity() {
         }
 
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            temp.tempHpRatio = seekBar!!.progress
+            temp.tempHpRatio = seekBar?.progress ?: 100
         }
     }
 

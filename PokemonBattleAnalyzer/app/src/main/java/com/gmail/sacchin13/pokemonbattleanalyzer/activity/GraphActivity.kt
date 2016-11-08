@@ -60,15 +60,12 @@ class GraphActivity : PGLActivity(), OnChartValueSelectedListener {
         val xl = chart1.xAxis
         xl.position = XAxis.XAxisPosition.BOTTOM
 
-
         resetParty(true)
 
         onProgressChanged()
     }
 
-    fun onProgressChanged() {
-
-    }
+    fun onProgressChanged() { }
 
     fun setData(){
         val index = arrayOf(4, 64, 128, 192, 252)
