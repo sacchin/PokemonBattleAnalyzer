@@ -120,6 +120,23 @@ class DatabaseHelper(context: Context) {
         }
     }
 
+    fun insertZSkillMasterData(id: Int, skillName: String, type: Int, category: Int, name: String, power: Int, rank: Int) {
+        realm.executeTransaction {
+            val skill = realm.createObject(ZSkill::class.java)
+            skill.no = id
+            skill.skillNumber = selectSkillByName(skillName).no
+            skill.jname = name
+            skill.type = type
+            skill.power = power
+            skill.category = category
+            skill.rank = rank
+        }
+    }
+
+    fun insertZSkillMasterData(id: Int, skillName: String, type: Int, category: Int, name: String, power: Int) {
+        insertZSkillMasterData(id, skillName, type, category, name, power, Rank.no(Rank.Code.UNKNOWN))
+    }
+
     fun insertMegaPokemonDataX(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, type1: Int, type2: Int, ability: String, weight: Float) {
         realm.executeTransaction {
             val megaPokemon = realm.createObject(MegaPokemonMasterData::class.java)

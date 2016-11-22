@@ -219,14 +219,16 @@ class ExpectedActivity : PGLActivity() {
 
         open.setImageBitmap(BitmapFactory.decodeResource(resources, android.R.drawable.ic_input_add))
         open.setOnClickListener {
-            val inAnimation = AnimationUtils.loadAnimation(this, R.anim.in_animation)
-            val outAnimation = AnimationUtils.loadAnimation(this, R.anim.out_animation)
+            //val inAnimation = AnimationUtils.loadAnimation(this, R.anim.in_animation)
+            //val outAnimation = AnimationUtils.loadAnimation(this, R.anim.out_animation)
             if (field_container.visibility == View.GONE) {
-                inAnimation.setAnimationListener(OnAnimationListener(true))
-                field_container.startAnimation(inAnimation)
+                //inAnimation.setAnimationListener(OnAnimationListener(true))
+                //field_container.startAnimation(inAnimation)
+                field_container.visibility = View.VISIBLE
             } else {
-                outAnimation.setAnimationListener(OnAnimationListener(false))
-                field_container.startAnimation(outAnimation)
+                field_container.visibility = View.GONE
+                //outAnimation.setAnimationListener(OnAnimationListener(false))
+                //field_container.startAnimation(outAnimation)
             }
         }
 
@@ -311,7 +313,7 @@ class ExpectedActivity : PGLActivity() {
             }
 
             val added = opponent.add(pokemon)
-            val white = Color.parseColor("#64FFFFFF")
+            val white = Color.parseColor("#64DDDDDD")
             from.backgroundColor = if (added) white else Color.parseColor("#00000000")
 
             return true

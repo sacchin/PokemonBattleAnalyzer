@@ -560,6 +560,7 @@ class PokemonForBattleTest {
 
     @Test
     fun 攻撃技を無効にするかどうかのテスト() {
+        val field = BattleField()
         val skill = Skill()
         val attackSide = PokemonForBattle.create(0, IndividualPokemon.create(1, kucheat))
         attackSide.side = PartyInBattle.OPPONENT_SIDE
@@ -569,66 +570,66 @@ class PokemonForBattleTest {
         skill.type = Type.no(Type.Code.NORMAL)
         attackSide.ability = "きもったま"
         defenseSide.individual.master.type1 = Type.no(Type.Code.GHOST)
-        assertEquals(false, defenseSide.noEffect(skill, attackSide))
+        assertEquals(false, defenseSide.noEffect(skill, attackSide, field))
 
 
         skill.jname = "どくのこな"
         skill.type = Type.no(Type.Code.GRASS)
         defenseSide.individual.master.type1 = Type.no(Type.Code.GRASS)
-        assertEquals(true, defenseSide.noEffect(skill, attackSide))
+        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
 
         skill.jname = "でんじは"
         skill.type = Type.no(Type.Code.ELECTRIC)
         defenseSide.individual.master.type1 = Type.no(Type.Code.ELECTRIC)
-        assertEquals(true, defenseSide.noEffect(skill, attackSide))
+        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
 
         skill.jname = "おにび"
         skill.type = Type.no(Type.Code.FIRE)
         defenseSide.individual.master.type1 = Type.no(Type.Code.FIRE)
-        assertEquals(true, defenseSide.noEffect(skill, attackSide))
+        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
 
         skill.jname = "どくどく"
         skill.type = Type.no(Type.Code.POISON)
         defenseSide.individual.master.type1 = Type.no(Type.Code.POISON)
-        assertEquals(true, defenseSide.noEffect(skill, attackSide))
+        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
 
 
         skill.jname = "チャームボイス"
         skill.type = Type.no(Type.Code.FAIRY)
         defenseSide.ability = "ぼうおん"
-        assertEquals(true, defenseSide.noEffect(skill, attackSide))
+        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
 
         skill.jname = "タネマシンガン"
         skill.type = Type.no(Type.Code.GRASS)
         defenseSide.ability = "ぼうだん"
-        assertEquals(true, defenseSide.noEffect(skill, attackSide))
+        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
 
         skill.jname = "どくのこな"
         defenseSide.ability = "ぼうじん"
-        assertEquals(true, defenseSide.noEffect(skill, attackSide))
+        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
 
         skill.jname = "ハイドロポンプ"
         skill.type = Type.no(Type.Code.WATER)
         defenseSide.ability = "ぼうじん"
-        assertEquals(false, defenseSide.noEffect(skill, attackSide))
+        assertEquals(false, defenseSide.noEffect(skill, attackSide, field))
 
 
         skill.jname = "チャームボイス"
         skill.type = Type.no(Type.Code.FAIRY)
         attackSide.ability = "かたやぶり"
         defenseSide.ability = "ぼうおん"
-        assertEquals(false, defenseSide.noEffect(skill, attackSide))
+        assertEquals(false, defenseSide.noEffect(skill, attackSide, field))
 
         skill.jname = "タネマシンガン"
         skill.type = Type.no(Type.Code.GRASS)
         attackSide.ability = "かたやぶり"
         defenseSide.ability = "ぼうだん"
-        assertEquals(false, defenseSide.noEffect(skill, attackSide))
+        assertEquals(false, defenseSide.noEffect(skill, attackSide, field))
 
         skill.jname = "どくのこな"
         attackSide.ability = "かたやぶり"
         defenseSide.ability = "ぼうじん"
-        assertEquals(false, defenseSide.noEffect(skill, attackSide))
+        assertEquals(false, defenseSide.noEffect(skill, attackSide, field))
 
     }
 
@@ -715,7 +716,7 @@ class PokemonForBattleTest {
 
         val actual = attackSide.speedValues(true)
         assertEquals(24, actual[0])
-        assertEquals(30, actual[1])
+        assertEquals(31, actual[1])
         assertEquals(34, actual[2])
         assertEquals(34, actual[3])
         assertEquals(38, actual[4])
@@ -734,7 +735,7 @@ class PokemonForBattleTest {
 
         attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.hpRatio = 50
-        assertEquals(75, attackSide.hpValue())
+        assertEquals(62, attackSide.hpValue())
     }
 
     @Test

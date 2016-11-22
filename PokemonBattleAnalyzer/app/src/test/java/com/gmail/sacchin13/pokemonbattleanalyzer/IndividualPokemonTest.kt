@@ -33,7 +33,7 @@ class IndividualPokemonTest {
     fun 特性一覧取得の正常系のテスト() {
         val actual = kucheat.abilities
         assertEquals(1, actual.size)
-        assertEquals("いかく", actual[0])
+        assertEquals("かいりきバサミ", actual[0])
     }
 
     @Test

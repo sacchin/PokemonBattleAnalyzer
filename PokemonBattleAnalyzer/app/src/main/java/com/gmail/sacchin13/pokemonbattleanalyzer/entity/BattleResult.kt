@@ -153,7 +153,7 @@ class BattleResult {
             var t = ""
             for ((key, value) in result) {
                 if (key == "mine") t += "---> $value <---\n"
-                else t += "$key($value)\n"
+                else t += "$value($key)\n"
             }
             return t
         }

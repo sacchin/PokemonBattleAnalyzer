@@ -8,7 +8,7 @@ object Rank {
     enum class Code {
         A, A2, A12, mA, mA2, B, B2, B3, mB, mB2, C, C2, C3, mC, mC2, D, D2, mD, mD2, S, S2, mS, mS2, mP, V, V2, mV, mV2,
         T, AB, mAmB, AC, mAmC, mA2mC2, AD, AS, AS2, AP, mAmCmS, BC, BD, mBmD, mBmDmS, CD, CS, ABP, ABD,
-        ABmS, CDS, C2D2S2, ABCDS, A2mBC2mDS2, UNKNOWN
+        ABmS, CDS, C2D2S2, ABCDS, A2mBC2mDS2, RESET, P, BG, T2, A2B2C2D2S2, UNKNOWN
     }
 
     var RANK_TABLE = mapOf<Code, Array<Int>>(
@@ -34,7 +34,7 @@ object Rank {
             Code.S to arrayOf(0, 0, 0, 0, 1, 0, 0, 0),
             Code.S2 to arrayOf(0, 0, 0, 0, 2, 0, 0, 0),
             Code.mS2 to arrayOf(0, 0, 0, 0, -2, 0, 0, 0),
-            Code.mP to arrayOf(0, 0, 0, 0, 0, 0, -1, 0),
+            Code.mP to arrayOf(0, 0, 0, 0, 0, -1, 0, 0),
             Code.V to arrayOf(0, 0, 0, 0, 0, 0, 1, 0),
             Code.V2 to arrayOf(0, 0, 0, 0, 0, 0, 2, 0),
             Code.mV to arrayOf(0, 0, 0, 0, 0, 0, -1, 0),
@@ -58,63 +58,74 @@ object Rank {
             Code.mAmCmS to arrayOf(-1, 0, -1, 0, -1, 0, 0, 0),
             Code.mBmDmS to arrayOf(0, -1, 0, -1, -1, 0, 0, 0),
             Code.A2mBC2mDS2 to arrayOf(2, -1, 2, -1, 2, 0, 0, 0),
+            Code.RESET to arrayOf(0, 0, 0, 0, 0, 0, 0, 0),
+            Code.P to arrayOf(0, 0, 0, 0, 0, 1, 0, 0),
+            Code.BG to arrayOf(0, 1, 0, 0, 0, 0, 0, 0),
+            Code.T to arrayOf(0, 1, 0, 0, 0, 0, 0, 1),
+            Code.T2 to arrayOf(0, 1, 0, 0, 0, 0, 0, 2),
+            Code.A2B2C2D2S2 to arrayOf(2, 2, 2, 2, 2, 0, 0, 0),
             Code.UNKNOWN to arrayOf(0, 0, 0, 0, 0, 0, 0, 0)
     )
 
     fun name(type: Code): String {
         when (type) {
-            Code.A -> return "A"
-            Code.A2 -> return "A2"
-            Code.A12 -> return "A12"
-            Code.mA -> return "mA"
-            Code.mA2 -> return "mA2"
-            Code.B -> return "B"
-            Code.B2 -> return "B2"
-            Code.B3 -> return "B3"
-            Code.mB -> return "mB"
-            Code.mB2 -> return "mB2"
-            Code.C -> return "C"
-            Code.C2 -> return "C2"
-            Code.C3 -> return "C3"
-            Code.mC -> return "mC"
-            Code.mC2 -> return "mC2"
-            Code.D -> return "D"
-            Code.D2 -> return "D2"
-            Code.mD -> return "mD"
-            Code.mD2 -> return "mD2"
-            Code.S -> return "S"
-            Code.S2 -> return "S2"
-            Code.mS -> return "mS"
-            Code.mS2 -> return "mS2"
-            Code.mP -> return "A"
-            Code.V -> return "A"
-            Code.V2 -> return "A"
-            Code.mV -> return "A"
-            Code.mV2 -> return "A"
-            Code.T -> return "A"
-            Code.AB -> return "A"
-            Code.mAmB -> return "A"
-            Code.AC -> return "A"
-            Code.mAmC -> return "A"
-            Code.mA2mC2 -> return "A"
-            Code.AD -> return "A"
-            Code.AS -> return "A"
-            Code.AS2 -> return "A"
-            Code.AP -> return "A"
-            Code.mAmCmS -> return "A"
-            Code.BC -> return "A"
-            Code.BD -> return "A"
-            Code.mBmD -> return "A"
-            Code.mBmDmS -> return "A"
-            Code.CD -> return "A"
-            Code.CS -> return "A"
-            Code.ABP -> return "A"
-            Code.ABD -> return "A"
-            Code.ABmS -> return "A"
-            Code.CDS -> return "A"
-            Code.C2D2S2 -> return "A"
-            Code.ABCDS -> return "A"
-            Code.A2mBC2mDS2 -> return "A"
+            Code.A -> return "A↑"
+            Code.A2 -> return "A2↑"
+            Code.A12 -> return "A"
+            Code.mA -> return "A↓"
+            Code.mA2 -> return "A2↓"
+            Code.B -> return "B↑"
+            Code.B2 -> return "B2↑"
+            Code.B3 -> return "B3↑"
+            Code.mB -> return "B↓"
+            Code.mB2 -> return "B2↓"
+            Code.C -> return "C↑"
+            Code.C2 -> return "C2↑"
+            Code.C3 -> return "C3↑"
+            Code.mC -> return "↓C"
+            Code.mC2 -> return "C2↓"
+            Code.D -> return "D↑"
+            Code.D2 -> return "D2↑"
+            Code.mD -> return "↓D"
+            Code.mD2 -> return "D2↓"
+            Code.S -> return "S↑"
+            Code.S2 -> return "S2↑"
+            Code.mS -> return "S↓"
+            Code.mS2 -> return "S2↓"
+            Code.mP -> return "P↓"
+            Code.V -> return "V↑"
+            Code.V2 -> return "V2↑"
+            Code.mV -> return "V↓"
+            Code.mV2 -> return "V2↓"
+            Code.T -> return "T↑"
+            Code.AB -> return "(AB)↑"
+            Code.mAmB -> return "(AB)↓"
+            Code.AC -> return "(AC)↑"
+            Code.mAmC -> return "(AC)↓"
+            Code.mA2mC2 -> return "(AC)2↓"
+            Code.AD -> return "(AD)↑"
+            Code.AS -> return "(AS)↑"
+            Code.AS2 -> return "A↑S2↑"
+            Code.AP -> return "(AP)↑"
+            Code.mAmCmS -> return "(ACS)↓"
+            Code.BC -> return "(BC)↑"
+            Code.BD -> return "(BD)↑"
+            Code.mBmD -> return "(BD)↓"
+            Code.mBmDmS -> return "(BDS)↓"
+            Code.CD -> return "(CD)↑"
+            Code.CS -> return "(CS)↑"
+            Code.ABP -> return "(ABP)↑"
+            Code.ABD -> return "(ABD)↑"
+            Code.ABmS -> return "(AB)↑S↓"
+            Code.CDS -> return "(CDS)↑"
+            Code.C2D2S2 -> return "(CDS)2↑"
+            Code.ABCDS -> return "(ABCDS)↑"
+            Code.A2mBC2mDS2 -> return "(ACS)2↑(BD)↓"
+            Code.RESET -> return "RESET"
+            Code.P -> return "P↑"
+            Code.BG -> return "B↑"
+            Code.T2 -> return "T2↑"
+            Code.A2B2C2D2S2 -> return "(ABCDS)2↑"
             else -> return "UNKNOWN"
         }
     }
@@ -173,6 +184,11 @@ object Rank {
             Code.C2D2S2 -> return 49
             Code.ABCDS -> return 50
             Code.A2mBC2mDS2 -> return 51
+            Code.RESET -> return 52
+            Code.P -> return 53
+            Code.BG -> return 54
+            Code.T2 -> return 55
+            Code.A2B2C2D2S2 -> return 56
             else -> return -1
         }
     }
@@ -231,6 +247,11 @@ object Rank {
             49 -> return Code.C2D2S2
             50 -> return Code.ABCDS
             51 -> return Code.A2mBC2mDS2
+            52 -> return Code.RESET
+            53 -> return Code.P
+            54 -> return Code.BG
+            55 -> return Code.T2
+            56 -> return Code.A2B2C2D2S2
             else -> return Code.UNKNOWN
         }
     }

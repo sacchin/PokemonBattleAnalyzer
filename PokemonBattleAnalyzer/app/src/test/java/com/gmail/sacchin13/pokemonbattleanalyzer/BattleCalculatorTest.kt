@@ -363,7 +363,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcDefenseValue()).thenReturn(104.0)
         Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -409,7 +409,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcSpecialDefenseValue()).thenReturn(103.0)
         Mockito.`when`(defenseSide.calcSpecialDefenseValueCorrection(field)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getSpecialDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -448,7 +448,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcSpecialDefenseValue()).thenReturn(103.0)
         Mockito.`when`(defenseSide.calcSpecialDefenseValueCorrection(field)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getSpecialDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -484,7 +484,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcDefenseValue()).thenReturn(27.0)
         Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -530,7 +530,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcDefenseValue()).thenReturn(27.0)
         Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -577,7 +577,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcSpecialDefenseValue()).thenReturn(170.0)
         Mockito.`when`(defenseSide.calcSpecialDefenseValueCorrection(field)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getSpecialDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -618,7 +618,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcDefenseValue()).thenReturn(137.0)
         Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(8192.0)//ファーコート
         Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -658,7 +658,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcSpecialDefenseValue()).thenReturn(68.0)
         Mockito.`when`(defenseSide.calcSpecialDefenseValueCorrection(field)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getSpecialDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -698,7 +698,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcDefenseValue()).thenReturn(115.0)
         Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -734,7 +734,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcDefenseValue()).thenReturn(141.0)
         Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -773,7 +773,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcSpecialDefenseValue()).thenReturn(227.0)
         Mockito.`when`(defenseSide.calcSpecialDefenseValueCorrection(field)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getSpecialDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -813,7 +813,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcSpecialDefenseValue()).thenReturn(227.0)
         Mockito.`when`(defenseSide.calcSpecialDefenseValueCorrection(field)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getSpecialDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -854,7 +854,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.ability()).thenReturn("たいねつ")
         Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -900,7 +900,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.ability()).thenReturn("かんそうはだ")
         Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -944,7 +944,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcDefenseValue()).thenReturn(62.0)
         Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -986,7 +986,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcDefenseValue()).thenReturn(62.0)
         Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, BattleField())).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
@@ -1027,7 +1027,7 @@ class BattleCalculatorTest {
         Mockito.`when`(defenseSide.calcDefenseValue()).thenReturn(71.0)
         Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(4096.0)
         Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
-        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide)).thenReturn(false)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
         Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
         Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
                 0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),

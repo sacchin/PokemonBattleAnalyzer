@@ -355,15 +355,15 @@ class BattleCalculator(
             attackSide.skill.type = Type.no(Type.Code.FLYING)
         }
         if (attackSide.ability() == "スカイスキン" && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
-            initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
+            initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
             attackSide.skill.type = Type.no(Type.Code.FLYING)
         }
         if (attackSide.ability() == "フェアリースキン" && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
-            initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
+            initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
             attackSide.skill.type = Type.no(Type.Code.FAIRY)
         }
         if (attackSide.ability() == "フリーズスキン" && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
-            initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
+            initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
             attackSide.skill.type = Type.no(Type.Code.ICE)
         }
         if (attackSide.ability() == "かたいツメ" && attackSide.skill.contact) {
