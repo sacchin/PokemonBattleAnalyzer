@@ -2,12 +2,10 @@ package com.gmail.sacchin13.pokemonbattleanalyzer
 
 import android.content.Context
 import android.util.Log
+import com.gmail.sacchin13.pokemonbattleanalyzer.activity.KpActivity
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
-import io.realm.Realm
-import io.realm.RealmConfiguration
-import io.realm.RealmResults
-import io.realm.Sort
+import io.realm.*
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -276,6 +274,10 @@ class DatabaseHelper(context: Context) {
         Log.v("userName", "${party[0].member5}")
         Log.v("userName", "${party[0].member6}")
         return party[0]
+    }
+
+    fun selectAllParty(activity: KpActivity){
+        realm.where(Party().javaClass).findAllAsync().addChangeListener { it -> activity.onSelect(it.toList()) }
     }
 
     fun selectAllSkill(): MutableList<Skill> {

@@ -31,6 +31,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     val AFFINITY_ACTIVITY_CODE = 1
     val EDIT_ACTIVITY_CODE = 2
     val GRAPH_ACTIVITY_CODE = 3
+    val KP_ACTIVITY_CODE = 4
 
     var serviceStatePreferences: SharedPreferences by Delegates.notNull()
 
@@ -97,6 +98,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             party.clear()
             partyLayout.removeAllViews()
             party.userName = "none"
+        } else if (id == R.id.nav_showkp) {
+            startKpActivity()
         } else if (id == R.id.nav_graph) {
             startGraphActivity()
         }
@@ -140,6 +143,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val intent = Intent(this, GraphActivity().javaClass)
         startActivityForResult(intent, GRAPH_ACTIVITY_CODE)
+    }
+
+    fun startKpActivity() {
+        val intent = Intent(this, KpActivity().javaClass)
+        startActivityForResult(intent, KP_ACTIVITY_CODE)
     }
 
     fun startSelectActivity() {

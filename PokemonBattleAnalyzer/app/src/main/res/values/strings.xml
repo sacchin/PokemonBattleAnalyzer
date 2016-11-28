@@ -4,6 +4,8 @@
 
     <string name="navigation_save_as_my">Save as My Party</string>
     <string name="navigation_edit_my_party">Edit My Party</string>
+    <string name="navigation_clear">Clear</string>
+    <string name="navigation_show_kp">Show KP</string>
     <string name="navigation_graph">Graph</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
