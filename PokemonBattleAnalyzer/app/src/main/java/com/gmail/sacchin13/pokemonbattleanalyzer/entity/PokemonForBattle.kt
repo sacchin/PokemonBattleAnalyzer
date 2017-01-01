@@ -40,6 +40,9 @@ class PokemonForBattle(
         const val UNKNOWN = -1
         const val NOT_CHANGED = "notchanged"
 
+        fun mine(pokemon: () -> IndividualPokemon): PokemonForBattle = PokemonForBattle.create(PartyInBattle.MY_SIDE, pokemon.invoke())
+        fun opponent(pokemon: () -> IndividualPokemon): PokemonForBattle = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, pokemon.invoke())
+
         fun create(side: Int, individual: IndividualPokemon): PokemonForBattle {
             return PokemonForBattle(side, UNKNOWN, NOT_CHANGED, false, "unknown", NOT_CHANGED, Skill(), 0, 100, 0,
                     0, 6, 0, 6, 0, 6, 0, 6, 0, 6,
@@ -721,7 +724,7 @@ class PokemonForBattle(
     }
 
     fun item(): String {
-        return if(itemUsed) "" else when (side) {
+        return if (itemUsed) "" else when (side) {
             PartyInBattle.MY_SIDE -> if (item == NOT_CHANGED) individual.item else item
             else -> item
         }
@@ -730,4 +733,5 @@ class PokemonForBattle(
     fun name(): String {
         return individual.name(mega)
     }
+
 }
