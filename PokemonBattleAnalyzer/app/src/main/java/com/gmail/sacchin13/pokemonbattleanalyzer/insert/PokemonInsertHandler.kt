@@ -631,7 +631,7 @@ class PokemonInsertHandler(private val databaseHelper: DatabaseHelper?) {
         databaseHelper.insertPokemonMasterData("611", "オノンド", "-", 0, 0, 0, 0, 0, 0, "-", "-", "-", 14, -1, 36.0)
         databaseHelper.insertPokemonMasterData("612", "オノノクス", "Haxorus", 76, 147, 90, 60, 70, 97, "とうそうしん", "かたやぶり", "きんちょうかん", 14, -1, 105.5)
         databaseHelper.insertPokemonMasterData("613", "クマシュン", "-", 0, 0, 0, 0, 0, 0, "-", "-", "-", 5, -1, 8.5)
-        databaseHelper.insertPokemonMasterData("614", "ツンベアー", "Beartic", 95, 130, 80, 70, 80, 50, "ゆきがくれ", "ゆきかき", "すいすい", 5, -1, 260.0)
+        databaseHelper.insertPokemonMasterData("614", "ツンベアー", "Beartic", 95, 130, 80, 70, 80, 50, "ゆきがくれ", "ゆきかき", "びびり", 5, -1, 260.0)
         databaseHelper.insertPokemonMasterData("615", "フリージオ", "Cryogonal", 80, 50, 50, 95, 135, 105, "ふゆう", "-", "-", 5, -1, 148.0)
         databaseHelper.insertPokemonMasterData("616", "チョボマキ", "-", 0, 0, 0, 0, 0, 0, "-", "-", "-", 11, -1, 7.7)
         databaseHelper.insertPokemonMasterData("617", "アギルダー", "Accelgor", 80, 70, 40, 100, 60, 145, "うるおいボディ", "ねんちゃく", "かるわざ", 11, -1, 25.3)

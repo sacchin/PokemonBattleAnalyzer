@@ -81,41 +81,49 @@ class ExpectedActivity : PGLActivity() {
             }
         }
 
+        showDamage()
 
-        //技1の場合
-        selectedMine.skill = selectedMine.individual.skillNo1
-        val caseOfSkill1 = calc.getResultFirst(selectedMine, selectedOpponent, allField)
-        skill1_name.text = selectedMine.individual.skillNo1.jname
-        skill1_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo1.jname)) Color.RED else Color.DKGRAY
 
-        //技2の場合
-        selectedMine.skill = selectedMine.individual.skillNo2
-        val caseOfSkill2 = calc.getResult(selectedMine, selectedOpponent, BattleField())
-        skill2_name.text = selectedMine.individual.skillNo2.jname
-        skill2_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo2.jname)) Color.RED else Color.DKGRAY
 
-        //技3の場合
-        selectedMine.skill = selectedMine.individual.skillNo3
-        val caseOfSkill3 = calc.getResult(selectedMine, selectedOpponent, BattleField())
-        skill3_name.text = selectedMine.individual.skillNo3.jname
-        skill3_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo3.jname)) Color.RED else Color.DKGRAY
-
-        //技4の場合
-        selectedMine.skill = selectedMine.individual.skillNo4
-        val caseOfSkill4 = calc.getResult(selectedMine, selectedOpponent, BattleField())
-        skill4_name.text = selectedMine.individual.skillNo4.jname
-        skill4_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo4.jname)) Color.RED else Color.DKGRAY
-
-        val yValues = mutableListOf<BarEntry>()
-        yValues.add(BarEntry(2.toFloat(), caseOfSkill4.arrayForBarChart()))
-        yValues.add(BarEntry(7.toFloat(), caseOfSkill3.arrayForBarChart()))
-        yValues.add(BarEntry(12.toFloat(), caseOfSkill2.arrayForBarChart()))
-        yValues.add(BarEntry(17.toFloat(), caseOfSkill1.arrayForBarChart()))
-        setData(yValues)
-
+//        val caseOfSkill2 = calc.givenDamage(selectedMine, selectedOpponent, allField)
         //控え1に交換した場合
         //控え2に交換した場合
     }
+
+
+    fun showDamage(){
+//        //技1の場合
+//        selectedMine.skill = selectedMine.individual.skillNo1
+//        val caseOfSkill1 = calc.sufferDamage(selectedMine, selectedOpponent, allField)
+//        skill1_name.text = selectedMine.individual.skillNo1.jname
+//        skill1_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo1.jname)) Color.RED else Color.DKGRAY
+//
+//        //技2の場合
+//        selectedMine.skill = selectedMine.individual.skillNo2
+//        val caseOfSkill2 = calc.sufferDamage(selectedMine, selectedOpponent, allField)
+//        skill2_name.text = selectedMine.individual.skillNo2.jname
+//        skill2_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo2.jname)) Color.RED else Color.DKGRAY
+//
+//        //技3の場合
+//        selectedMine.skill = selectedMine.individual.skillNo3
+//        val caseOfSkill3 = calc.sufferDamage(selectedMine, selectedOpponent, allField)
+//        skill3_name.text = selectedMine.individual.skillNo3.jname
+//        skill3_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo3.jname)) Color.RED else Color.DKGRAY
+//
+//        //技4の場合
+//        selectedMine.skill = selectedMine.individual.skillNo4
+//        val caseOfSkill4 = calc.sufferDamage(selectedMine, selectedOpponent, allField)
+//        skill4_name.text = selectedMine.individual.skillNo4.jname
+//        skill4_name.textColor = if (Skill.migawariSkill(selectedMine.individual.skillNo4.jname)) Color.RED else Color.DKGRAY
+//
+//        val yValues = mutableListOf<BarEntry>()
+//        yValues.add(BarEntry(2.toFloat(), caseOfSkill4.arrayForBarChart()))
+//        yValues.add(BarEntry(7.toFloat(), caseOfSkill3.arrayForBarChart()))
+//        yValues.add(BarEntry(12.toFloat(), caseOfSkill2.arrayForBarChart()))
+//        yValues.add(BarEntry(17.toFloat(), caseOfSkill1.arrayForBarChart()))
+//        setData(yValues)
+    }
+
 
     fun get(index: Int): IndividualPokemon {
         when (index) {

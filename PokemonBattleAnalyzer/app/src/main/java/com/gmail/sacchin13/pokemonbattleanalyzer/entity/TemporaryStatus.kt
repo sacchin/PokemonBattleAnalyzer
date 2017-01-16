@@ -2,54 +2,23 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Rank.Value
 
 class TemporaryStatus(
         var tempItem: Int = 0,
         var tempStatus: Int = StatusAilment.no(StatusAilment.Code.UNKNOWN),
         var tempHpRatio: Int = 100,
         var tempHpValue: Int = 0,
-        var tempAttack: Int = 6,
-        var tempDefense: Int = 6,
-        var tempSpecialAttack: Int = 6,
-        var tempSpecialDefense: Int = 6,
-        var tempSpeed: Int = 6,
-        var tempHitProbability: Int = 6,
-        var tempAvoidance: Int = 6,
-        var tempCritical: Int = 6,
+        var tempAttack: Int = Rank.no(Value.DEFAULT),
+        var tempDefense: Int = Rank.no(Value.DEFAULT),
+        var tempSpecialAttack: Int = Rank.no(Value.DEFAULT),
+        var tempSpecialDefense: Int = Rank.no(Value.DEFAULT),
+        var tempSpeed: Int = Rank.no(Value.DEFAULT),
+        var tempHitProbability: Int = Rank.no(Value.DEFAULT),
+        var tempAvoidance: Int = Rank.no(Value.DEFAULT),
+        var tempCritical: Int = Rank.no(Value.DEFAULT),
         var tempMigawari: Int = 0,
         var tempMega: Int = MegaPokemonMasterData.NOT_MEGA) : Parcelable {
-
-    fun setAttackRank(position: Int) {
-        tempAttack = position
-    }
-
-    fun setDefenseRank(position: Int) {
-        tempDefense = position
-    }
-
-    fun setSpecialAttackRank(position: Int) {
-        tempSpecialAttack = position
-    }
-
-    fun setSpecialDefenseRank(position: Int) {
-        tempSpecialDefense = position
-    }
-
-    fun setSpeedRank(position: Int) {
-        tempSpeed = position
-    }
-
-    fun setHitProbabilityRank(position: Int) {
-        tempHitProbability = position
-    }
-
-    fun setAvoidanceRank(position: Int) {
-        tempAvoidance = position
-    }
-
-    fun setCriticalRank(position: Int) {
-        tempCritical = position
-    }
 
     companion object {
         @JvmField

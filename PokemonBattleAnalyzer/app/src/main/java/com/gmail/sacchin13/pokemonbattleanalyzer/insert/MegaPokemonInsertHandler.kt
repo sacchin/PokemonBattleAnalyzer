@@ -12,7 +12,7 @@ class MegaPokemonInsertHandler(private val databaseHelper: DatabaseHelper?) {
         databaseHelper.insertMegaPokemonDataX("009", 79, 103, 120, 135, 115, 78, "メガランチャー", 101.1f)
         databaseHelper.insertMegaPokemonDataX("015", 65, 150, 40, 15, 80, 145, "てきおうりょく", 40.5f)
         databaseHelper.insertMegaPokemonDataX("018", 83, 80, 80, 135, 80, 121, "ノーガード", 50.5f)
-        databaseHelper.insertMegaPokemonDataX("065", 55, 50, 65, 175, 95, 150, "トレース", 48.0f)
+        databaseHelper.insertMegaPokemonDataX("065", 55, 50, 65, 175, 105, 150, "トレース", 48.0f)
         databaseHelper.insertMegaPokemonDataX("080", 95, 75, 180, 130, 80, 30, "シェルアーマー", 120.0f)
         databaseHelper.insertMegaPokemonDataX("094", 60, 65, 80, 170, 95, 130, "かげふみ", 40.5f)
         databaseHelper.insertMegaPokemonDataX("115", 105, 125, 100, 60, 100, 100, "おやこあい", 100.0f)

@@ -118,15 +118,15 @@ class DetailActivity : PGLActivity() {
         return row
     }
 
-    fun createTextView(text: String, bgColor: Int, txtColor: Int, txtSize: Int): TextView {
-        val tv = TextView(this)
-        tv.text = text
-        tv.setBackgroundColor(bgColor)
-        tv.setTextColor(txtColor)
-        tv.textSize = txtSize.toFloat()
-        val p = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
-        tv.layoutParams = p
-        return tv
+    fun createTextView(t: String, bgColor: Int, txtColor: Int, txtSize: Int): TextView {
+        return TextView(this).apply {
+            text = t
+            setBackgroundColor(bgColor)
+            setTextColor(txtColor)
+            textSize = txtSize.toFloat()
+            val p = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
+            layoutParams = p
+        }
     }
 
     override fun showParty() {
@@ -148,9 +148,10 @@ class DetailActivity : PGLActivity() {
     }
 
     private fun createPBAPokemonStatus(p: PokemonMasterData, type: Int) {
-        val sss = LinearLayout(this)
-        sss.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        sss.orientation = LinearLayout.HORIZONTAL
+        val sss = LinearLayout(this).apply{
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            orientation = LinearLayout.HORIZONTAL
+        }
 
         val temp = when (type) {
             NOT_MEGA -> util.createImage(p, 150f, resources)
@@ -162,14 +163,16 @@ class DetailActivity : PGLActivity() {
             MEGA_Y -> util.createImage(p.no + "my", 150f, resources)
             else -> util.createImage(p, 150f, resources)
         }
-        val imageView = ImageView(this)
-        imageView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        imageView.setImageBitmap(temp)
+        val imageView = ImageView(this).apply{
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            setImageBitmap(temp)
+        }
         sss.addView(imageView)
 
-        val status = TableLayout(this)
-        status.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
-        status.isStretchAllColumns = true
+        val status = TableLayout(this).apply{
+            layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
+            isStretchAllColumns = true
+        }
 
         val abilities = when (type) {
             NOT_MEGA -> arrayOf(p.ability1, p.ability2, p.abilityd)
@@ -203,28 +206,28 @@ class DetailActivity : PGLActivity() {
 
         rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         myASpinner.adapter = rankAdapter
-        myASpinner.setSelection(temp.tempAttack)
+        myASpinner.setSelection(positionToRank(temp.tempAttack))
         myASpinner.onItemSelectedListener = OnRankSelectedListener(0)
         myBSpinner.adapter = rankAdapter
-        myBSpinner.setSelection(temp.tempDefense)
+        myBSpinner.setSelection(positionToRank(temp.tempDefense))
         myBSpinner.onItemSelectedListener = OnRankSelectedListener(1)
         myCSpinner.adapter = rankAdapter
-        myCSpinner.setSelection(temp.tempSpecialAttack)
+        myCSpinner.setSelection(positionToRank(temp.tempSpecialAttack))
         myCSpinner.onItemSelectedListener = OnRankSelectedListener(2)
         myDSpinner.adapter = rankAdapter
-        myDSpinner.setSelection(temp.tempSpecialDefense)
+        myDSpinner.setSelection(positionToRank(temp.tempSpecialDefense))
         myDSpinner.onItemSelectedListener = OnRankSelectedListener(3)
         mySSpinner.adapter = rankAdapter
-        mySSpinner.setSelection(temp.tempSpeed)
+        mySSpinner.setSelection(positionToRank(temp.tempSpeed))
         mySSpinner.onItemSelectedListener = OnRankSelectedListener(4)
         myHSpinner.adapter = rankAdapter
-        myHSpinner.setSelection(temp.tempSpeed)
+        myHSpinner.setSelection(positionToRank(temp.tempHitProbability))
         myHSpinner.onItemSelectedListener = OnRankSelectedListener(5)
         myAVSpinner.adapter = rankAdapter
-        myAVSpinner.setSelection(temp.tempSpeed)
+        myAVSpinner.setSelection(positionToRank(temp.tempAvoidance))
         myAVSpinner.onItemSelectedListener = OnRankSelectedListener(6)
         myCRSpinner.adapter = rankAdapter
-        myCRSpinner.setSelection(temp.tempSpeed)
+        myCRSpinner.setSelection(positionToRank(temp.tempCritical))
         myCRSpinner.onItemSelectedListener = OnRankSelectedListener(7)
 
         if (isMine) {
@@ -271,14 +274,14 @@ class DetailActivity : PGLActivity() {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             when (which) {
-                0 -> temp.setAttackRank(id.toInt())
-                1 -> temp.setDefenseRank(id.toInt())
-                2 -> temp.setSpecialAttackRank(id.toInt())
-                3 -> temp.setSpecialDefenseRank(id.toInt())
-                4 -> temp.setSpeedRank(id.toInt())
-                5 -> temp.setHitProbabilityRank(id.toInt())
-                6 -> temp.setAvoidanceRank(id.toInt())
-                7 -> temp.setCriticalRank(id.toInt())
+                0 -> temp.tempAttack = rankToPosition(id.toInt())
+                1 -> temp.tempDefense = rankToPosition(id.toInt())
+                2 -> temp.tempSpecialAttack = rankToPosition(id.toInt())
+                3 -> temp.tempSpecialDefense = rankToPosition(id.toInt())
+                4 -> temp.tempSpeed = rankToPosition(id.toInt())
+                5 -> temp.tempHitProbability = rankToPosition(id.toInt())
+                6 -> temp.tempAvoidance = rankToPosition(id.toInt())
+                7 -> temp.tempCritical = rankToPosition(id.toInt())
             }
         }
     }
@@ -317,6 +320,9 @@ class DetailActivity : PGLActivity() {
             return false
         }
     }
+
+    fun rankToPosition(rank: Int): Int = rank + 6
+    fun positionToRank(position: Int): Int = position - 6
 }
 
 

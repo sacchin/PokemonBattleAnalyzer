@@ -12,7 +12,9 @@ class BattleCalculator(
             "れんぞくぎり", "ころがる", "エコーボイス", "りんしょう",
             "たつまき", "かぜおこし", "きりふだ", "ちかい系", "なげつける",
             "ふくろだだき", "ダメおし", "しぜんのめぐみ", "ウェザーボール",
-            "はきだす", "おいうち")
+            "はきだす", "おいうち", "ふみつけ", "じしん", "なみのり",
+            "ハードローラー", "ドラゴンダイブ", "ゴーストダイブ", "シャドーダイブ",
+            "フライングプレス", "のしかかり")
 
     fun getGeneralResult(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
         val result = BattleResult()
@@ -43,7 +45,7 @@ class BattleCalculator(
         return result
     }
 
-    fun getResultFirst(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
+    fun sufferDamage(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
         val result = BattleResult()
 
         result.coverRate = 0.0
@@ -70,7 +72,7 @@ class BattleCalculator(
         return result
     }
 
-    fun getResult(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
+    fun givenDamage(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
         val result = BattleResult()
 
         result.coverRate = 0.0
@@ -206,7 +208,9 @@ class BattleCalculator(
 
         var criticalDamage = Math.floor(Math.floor(levelValue().times(skillPower).times(ac).div(dc)).toDouble().div(50.0).plus(2.0))
         // 3072 / 4096 五捨五超入 複数ダメージ補正
-        //TODO * 2048 / 4096 五捨五超入 おやこあい2回目
+
+        var parentalCriticalDamage = Util.round5(criticalDamage.times(2048).div(4096))
+
         val fieldCorrection = fieldCorrection(attackSide, field)
         criticalDamage = Util.round5(criticalDamage.times(fieldCorrection))
         criticalDamage = Math.floor(criticalDamage.times(1.5))
@@ -215,60 +219,46 @@ class BattleCalculator(
         val dn = calcDefenseValue(defenseValue, defenseValueCorrection, defenseRankCorrectionB, attackSide, defenseSide, field)
         var damage = Math.floor(Math.floor(levelValue().times(skillPower).times(an).div(dn)).toDouble().div(50.0).plus(2.0))
         // 3072 / 4096 五捨五超入 複数ダメージ補正
-        //TODO * 2048 / 4096 五捨五超入 おやこあい2回目
+        var parentalDamage = Util.round5(damage.times(2048).div(4096))
         damage = Util.round5(damage.times(fieldCorrection))
 
-        val randomDamage = arrayOf(
-                Math.floor(criticalDamage.times(0.85)),
-                Math.floor(criticalDamage.times(0.86)),
-                Math.floor(criticalDamage.times(0.87)),
-                Math.floor(criticalDamage.times(0.88)),
-                Math.floor(criticalDamage.times(0.89)),
-                Math.floor(criticalDamage.times(0.90)),
-                Math.floor(criticalDamage.times(0.91)),
-                Math.floor(criticalDamage.times(0.92)),
-                Math.floor(criticalDamage.times(0.93)),
-                Math.floor(criticalDamage.times(0.94)),
-                Math.floor(criticalDamage.times(0.95)),
-                Math.floor(criticalDamage.times(0.96)),
-                Math.floor(criticalDamage.times(0.97)),
-                Math.floor(criticalDamage.times(0.98)),
-                Math.floor(criticalDamage.times(0.99)),
-                Math.floor(criticalDamage),
-                Math.floor(damage.times(0.85)),
-                Math.floor(damage.times(0.86)),
-                Math.floor(damage.times(0.87)),
-                Math.floor(damage.times(0.88)),
-                Math.floor(damage.times(0.89)),
-                Math.floor(damage.times(0.90)),
-                Math.floor(damage.times(0.91)),
-                Math.floor(damage.times(0.92)),
-                Math.floor(damage.times(0.93)),
-                Math.floor(damage.times(0.94)),
-                Math.floor(damage.times(0.95)),
-                Math.floor(damage.times(0.96)),
-                Math.floor(damage.times(0.97)),
-                Math.floor(damage.times(0.98)),
-                Math.floor(damage.times(0.99)),
-                Math.floor(damage))
+
+        val randomize = arrayOf(0.85, 0.86, 0.87, 0.88, 0.89, 0.90, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99, 1.0)
+        val randomDamage = randomize.map { num -> Math.floor(criticalDamage.times(num)) }.plus(randomize.map { num -> Math.floor(damage.times(num)) }).toTypedArray()
 
         val damageCorrectionA = calcDamageCorrection(attackSide, defenseSide, field, true)
         val damageCorrectionB = calcDamageCorrection(attackSide, defenseSide, field, false)
         println("${attackSide.individual.master.jname}(${attackSide.skill.jname}), $attackValue, $attackValueCorrection, $defenseValue, $defenseValueCorrection, $attackRankCorrectionA, " +
-                "$defenseRankCorrectionA, $attackRankCorrectionB, $defenseRankCorrectionB, $damageCorrectionA, $damageCorrectionB")
-        for (i in 0..(randomDamage.size - 1)) {
-            randomDamage[i] = Util.round5(randomDamage[i].times(attackSide.typeBonus()))
-            randomDamage[i] = Math.floor(randomDamage[i].times(Type.calculateAffinity(Type.code(attackSide.skill.type), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))))
+                "$defenseRankCorrectionA, $attackRankCorrectionB, $defenseRankCorrectionB, $damageCorrectionA, $damageCorrectionB, $criticalDamage, $damage, $criticalRate, $fieldCorrection, ${levelValue()} * $skillPower * $an / $dn")
+
+        for ((i, value) in randomDamage.withIndex()) {
+            var v = value
+            val bonus = attackSide.typeBonus()
+            v = Util.round5(v.times(bonus.second))
+            v = Math.floor(v.times(Type.calculateAffinity(Type.code(bonus.first), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))))
             if (ignore.not() && attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
-                randomDamage[i] = Math.floor(randomDamage[i].times(0.5))
+                v = Math.floor(v.times(0.5))
             }
-            if (i < 16) {
-                randomDamage[i] = Util.round5(randomDamage[i].times(damageCorrectionA).div(4096))
-            } else {
-                randomDamage[i] = Util.round5(randomDamage[i].times(damageCorrectionB).div(4096))
-            }
-            if (randomDamage[i] < 1) {
-                randomDamage[i] = 1.0
+            v = Util.round5(v.times(if (i < 16) damageCorrectionA else damageCorrectionB).div(4096))
+            randomDamage[i] = if (v < 1) 1.0 else v
+        }
+
+        var parentalRandomDamage = arrayOf<Double>()
+        if(attackSide.ability() == "おやこあい") {
+            parentalCriticalDamage = Util.round5(parentalCriticalDamage.times(fieldCorrection))
+            parentalCriticalDamage = Math.floor(parentalCriticalDamage.times(1.5))
+            parentalDamage = Util.round5(parentalDamage.times(fieldCorrection))
+            parentalRandomDamage = randomize.map { num -> Math.floor(parentalCriticalDamage.times(num)) }.plus(randomize.map { num -> Math.floor(parentalDamage.times(num)) }).toTypedArray()
+            for ((i, value) in parentalRandomDamage.withIndex()) {
+                var v = value
+                val bonus = attackSide.typeBonus()
+                v = Util.round5(v.times(bonus.second))
+                v = Math.floor(v.times(Type.calculateAffinity(Type.code(bonus.first), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))))
+                if (ignore.not() && attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
+                    v = Math.floor(v.times(0.5))
+                }
+                v = Util.round5(v.times(if (i < 16) damageCorrectionA else damageCorrectionB).div(4096))
+                parentalRandomDamage[i] = if (v < 1) 1.0 else v
             }
         }
 
@@ -276,12 +266,25 @@ class BattleCalculator(
         val notr = 1.minus(criticalRate).div(16.0)
 
         val result = mutableMapOf<Int, Double>()
-        for (i in 0..(randomDamage.size - 1)) {
-            val k = randomDamage[i].toInt()
-            if (result.containsKey(k)) {
-                result[k] = if (i < 16) result[k]!!.plus(r) else result[k]!!.plus(notr)
-            } else {
-                result[k] = if (i < 16) r else notr
+        for ((i, d) in randomDamage.withIndex()) {
+            val damageKey = d.toInt()
+            if(attackSide.ability() == "おやこあい") {
+                for ((j, pd) in parentalRandomDamage.withIndex()) {
+                    val k = damageKey + pd.toInt()
+
+                    val rate = if (i < 16 && j < 16){
+                        r.times(r)
+                    } else if(16 <= i&& 16 <= j){
+                        notr.times(notr)
+                    }else{
+                        r.times(notr)
+                    }
+
+                    result[k] = if (result.containsKey(k)) result[k]!!.plus(rate) else rate
+                }
+            }else{
+                val rate = if (i < 16) r else notr
+                result[damageKey] = if (result.containsKey(damageKey)) result[damageKey]!!.plus(rate) else rate
             }
         }
 
@@ -352,19 +355,18 @@ class BattleCalculator(
         if (attackSide.ability() == "すなのちから" && field.weather == BattleField.Weather.Sandstorm &&
                 (attackSide.skill.type == Type.no(Type.Code.ROCK) || attackSide.skill.type == Type.no(Type.Code.STEEL) || attackSide.skill.type == Type.no(Type.Code.GROUND))) {
             initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
-            attackSide.skill.type = Type.no(Type.Code.FLYING)
         }
         if (attackSide.ability() == "スカイスキン" && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
-            attackSide.skill.type = Type.no(Type.Code.FLYING)
         }
         if (attackSide.ability() == "フェアリースキン" && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
-            attackSide.skill.type = Type.no(Type.Code.FAIRY)
         }
         if (attackSide.ability() == "フリーズスキン" && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
             initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
-            attackSide.skill.type = Type.no(Type.Code.ICE)
+        }
+        if (attackSide.ability() == "エレキスキン" && attackSide.skill.type == Type.no(Type.Code.NORMAL)) {
+            initValue = Math.round(initValue.times(4915.0).div(4096.0)).toDouble()
         }
         if (attackSide.ability() == "かたいツメ" && attackSide.skill.contact) {
             initValue = Math.round(initValue.times(5325.0).div(4096.0)).toDouble()
@@ -573,17 +575,6 @@ class BattleCalculator(
             initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
         }
 
-//            　×　8192（0x2000）　÷　4096（0x1000）　→　四捨五入
-//            　　ふみつけ（ちいさくなる）
-//            　　じしん（あなをほる）
-//            　　なみのり（ダイビング）
-//            　　ハードローラー（ちいさくなる）
-//            　　ドラゴンダイブ（ちいさくなる）
-//            　　ゴーストダイブ（ちいさくなる）
-//            　　シャドーダイブ（ちいさくなる）
-//            　　フライングプレス（ちいさくなる）
-//            　　のしかかり（ちいさくなる）：
-
         return initValue
     }
 
@@ -661,8 +652,9 @@ class BattleCalculator(
 
         val damageCorrectionB = calcDamageCorrection(attackSide, defenseSide, field, false)
         for (i in 0..(randomDamage.size - 1)) {
-            randomDamage[i] = Util.round5(randomDamage[i].times(attackSide.typeBonus()))
-            randomDamage[i] = Math.floor(randomDamage[i].times(Type.calculateAffinity(Type.code(attackSide.skill.type), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))))
+            val bonus = attackSide.typeBonus()
+            randomDamage[i] = Util.round5(randomDamage[i].times(bonus.second))
+            randomDamage[i] = Math.floor(randomDamage[i].times(Type.calculateAffinity(Type.code(bonus.first), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))))
             if (ignore.not() && attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
                 randomDamage[i] = Math.floor(randomDamage[i].times(0.5))
             }
@@ -683,15 +675,4 @@ class BattleCalculator(
     fun levelValue(): Int {
         return Math.floor(2.times(level).div(5.0).plus(2)).toInt()
     }
-
-//    fun noEffectAlert(attackSide: PokemonForBattle, opponent: PartyInBattle): List<PokemonForBattle> {
-//        val result = mutableListOf<PokemonForBattle>()
-//        for (m in opponent.member) {
-//            for (a in m.abilityTrend()) {
-//                m.ability = a.name
-//                if (m.noEffect(attackSide.skill, attackSide, field)) result.add(m)
-//            }
-//        }
-//        return result
-//    }
 }

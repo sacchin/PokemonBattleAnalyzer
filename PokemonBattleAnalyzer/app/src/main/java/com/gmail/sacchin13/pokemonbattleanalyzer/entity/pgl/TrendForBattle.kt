@@ -24,9 +24,14 @@ data class TrendForBattle(
     }
 
     fun updateSkills(databaseHelper: DatabaseHelper) {
-        for (temp in 0..(wazaInfo.size - 2)) {
-            if (!wazaInfo[temp].name.equals("null")) {
-                skillList.add(RankingPokemonSkill.create(wazaInfo[temp], databaseHelper.selectSkillByName(wazaInfo[temp].name)))
+        for (temp in wazaInfo) {
+            if (temp.name != "null") {
+                skillList.add(RankingPokemonSkill.create(temp, databaseHelper.selectSkillByName(temp.name)))
+            }
+        }
+        for (temp in wazaInfo) {
+            if (temp.name != "null") {
+                skillList.add(RankingPokemonSkill.create(temp, databaseHelper.selectZSkill(temp.name)))
             }
         }
     }

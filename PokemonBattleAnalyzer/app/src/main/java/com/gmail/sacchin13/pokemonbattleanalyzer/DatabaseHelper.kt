@@ -213,6 +213,10 @@ class DatabaseHelper(context: Context) {
         return realm.where(Skill().javaClass).equalTo("jname", name).findFirst()
     }
 
+    fun selectZSkill(name: String): ZSkill {
+        return realm.where(ZSkill().javaClass).equalTo("jname", name).findFirst()
+    }
+
     fun selectUnknownSkill(): Skill {
         return realm.where(Skill().javaClass).equalTo("no", -1).findFirst()
     }

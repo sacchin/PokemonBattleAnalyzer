@@ -401,13 +401,16 @@ class PokemonForBattleTest {
         attackSide.side = PartyInBattle.OPPONENT_SIDE
 
         attackSide.skill.type = Type.no(Type.Code.WATER)
-        assertEquals(1.0, attackSide.typeBonus(), 0.001)
+        assertEquals(Type.no(Type.Code.WATER), attackSide.typeBonus().first)
+        assertEquals(1.0, attackSide.typeBonus().second, 0.001)
 
         attackSide.skill.type = Type.no(Type.Code.FIRE)
-        assertEquals(1.5, attackSide.typeBonus(), 0.001)
+        assertEquals(Type.no(Type.Code.FIRE), attackSide.typeBonus().first)
+        assertEquals(1.5, attackSide.typeBonus().second, 0.001)
 
         attackSide.ability = "てきおうりょく"
-        assertEquals(2.0, attackSide.typeBonus(), 0.001)
+        assertEquals(Type.no(Type.Code.FIRE), attackSide.typeBonus().first)
+        assertEquals(2.0, attackSide.typeBonus().second, 0.001)
     }
 
     @Test
@@ -749,6 +752,39 @@ class PokemonForBattleTest {
         attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.hpRatio = 50
         assertEquals(50, attackSide.hpValue())
+    }
+
+    fun Int.over(): Int {
+        return if(0 < this) this else 0
+    }
+    
+    @Test
+    fun 演算子オーバーロードテスト() {
+
+        val attackRank = 0
+        val defenseRank = 1
+        val specialAttackRank = 0
+        val specialDefenseRank = 1
+        val speedRank = -2
+        val hitProbabilityRank = -5
+        val avoidanceRank = 1
+        val criticalRank = 0
+
+
+        var oldType = if (0 < attackRank) attackRank else 0
+        oldType += if (0 < defenseRank) defenseRank else 0
+        oldType += if (0 < specialAttackRank) specialAttackRank else 0
+        oldType += if (0 < specialDefenseRank) specialDefenseRank else 0
+        oldType += if (0 < speedRank) speedRank else 0
+        oldType += if (0 < hitProbabilityRank) hitProbabilityRank else 0
+        oldType += if (0 < avoidanceRank) avoidanceRank else 0
+        oldType += if (0 < criticalRank) criticalRank else 0
+
+
+        var newType = attackRank.over() + defenseRank.over() + specialAttackRank.over() + specialDefenseRank.over() +
+         speedRank.over() + hitProbabilityRank.over() + avoidanceRank.over() + criticalRank.over()
+
+        assertEquals(newType, oldType)
     }
 
 //

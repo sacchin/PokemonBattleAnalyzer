@@ -349,7 +349,7 @@ class BattleCalculatorTest {
 
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcAttackValue()).thenReturn(166.0)
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.0)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.0))
         Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -395,7 +395,7 @@ class BattleCalculatorTest {
 
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcSpecialAttackValue()).thenReturn(82.0)
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.0)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.0))
         Mockito.`when`(attackSide.getSpecialAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -420,7 +420,6 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcSpecialAttackValueCorrection(defenseSide, field)).thenReturn(4096.0)
 
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
-        for (d in damages) println(d)
         assertTrue(damages.containsKey(12))
         assertTrue(damages.containsKey(13))
         assertTrue(damages.containsKey(14))
@@ -433,7 +432,7 @@ class BattleCalculatorTest {
 
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcSpecialAttackValue()).thenReturn(82.0)
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.5)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.5))
         Mockito.`when`(attackSide.ability()).thenReturn("フェアリースキン")
         Mockito.`when`(attackSide.getSpecialAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
@@ -470,7 +469,7 @@ class BattleCalculatorTest {
 
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcAttackValue()).thenReturn(90.0)
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.5)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.5))
         Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -495,6 +494,7 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(4096.0, false))
 
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
+        for (d in damages) println(d)
         assertTrue(damages.containsKey(151))
         assertTrue(damages.containsKey(153))
         assertTrue(damages.containsKey(154))
@@ -515,7 +515,7 @@ class BattleCalculatorTest {
 
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcAttackValue()).thenReturn(90.0)
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.5)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.5))
         Mockito.`when`(attackSide.item).thenReturn("いのちのたま")
         Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
@@ -563,7 +563,7 @@ class BattleCalculatorTest {
 
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcSpecialAttackValue()).thenReturn(154.0)
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.5)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.5))
         Mockito.`when`(attackSide.getSpecialAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -588,6 +588,7 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcSpecialAttackValueCorrection(defenseSide, field)).thenReturn(4096.0)
 
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
+        println(damages)
         assertTrue(damages.containsKey(30))
         assertTrue(damages.containsKey(31))
         assertTrue(damages.containsKey(33))
@@ -604,7 +605,7 @@ class BattleCalculatorTest {
 
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcAttackValue()).thenReturn(150.0)
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.5)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.5))
         Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -644,7 +645,7 @@ class BattleCalculatorTest {
 
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcSpecialAttackValue()).thenReturn(81.0)
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.0)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.0))
         Mockito.`when`(attackSide.getSpecialAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -684,7 +685,7 @@ class BattleCalculatorTest {
 
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcAttackValue()).thenReturn(103.0)
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.0)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.0))
         Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -720,7 +721,7 @@ class BattleCalculatorTest {
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcAttackValue()).thenReturn(99.0)
         Mockito.`when`(attackSide.ability()).thenReturn("かたいツメ")
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.0)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.0))
         Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -759,7 +760,7 @@ class BattleCalculatorTest {
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcSpecialAttackValue()).thenReturn(152.0)
         Mockito.`when`(attackSide.ability()).thenReturn("フェアリースキン")
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.5)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.5))
         Mockito.`when`(attackSide.getSpecialAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -799,7 +800,7 @@ class BattleCalculatorTest {
 
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcSpecialAttackValue()).thenReturn(104.0)
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.5)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.5))
         Mockito.`when`(attackSide.getSpecialAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -839,7 +840,7 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcAttackValue()).thenReturn(120.0)
         Mockito.`when`(attackSide.ability()).thenReturn("がんじょうあご")
         Mockito.`when`(attackSide.item).thenReturn("ひのたまプレート")
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.5)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.5))
         Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -885,7 +886,7 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcAttackValue()).thenReturn(120.0)
         Mockito.`when`(attackSide.ability()).thenReturn("かたいツメ")
         Mockito.`when`(attackSide.item).thenReturn("ひのたまプレート")
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.5)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.5))
         Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -907,7 +908,7 @@ class BattleCalculatorTest {
                 252, 252, 0, 0, 0, 4, 31, 31, 31, 31, 31, 31,
                 PokemonMasterData("113", "ラッキー", "-", "-", 250, 5, 5, 35, 105, 50, "しぜんかいふく", "てんのめぐみ", "いやしのこころ", 0, -1, 34.6f)))
 
-        Mockito.`when`(attackSide.determineSkillPower(defenseSide)).thenReturn(50)
+        Mockito.`when`(attackSide.determineSkillPower(defenseSide)).thenReturn(60)
         Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(4096.0, false))
 
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
@@ -930,7 +931,7 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcAttackValue()).thenReturn(73.0)
         Mockito.`when`(attackSide.ability()).thenReturn("はりきり")
         Mockito.`when`(attackSide.item).thenReturn("こだわりハチマキ")
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.0)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.0))
         Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(-1)
@@ -972,7 +973,7 @@ class BattleCalculatorTest {
         Mockito.`when`(attackSide.calcAttackValue()).thenReturn(73.0)
         Mockito.`when`(attackSide.ability()).thenReturn("こんじょう")
         Mockito.`when`(attackSide.item).thenReturn("こだわりハチマキ")
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.0)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.0))
         Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(StatusAilment.no(StatusAilment.Code.PARALYSIS))
@@ -1013,7 +1014,7 @@ class BattleCalculatorTest {
 
         val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
         Mockito.`when`(attackSide.calcAttackValue()).thenReturn(90.0)
-        Mockito.`when`(attackSide.typeBonus()).thenReturn(1.5)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.5))
         Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
         Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
         Mockito.`when`(attackSide.status).thenReturn(StatusAilment.no(StatusAilment.Code.UNKNOWN))
@@ -1040,6 +1041,82 @@ class BattleCalculatorTest {
         val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
         for (d in damages) println(d)
         assertTrue(damages.containsKey(45))
+    }
+
+
+    //以下第7世代
+    @Test
+    fun 検証スレテストケースその18() {
+        val calc = BattleCalculator(32)
+        val field = BattleField()
+
+        val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
+        Mockito.`when`(attackSide.calcAttackValue()).thenReturn(49.0)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.0))
+        Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
+        Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
+        Mockito.`when`(attackSide.status).thenReturn(StatusAilment.no(StatusAilment.Code.UNKNOWN))
+        Mockito.`when`(attackSide.skill).thenReturn(Skill(197, "しっぺがえし", "-", 15, 50, 100.0, 0, 10, 0, true, true, -1, 0.0, -1, 0.0, -1, 0.0))
+        Mockito.`when`(attackSide.individual).thenReturn(IndividualPokemon(
+                0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
+                252, 252, 0, 0, 0, 4, 31, 31, 31, 31, 31, 31,
+                PokemonMasterData("094", "ゲンガー", "Gengar", "-", 60, 65, 60, 130, 75, 110, "のろわれボディ", "のろわれボディ", "のろわれボディ", 13, 7, 40.5f)))
+
+        val defenseSide = PowerMockito.mock(PokemonForBattle::class.java)
+        Mockito.`when`(defenseSide.calcDefenseValue()).thenReturn(75.0)
+        Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(6144.0)
+        Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
+        Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
+        Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
+                0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
+                252, 252, 0, 0, 0, 4, 31, 31, 31, 31, 31, 31,
+                PokemonMasterData("042", "ゴルバット", "-", "-", 75, 80, 70, 65, 75, 90, "-", "-", "-", 7, 9, 55.0f)))
+
+        Mockito.`when`(attackSide.determineSkillPower(defenseSide)).thenReturn(100)
+        Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(4096.0, false))
+
+        val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
+        for (d in damages) println(d)
+        assertTrue(damages.containsKey(12))
+        assertTrue(damages.containsKey(13))
+    }
+
+    @Test
+    fun 検証スレテストケースその19() {
+        val calc = BattleCalculator(32)
+        val field = BattleField()
+
+        val attackSide = PowerMockito.mock(PokemonForBattle::class.java)
+        Mockito.`when`(attackSide.calcAttackValue()).thenReturn(49.0)
+        Mockito.`when`(attackSide.typeBonus()).thenReturn(Pair(0, 1.5))
+        Mockito.`when`(attackSide.getAttackRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
+        Mockito.`when`(attackSide.side).thenReturn(PartyInBattle.MY_SIDE)
+        Mockito.`when`(attackSide.status).thenReturn(StatusAilment.no(StatusAilment.Code.UNKNOWN))
+        Mockito.`when`(attackSide.skill).thenReturn(Skill(249, "シャドーパンチ", "-", 13, 60, -1.0, 0, 20, 0, true, true, -1, 0.0, -1, 0.0, -1, 0.0))
+        Mockito.`when`(attackSide.individual).thenReturn(IndividualPokemon(
+                0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
+                252, 252, 0, 0, 0, 4, 31, 31, 31, 31, 31, 31,
+                PokemonMasterData("094", "ゲンガー", "Gengar", "-", 60, 65, 60, 130, 75, 110, "のろわれボディ", "のろわれボディ", "のろわれボディ", 13, 7, 40.5f)))
+
+        val defenseSide = PowerMockito.mock(PokemonForBattle::class.java)
+        Mockito.`when`(defenseSide.calcDefenseValue()).thenReturn(75.0)
+        Mockito.`when`(defenseSide.calcDefenseValueCorrection(attackSide)).thenReturn(6144.0)
+        Mockito.`when`(defenseSide.getDefenseRankCorrection(Mockito.anyBoolean())).thenReturn(1.0)
+        Mockito.`when`(defenseSide.noEffect(attackSide.skill, attackSide, field)).thenReturn(false)
+        Mockito.`when`(defenseSide.side).thenReturn(PartyInBattle.OPPONENT_SIDE)
+        Mockito.`when`(defenseSide.individual).thenReturn(IndividualPokemon(
+                0, -1, "unknown", "unknown", "unknown", Skill(), Skill(), Skill(), Skill(),
+                252, 252, 0, 0, 0, 4, 31, 31, 31, 31, 31, 31,
+                PokemonMasterData("042", "ゴルバット", "-", "-", 75, 80, 70, 65, 75, 90, "-", "-", "-", 7, 9, 55.0f)))
+
+        Mockito.`when`(attackSide.determineSkillPower(defenseSide)).thenReturn(60)
+        Mockito.`when`(attackSide.calcAttackValueCorrection(defenseSide, field)).thenReturn(Pair(4096.0, false))
+
+        val damages = calc.doSkill(attackSide, defenseSide, field, 0.0, true, true)
+        for (d in damages) println(d)
+        assertTrue(damages.containsKey(10))
+        assertTrue(damages.containsKey(12))
     }
 
 }
