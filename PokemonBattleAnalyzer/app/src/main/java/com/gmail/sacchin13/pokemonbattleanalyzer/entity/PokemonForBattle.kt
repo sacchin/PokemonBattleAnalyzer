@@ -1,8 +1,8 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Rank.Value
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.Info
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Rank.Value
 import kotlin.properties.Delegates
 
 class PokemonForBattle(
@@ -43,29 +43,49 @@ class PokemonForBattle(
         fun opponent(pokemon: () -> IndividualPokemon): PokemonForBattle = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, pokemon.invoke())
 
         fun create(side: Int, individual: IndividualPokemon): PokemonForBattle {
-            return PokemonForBattle(side, UNKNOWN, NOT_CHANGED, false, "unknown", NOT_CHANGED, Skill(), 0, 100, 0,
+            return PokemonForBattle(side, UNKNOWN, individual.item, false, individual.characteristic, individual.ability, Skill(), 0, 100, 0,
                     0, Rank.no(Value.DEFAULT), 0, Rank.no(Value.DEFAULT), 0, Rank.no(Value.DEFAULT), 0, Rank.no(Value.DEFAULT), 0, Rank.no(Value.DEFAULT),
                     Rank.no(Value.DEFAULT), Rank.no(Value.DEFAULT), Rank.no(Value.DEFAULT), false, MegaPokemonMasterData.NOT_MEGA, individual)
         }
     }
 
     fun Int.over(): Int {
-        return if(0 < this) this else 0
+        return if (0 < this) this else 0
     }
 
-    fun abilityTrend(): List<Info> {
-        if (ability() == "unknown") return trend.tokuseiInfo.filterNotNull()
-        return listOf(Info(0, 1.0f, ability(), 0))
+    fun abilityTrend(): List<Info> = trend.tokuseiInfo.filterNotNull()
+    fun characteristicTrend(): List<Info> = trend.seikakuInfo.filterNotNull()
+    fun itemTrend(): List<Info> = trend.itemInfo.filterNotNull().filter {
+        it ->
+        it.name != null && damageRelated(it.name)
     }
 
-    fun characteristicTrend(): List<Info> {
-        if (characteristic == "unknown") return trend.seikakuInfo.filterNotNull()
-        return listOf(Info(0, 1.0f, characteristic, 0))
-    }
-
-    fun itemTrend(): List<Info> {
-        if (item == "unknown") return trend.itemInfo.filterNotNull()
-        return listOf(Info(0, 1.0f, item, 0))
+    fun damageRelated(item: String): Boolean {
+        return (item == "いのちのたま" || item == "こだわりメガネ" ||
+                item == "こだわりハチマキ" || item == "ものしりメガネ" ||
+                item == "ちからのハチマキ" || item == "たつじんのおび" ||
+                item == "ふといホネ" || item == "こころのしずく" ||
+                item == "メトロノーム" || item == "あおぞらプレート" ||
+                item == "いかずちプレート" || item == "がんせきプレート" ||
+                item == "こうてつプレート" || item == "こぶしのプレート" ||
+                item == "こわもてプレート" || item == "しずくプレート" ||
+                item == "だいちのプレート" || item == "たまむしプレート" ||
+                item == "つららのプレート" || item == "ひのたまプレート" ||
+                item == "ふしぎのプレート" || item == "みどりのプレート" ||
+                item == "もうどくプレート" || item == "もののけプレート" ||
+                item == "りゅうのプレート" || item == "はっきんだま" ||
+                item == "しらたま" || item == "こんごうだま" ||
+                item == "しんかいのキバ" || item == "しんかいのウロコ" ||
+                item == "ながねぎ" || item == "ラッキーパンチ" ||
+                item == "スピードパウダー" || item == "メタルパウダー" ||
+                item == "もくたん" || item == "しんぴのしずく" ||
+                item == "じしゃく" || item == "きせきのタネ" ||
+                item == "とけないこおり" || item == "くろおび" ||
+                item == "どくバリ" || item == "やわらかいすな" ||
+                item == "するどいくちばし" || item == "まがったスプーン" ||
+                item == "ぎんのこな" || item == "かたいいし" ||
+                item == "のろいのおふだ" || item == "りゅうのキバ" ||
+                item == "くろいメガネ" || item == "メタルコート")
     }
 
     fun hpValue(): Int {
@@ -512,17 +532,17 @@ class PokemonForBattle(
 
     fun typeBonus(): Pair<Int, Double> {
         val skillType =
-        if (ability() == "スカイスキン" && skill.type == Type.no(Type.Code.NORMAL)) {
-            Type.no(Type.Code.FLYING)
-        }else if (ability() == "フェアリースキン" && skill.type == Type.no(Type.Code.NORMAL)) {
-            Type.no(Type.Code.FAIRY)
-        }else if (ability() == "フリーズスキン" && skill.type == Type.no(Type.Code.NORMAL)) {
-            Type.no(Type.Code.ICE)
-        }else if (ability() == "エレキスキン" && skill.type == Type.no(Type.Code.NORMAL)) {
-            Type.no(Type.Code.ELECTRIC)
-        }else {
-            skill.type
-        }
+                if (ability() == "スカイスキン" && skill.type == Type.no(Type.Code.NORMAL)) {
+                    Type.no(Type.Code.FLYING)
+                } else if (ability() == "フェアリースキン" && skill.type == Type.no(Type.Code.NORMAL)) {
+                    Type.no(Type.Code.FAIRY)
+                } else if (ability() == "フリーズスキン" && skill.type == Type.no(Type.Code.NORMAL)) {
+                    Type.no(Type.Code.ICE)
+                } else if (ability() == "エレキスキン" && skill.type == Type.no(Type.Code.NORMAL)) {
+                    Type.no(Type.Code.ELECTRIC)
+                } else {
+                    skill.type
+                }
 
         if (skillType == individual.master.type1 || skillType == individual.master.type2) {
             if (ability() == "てきおうりょく") return Pair(skillType, 2.0) else return Pair(skillType, 1.5)

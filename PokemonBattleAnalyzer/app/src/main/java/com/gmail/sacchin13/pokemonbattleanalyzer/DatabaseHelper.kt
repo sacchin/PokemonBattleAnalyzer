@@ -5,7 +5,10 @@ import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.activity.KpActivity
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
-import io.realm.*
+import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.RealmResults
+import io.realm.Sort
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -213,8 +216,8 @@ class DatabaseHelper(context: Context) {
         return realm.where(Skill().javaClass).equalTo("jname", name).findFirst()
     }
 
-    fun selectZSkill(name: String): ZSkill {
-        return realm.where(ZSkill().javaClass).equalTo("jname", name).findFirst()
+    fun selectZSkill(skillNumber: Int): ZSkill {
+        return realm.where(ZSkill().javaClass).equalTo("skillNumber", skillNumber).findFirst()
     }
 
     fun selectUnknownSkill(): Skill {
@@ -280,7 +283,7 @@ class DatabaseHelper(context: Context) {
         return party[0]
     }
 
-    fun selectAllParty(activity: KpActivity){
+    fun selectAllParty(activity: KpActivity) {
         realm.where(Party().javaClass).findAllAsync().addChangeListener { it -> activity.onSelect(it.toList()) }
     }
 

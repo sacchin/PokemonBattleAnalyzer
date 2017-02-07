@@ -56,8 +56,8 @@ class MegaPokemonInsertHandler(private val databaseHelper: DatabaseHelper?) {
 
         databaseHelper.insertMegaPokemonDataX("681", 60, 150, 50, 150, 50, 60, "バトルスイッチ", 53.0f)
         databaseHelper.insertMegaPokemonDataX("555", 105, 30, 105, 140, 105, 55, Type.no(Type.Code.FIRE), Type.no(Type.Code.PSYCHIC), "ダルマモード", 92.9f)
-        databaseHelper.insertMegaPokemonDataX("681", 45, 140, 130, 140, 135, 30, "ぎょぐん", 53.0f)
-        databaseHelper.insertMegaPokemonDataX("555", 60, 100, 60, 100, 60, 120, "リミットシールド", 92.9f)
+        databaseHelper.insertMegaPokemonDataX("746", 45, 140, 130, 140, 135, 30, "ぎょぐん", 53.0f)
+        databaseHelper.insertMegaPokemonDataX("774", 60, 100, 60, 100, 60, 120, "リミットシールド", 92.9f)
         Log.i("MegaPokemonInsertHandle", "メガシンカポケモンデータOK!")
     }
 }

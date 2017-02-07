@@ -31,11 +31,11 @@ class PokemonTrendDownloader(
                     .addInterceptor {
                         it.proceed(it.request()
                                 .newBuilder()
-                                .addHeader("Referer", "https://3ds.pokemon-gl.com/battle/oras/")
+                                .addHeader("Referer", "https://3ds.pokemon-gl.com/battle/")
                                 .build())
                     }.build()
             val requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"),
-                    "languageId=1&seasonId=117&battleType=1&timezone=JST&pokemonId=$pokemonNo&displayNumberWaza=10&displayNumberTokusei=3" +
+                    "languageId=1&seasonId=202&battleType=1&timezone=JST&pokemonId=$pokemonNo&displayNumberWaza=10&displayNumberTokusei=3" +
                             "&displayNumberSeikaku=10&displayNumberItem=10&displayNumberLevel=10&displayNumberPokemonIn=10&displayNumberPokemonDown=10" +
                             "&displayNumberPokemonDownWaza=10&timeStamp=$ms"
             )

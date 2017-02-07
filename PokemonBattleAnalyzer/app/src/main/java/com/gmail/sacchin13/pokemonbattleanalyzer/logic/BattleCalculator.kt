@@ -19,6 +19,7 @@ class BattleCalculator(
     fun getGeneralResult(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
         val result = BattleResult()
 
+        Log.v("getGeneralResult", "start")
         result.coverRate = 0.0
         result.prioritySkill(opponent.trend)
         loop@ for (item in opponent.itemTrend()) {
@@ -34,6 +35,7 @@ class BattleCalculator(
                     opponent.ability = tokusei.name
                     opponent.characteristic = seikaku.name
 
+                    Log.v("getGeneralResult", "${opponent.item}, ${opponent.ability}, ${opponent.characteristic}")
                     result.orderRate(opponent, rate)
                     result.add(oppoAttack(rate, opponent, mine, field))
 
@@ -136,15 +138,24 @@ class BattleCalculator(
         return result
     }
 
+
     fun oppoAttack(baseRate: Double, opponent: PokemonForBattle, mine: PokemonForBattle, field: BattleField): BattleResult {
         val result = BattleResult()
+        val hasZ = opponent.item.contains("Z")
+        val zType = Type.no(Type.code(opponent.item.replace("Z", "")))
 
         for (skill in opponent.trend.skillList) {
             opponent.skill = skill.skill
+
+            if (skill.skill.jname.contains("Z")) {
+                if ((hasZ && skill.skill.type == zType).not()) continue
+                else Log.v("oppoAttack", "has ${opponent.item}, calc ${skill.skill.jname}")
+            }
+
             opponent.attackEffortValue = 0
             opponent.specialAttackEffortValue = 0
             val d0 = doSkill(opponent, mine, field, mine.calcCriticalRate().toDouble(), true, false)
-            for ((key, value) in d0) result.updateDefeatedTimes(skill.skill.jname, mine.defeatTimes(key), baseRate.times(value))
+            for ((damage, rate) in d0) result.updateDefeatedTimes(skill.skill.jname, damage, mine.defeatTimes(damage), baseRate.times(rate))
 
             if (result.blow(baseRate)) {
                 println("blow!!")
@@ -154,7 +165,7 @@ class BattleCalculator(
             opponent.attackEffortValue = 252
             opponent.specialAttackEffortValue = 252
             val d252 = doSkill(opponent, mine, field, mine.calcCriticalRate().toDouble(), true, false)
-            for ((key, value) in d252) result.updateDefeatedTimes(skill.skill.jname, mine.defeatTimes(key), baseRate.times(value))
+            for ((damage, rate) in d252) result.updateDefeatedTimes(skill.skill.jname, damage, mine.defeatTimes(damage), baseRate.times(rate))
         }
 
         return result
@@ -162,8 +173,8 @@ class BattleCalculator(
 
     fun doSkill(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField,
                 criticalRate: Double, first: Boolean, damaged: Boolean): MutableMap<Int, Double> {
-        Log.e("doSkill", "noEffect(${defenseSide.noEffect(attackSide.skill, attackSide, field)})")
         if (defenseSide.noEffect(attackSide.skill, attackSide, field)) {
+            Log.v("doSkill", "${attackSide.skill.jname} to ${defenseSide.individual.master.jname} is no effect !")
             return mutableMapOf(0 to 1.0)
         }
 
@@ -228,8 +239,8 @@ class BattleCalculator(
 
         val damageCorrectionA = calcDamageCorrection(attackSide, defenseSide, field, true)
         val damageCorrectionB = calcDamageCorrection(attackSide, defenseSide, field, false)
-        println("${attackSide.individual.master.jname}(${attackSide.skill.jname}), $attackValue, $attackValueCorrection, $defenseValue, $defenseValueCorrection, $attackRankCorrectionA, " +
-                "$defenseRankCorrectionA, $attackRankCorrectionB, $defenseRankCorrectionB, $damageCorrectionA, $damageCorrectionB, $criticalDamage, $damage, $criticalRate, $fieldCorrection, ${levelValue()} * $skillPower * $an / $dn")
+        //println("${attackSide.individual.master.jname}(${attackSide.skill.jname}), $attackValue, $attackValueCorrection, $defenseValue, $defenseValueCorrection, $attackRankCorrectionA, " +
+        //       "$defenseRankCorrectionA, $attackRankCorrectionB, $defenseRankCorrectionB, $damageCorrectionA, $damageCorrectionB, $criticalDamage, $damage, $criticalRate, $fieldCorrection, ${levelValue()} * $skillPower * $an / $dn")
 
         for ((i, value) in randomDamage.withIndex()) {
             var v = value
@@ -244,7 +255,7 @@ class BattleCalculator(
         }
 
         var parentalRandomDamage = arrayOf<Double>()
-        if(attackSide.ability() == "おやこあい") {
+        if (attackSide.ability() == "おやこあい") {
             parentalCriticalDamage = Util.round5(parentalCriticalDamage.times(fieldCorrection))
             parentalCriticalDamage = Math.floor(parentalCriticalDamage.times(1.5))
             parentalDamage = Util.round5(parentalDamage.times(fieldCorrection))
@@ -268,21 +279,21 @@ class BattleCalculator(
         val result = mutableMapOf<Int, Double>()
         for ((i, d) in randomDamage.withIndex()) {
             val damageKey = d.toInt()
-            if(attackSide.ability() == "おやこあい") {
+            if (attackSide.ability() == "おやこあい") {
                 for ((j, pd) in parentalRandomDamage.withIndex()) {
                     val k = damageKey + pd.toInt()
 
-                    val rate = if (i < 16 && j < 16){
+                    val rate = if (i < 16 && j < 16) {
                         r.times(r)
-                    } else if(16 <= i&& 16 <= j){
+                    } else if (16 <= i && 16 <= j) {
                         notr.times(notr)
-                    }else{
+                    } else {
                         r.times(notr)
                     }
 
                     result[k] = if (result.containsKey(k)) result[k]!!.plus(rate) else rate
                 }
-            }else{
+            } else {
                 val rate = if (i < 16) r else notr
                 result[damageKey] = if (result.containsKey(damageKey)) result[damageKey]!!.plus(rate) else rate
             }

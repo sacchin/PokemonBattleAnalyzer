@@ -9,7 +9,6 @@ import android.support.design.widget.Snackbar
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
@@ -24,7 +23,6 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import kotlinx.android.synthetic.main.activity_expected.*
 import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.textColor
 import kotlin.properties.Delegates
 
 class ExpectedActivity : PGLActivity() {
@@ -50,6 +48,7 @@ class ExpectedActivity : PGLActivity() {
     }
 
     fun showBest() {
+        Log.v("showBest", "start")
         val calc = BattleCalculator()
         val selectedOpponent = opponent.apply()
         val selectedMine = mine.apply()
@@ -57,32 +56,18 @@ class ExpectedActivity : PGLActivity() {
         allField.resetDefenseSide(opponent.field)
 
         val general = calc.getGeneralResult(selectedMine, selectedOpponent, allField)
-        coverRate.text = general.coverRate()
-        order.text = general.orderResult(selectedMine, selectedOpponent, allField,
-                mine.field.contains(BattleField.Field.Tailwind), opponent.field.contains(BattleField.Field.Tailwind))
-        correctionRate.text = "0.9(${Util.percent(general.correctionRate[0].times(100.0))})\n" +
-                "1.1(${Util.percent(general.correctionRate[2].times(100.0))})"
-        scarf.text = Util.percent(general.scarfRate.times(100.0))
-        orderAbility.text = Util.percent(general.orderAbilityRate.times(100.0))
+        showGeneralResult(selectedMine, selectedOpponent, general)
 
-        if (general.prioritySkills.isEmpty()) {
-            priority.text = "なし"
-        } else {
-            var t = ""
-            for ((key, value) in general.prioritySkills) {
-                t += key + " = ${Util.percent(value)}\n"
-            }
-            priority.text = t
+
+        //val suffer = calc.sufferDamage(selectedMine, selectedOpponent, allField)
+
+        Log.v("showBest", "start")
+        for (i in general.defeatedTimes) {
+            Log.v("showBest", "${i.key}: ${i.value.summary()}")
         }
 
-        for ((key, value) in general.defeatedTimes) {
-            for (pair in value) {
-                Log.v("defeatedTimes", "$pair")
-            }
-        }
 
         showDamage()
-
 
 
 //        val caseOfSkill2 = calc.givenDamage(selectedMine, selectedOpponent, allField)
@@ -90,8 +75,34 @@ class ExpectedActivity : PGLActivity() {
         //控え2に交換した場合
     }
 
+    fun showGeneralResult(selectedMine: PokemonForBattle, selectedOpponent: PokemonForBattle, result: BattleResult) {
+        coverRate.text = result.coverRate()
+        order.text = result.orderResult(selectedMine, selectedOpponent, allField,
+                mine.field.contains(BattleField.Field.Tailwind), opponent.field.contains(BattleField.Field.Tailwind))
+        correctionRate.text = "0.9(${Util.percent(result.correctionRate[0].times(100.0))})\n" +
+                "1.1(${Util.percent(result.correctionRate[2].times(100.0))})"
+        scarf.text = Util.percent(result.scarfRate.times(100.0))
+        orderAbility.text = Util.percent(result.orderAbilityRate.times(100.0))
 
-    fun showDamage(){
+        if (result.prioritySkills.isEmpty()) {
+            priority.text = "なし"
+        } else {
+            var t = ""
+            for ((key, value) in result.prioritySkills) {
+                t += key + " = ${Util.percent(value)}\n"
+            }
+            priority.text = t
+        }
+
+//        for ((key, value) in result.defeatedTimes) {
+//            for (pair in value) {
+//                Log.v("defeatedTimes", "$pair")
+//            }
+//        }
+    }
+
+
+    fun showDamage() {
 //        //技1の場合
 //        selectedMine.skill = selectedMine.individual.skillNo1
 //        val caseOfSkill1 = calc.sufferDamage(selectedMine, selectedOpponent, allField)
@@ -191,7 +202,7 @@ class ExpectedActivity : PGLActivity() {
         room.adapter = roomAdapter
         room.onItemSelectedListener = OnRoomSelectedListener()
 
-        val terrainAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("-", "エレキ", "グラス", "ミスト"))
+        val terrainAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("-", "エレキ", "グラス", "ミスト", "サイコ"))
         terrainAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         terrain.adapter = terrainAdapter
         terrain.onItemSelectedListener = OnTerrainSelectedListener()
@@ -241,7 +252,7 @@ class ExpectedActivity : PGLActivity() {
         }
 
         expected_fab.setOnClickListener {
-//            showProgress(true)
+            //            showProgress(true)
             showBest()
 //            showProgress(false)
         }
@@ -389,6 +400,7 @@ class ExpectedActivity : PGLActivity() {
                 1 -> allField.terrain = BattleField.Terrain.ElectricTerrain
                 2 -> allField.terrain = BattleField.Terrain.GrassyTerrain
                 3 -> allField.terrain = BattleField.Terrain.MistyTerrain
+                4 -> allField.terrain = BattleField.Terrain.PsycoTerrain
                 else -> allField.terrain = BattleField.Terrain.Unknown
             }
         }

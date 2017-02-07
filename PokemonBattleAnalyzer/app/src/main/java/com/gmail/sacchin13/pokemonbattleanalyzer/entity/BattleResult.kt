@@ -1,9 +1,28 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import java.text.NumberFormat
 
 class BattleResult {
+
+    class SufferDamage(
+            val damages: MutableList<Int> = mutableListOf(),
+            val times: MutableList<Int> = mutableListOf()) {
+        fun merge(sd: SufferDamage) {
+            damages.addAll(sd.damages)
+            times.addAll(sd.times)
+        }
+
+        fun summary(): String {
+            var result = "re: "
+            times.groupBy { it -> it }.forEach {
+                result += "${it.key}(${Util.percent(it.key.div(times.size.toDouble()))}), "
+            }
+            return result
+        }
+    }
+
 
     var coverRate: Double = 0.0
 
@@ -21,7 +40,7 @@ class BattleResult {
 
     var orderAbilityRate = 0.0
 
-    var defeatedTimes = mutableMapOf<String, MutableMap<Int, Double>>()
+    var defeatedTimes = mutableMapOf<String, SufferDamage>()
 
     var didAttack = false
 
@@ -35,28 +54,24 @@ class BattleResult {
         defeatTimes[key] = defeatTimes[key]!!.plus(value)
     }
 
-    fun updateDefeatedTimes(skillName: String, key: Int, value: Double) {
-        if (defeatedTimes[skillName] == null) {
-            defeatedTimes[skillName] = mutableMapOf(
-                    1 to 0.0, 2 to 0.0, 3 to 0.0, 4 to 0.0, 5 to 0.0
-            )
-        }
-
-        val a = defeatedTimes[skillName] as MutableMap<Int, Double>
-        a[key] = a[key]!!.plus(value)
+    fun updateDefeatedTimes(skillName: String, damage: Int, time: Int, rate: Double) {
+        val sufferDamage = defeatedTimes[skillName] ?: SufferDamage()
+        sufferDamage.damages.add(damage)
+        sufferDamage.times.add(time)
+        defeatedTimes[skillName] = sufferDamage
     }
 
-    fun calcBreakMigawari(checked: Boolean, skillName: String){
-        if(checked.not() || Skill.migawariSkill(skillName)){
+    fun calcBreakMigawari(checked: Boolean, skillName: String) {
+        if (checked.not() || Skill.migawariSkill(skillName)) {
             breakMigawari = -1
-        }else if (Math.abs(defeatTimes[5]!!.minus(0.0)) < 0.001) {
+        } else if (Math.abs(defeatTimes[5]!!.minus(0.0)) < 0.001) {
             breakMigawari = 0
-        }else if (Math.abs(defeatTimes[1]!!.minus(0.0)) < 0.001 &&
+        } else if (Math.abs(defeatTimes[1]!!.minus(0.0)) < 0.001 &&
                 Math.abs(defeatTimes[2]!!.minus(0.0)) < 0.001 &&
                 Math.abs(defeatTimes[3]!!.minus(0.0)) < 0.001 &&
                 Math.abs(defeatTimes[4]!!.minus(0.0)) < 0.001) {
             breakMigawari = 2
-        }else{
+        } else {
             breakMigawari = 1
         }
     }
@@ -88,24 +103,17 @@ class BattleResult {
     }
 
     fun add(result: BattleResult) {
-        if (result.didAttack) {
-            for (key in defeatTimes.keys) {
-                defeatTimes[key] = defeatTimes[key]!!.plus(result.defeatTimes[key]!!)
-            }
+//        if (result.didAttack) {
+//            for (key in defeatTimes.keys) {
+//                defeatTimes[key] = defeatTimes[key]!!.plus(result.defeatTimes[key]!!)
+//            }
 
-            for ((key, value) in result.defeatedTimes) {
-                if (defeatedTimes[key] == null) {
-                    defeatedTimes.put(key, value)
-                } else {
-                    val r = defeatedTimes[key] as MutableMap<Int, Double>
-                    r[1] = r[1]!!.plus(value[1]!!)
-                    r[2] = r[2]!!.plus(value[2]!!)
-                    r[3] = r[3]!!.plus(value[3]!!)
-                    r[4] = r[4]!!.plus(value[4]!!)
-                    r[5] = r[5]!!.plus(value[5]!!)
-                }
-            }
+        for ((skillName, sufferDamage) in result.defeatedTimes) {
+            val temp = defeatedTimes[skillName] ?: SufferDamage()
+            temp.merge(sufferDamage)
+            defeatedTimes[skillName] = temp
         }
+//        }
 
         for (key in speedOccur.keys) {
             speedOccur[key] = speedOccur[key]!!.plus(result.speedOccur[key]!!)
