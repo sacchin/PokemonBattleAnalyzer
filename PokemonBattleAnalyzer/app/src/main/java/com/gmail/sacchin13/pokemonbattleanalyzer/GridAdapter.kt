@@ -7,7 +7,7 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.gmail.sacchin13.pokemonbattleanalyzer.activity.HomeActivity
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import org.jetbrains.anko.onClick
 import kotlin.properties.Delegates

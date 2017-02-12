@@ -8,8 +8,8 @@ import android.widget.LinearLayout
 import android.widget.TableRow
 import android.widget.TextView
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPokemon
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.IndividualPokemon
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import kotlinx.android.synthetic.main.activity_select.*
 import kotlinx.android.synthetic.main.content_select.*
@@ -114,7 +114,7 @@ class SelectActivity : PGLActivity() {
         checkOpponentParty()
     }
 
-    fun createLinearLayout(texts: Array<String>, layoutSpan: Int, bgColor: Int, txtColor: Int, txtSize: Int): LinearLayout {
+    fun createLinearLayout(texts: Array<String>, bgColor: Int, txtColor: Int, txtSize: Int): LinearLayout {
         val container = LinearLayout(this)
         container.layoutParams = LinearLayout.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
         for (temp in texts) {
@@ -138,12 +138,10 @@ class SelectActivity : PGLActivity() {
 
         for (temp in constructions) {
             val count = 0
-            for (pokemon in opponentList) {
-                if (temp.list.contains(pokemon)) count.inc()
-            }
+            opponentList.filter { it -> temp.list.contains(it) }.map { count.inc() }
 
-            if (temp.list.size.div(2).toInt() < count) {
-                createLinearLayout(arrayOf(temp.name, temp.warning), 0, Color.TRANSPARENT, Color.BLACK, 12)
+            if (temp.list.size.div(2) < count) {
+                createLinearLayout(arrayOf(temp.name, temp.warning), 0, Color.BLACK, 12)
             }
         }
     }

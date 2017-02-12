@@ -3,6 +3,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 import android.os.Parcel
 import android.os.Parcelable
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Rank.Value
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.MegaPokemonMasterData
 
 class TemporaryStatus(
         var tempItem: Int = 0,

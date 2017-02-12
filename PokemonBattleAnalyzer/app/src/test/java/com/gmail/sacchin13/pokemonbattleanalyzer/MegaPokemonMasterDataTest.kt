@@ -1,6 +1,6 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.MegaPokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.MegaPokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Type
 import org.junit.Assert.assertEquals
 import org.junit.Test

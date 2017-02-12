@@ -1,28 +1,17 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Skill
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import java.text.NumberFormat
 
 class BattleResult {
 
     class SufferDamage(
-            val damages: MutableList<Int> = mutableListOf(),
-            val times: MutableList<Int> = mutableListOf()) {
-        fun merge(sd: SufferDamage) {
-            damages.addAll(sd.damages)
-            times.addAll(sd.times)
-        }
-
-        fun summary(): String {
-            var result = "re: "
-            times.groupBy { it -> it }.forEach {
-                result += "${it.key}(${Util.percent(it.key.div(times.size.toDouble()))}), "
-            }
-            return result
-        }
+            val damage: Int = 0,
+            val time: Int = 0,
+            val rate: Double = 0.0) {
     }
-
 
     var coverRate: Double = 0.0
 
@@ -40,7 +29,7 @@ class BattleResult {
 
     var orderAbilityRate = 0.0
 
-    var defeatedTimes = mutableMapOf<String, SufferDamage>()
+    var defeatedTimes = mutableMapOf<String, MutableList<SufferDamage>>()
 
     var didAttack = false
 
@@ -55,9 +44,8 @@ class BattleResult {
     }
 
     fun updateDefeatedTimes(skillName: String, damage: Int, time: Int, rate: Double) {
-        val sufferDamage = defeatedTimes[skillName] ?: SufferDamage()
-        sufferDamage.damages.add(damage)
-        sufferDamage.times.add(time)
+        val sufferDamage = defeatedTimes[skillName] ?: mutableListOf<SufferDamage>()
+        sufferDamage.add(SufferDamage(damage, time, rate))
         defeatedTimes[skillName] = sufferDamage
     }
 
@@ -102,24 +90,18 @@ class BattleResult {
         }
     }
 
-    fun add(result: BattleResult) {
-//        if (result.didAttack) {
-//            for (key in defeatTimes.keys) {
-//                defeatTimes[key] = defeatTimes[key]!!.plus(result.defeatTimes[key]!!)
-//            }
-
-        for ((skillName, sufferDamage) in result.defeatedTimes) {
-            val temp = defeatedTimes[skillName] ?: SufferDamage()
-            temp.merge(sufferDamage)
+    fun add(newOne: BattleResult) {
+        for ((skillName, sufferDamage) in newOne.defeatedTimes) {
+            val temp = defeatedTimes[skillName] ?: mutableListOf<SufferDamage>()
+            temp.addAll(sufferDamage)
             defeatedTimes[skillName] = temp
         }
-//        }
 
         for (key in speedOccur.keys) {
-            speedOccur[key] = speedOccur[key]!!.plus(result.speedOccur[key]!!)
+            speedOccur[key] = speedOccur[key]!!.plus(newOne.speedOccur[key]!!)
         }
 
-        prioritySkills.putAll(result.prioritySkills)
+        prioritySkills.putAll(newOne.prioritySkills)
     }
 
     fun orderRate(opponent: PokemonForBattle, rate: Double) {
@@ -132,8 +114,27 @@ class BattleResult {
 
         if (opponent.item == "こだわりスカーフ") scarfRate += rate
         if (opponent.ability == "すなかき" || opponent.ability == "ようりょくそ"
-                || opponent.ability == "すいすい") orderAbilityRate += rate
+                || opponent.ability == "すいすい" || opponent.ability == "ゆきかき") orderAbilityRate += rate
     }
+
+    fun prioritySkill(): String {
+        return if (prioritySkills.isEmpty()) {
+            "なし"
+        } else {
+            var t = ""
+            for ((key, value) in prioritySkills) {
+                t += key + " = ${Util.percent(value)}\n"
+            }
+            return t
+        }
+    }
+
+    fun orderAbility(): String = if (scarfRate < 0.001) "なし" else Util.percent(orderAbilityRate.times(100.0))
+
+    fun scarfRate(): String = if (scarfRate < 0.001) "なし" else Util.percent(scarfRate.times(100.0))
+
+    fun correctionRate(): String = "すばやさ↓(${Util.percent(correctionRate[0].times(100.0))})\n" +
+            "すばやさ↑(${Util.percent(correctionRate[1].times(100.0))})"
 
     fun orderResult(mine: PokemonForBattle, opponent: PokemonForBattle,
                     field: BattleField, myTailWind: Boolean, oppoTailWind: Boolean): String {

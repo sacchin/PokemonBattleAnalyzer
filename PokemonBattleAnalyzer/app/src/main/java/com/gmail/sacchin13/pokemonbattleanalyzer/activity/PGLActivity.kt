@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Party
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.http.PokemonTrendDownloader
 import kotlin.properties.Delegates

@@ -1,5 +1,6 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.IndividualPokemon
 import java.util.Collections
 import java.util.Comparator
 

@@ -1,5 +1,6 @@
-package com.gmail.sacchin13.pokemonbattleanalyzer.entity
+package com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm
 
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.ui.MegaPokemonMasterDataForUI
 import io.realm.RealmObject
 
 open class MegaPokemonMasterData(
@@ -26,5 +27,10 @@ open class MegaPokemonMasterData(
                    weight: Float, ability: String, megaType: Int): MegaPokemonMasterData {
             return MegaPokemonMasterData(pokemonNo, h, a, b, c, d, s, type1, type2, weight, ability, megaType)
         }
+    }
+
+    fun uiObject(): MegaPokemonMasterDataForUI {
+        return MegaPokemonMasterDataForUI(pokemonNo,
+                h, a, b, c, d, s, type1, type2, weight, ability, megaType)
     }
 }

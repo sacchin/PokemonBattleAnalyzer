@@ -6,7 +6,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.ui.PokemonMasterDataForUI
 import kotlin.properties.Delegates
 
 class Util {
@@ -511,7 +512,7 @@ class Util {
                 "112" to R.drawable.n112,
                 "211" to R.drawable.n211,
                 "222" to R.drawable.n222,
-                "025" to R.drawable.n25,
+                "025" to R.drawable.n025,
                 "284" to R.drawable.n284,
                 "311" to R.drawable.n311,
                 "312" to R.drawable.n312,
@@ -549,7 +550,7 @@ class Util {
                 "466" to R.drawable.n466,
                 "467" to R.drawable.n467,
                 "469" to R.drawable.n469,
-                "47" to R.drawable.n47,
+                "047" to R.drawable.n047,
                 "470" to R.drawable.n470,
                 "471" to R.drawable.n471,
                 "474" to R.drawable.n474,
@@ -692,6 +693,10 @@ class Util {
     }
 
     fun createImage(p: PokemonMasterData, scale: Float, resource: Resources): Bitmap {
+        return createImage(p.no, scale, resource)
+    }
+
+    fun createImage(p: PokemonMasterDataForUI, scale: Float, resource: Resources): Bitmap {
         return createImage(p.no, scale, resource)
     }
 

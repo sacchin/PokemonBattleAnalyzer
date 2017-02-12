@@ -1,8 +1,8 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.MegaPokemonMasterData
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Type
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.MegaPokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -29,87 +29,87 @@ class PokemonMasterDataTest {
 
     @Test
     fun testGetHpValue() {
-        assertEquals(157, kucheat.hp(31, 252))
-        assertEquals(141, kucheat.hp(0, 252))
-        assertEquals(125, kucheat.hp(31, 0))
-        assertEquals(110, kucheat.hp(0, 0))
+        assertEquals(157, kucheat.uiObject().hp(31, 252))
+        assertEquals(141, kucheat.uiObject().hp(0, 252))
+        assertEquals(125, kucheat.uiObject().hp(31, 0))
+        assertEquals(110, kucheat.uiObject().hp(0, 0))
     }
 
     @Test
     fun testGetHpXValue() {
-        assertEquals(157, kucheat.hpX(31, 252))
-        assertEquals(141, kucheat.hpX(0, 252))
-        assertEquals(125, kucheat.hpX(31, 0))
-        assertEquals(110, kucheat.hpX(0, 0))
+        assertEquals(157, kucheat.uiObject().hpX(31, 252))
+        assertEquals(141, kucheat.uiObject().hpX(0, 252))
+        assertEquals(125, kucheat.uiObject().hpX(31, 0))
+        assertEquals(110, kucheat.uiObject().hpX(0, 0))
     }
 
     @Test
     fun testGetAttackValue() {
-        assertEquals(137, kucheat.attack(31, 252))
-        assertEquals(121, kucheat.attack(0, 252))
-        assertEquals(105, kucheat.attack(31, 0))
-        assertEquals(90, kucheat.attack(0, 0))
+        assertEquals(137, kucheat.uiObject().attack(31, 252))
+        assertEquals(121, kucheat.uiObject().attack(0, 252))
+        assertEquals(105, kucheat.uiObject().attack(31, 0))
+        assertEquals(90, kucheat.uiObject().attack(0, 0))
     }
 
     @Test
     fun testGetAttackXValue() {
-        assertEquals(157, kucheat.attackX(31, 252))
-        assertEquals(141, kucheat.attackX(0, 252))
-        assertEquals(125, kucheat.attackX(31, 0))
-        assertEquals(110, kucheat.attackX(0, 0))
+        assertEquals(157, kucheat.uiObject().attackX(31, 252))
+        assertEquals(141, kucheat.uiObject().attackX(0, 252))
+        assertEquals(125, kucheat.uiObject().attackX(31, 0))
+        assertEquals(110, kucheat.uiObject().attackX(0, 0))
     }
 
     @Test
     fun testGetDefenseValue() {
-        assertEquals(137, kucheat.defense(31, 252))
-        assertEquals(121, kucheat.defense(0, 252))
-        assertEquals(105, kucheat.defense(31, 0))
-        assertEquals(90, kucheat.defense(0, 0))
+        assertEquals(137, kucheat.uiObject().defense(31, 252))
+        assertEquals(121, kucheat.uiObject().defense(0, 252))
+        assertEquals(105, kucheat.uiObject().defense(31, 0))
+        assertEquals(90, kucheat.uiObject().defense(0, 0))
     }
 
     @Test
     fun testGetSpecialAttackValue() {
-        assertEquals(107, kucheat.specialAttack(31, 252))
-        assertEquals(91, kucheat.specialAttack(0, 252))
-        assertEquals(75, kucheat.specialAttack(31, 0))
-        assertEquals(60, kucheat.specialAttack(0, 0))
+        assertEquals(107, kucheat.uiObject().specialAttack(31, 252))
+        assertEquals(91, kucheat.uiObject().specialAttack(0, 252))
+        assertEquals(75, kucheat.uiObject().specialAttack(31, 0))
+        assertEquals(60, kucheat.uiObject().specialAttack(0, 0))
     }
 
     @Test
     fun testGetSpecialAttackXValue() {
-        assertEquals(107, kucheat.specialAttackX(31, 252))
-        assertEquals(91, kucheat.specialAttackX(0, 252))
-        assertEquals(75, kucheat.specialAttackX(31, 0))
-        assertEquals(60, kucheat.specialAttackX(0, 0))
+        assertEquals(107, kucheat.uiObject().specialAttackX(31, 252))
+        assertEquals(91, kucheat.uiObject().specialAttackX(0, 252))
+        assertEquals(75, kucheat.uiObject().specialAttackX(31, 0))
+        assertEquals(60, kucheat.uiObject().specialAttackX(0, 0))
     }
 
     @Test
     fun testGetSpecialDefenseValue() {
-        assertEquals(107, kucheat.specialDefense(31, 252))
-        assertEquals(91, kucheat.specialDefense(0, 252))
-        assertEquals(75, kucheat.specialDefense(31, 0))
-        assertEquals(60, kucheat.specialDefense(0, 0))
+        assertEquals(107, kucheat.uiObject().specialDefense(31, 252))
+        assertEquals(91, kucheat.uiObject().specialDefense(0, 252))
+        assertEquals(75, kucheat.uiObject().specialDefense(31, 0))
+        assertEquals(60, kucheat.uiObject().specialDefense(0, 0))
     }
 
     @Test
     fun testGetSpeedValue() {
-        assertEquals(102, kucheat.speed(31, 252))
-        assertEquals(86, kucheat.speed(0, 252))
-        assertEquals(70, kucheat.speed(31, 0))
-        assertEquals(55, kucheat.speed(0, 0))
+        assertEquals(102, kucheat.uiObject().speed(31, 252))
+        assertEquals(86, kucheat.uiObject().speed(0, 252))
+        assertEquals(70, kucheat.uiObject().speed(31, 0))
+        assertEquals(55, kucheat.uiObject().speed(0, 0))
     }
 
     @Test
     fun testGetSpeedXValue() {
-        assertEquals(102, kucheat.speedX(31, 252))
-        assertEquals(86, kucheat.speedX(0, 252))
-        assertEquals(70, kucheat.speedX(31, 0))
-        assertEquals(55, kucheat.speedX(0, 0))
+        assertEquals(102, kucheat.uiObject().speedX(31, 252))
+        assertEquals(86, kucheat.uiObject().speedX(0, 252))
+        assertEquals(70, kucheat.uiObject().speedX(31, 0))
+        assertEquals(55, kucheat.uiObject().speedX(0, 0))
     }
 
     @Test
     fun testGetSpeedValues() {
-        val actual = kucheat.speedValues()
+        val actual = kucheat.uiObject().speedValues()
         assertEquals(49, actual[0])
         assertEquals(63, actual[1])
         assertEquals(70, actual[2])
@@ -122,7 +122,7 @@ class PokemonMasterDataTest {
 
     @Test
     fun testGetSpeedValuesX() {
-        val actual = kucheat.speedValuesX()
+        val actual = kucheat.uiObject().speedValuesX()
         assertEquals(49, actual[0])
         assertEquals(63, actual[1])
         assertEquals(70, actual[2])
@@ -135,7 +135,7 @@ class PokemonMasterDataTest {
 
     @Test
     fun testGetSpeedValuesY() {
-        val actual = kucheat.speedValuesY()
+        val actual = kucheat.uiObject().speedValuesY()
         assertEquals(49, actual[0])
         assertEquals(63, actual[1])
         assertEquals(70, actual[2])

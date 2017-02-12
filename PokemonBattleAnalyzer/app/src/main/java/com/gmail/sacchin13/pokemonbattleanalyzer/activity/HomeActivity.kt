@@ -17,8 +17,8 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
 import com.gmail.sacchin13.pokemonbattleanalyzer.GridAdapter
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Party
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.insert.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*

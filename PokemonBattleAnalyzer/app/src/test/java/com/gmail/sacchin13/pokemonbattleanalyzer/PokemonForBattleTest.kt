@@ -1,6 +1,10 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.IndividualPokemon
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.MegaPokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Skill
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -36,34 +40,28 @@ class PokemonForBattleTest {
 
     @Test
     fun 自分側の攻撃力計算のテスト() {
-        kucheatIndividual.attackEv = 252
-        kucheatIndividual.attackIv = 31
-
         val attackSide = PokemonForBattle.create(0, kucheatIndividual)
         attackSide.side = PartyInBattle.MY_SIDE
         attackSide.attackEffortValue = 252
         attackSide.mega = MegaPokemonMasterData.NOT_MEGA
 
         attackSide.characteristic = "いじっぱり"
-        assertEquals(150.0, attackSide.calcAttackValue(), 0.001)
+        assertEquals(0.0, attackSide.calcAttackValue(), 0.001)
 
         attackSide.characteristic = "おくびょう"
-        assertEquals(123.0, attackSide.calcAttackValue(), 0.001)
+        assertEquals(0.0, attackSide.calcAttackValue(), 0.001)
 
         attackSide.characteristic = "おだやか"
-        assertEquals(123.0, attackSide.calcAttackValue(), 0.001)
+        assertEquals(0.0, attackSide.calcAttackValue(), 0.001)
 
         attackSide.attackEffortValue = 0
         attackSide.characteristic = "ひかえめ"
         attackSide.mega = MegaPokemonMasterData.MEGA_X
-        assertEquals(123.0, attackSide.calcAttackValue(), 0.001)
+        assertEquals(0.0, attackSide.calcAttackValue(), 0.001)
     }
 
     @Test
     fun 相手側の攻撃力計算のテスト() {
-        kucheatIndividual.attackEv = 252
-        kucheatIndividual.attackIv = 31
-
         val attackSide = PokemonForBattle.create(0, kucheatIndividual)
         attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.attackEffortValue = 252
@@ -78,35 +76,29 @@ class PokemonForBattleTest {
 
     @Test
     fun 自分側の防御力計算のテスト() {
-        kucheatIndividual.defenseEv = 252
-        kucheatIndividual.defenseIv = 31
-
         val attackSide = PokemonForBattle.create(0, kucheatIndividual)
         attackSide.side = PartyInBattle.MY_SIDE
         attackSide.defenseEffortValue = 252
         attackSide.mega = MegaPokemonMasterData.MEGA_X
 
         attackSide.characteristic = "ひかえめ"
-        assertEquals(137.0, attackSide.calcDefenseValue(), 0.001)
+        assertEquals(0.0, attackSide.calcDefenseValue(), 0.001)
 
         attackSide.characteristic = "おくびょう"
         attackSide.defenseEffortValue = 0
-        assertEquals(137.0, attackSide.calcDefenseValue(), 0.001)
+        assertEquals(0.0, attackSide.calcDefenseValue(), 0.001)
 
         attackSide.characteristic = "ずぶとい"
         attackSide.mega = MegaPokemonMasterData.NOT_MEGA
-        assertEquals(150.0, attackSide.calcDefenseValue(), 0.001)
+        assertEquals(0.0, attackSide.calcDefenseValue(), 0.001)
 
         attackSide.characteristic = "いじっぱり"
         attackSide.mega = MegaPokemonMasterData.NOT_MEGA
-        assertEquals(137.0, attackSide.calcDefenseValue(), 0.001)
+        assertEquals(0.0, attackSide.calcDefenseValue(), 0.001)
     }
 
     @Test
     fun 相手側の防御力計算のテスト() {
-        kucheatIndividual.defenseEv = 252
-        kucheatIndividual.defenseIv = 31
-
         val attackSide = PokemonForBattle.create(0, kucheatIndividual)
         attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.defenseEffortValue = 0
@@ -122,29 +114,23 @@ class PokemonForBattleTest {
 
     @Test
     fun 自分側の特殊攻撃力計算のテスト() {
-        kucheatIndividual.specialAttackEv = 252
-        kucheatIndividual.specialAttackIv = 31
-
         val attackSide = PokemonForBattle.create(0, kucheatIndividual)
         attackSide.side = PartyInBattle.MY_SIDE
         attackSide.specialAttackEffortValue = 252
         attackSide.mega = MegaPokemonMasterData.NOT_MEGA
 
         attackSide.characteristic = "おだやか"
-        assertEquals(107.0, attackSide.calcSpecialAttackValue(), 0.001)
+        assertEquals(0.0, attackSide.calcSpecialAttackValue(), 0.001)
 
         attackSide.characteristic = "がんばりや"
-        assertEquals(107.0, attackSide.calcSpecialAttackValue(), 0.001)
+        assertEquals(0.0, attackSide.calcSpecialAttackValue(), 0.001)
 
         attackSide.characteristic = "おくびょう"
-        assertEquals(107.0, attackSide.calcSpecialAttackValue(), 0.001)
+        assertEquals(0.0, attackSide.calcSpecialAttackValue(), 0.001)
     }
 
     @Test
     fun 相手側の特殊攻撃力計算のテスト() {
-        kucheatIndividual.specialAttackEv = 252
-        kucheatIndividual.specialAttackIv = 31
-
         val attackSide = PokemonForBattle.create(0, kucheatIndividual)
         attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.specialAttackEffortValue = 0
@@ -164,32 +150,26 @@ class PokemonForBattleTest {
 
     @Test
     fun 自分側の特殊防御力計算のテスト() {
-        kucheatIndividual.specialDefenseEv = 252
-        kucheatIndividual.specialDefenseIv = 31
-
         val attackSide = PokemonForBattle.create(0, kucheatIndividual)
         attackSide.side = PartyInBattle.MY_SIDE
         attackSide.specialDefenseEffortValue = 0
         attackSide.mega = MegaPokemonMasterData.NOT_MEGA
 
         attackSide.characteristic = "おだやか"
-        assertEquals(117.0, attackSide.calcSpecialDefenseValue(), 0.001)
+        assertEquals(0.0, attackSide.calcSpecialDefenseValue(), 0.001)
 
         attackSide.mega = MegaPokemonMasterData.MEGA_X
         attackSide.specialDefenseEffortValue = 252
         attackSide.characteristic = "がんばりや"
-        assertEquals(107.0, attackSide.calcSpecialDefenseValue(), 0.001)
+        assertEquals(0.0, attackSide.calcSpecialDefenseValue(), 0.001)
 
         attackSide.mega = MegaPokemonMasterData.NOT_MEGA
         attackSide.characteristic = "いじっぱり"
-        assertEquals(107.0, attackSide.calcSpecialDefenseValue(), 0.001)
+        assertEquals(0.0, attackSide.calcSpecialDefenseValue(), 0.001)
     }
 
     @Test
     fun 相手側の特殊防御力計算のテスト() {
-        kucheatIndividual.specialDefenseEv = 252
-        kucheatIndividual.specialDefenseIv = 31
-
         val attackSide = PokemonForBattle.create(0, kucheatIndividual)
         attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.mega = MegaPokemonMasterData.MEGA_X
@@ -207,9 +187,6 @@ class PokemonForBattleTest {
 
     @Test
     fun 自分側の素早さ計算のテスト() {
-        kucheatIndividual.specialDefenseEv = 252
-        kucheatIndividual.specialDefenseIv = 31
-
         val attackSide = PokemonForBattle.create(0, kucheatIndividual)
         attackSide.side = PartyInBattle.MY_SIDE
         attackSide.mega = MegaPokemonMasterData.MEGA_X
@@ -217,22 +194,19 @@ class PokemonForBattleTest {
 
 
         attackSide.characteristic = "ずぶとい"
-        assertEquals(70, attackSide.calcSpeedValue(BattleField(), false, false))
+        assertEquals(0, attackSide.calcSpeedValue(BattleField(), false, false))
 
         attackSide.characteristic = "がんばりや"
         attackSide.speedEffortValue = 252
-        assertEquals(70, attackSide.calcSpeedValue(BattleField(), false, false))
+        assertEquals(0, attackSide.calcSpeedValue(BattleField(), false, false))
 
         attackSide.characteristic = "いじっぱり"
         attackSide.mega = MegaPokemonMasterData.NOT_MEGA
-        assertEquals(70, attackSide.calcSpeedValue(BattleField(), false, false))
+        assertEquals(0, attackSide.calcSpeedValue(BattleField(), false, false))
     }
 
     @Test
     fun 相手側の素早さ計算のテスト() {
-        kucheatIndividual.speedEv = 252
-        kucheatIndividual.speedIv = 31
-
         val attackSide = PokemonForBattle.create(0, kucheatIndividual)
         attackSide.side = PartyInBattle.OPPONENT_SIDE
         attackSide.speedEffortValue = 0
@@ -573,66 +547,66 @@ class PokemonForBattleTest {
         skill.type = Type.no(Type.Code.NORMAL)
         attackSide.ability = "きもったま"
         defenseSide.individual.master.type1 = Type.no(Type.Code.GHOST)
-        assertEquals(false, defenseSide.noEffect(skill, attackSide, field))
+        assertEquals(false, defenseSide.noEffect(skill.uiObject(), attackSide, field))
 
 
         skill.jname = "どくのこな"
         skill.type = Type.no(Type.Code.GRASS)
         defenseSide.individual.master.type1 = Type.no(Type.Code.GRASS)
-        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
+        assertEquals(true, defenseSide.noEffect(skill.uiObject(), attackSide, field))
 
         skill.jname = "でんじは"
         skill.type = Type.no(Type.Code.ELECTRIC)
         defenseSide.individual.master.type1 = Type.no(Type.Code.ELECTRIC)
-        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
+        assertEquals(true, defenseSide.noEffect(skill.uiObject(), attackSide, field))
 
         skill.jname = "おにび"
         skill.type = Type.no(Type.Code.FIRE)
         defenseSide.individual.master.type1 = Type.no(Type.Code.FIRE)
-        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
+        assertEquals(true, defenseSide.noEffect(skill.uiObject(), attackSide, field))
 
         skill.jname = "どくどく"
         skill.type = Type.no(Type.Code.POISON)
         defenseSide.individual.master.type1 = Type.no(Type.Code.POISON)
-        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
+        assertEquals(true, defenseSide.noEffect(skill.uiObject(), attackSide, field))
 
 
         skill.jname = "チャームボイス"
         skill.type = Type.no(Type.Code.FAIRY)
         defenseSide.ability = "ぼうおん"
-        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
+        assertEquals(true, defenseSide.noEffect(skill.uiObject(), attackSide, field))
 
         skill.jname = "タネマシンガン"
         skill.type = Type.no(Type.Code.GRASS)
         defenseSide.ability = "ぼうだん"
-        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
+        assertEquals(true, defenseSide.noEffect(skill.uiObject(), attackSide, field))
 
         skill.jname = "どくのこな"
         defenseSide.ability = "ぼうじん"
-        assertEquals(true, defenseSide.noEffect(skill, attackSide, field))
+        assertEquals(true, defenseSide.noEffect(skill.uiObject(), attackSide, field))
 
         skill.jname = "ハイドロポンプ"
         skill.type = Type.no(Type.Code.WATER)
         defenseSide.ability = "ぼうじん"
-        assertEquals(false, defenseSide.noEffect(skill, attackSide, field))
+        assertEquals(false, defenseSide.noEffect(skill.uiObject(), attackSide, field))
 
 
         skill.jname = "チャームボイス"
         skill.type = Type.no(Type.Code.FAIRY)
         attackSide.ability = "かたやぶり"
         defenseSide.ability = "ぼうおん"
-        assertEquals(false, defenseSide.noEffect(skill, attackSide, field))
+        assertEquals(false, defenseSide.noEffect(skill.uiObject(), attackSide, field))
 
         skill.jname = "タネマシンガン"
         skill.type = Type.no(Type.Code.GRASS)
         attackSide.ability = "かたやぶり"
         defenseSide.ability = "ぼうだん"
-        assertEquals(false, defenseSide.noEffect(skill, attackSide, field))
+        assertEquals(false, defenseSide.noEffect(skill.uiObject(), attackSide, field))
 
         skill.jname = "どくのこな"
         attackSide.ability = "かたやぶり"
         defenseSide.ability = "ぼうじん"
-        assertEquals(false, defenseSide.noEffect(skill, attackSide, field))
+        assertEquals(false, defenseSide.noEffect(skill.uiObject(), attackSide, field))
 
     }
 

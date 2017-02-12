@@ -4,12 +4,13 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingPokemonSkill
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.IndividualPokemon
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Skill
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.ui.SkillForUI
 import com.squareup.moshi.Moshi
 import org.junit.Before
-import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
-import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.io.File
@@ -93,9 +94,9 @@ class PBADSLTest {
         garura = PokemonForBattle.create(PartyInBattle.MY_SIDE, IndividualPokemon(
                 0, -1, "ガルーラナイト", "いじっぱり", "せいしんりょく",
                 database["ねこだまし"] as Skill, database["いわなだれ"] as Skill, database["みがわり"] as Skill, database["アイアンヘッド"] as Skill,
-                252, 252, 0, 0, 0, 4, 31, 31, 31, 31, 31, 31,
+                252, 252, 0, 0, 0, 4, //31, 31, 31, 31, 31, 31,
                 PokemonMasterData("115", "ガルーラ", "Kangaskhan", "-", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
-        garura.skill = database["おんがえし"] as Skill
+        garura.skill = database["おんがえし"]?.uiObject() ?: SkillForUI()
         garura.skill.power = 200
         garura.hpValue = 212
         garura.trend = TrendForBattle.create(rankingResponse1.rankingPokemonTrend)
@@ -115,10 +116,10 @@ class PBADSLTest {
         fireallow = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, IndividualPokemon(
                 0, -1, "ゴツゴツメット", "ずぶとい", "はやてのつばさ",
                 database["はねやすめ"] as Skill, database["おにび"] as Skill, database["みがわり"] as Skill, database["ブレイブバード"] as Skill,
-                252, 0, 252, 0, 0, 4, 31, 31, 31, 31, 31, 31,
+                252, 0, 252, 0, 0, 4, //31, 31, 31, 31, 31, 31,
                 PokemonMasterData("663", "ファイアロー", "Talonflame", "-", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
         fireallow.hpRatio = 100
-        fireallow.skill = database["ブレイブバード"] as Skill
+        fireallow.skill = database["ブレイブバード"]?.uiObject() ?: SkillForUI()
         fireallow.trend = TrendForBattle.create(rankingResponse2.rankingPokemonTrend)
         fireallow.trend.skillList = skills2
 
@@ -284,50 +285,50 @@ class PBADSLTest {
 //        assertEquals(0.0, result.defeatTimes[5]!!, 0.1)
 //    }
 
-    @Test
-    fun DSLを記述するテスト() {
-        val db = PowerMockito.mock(DatabaseHelper::class.java)
-        Mockito.`when`(db.selectPokemonByName(Mockito.any())).thenReturn(garura.individual.master)
-        Mockito.`when`(db.selectIndividualPBAPokemon(Mockito.any())).thenReturn(garura.individual)
-
-
-        val kucheat = PokemonForBattle.mine {
-            "クチート" at "クチートナイト" of "いじっぱり" h 252 a 252 with
-                    ("じゃれつく" and "はたきおたす" and "つるぎのまい" and "ふいうち")
-        }
-    }
-
-    infix fun IndividualPokemon.with(a: MutableList<Skill>): IndividualPokemon {
-        this.skillNo1 = a[0] ?: Skill()
-        this.skillNo2 = a[1] ?: Skill()
-        this.skillNo3 = a[2] ?: Skill()
-        this.skillNo4 = a[3] ?: Skill()
-        return this
-    }
-
-    infix fun IndividualPokemon.h(h: Int): IndividualPokemon = this.apply { hpEv = h }
-    infix fun IndividualPokemon.a(a: Int): IndividualPokemon = this.apply { attackEv = a }
-    infix fun IndividualPokemon.b(b: Int): IndividualPokemon = this.apply { defenseEv = b }
-    infix fun IndividualPokemon.c(c: Int): IndividualPokemon = this.apply { specialAttackEv = c }
-    infix fun IndividualPokemon.d(d: Int): IndividualPokemon = this.apply { specialDefenseEv = d }
-    infix fun IndividualPokemon.s(s: Int): IndividualPokemon = this.apply { speedEv = s }
-    infix fun Pair<String, String>.of(char: String): IndividualPokemon {
-        val p = IndividualPokemon.create(0, db.selectPokemonByName(this.first))
-        p.characteristic = char
-        p.item = this.second
-        return p
-    }
-
-
-    infix fun String.at(item: String): Pair<String, String> = Pair(this, item)
-    infix fun MutableList<Skill>.and(skill: String): MutableList<Skill> {
-        this.add(db.selectSkillByName(skill))
-        return this
-    }
-
-    infix fun String.and(skill: String): MutableList<Skill> {
-        val p = mutableListOf(db.selectSkillByName(this))
-        p.add(db.selectSkillByName(skill))
-        return p
-    }
+//    @Test
+//    fun DSLを記述するテスト() {
+//        val db = PowerMockito.mock(DatabaseHelper::class.java)
+//        Mockito.`when`(db.selectPokemonByName(Mockito.any())).thenReturn(garura.individual.master)
+//        Mockito.`when`(db.selectIndividualPBAPokemon(Mockito.any())).thenReturn(garura.individual)
+//
+//
+//        val kucheat = PokemonForBattle.mine {
+//            "クチート" at "クチートナイト" of "いじっぱり" h 252 a 252 with
+//                    ("じゃれつく" and "はたきおたす" and "つるぎのまい" and "ふいうち")
+//        }
+//    }
+//
+//    infix fun IndividualPokemon.with(a: MutableList<Skill>): IndividualPokemon {
+//        this.skillNo1 = a[0] ?: Skill()
+//        this.skillNo2 = a[1] ?: Skill()
+//        this.skillNo3 = a[2] ?: Skill()
+//        this.skillNo4 = a[3] ?: Skill()
+//        return this
+//    }
+//
+//    infix fun IndividualPokemon.h(h: Int): IndividualPokemon = this.apply { hpEv = h }
+//    infix fun IndividualPokemon.a(a: Int): IndividualPokemon = this.apply { attackEv = a }
+//    infix fun IndividualPokemon.b(b: Int): IndividualPokemon = this.apply { defenseEv = b }
+//    infix fun IndividualPokemon.c(c: Int): IndividualPokemon = this.apply { specialAttackEv = c }
+//    infix fun IndividualPokemon.d(d: Int): IndividualPokemon = this.apply { specialDefenseEv = d }
+//    infix fun IndividualPokemon.s(s: Int): IndividualPokemon = this.apply { speedEv = s }
+//    infix fun Pair<String, String>.of(char: String): IndividualPokemon {
+//        val p = IndividualPokemon.create(0, db.selectPokemonByName(this.first))
+//        p.characteristic = char
+//        p.item = this.second
+//        return p
+//    }
+//
+//
+//    infix fun String.at(item: String): Pair<String, String> = Pair(this, item)
+//    infix fun MutableList<Skill>.and(skill: String): MutableList<Skill> {
+//        this.add(db.selectSkillByName(skill))
+//        return this
+//    }
+//
+//    infix fun String.and(skill: String): MutableList<Skill> {
+//        val p = mutableListOf(db.selectSkillByName(this))
+//        p.add(db.selectSkillByName(skill))
+//        return p
+//    }
 }

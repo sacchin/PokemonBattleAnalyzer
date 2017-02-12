@@ -3,6 +3,12 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Rank.Value
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.Info
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.IndividualPokemon
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.MegaPokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Skill
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.ZSkill
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.ui.IndividualPokemonForUI
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.ui.SkillForUI
 import kotlin.properties.Delegates
 
 class PokemonForBattle(
@@ -12,7 +18,7 @@ class PokemonForBattle(
         var itemUsed: Boolean,
         var characteristic: String,
         var ability: String,
-        var skill: Skill,
+        var skill: SkillForUI,
         var hpEffortValue: Int,
         var hpRatio: Int,
         var hpValue: Int,
@@ -34,6 +40,7 @@ class PokemonForBattle(
         var individual: IndividualPokemon = IndividualPokemon()
 ) {
     var trend: TrendForBattle by Delegates.notNull()
+    var individualForUI: IndividualPokemonForUI by Delegates.notNull()
 
     companion object {
         const val UNKNOWN = -1
@@ -43,10 +50,14 @@ class PokemonForBattle(
         fun opponent(pokemon: () -> IndividualPokemon): PokemonForBattle = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, pokemon.invoke())
 
         fun create(side: Int, individual: IndividualPokemon): PokemonForBattle {
-            return PokemonForBattle(side, UNKNOWN, individual.item, false, individual.characteristic, individual.ability, Skill(), 0, 100, 0,
+            return PokemonForBattle(side, UNKNOWN, individual.item, false, individual.characteristic, individual.ability, SkillForUI(), 0, 100, 0,
                     0, Rank.no(Value.DEFAULT), 0, Rank.no(Value.DEFAULT), 0, Rank.no(Value.DEFAULT), 0, Rank.no(Value.DEFAULT), 0, Rank.no(Value.DEFAULT),
                     Rank.no(Value.DEFAULT), Rank.no(Value.DEFAULT), Rank.no(Value.DEFAULT), false, MegaPokemonMasterData.NOT_MEGA, individual)
         }
+    }
+
+    fun ready() {
+        individualForUI = individual.uiObject()
     }
 
     fun Int.over(): Int {
@@ -55,12 +66,42 @@ class PokemonForBattle(
 
     fun abilityTrend(): List<Info> = trend.tokuseiInfo.filterNotNull()
     fun characteristicTrend(): List<Info> = trend.seikakuInfo.filterNotNull()
-    fun itemTrend(): List<Info> = trend.itemInfo.filterNotNull().filter {
-        it ->
-        it.name != null && damageRelated(it.name)
+    fun damageRelatedItem(): List<Info> {
+        val list = trend.itemInfo.filterNotNull().filter { it -> it.name != null && attackRelated(it.name) }
+        return if (list.isEmpty()) listOf(Info()) else list
     }
 
-    fun damageRelated(item: String): Boolean {
+    fun itemTrend(): List<Info> = trend.itemInfo.filterNotNull()
+
+    fun attackRelated(item: String): Boolean {
+        return (ZSkill.zCrystal(item) || item == "いのちのたま" || item == "こだわりメガネ" ||
+                item == "こだわりハチマキ" || item == "ものしりメガネ" ||
+                item == "ちからのハチマキ" || item == "たつじんのおび" ||
+                item == "ふといホネ" || item == "こころのしずく" ||
+                item == "メトロノーム" || item == "あおぞらプレート" ||
+                item == "いかずちプレート" || item == "がんせきプレート" ||
+                item == "こうてつプレート" || item == "こぶしのプレート" ||
+                item == "こわもてプレート" || item == "しずくプレート" ||
+                item == "だいちのプレート" || item == "たまむしプレート" ||
+                item == "つららのプレート" || item == "ひのたまプレート" ||
+                item == "ふしぎのプレート" || item == "みどりのプレート" ||
+                item == "もうどくプレート" || item == "もののけプレート" ||
+                item == "りゅうのプレート" || item == "はっきんだま" ||
+                item == "しらたま" || item == "こんごうだま" ||
+                item == "しんかいのキバ" || item == "しんかいのウロコ" ||
+                item == "ながねぎ" || item == "ラッキーパンチ" ||
+                item == "スピードパウダー" || item == "メタルパウダー" ||
+                item == "もくたん" || item == "しんぴのしずく" ||
+                item == "じしゃく" || item == "きせきのタネ" ||
+                item == "とけないこおり" || item == "くろおび" ||
+                item == "どくバリ" || item == "やわらかいすな" ||
+                item == "するどいくちばし" || item == "まがったスプーン" ||
+                item == "ぎんのこな" || item == "かたいいし" ||
+                item == "のろいのおふだ" || item == "りゅうのキバ" ||
+                item == "くろいメガネ" || item == "メタルコート")
+    }
+
+    fun defenseRelated(item: String): Boolean {
         return (item == "いのちのたま" || item == "こだわりメガネ" ||
                 item == "こだわりハチマキ" || item == "ものしりメガネ" ||
                 item == "ちからのハチマキ" || item == "たつじんのおび" ||
@@ -91,14 +132,14 @@ class PokemonForBattle(
     fun hpValue(): Int {
         when (side) {
             PartyInBattle.MY_SIDE -> return hpValue
-            PartyInBattle.OPPONENT_SIDE -> return individual.calcHp(hpEffortValue, mega).times(hpRatio).div(100.0).toInt()
+            PartyInBattle.OPPONENT_SIDE -> return individualForUI.calcHp(hpEffortValue, mega).times(hpRatio).div(100.0).toInt()
         }
         return 0
     }
 
     fun hpRatio(): Int {
         when (side) {
-            PartyInBattle.MY_SIDE -> return hpValue.times(100.0).div(individual.calcHp(hpEffortValue, mega)).toInt()
+            PartyInBattle.MY_SIDE -> return hpValue.times(100.0).div(individualForUI.calcHp(hpEffortValue, mega)).toInt()
             PartyInBattle.OPPONENT_SIDE -> return hpRatio
         }
         return 0
@@ -174,7 +215,7 @@ class PokemonForBattle(
             if (7 < sum) return 200
         }
         if (skill.jname == "ヘビーボンバー") {
-            val tmp = (defenseSide.individual.master.weight / individual.master.weight).times(120)
+            val tmp = (defenseSide.individualForUI.master.weight / individualForUI.master.weight).times(120)
             when {
                 (tmp <= 24) -> return 120
                 (24 < tmp && tmp <= 30) -> return 100
@@ -184,7 +225,7 @@ class PokemonForBattle(
             }
         }
         if (skill.jname == "けたぐり" || skill.jname == "くさむすび") {
-            val tmp = defenseSide.individual.master.weight
+            val tmp = defenseSide.individualForUI.master.weight
             when {
                 (tmp < 10.0) -> return 20
                 (10.1 < tmp && tmp < 25.0) -> return 40
@@ -196,7 +237,7 @@ class PokemonForBattle(
         }
         val temp = BattleField()
         if (skill.jname == "ジャイロボール") {
-            val tmp = (25 * defenseSide.calcSpeedValue(temp, false, false) / calcSpeedValue(temp, false, false)).toInt() + 1
+            val tmp = (25 * defenseSide.calcSpeedValue(temp, false, false) / calcSpeedValue(temp, false, false)) + 1
             return if (150 < tmp) 150 else tmp
         }
         if (skill.jname == "エレキボール") {
@@ -294,9 +335,9 @@ class PokemonForBattle(
 
     fun calcAttackValue(): Double {
         val a = if (side == PartyInBattle.MY_SIDE) {
-            individual.calcAttack(mega)
+            individualForUI.attack
         } else {
-            individual.calcAttack(attackEffortValue, mega)
+            individualForUI.calcAttack(attackEffortValue, mega)
         }
         return Math.floor(a.times(Characteristic.correction(characteristic, "A")))
     }
@@ -321,9 +362,9 @@ class PokemonForBattle(
 
     fun calcDefenseValue(): Double {
         val d = if (side == PartyInBattle.MY_SIDE) {
-            individual.calcDefense(mega)
+            individualForUI.defense
         } else {
-            individual.calcDefense(defenseEffortValue, mega)
+            individualForUI.calcDefense(defenseEffortValue, mega)
         }
         return Math.floor(d.times(Characteristic.correction(characteristic, "B")))
     }
@@ -368,9 +409,9 @@ class PokemonForBattle(
 
     fun calcSpecialAttackValue(): Double {
         val sa = if (side == PartyInBattle.MY_SIDE) {
-            individual.calcSpecialAttack(mega)
+            individualForUI.specialAttack
         } else {
-            individual.calcSpecialAttack(specialAttackEffortValue, mega)
+            individualForUI.calcSpecialAttack(specialAttackEffortValue, mega)
         }
         return Math.floor(sa.times(Characteristic.correction(characteristic, "C")))
     }
@@ -395,9 +436,9 @@ class PokemonForBattle(
 
     fun calcSpecialDefenseValue(): Double {
         val sd = if (side == PartyInBattle.MY_SIDE) {
-            individual.calcSpecialDefense(mega)
+            individualForUI.specialDefense
         } else {
-            individual.calcSpecialDefense(specialDefenseEffortValue, mega)
+            individualForUI.calcSpecialDefense(specialDefenseEffortValue, mega)
         }
         return Math.floor(sd.times(Characteristic.correction(characteristic, "D")))
     }
@@ -443,8 +484,8 @@ class PokemonForBattle(
 
     fun calcSpeedValue(allField: BattleField, tailWind: Boolean, onlyStatus: Boolean): Int {
         var result = when (side) {
-            PartyInBattle.MY_SIDE -> individual.calcSpeed(mega)
-            else -> individual.calcSpeed(252, mega)
+            PartyInBattle.MY_SIDE -> individualForUI.speed
+            else -> individualForUI.calcSpeed(252, mega)
         }
 
         result = Math.floor(result.times(Characteristic.correction(characteristic, "S"))).toInt()
@@ -544,7 +585,7 @@ class PokemonForBattle(
                     skill.type
                 }
 
-        if (skillType == individual.master.type1 || skillType == individual.master.type2) {
+        if (skillType == type1() || skillType == type2()) {
             if (ability() == "てきおうりょく") return Pair(skillType, 2.0) else return Pair(skillType, 1.5)
         }
         return Pair(skillType, 1.0)
@@ -604,9 +645,11 @@ class PokemonForBattle(
     }
 
     fun defeatTimes(damage: Int): Int {
+        if (damage == 0) return 0
+
         var hp = hpValue
         if (side == PartyInBattle.OPPONENT_SIDE) {
-            hp = individual.calcHp(hpEffortValue, mega).times(hpRatio()).div(100.0).toInt()
+            hp = individualForUI.calcHp(hpEffortValue, mega).times(hpRatio()).div(100.0).toInt()
         }
         //println("${hp} - ${damage}"
         return if (hp < damage) {
@@ -625,10 +668,12 @@ class PokemonForBattle(
     fun recoil(damage: Int) {
         val d = if (ability() == "いしあたま" || ability() == "マジックガード") {
             0
-        } else if (skill.jname == "アフロブレイク" || skill.jname == "じごくぐるま" || skill.jname == "とっしん" || skill.jname == "ワイルドボルト") {
+        } else if (skill.jname == "アフロブレイク" || skill.jname == "じごくぐるま" ||
+                skill.jname == "とっしん" || skill.jname == "ワイルドボルト") {
             damage.div(4.0).toInt()
         } else if (skill.jname == "ウッドハンマー" || skill.jname == "すてみタックル" ||
-                skill.jname == "フレアドライブ" || skill.jname == "ブレイブバード" || skill.jname == "ボルテッカー") {
+                skill.jname == "フレアドライブ" || skill.jname == "ブレイブバード" ||
+                skill.jname == "ボルテッカー") {
             damage.div(3.0).toInt()
         } else if (skill.jname == "もろはのずつき") {
             damage.div(2.0).toInt()
@@ -641,7 +686,8 @@ class PokemonForBattle(
         } else if (ability() == "ちからずく" && skill.aliment == -2) {
             0
         } else if (item() == "いのちのたま") {
-            if (side == PartyInBattle.MY_SIDE) individual.calcHp(mega).div(10) else individual.calcHp(252, mega).div(10)
+            if (side == PartyInBattle.MY_SIDE) individualForUI.calcHp(mega).div(10)
+            else individualForUI.calcHp(252, mega).div(10)
         } else {
             0
         }
@@ -649,20 +695,20 @@ class PokemonForBattle(
         if (side == PartyInBattle.MY_SIDE) {
             hpValue = hpValue - d - d2
         } else {
-            val max = individual.calcHp(252, mega)
+            val max = individualForUI.calcHp(252, mega)
             val now = hpValue()
             hpRatio = (now - d - d2).times(100.0).div(max).toInt()
         }
     }
 
-    fun noEffect(skill: Skill, attackSide: PokemonForBattle, field: BattleField): Boolean {
+    fun noEffect(skill: SkillForUI, attackSide: PokemonForBattle, field: BattleField): Boolean {
 
         val kimottama = attackSide.ability() == "きもったま"
         if (kimottama && (Type.code(skill.type) == Type.Code.NORMAL || Type.code(skill.type) == Type.Code.FIGHTING)) {
-            return (individual.master.type1 == Type.no(Type.Code.GHOST) || individual.master.type2 == Type.no(Type.Code.GHOST)).not()
+            return (type1() == Type.no(Type.Code.GHOST) || type2() == Type.no(Type.Code.GHOST)).not()
         }
         val katayaburi = attackSide.ability() == "かたやぶり"
-        val result = individual.typeScale(Type.code(skill.type), mega, katayaburi)
+        val result = individualForUI.typeScale(Type.code(skill.type), mega, katayaburi)
         if (result < 0.1) {
             return true
         }
@@ -677,19 +723,16 @@ class PokemonForBattle(
 
         if ((skill.jname == "ねむりごな" || skill.jname == "しびれごな" || skill.jname == "どくのこな" || skill.jname == "キノコのほうし" ||
                 skill.jname == "やどりぎのタネ" || skill.jname == "いかりのこな" || skill.jname == "ふんじん" || skill.jname == "わたほうし") &&
-                (individual.master.type1 == Type.no(Type.Code.GRASS) || individual.master.type2 == Type.no(Type.Code.GRASS))) {
+                (type1() == Type.no(Type.Code.GRASS) || type2() == Type.no(Type.Code.GRASS))) {
             return true
         }
-        if (skill.jname == "でんじは" &&
-                (individual.master.type1 == Type.no(Type.Code.ELECTRIC) || individual.master.type2 == Type.no(Type.Code.ELECTRIC))) {
+        if (skill.jname == "でんじは" && (type1() == Type.no(Type.Code.ELECTRIC) || type2() == Type.no(Type.Code.ELECTRIC))) {
             return true
         }
-        if (skill.jname == "おにび" &&
-                (individual.master.type1 == Type.no(Type.Code.FIRE) || individual.master.type2 == Type.no(Type.Code.FIRE))) {
+        if (skill.jname == "おにび" && (type1() == Type.no(Type.Code.FIRE) || type2() == Type.no(Type.Code.FIRE))) {
             return true
         }
-        if (skill.jname == "どくどく" &&
-                (individual.master.type1 == Type.no(Type.Code.POISON) || individual.master.type2 == Type.no(Type.Code.POISON))) {
+        if (skill.jname == "どくどく" && (type1() == Type.no(Type.Code.POISON) || type2() == Type.no(Type.Code.POISON))) {
             return true
         }
 
@@ -703,8 +746,8 @@ class PokemonForBattle(
     }
 
     fun floating(): Boolean {
-        return (ability() == "ふゆう" || individual.types(mega).first == Type.no(Type.Code.FLYING) ||
-                individual.types(mega).second == Type.no(Type.Code.FLYING) ||
+        return (ability() == "ふゆう" || individualForUI.types(mega).first == Type.no(Type.Code.FLYING) ||
+                individualForUI.types(mega).second == Type.no(Type.Code.FLYING) ||
                 item() == "ふうせん")
     }
 
@@ -712,7 +755,6 @@ class PokemonForBattle(
         if (ability() == "ちからずく") {
             if (skill.aliment == -1 && skill.myRankUp == -1 && skill.oppoRankUp == -1) {
                 return false
-
             } else {
                 //ちからずくで無効にしたことを表現するために-2を代入している
                 //fun recoil(damage: Int)にて利用
@@ -727,7 +769,7 @@ class PokemonForBattle(
     }
 
     fun speedValues(tailWind: Boolean): Array<Int> {
-        val values = individual.speedValues(mega)
+        val values = individualForUI.speedValues(mega)
 
         for (i in values.indices) {
             values[i] = Math.floor(values[i].times(getSpeedRankCorrection())).toInt()
@@ -746,20 +788,27 @@ class PokemonForBattle(
 
     fun ability(): String {
         return when (side) {
-            PartyInBattle.MY_SIDE -> if (ability == NOT_CHANGED) individual.ability(mega) else ability
+            PartyInBattle.MY_SIDE -> if (ability == NOT_CHANGED) individualForUI.ability(mega) else ability
             else -> ability
         }
     }
 
     fun item(): String {
         return if (itemUsed) "" else when (side) {
-            PartyInBattle.MY_SIDE -> if (item == NOT_CHANGED) individual.item else item
+            PartyInBattle.MY_SIDE -> if (item == NOT_CHANGED) individualForUI.item else item
             else -> item
         }
     }
 
     fun name(): String {
-        return individual.name(mega)
+        return individualForUI.name(mega)
     }
 
+    fun type1(): Int {
+        return individualForUI.master.type1
+    }
+
+    fun type2(): Int {
+        return individualForUI.master.type1
+    }
 }

@@ -10,6 +10,8 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Party
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.http.PokemonTrendDownloader
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import com.squareup.moshi.Moshi

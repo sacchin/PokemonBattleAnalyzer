@@ -1,5 +1,6 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
 import io.realm.RealmList
 import io.realm.RealmObject
 

@@ -3,7 +3,10 @@ package com.gmail.sacchin13.pokemonbattleanalyzer
 import android.content.Context
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.activity.KpActivity
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Construction
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Rank
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Type
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -18,7 +21,7 @@ class DatabaseHelper(context: Context) {
 
     init {
         val realmConfig = RealmConfiguration.Builder(context).build()
-        realm = Realm.getInstance(realmConfig);
+        realm = Realm.getInstance(realmConfig)
     }
 
     fun begin() {
@@ -47,6 +50,7 @@ class DatabaseHelper(context: Context) {
             pokemon.c = c
             pokemon.d = d
             pokemon.s = s
+            pokemon.form = form
             pokemon.ability1 = ability1
             pokemon.ability2 = ability2
             pokemon.abilityd = abilityd
@@ -76,11 +80,7 @@ class DatabaseHelper(context: Context) {
         val pokemonList = realm.where(PokemonMasterData().javaClass).findAllSorted("no", Sort.DESCENDING)
 
         val result = ArrayList<PokemonMasterData>()
-        for (p in pokemonList) {
-            if (util.pokemonImageResource.contains(p.no)) {
-                result.add(p)
-            }
-        }
+        pokemonList.filter { it -> util.pokemonImageResource.contains(it.no) }.map { it -> result.add(it) }
         return result
     }
 
@@ -192,13 +192,13 @@ class DatabaseHelper(context: Context) {
         realm.executeTransaction {
 
             val construction = realm.createObject(Construction::class.java)
-            for (pokemonName in list) {
-                val pokemon = selectPokemonByName(pokemonName)
+            list.map { it ->
+                val pokemon = selectPokemonByName(it)
                 construction.list.add(pokemon)
             }
 
-            for (pokemonName in advantage) {
-                val pokemon = selectPokemonByName(pokemonName)
+            advantage.map { it ->
+                val pokemon = selectPokemonByName(it)
                 construction.advantage.add(pokemon)
             }
 
@@ -274,12 +274,6 @@ class DatabaseHelper(context: Context) {
             return Party()
         }
 
-        Log.v("userName", "${party[0].member1}")
-        Log.v("userName", "${party[0].member2}")
-        Log.v("userName", "${party[0].member3}")
-        Log.v("userName", "${party[0].member4}")
-        Log.v("userName", "${party[0].member5}")
-        Log.v("userName", "${party[0].member6}")
         return party[0]
     }
 
@@ -295,9 +289,7 @@ class DatabaseHelper(context: Context) {
     fun selectAllItem(): ArrayList<String> {
         val item = realm.where(ItemMasterData().javaClass).findAllSorted("name", Sort.ASCENDING)
         val list = ArrayList<String>()
-        for (temp in item) {
-            list.add(temp.name)
-        }
+        item.map { it -> list.add(it.name) }
         return list
     }
 
@@ -312,18 +304,12 @@ class DatabaseHelper(context: Context) {
             inserted.member1.skillNo2 = selectSkillByName("みがわり")
             inserted.member1.skillNo3 = selectSkillByName("じゃれつく")
             inserted.member1.skillNo4 = selectSkillByName("つるぎのまい")
-            inserted.member1.hpEv = 4
-            inserted.member1.attackEv = 252
-            inserted.member1.defenseEv = 0
-            inserted.member1.specialAttackEv = 0
-            inserted.member1.specialDefenseEv = 0
-            inserted.member1.speedEv = 252
-            inserted.member1.hpIv = 15
-            inserted.member1.attackIv = 31
-            inserted.member1.defenseIv = 31
-            inserted.member1.specialAttackIv = 15
-            inserted.member1.specialDefenseIv = 31
-            inserted.member1.speedIv = 31
+            inserted.member1.hp = 4
+            inserted.member1.attack = 252
+            inserted.member1.defense = 0
+            inserted.member1.specialAttack = 0
+            inserted.member1.specialDefense = 0
+            inserted.member1.speed = 252
 
             inserted.member2.ability = "クリアボディ"
             inserted.member2.characteristic = "いじっぱり"
@@ -332,18 +318,13 @@ class DatabaseHelper(context: Context) {
             inserted.member2.skillNo2 = selectSkillByName("ストーンエッジ")
             inserted.member2.skillNo3 = selectSkillByName("じならし")
             inserted.member2.skillNo4 = selectSkillByName("ドレインパンチ")
-            inserted.member2.hpEv = 252
-            inserted.member2.attackEv = 252
-            inserted.member2.defenseEv = 0
-            inserted.member2.specialAttackEv = 0
-            inserted.member2.specialDefenseEv = 4
-            inserted.member2.speedEv = 0
-            inserted.member2.hpIv = 15
-            inserted.member2.attackIv = 15
-            inserted.member2.defenseIv = 31
-            inserted.member2.specialAttackIv = 15
-            inserted.member2.specialDefenseIv = 31
-            inserted.member2.speedIv = 31
+            inserted.member1.hp = 4
+            inserted.member1.attack = 252
+            inserted.member1.defense = 0
+            inserted.member1.specialAttack = 0
+            inserted.member1.specialDefense = 0
+            inserted.member1.speed = 252
+
 
             inserted.member3.ability = "あまのじゃく"
             inserted.member3.characteristic = "おくびょう"
@@ -352,18 +333,13 @@ class DatabaseHelper(context: Context) {
             inserted.member3.skillNo2 = selectSkillByName("リーフストーム")
             inserted.member3.skillNo3 = selectSkillByName("へびにらみ")
             inserted.member3.skillNo4 = selectSkillByName("こうごうせい")
-            inserted.member3.hpEv = 156
-            inserted.member3.attackEv = 0
-            inserted.member3.defenseEv = 180
-            inserted.member3.specialAttackEv = 0
-            inserted.member3.specialDefenseEv = 0
-            inserted.member3.speedEv = 172
-            inserted.member3.hpIv = 31
-            inserted.member3.attackIv = 15
-            inserted.member3.defenseIv = 31
-            inserted.member3.specialAttackIv = 15
-            inserted.member3.specialDefenseIv = 31
-            inserted.member3.speedIv = 31
+            inserted.member1.hp = 4
+            inserted.member1.attack = 252
+            inserted.member1.defense = 0
+            inserted.member1.specialAttack = 0
+            inserted.member1.specialDefense = 0
+            inserted.member1.speed = 252
+
 
             inserted.member4.ability = "いかく"
             inserted.member4.characteristic = "やんちゃ"
@@ -372,18 +348,13 @@ class DatabaseHelper(context: Context) {
             inserted.member4.skillNo2 = selectSkillByName("かえんほうしゃ")
             inserted.member4.skillNo3 = selectSkillByName("じしん")
             inserted.member4.skillNo4 = selectSkillByName("いわなだれ")
-            inserted.member4.hpEv = 104
-            inserted.member4.attackEv = 0
-            inserted.member4.defenseEv = 0
-            inserted.member4.specialAttackEv = 252
-            inserted.member4.specialDefenseEv = 0
-            inserted.member4.speedEv = 156
-            inserted.member4.hpIv = 31
-            inserted.member4.attackIv = 31
-            inserted.member4.defenseIv = 31
-            inserted.member4.specialAttackIv = 31
-            inserted.member4.specialDefenseIv = 15
-            inserted.member4.speedIv = 15
+            inserted.member1.hp = 4
+            inserted.member1.attack = 252
+            inserted.member1.defense = 0
+            inserted.member1.specialAttack = 0
+            inserted.member1.specialDefense = 0
+            inserted.member1.speed = 252
+
 
             inserted.member5.ability = "かそく"
             inserted.member5.characteristic = "ようき"
@@ -392,18 +363,13 @@ class DatabaseHelper(context: Context) {
             inserted.member5.skillNo2 = selectSkillByName("こおりのキバ")
             inserted.member5.skillNo3 = selectSkillByName("どくどくのキバ")
             inserted.member5.skillNo4 = selectSkillByName("まもる")
-            inserted.member5.hpEv = 4
-            inserted.member5.attackEv = 252
-            inserted.member5.defenseEv = 0
-            inserted.member5.specialAttackEv = 0
-            inserted.member5.specialDefenseEv = 0
-            inserted.member5.speedEv = 252
-            inserted.member5.hpIv = 15
-            inserted.member5.attackIv = 31
-            inserted.member5.defenseIv = 31
-            inserted.member5.specialAttackIv = 15
-            inserted.member5.specialDefenseIv = 31
-            inserted.member5.speedIv = 31
+            inserted.member1.hp = 4
+            inserted.member1.attack = 252
+            inserted.member1.defense = 0
+            inserted.member1.specialAttack = 0
+            inserted.member1.specialDefense = 0
+            inserted.member1.speed = 252
+
 
             inserted.member6.ability = "すなおこし"
             inserted.member6.characteristic = "ゆうかん"
@@ -412,18 +378,13 @@ class DatabaseHelper(context: Context) {
             inserted.member6.skillNo2 = selectSkillByName("あくび")
             inserted.member6.skillNo3 = selectSkillByName("なまける")
             inserted.member6.skillNo4 = selectSkillByName("かみくだく")
-            inserted.member6.hpEv = 252
-            inserted.member6.attackEv = 252
-            inserted.member6.defenseEv = 0
-            inserted.member6.specialAttackEv = 0
-            inserted.member6.specialDefenseEv = 0
-            inserted.member6.speedEv = 4
-            inserted.member6.hpIv = 15
-            inserted.member6.attackIv = 15
-            inserted.member6.defenseIv = 15
-            inserted.member6.specialAttackIv = 15
-            inserted.member6.specialDefenseIv = 15
-            inserted.member6.speedIv = 15
+            inserted.member1.hp = 4
+            inserted.member1.attack = 252
+            inserted.member1.defense = 0
+            inserted.member1.specialAttack = 0
+            inserted.member1.specialDefense = 0
+            inserted.member1.speed = 252
+
         }
     }
 }

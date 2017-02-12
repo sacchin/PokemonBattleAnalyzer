@@ -1,12 +1,18 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.logic
 
+import android.os.AsyncTask
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.ZSkill
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 
 class BattleCalculator(
-        val level: Int = 50
-) {
+        val level: Int = 50,
+        val mine: PokemonForBattle,
+        val opponent: PokemonForBattle,
+        val field: BattleField,
+        val listener: EventListener
+) : AsyncTask<Void, Void, BattleResult>() {
 
     val notCompatibleWords = arrayOf(
             "れんぞくぎり", "ころがる", "エコーボイス", "りんしょう",
@@ -16,42 +22,23 @@ class BattleCalculator(
             "ハードローラー", "ドラゴンダイブ", "ゴーストダイブ", "シャドーダイブ",
             "フライングプレス", "のしかかり")
 
-    fun getGeneralResult(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
-        val result = BattleResult()
-
-        Log.v("getGeneralResult", "start")
-        result.coverRate = 0.0
-        result.prioritySkill(opponent.trend)
-        loop@ for (item in opponent.itemTrend()) {
-            if (item.name.isNullOrEmpty() || item.usageRate < 0.01) continue
-            for (tokusei in opponent.abilityTrend()) {
-                if (tokusei.name.isNullOrEmpty() || tokusei.usageRate < 0.01) continue
-                for (seikaku in opponent.characteristicTrend()) {
-                    if (seikaku.name.isNullOrEmpty() || seikaku.usageRate < 0.01) continue
-                    val rate = item.usageRate.times(tokusei.usageRate.times(seikaku.usageRate)).toDouble()
-                    result.coverRate = result.coverRate.plus(rate)
-
-                    opponent.item = item.name
-                    opponent.ability = tokusei.name
-                    opponent.characteristic = seikaku.name
-
-                    Log.v("getGeneralResult", "${opponent.item}, ${opponent.ability}, ${opponent.characteristic}")
-                    result.orderRate(opponent, rate)
-                    result.add(oppoAttack(rate, opponent, mine, field))
-
-                    if (0.9 < result.coverRate) break@loop
-                }
-            }
-        }
-
-        return result
+    interface EventListener {
+        fun onFinish(result: BattleResult)
     }
 
-    fun sufferDamage(mine: PokemonForBattle, opponent: PokemonForBattle, field: BattleField): BattleResult {
+    override fun onPostExecute(result: BattleResult) {
+        listener.onFinish(result)
+    }
+
+    override fun doInBackground(vararg params: Void?): BattleResult {
+        return calc()
+    }
+
+    fun calc(): BattleResult {
         val result = BattleResult()
 
         result.coverRate = 0.0
-        loop@ for (item in opponent.itemTrend()) {
+        loop@ for (item in opponent.damageRelatedItem()) {
             if (item.name.isNullOrEmpty() || item.usageRate < 0.01) continue
             for (tokusei in opponent.abilityTrend()) {
                 if (tokusei.name.isNullOrEmpty() || tokusei.usageRate < 0.01) continue
@@ -64,7 +51,7 @@ class BattleCalculator(
                     opponent.ability = tokusei.name
                     opponent.characteristic = seikaku.name
 
-                    result.add(myAttack(rate, mine, opponent, field))
+                    result.add(oppoAttack(rate, opponent, mine, field))
 
                     if (0.9 < result.coverRate) break@loop
                 }
@@ -106,7 +93,7 @@ class BattleCalculator(
 
         opponent.defenseEffortValue = 252
         opponent.specialDefenseEffortValue = 252
-        val d252 = doSkill(mine, opponent, field, mine.calcCriticalRate().toDouble(), true, false)
+        val d252 = doSkill(mine, opponent, field, mine.calcCriticalRate(), true, false)
 
         opponent.hpEffortValue = 252
         //H=252, B(or D)=252の場合の確定数
@@ -119,7 +106,7 @@ class BattleCalculator(
 
         opponent.defenseEffortValue = 0
         opponent.specialDefenseEffortValue = 0
-        val d0 = doSkill(mine, opponent, field, mine.calcCriticalRate().toDouble(), true, false)
+        val d0 = doSkill(mine, opponent, field, mine.calcCriticalRate(), true, false)
         //H=252, B(or D)が0の場合の確定数
         for ((key, value) in d0) result.updateDefeatTimes(opponent.defeatTimes(key), baseRate.times(value))
 
@@ -141,20 +128,22 @@ class BattleCalculator(
 
     fun oppoAttack(baseRate: Double, opponent: PokemonForBattle, mine: PokemonForBattle, field: BattleField): BattleResult {
         val result = BattleResult()
-        val hasZ = opponent.item.contains("Z")
-        val zType = Type.no(Type.code(opponent.item.replace("Z", "")))
 
         for (skill in opponent.trend.skillList) {
             opponent.skill = skill.skill
 
-            if (skill.skill.jname.contains("Z")) {
-                if ((hasZ && skill.skill.type == zType).not()) continue
-                else Log.v("oppoAttack", "has ${opponent.item}, calc ${skill.skill.jname}")
+            if (ZSkill.zCrystal(opponent.item)) {
+                if (ZSkill.satisfyZSkill(opponent.item, opponent.skill))
+                    Log.v("oppoAttack", "has ${opponent.item}, calc ${skill.skill.jname}(${skill.skill.power}")
+                else
+                    continue
             }
+            Log.v("oppoAttack", "${opponent.item}, ${opponent.ability}, ${opponent.characteristic}")
+
 
             opponent.attackEffortValue = 0
             opponent.specialAttackEffortValue = 0
-            val d0 = doSkill(opponent, mine, field, mine.calcCriticalRate().toDouble(), true, false)
+            val d0 = doSkill(opponent, mine, field, mine.calcCriticalRate(), true, false)
             for ((damage, rate) in d0) result.updateDefeatedTimes(skill.skill.jname, damage, mine.defeatTimes(damage), baseRate.times(rate))
 
             if (result.blow(baseRate)) {
@@ -164,7 +153,7 @@ class BattleCalculator(
 
             opponent.attackEffortValue = 252
             opponent.specialAttackEffortValue = 252
-            val d252 = doSkill(opponent, mine, field, mine.calcCriticalRate().toDouble(), true, false)
+            val d252 = doSkill(opponent, mine, field, mine.calcCriticalRate(), true, false)
             for ((damage, rate) in d252) result.updateDefeatedTimes(skill.skill.jname, damage, mine.defeatTimes(damage), baseRate.times(rate))
         }
 
@@ -174,7 +163,7 @@ class BattleCalculator(
     fun doSkill(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField,
                 criticalRate: Double, first: Boolean, damaged: Boolean): MutableMap<Int, Double> {
         if (defenseSide.noEffect(attackSide.skill, attackSide, field)) {
-            Log.v("doSkill", "${attackSide.skill.jname} to ${defenseSide.individual.master.jname} is no effect !")
+            Log.v("doSkill", "${attackSide.skill.jname} to ${defenseSide.individualForUI.master.jname} is no effect !")
             return mutableMapOf(0 to 1.0)
         }
 
@@ -246,7 +235,8 @@ class BattleCalculator(
             var v = value
             val bonus = attackSide.typeBonus()
             v = Util.round5(v.times(bonus.second))
-            v = Math.floor(v.times(Type.calculateAffinity(Type.code(bonus.first), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))))
+            v = Math.floor(v.times(Type.calculateAffinity(Type.code(bonus.first),
+                    Type.code(defenseSide.type1()), Type.code(defenseSide.type2()))))
             if (ignore.not() && attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
                 v = Math.floor(v.times(0.5))
             }
@@ -264,7 +254,8 @@ class BattleCalculator(
                 var v = value
                 val bonus = attackSide.typeBonus()
                 v = Util.round5(v.times(bonus.second))
-                v = Math.floor(v.times(Type.calculateAffinity(Type.code(bonus.first), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))))
+                v = Math.floor(v.times(Type.calculateAffinity(Type.code(bonus.first),
+                        Type.code(defenseSide.type1()), Type.code(defenseSide.type2()))))
                 if (ignore.not() && attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
                     v = Math.floor(v.times(0.5))
                 }
@@ -339,7 +330,7 @@ class BattleCalculator(
     fun calcDefenseValue(base: Double, defenseValueCorrection: Double, defenseRankCorrection: Double, attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField): Double {
         var result = Math.floor(base.times(defenseRankCorrection))
         if (attackSide.skill.category == 1 && field.weather == BattleField.Weather.Sandstorm &&
-                (defenseSide.individual.master.type1 == Type.no(Type.Code.ROCK) || defenseSide.individual.master.type2 == Type.no(Type.Code.ROCK))) {
+                (defenseSide.type1() == Type.no(Type.Code.ROCK) || defenseSide.type2() == Type.no(Type.Code.ROCK))) {
             result = Util.round5(result.times(1.5))
         }
 
@@ -542,7 +533,7 @@ class BattleCalculator(
         if (defenseSide.hpRatio == 100 && defenseSide.ability() == "マルチスケイル") {
             initValue = Math.round(initValue.times(2048.0).div(4096.0)).toDouble()
         }
-        val batsugun = Type.calculateAffinity(Type.code(attackSide.skill.type), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))
+        val batsugun = Type.calculateAffinity(Type.code(attackSide.skill.type), Type.code(defenseSide.type1()), Type.code(defenseSide.type2()))
         if (batsugun < 1 && attackSide.ability() == "いろめがね") {
             initValue = Math.round(initValue.times(8192.0).div(4096.0)).toDouble()
         }
@@ -665,7 +656,8 @@ class BattleCalculator(
         for (i in 0..(randomDamage.size - 1)) {
             val bonus = attackSide.typeBonus()
             randomDamage[i] = Util.round5(randomDamage[i].times(bonus.second))
-            randomDamage[i] = Math.floor(randomDamage[i].times(Type.calculateAffinity(Type.code(bonus.first), Type.code(defenseSide.individual.master.type1), Type.code(defenseSide.individual.master.type2))))
+            randomDamage[i] = Math.floor(randomDamage[i].times(Type.calculateAffinity(Type.code(bonus.first),
+                    Type.code(defenseSide.type1()), Type.code(defenseSide.type2()))))
             if (ignore.not() && attackSide.skill.category == 0 && attackSide.status == StatusAilment.no(StatusAilment.Code.BURN)) {
                 randomDamage[i] = Math.floor(randomDamage[i].times(0.5))
             }
@@ -676,10 +668,7 @@ class BattleCalculator(
         }
 
         val result = mutableMapOf<Int, Double>()
-        for (value in randomDamage) {
-            val k = value.toInt()
-            result[k] = result[k]?.let { it.plus(1) } ?: 1.0
-        }
+        randomDamage.map { it -> result[it.toInt()] = result[it.toInt()]?.plus(1) ?: 1.0 }
         return result
     }
 

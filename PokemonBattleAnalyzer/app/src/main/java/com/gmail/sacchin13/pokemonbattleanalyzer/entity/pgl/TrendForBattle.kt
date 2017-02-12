@@ -28,7 +28,6 @@ data class TrendForBattle(
         for (temp in wazaInfo) {
             val skillName = temp.name ?: "null"
             if (skillName != "null") {
-                Log.v("updateSkills", skillName)
                 val skill = databaseHelper.selectSkillByName(skillName)
                 skillList.add(RankingPokemonSkill.create(temp, skill))
                 skillList.add(RankingPokemonSkill.create(temp, databaseHelper.selectZSkill(skill.no)))

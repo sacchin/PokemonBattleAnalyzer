@@ -1,11 +1,9 @@
-package com.gmail.sacchin13.pokemonbattleanalyzer.entity
+package com.gmail.sacchin13.pokemonbattleanalyzer.entity.ui
 
-import io.realm.RealmObject
-import io.realm.annotations.Ignore
-import io.realm.annotations.RealmClass
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.MegaPokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
 
-@RealmClass
-open class PokemonMasterData(
+open class PokemonMasterDataForUI(
         open var no: String = "none",
         open var jname: String = "none",
         open var ename: String = "none",
@@ -22,11 +20,10 @@ open class PokemonMasterData(
         open var type1: Int = -1,
         open var type2: Int = -1,
         open var weight: Float = -1f,
-        open var megax: MegaPokemonMasterData? = null,
-        open var megay: MegaPokemonMasterData? = null
-) : RealmObject() {
+        open var megax: MegaPokemonMasterDataForUI? = null,
+        open var megay: MegaPokemonMasterDataForUI? = null
+) {
 
-    @Ignore
     var cacheSpeedValues = arrayOf<Int>()
 
     companion object {
@@ -34,7 +31,7 @@ open class PokemonMasterData(
                    h: Int, a: Int, b: Int, c: Int, d: Int, s: Int,
                    ability1: String, ability2: String, abilityd: String,
                    type1: Int, type2: Int, weight: Float): PokemonMasterData {
-            return PokemonMasterData.create(no, jname, ename, form, h, a, b, c, d, s,
+            return create(no, jname, ename, form, h, a, b, c, d, s,
                     ability1, ability2, abilityd, type1, type2, weight, null, null)
         }
 
@@ -42,7 +39,7 @@ open class PokemonMasterData(
                    h: Int, a: Int, b: Int, c: Int, d: Int, s: Int,
                    ability1: String, ability2: String, abilityd: String,
                    type1: Int, type2: Int, weight: Float, megax: MegaPokemonMasterData?): PokemonMasterData {
-            return PokemonMasterData.create(no, jname, ename, form, h, a, b, c, d, s,
+            return create(no, jname, ename, form, h, a, b, c, d, s,
                     ability1, ability2, abilityd, type1, type2, weight, megax, null)
         }
 
@@ -131,18 +128,5 @@ open class PokemonMasterData(
                     speedY(31, 252).times(1.1).toInt()) //最速
         }
         return cacheSpeedValues
-    }
-
-    fun battling(): Array<String> {
-        val result = mutableListOf("-")
-        if (megax != null) result.add(
-                when (no) {
-                    "555" -> "D"
-                    "681" -> "B"
-                    else -> "X"
-                })
-        if (megay != null) result.add("Y")
-
-        return result.toTypedArray()
     }
 }

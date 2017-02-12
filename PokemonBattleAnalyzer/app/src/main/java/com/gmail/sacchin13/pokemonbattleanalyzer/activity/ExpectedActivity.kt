@@ -19,7 +19,9 @@ import com.github.mikephil.charting.data.BarEntry
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.IndividualPokemon
 import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
+import com.gmail.sacchin13.pokemonbattleanalyzer.logic.GeneralCalculator
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import kotlinx.android.synthetic.main.activity_expected.*
 import org.jetbrains.anko.backgroundColor
@@ -39,6 +41,38 @@ class ExpectedActivity : PGLActivity() {
         mine = PartyInBattle(PartyInBattle.MY_SIDE)
     }
 
+    inner class GeneralCalculatorListener(
+            val selectedMine: PokemonForBattle,
+            val selectedOpponent: PokemonForBattle) : GeneralCalculator.EventListener {
+        override fun onFinish(result: BattleResult) {
+            showGeneralResult(selectedMine, selectedOpponent, result)
+        }
+    }
+
+    inner class BattleCalculatorListener : BattleCalculator.EventListener {
+        override fun onFinish(result: BattleResult) {
+            Log.v("showBest", "start")
+            for ((key, list) in result.defeatedTimes) {
+                Log.v("showBest", "$key: ${summary(list)}")
+            }
+        }
+
+        fun summary(list: MutableList<BattleResult.SufferDamage>): String {
+            if (list.sumBy { it -> it.time } == 0) return "効果なし"
+
+            list.forEach {
+                Log.v("summary", "${it.damage}, ${it.time}, ${it.rate}")
+            }
+
+//            var result = "re: "
+//            list.groupBy { it -> "${it.time}確" }.forEach {
+//                result += "${}(${Util.percent(it.value.sum().toDouble())}), "
+//            }
+
+            return ""
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expected)
@@ -49,22 +83,16 @@ class ExpectedActivity : PGLActivity() {
 
     fun showBest() {
         Log.v("showBest", "start")
-        val calc = BattleCalculator()
-        val selectedOpponent = opponent.apply()
         val selectedMine = mine.apply()
+        val selectedOpponent = opponent.apply()
         allField.resetAttackSide(mine.field)
         allField.resetDefenseSide(opponent.field)
 
-        val general = calc.getGeneralResult(selectedMine, selectedOpponent, allField)
-        showGeneralResult(selectedMine, selectedOpponent, general)
+        GeneralCalculator(selectedMine, selectedOpponent, allField, GeneralCalculatorListener(selectedMine, selectedOpponent)).execute()
+        BattleCalculator(50, selectedMine, selectedOpponent, allField, BattleCalculatorListener()).execute()
 
 
         //val suffer = calc.sufferDamage(selectedMine, selectedOpponent, allField)
-
-        Log.v("showBest", "start")
-        for (i in general.defeatedTimes) {
-            Log.v("showBest", "${i.key}: ${i.value.summary()}")
-        }
 
 
         showDamage()
@@ -79,20 +107,10 @@ class ExpectedActivity : PGLActivity() {
         coverRate.text = result.coverRate()
         order.text = result.orderResult(selectedMine, selectedOpponent, allField,
                 mine.field.contains(BattleField.Field.Tailwind), opponent.field.contains(BattleField.Field.Tailwind))
-        correctionRate.text = "0.9(${Util.percent(result.correctionRate[0].times(100.0))})\n" +
-                "1.1(${Util.percent(result.correctionRate[2].times(100.0))})"
-        scarf.text = Util.percent(result.scarfRate.times(100.0))
-        orderAbility.text = Util.percent(result.orderAbilityRate.times(100.0))
-
-        if (result.prioritySkills.isEmpty()) {
-            priority.text = "なし"
-        } else {
-            var t = ""
-            for ((key, value) in result.prioritySkills) {
-                t += key + " = ${Util.percent(value)}\n"
-            }
-            priority.text = t
-        }
+        correctionRate.text = result.correctionRate()
+        scarf.text = result.scarfRate()
+        orderAbility.text = result.orderAbility()
+        priority.text = result.prioritySkill()
 
 //        for ((key, value) in result.defeatedTimes) {
 //            for (pair in value) {
@@ -153,6 +171,8 @@ class ExpectedActivity : PGLActivity() {
 
         result.updateSkills(databaseHelper)
         opponent.member[index].trend = result
+        opponent.member[index].ready()
+        Log.v("setTrend", "${opponent.member[index].individualForUI.master.jname}($index) is downloaded($finishCount) !")
 
         if (result.itemInfo.isEmpty() && result.seikakuInfo.isEmpty() &&
                 result.tokuseiInfo.isEmpty() && result.skillList.isEmpty()) {
@@ -169,10 +189,13 @@ class ExpectedActivity : PGLActivity() {
         mine.add(get(intent.extras.getInt("member3", 0)))
         my_party1.setOnClickListener(OnPokemonSelectedListener(true, 0))
         my_party1.setImageBitmap(util.createImage(mine.member[0].individual.master, 180.0f, resources))
+        mine.member[0].ready()
         my_party2.setOnClickListener(OnPokemonSelectedListener(true, 1))
         my_party2.setImageBitmap(util.createImage(mine.member[1].individual.master, 180.0f, resources))
+        mine.member[1].ready()
         my_party3.setOnClickListener(OnPokemonSelectedListener(true, 2))
         my_party3.setImageBitmap(util.createImage(mine.member[2].individual.master, 180.0f, resources))
+        mine.member[2].ready()
 
         chart1.setDrawGridBackground(false)
         chart1.setPinchZoom(false)
@@ -192,17 +215,17 @@ class ExpectedActivity : PGLActivity() {
         selected_party1.setImageBitmap(temp)
         selected_oppoParty1.setImageBitmap(temp)
 
-        val weatherAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("-", "晴", "雨", "砂", "霰"))
+        val weatherAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("天候", "晴", "雨", "砂", "霰"))
         weatherAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         weather.adapter = weatherAdapter
         weather.onItemSelectedListener = OnWeatherSelectedListener()
 
-        val roomAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("-", "トリック", "マジック", "ワンダー"))
+        val roomAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("ルーム", "トリック", "マジック", "ワンダー"))
         roomAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         room.adapter = roomAdapter
         room.onItemSelectedListener = OnRoomSelectedListener()
 
-        val terrainAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("-", "エレキ", "グラス", "ミスト", "サイコ"))
+        val terrainAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("フィールド", "エレキ", "グラス", "ミスト", "サイコ"))
         terrainAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         terrain.adapter = terrainAdapter
         terrain.onItemSelectedListener = OnTerrainSelectedListener()
@@ -452,8 +475,8 @@ class ExpectedActivity : PGLActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == DETAIL_CODE) {
-            val party = if (data!!.getBooleanExtra("isMine", true)) mine else opponent
+        if (requestCode == DETAIL_CODE && data != null) {
+            val party = if (data.getBooleanExtra("isMine", true)) mine else opponent
             party.temp = data.getParcelableExtra<TemporaryStatus>("edited")
             party.apply()
             Log.v("ExpectedActivity", party.temp.toString())

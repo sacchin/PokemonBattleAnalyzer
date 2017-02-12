@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.util.Log
 import android.widget.ArrayAdapter
-
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -16,15 +15,14 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBubbleDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PartyInBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonCharacteristic
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Skill
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
-import com.gmail.sacchin13.pokemonbattleanalyzer.logic.BattleCalculator
 import kotlinx.android.synthetic.main.activity_graph.*
-
-import java.util.ArrayList
+import java.util.*
 import kotlin.properties.Delegates
 
 class GraphActivity : PGLActivity(), OnChartValueSelectedListener {
@@ -65,9 +63,9 @@ class GraphActivity : PGLActivity(), OnChartValueSelectedListener {
         onProgressChanged()
     }
 
-    fun onProgressChanged() { }
+    fun onProgressChanged() {}
 
-    fun setData(){
+    fun setData() {
         val index = arrayOf(4, 64, 128, 192, 252)
 
         val i = member1SkillSpinner.selectedItemPosition
@@ -77,7 +75,7 @@ class GraphActivity : PGLActivity(), OnChartValueSelectedListener {
         opponent.member[0].item = member1ItemSpinner.selectedItem as String
         opponent.member[1].hpRatio = 100
 
-        Log.v(opponent.member[0].individual.master.jname,  opponent.member[0].skill.jname + ", " + opponent.member[0].ability + ", " + opponent.member[0].characteristic + ", " + opponent.member[0].item)
+        Log.v(opponent.member[0].individual.master.jname, opponent.member[0].skill.jname + ", " + opponent.member[0].ability + ", " + opponent.member[0].characteristic + ", " + opponent.member[0].item)
         Log.v(opponent.member[1].individual.master.jname, "defense")
         //val dataSets = ArrayList<IBubbleDataSet>()
 
@@ -92,37 +90,37 @@ class GraphActivity : PGLActivity(), OnChartValueSelectedListener {
         list.add(BubbleEntry(0.toFloat(), 1.toFloat(), 1f))
         list.add(BubbleEntry(6.toFloat(), 1.toFloat(), 1f))
 
-        val calc = BattleCalculator()
-        for((y, h) in index.withIndex()){
-            for((x, bd)in index.withIndex()) {
-                val result = calc.simulateTurn(opponent.member[0], opponent.member[1], BattleField(), h, bd)
-                val pair = result.defeatTimes.filterValues { it -> 0.9 < it.minus(0.0)}.maxBy { it -> it.key }
-                val rate = pair!!.value.toDouble().div(result.count().toDouble())
-
-                when(pair.key) {
-                    1 -> {
-                        Log.v("data1", "x${x.plus(1).toFloat()}, y${y.plus(1).times(20).toFloat()}, k${pair.key}, r${rate.times(100).toFloat()}, ${pair.value.toDouble()}, ${result.count().toDouble()}")
-                        yVals1.add(BubbleEntry(x.plus(1).toFloat(), y.plus(1).times(20).toFloat(), rate.times(100).toFloat()))
-                    }
-                    2 -> {
-                        Log.v("data2", "x${x.plus(1).toFloat()}, y${y.plus(1).times(20).toFloat()}, k${pair.key}, r${rate.times(100).toFloat()}, ${pair.value.toDouble()}, ${result.count().toDouble()}")
-                        yVals2.add(BubbleEntry(x.plus(1).toFloat(), y.plus(1).times(20).toFloat(), rate.times(100).toFloat()))
-                    }
-                    3 -> {
-                        Log.v("data3", "x${x.plus(1).toFloat()}, y${y.plus(1).times(20).toFloat()}, k${pair.key}, r${rate.times(100).toFloat()}, ${pair.value.toDouble()}, ${result.count().toDouble()}")
-                        yVals3.add(BubbleEntry(x.plus(1).toFloat(), y.plus(1).times(20).toFloat(), rate.times(100).toFloat()))
-                    }
-                    4 -> {
-                        Log.v("data4", "x${x.plus(1).toFloat()}, y${y.plus(1).times(20).toFloat()}, k${pair.key}, r${rate.times(100).toFloat()}, ${pair.value.toDouble()}, ${result.count().toDouble()}")
-                        yVals4.add(BubbleEntry(x.plus(1).toFloat(), y.plus(1).times(20).toFloat(), rate.times(100).toFloat()))
-                    }
-                    else -> {
-                        Log.v("data5", "x${x.plus(1).toFloat()}, y${y.plus(1).times(20).toFloat()}, k${pair.key}, r${rate.times(100).toFloat()}, ${pair.value.toDouble()}, ${result.count().toDouble()}")
-                        yVals5.add(BubbleEntry(x.plus(1).toFloat(), y.plus(1).times(20).toFloat(), rate.times(100).toFloat()))
-                    }
-                }
-            }
-        }
+//        val calc = BattleCalculator()
+//        for((y, h) in index.withIndex()){
+//            for((x, bd)in index.withIndex()) {
+//                val result = calc.simulateTurn(opponent.member[0], opponent.member[1], BattleField(), h, bd)
+//                val pair = result.defeatTimes.filterValues { it -> 0.9 < it.minus(0.0)}.maxBy { it -> it.key }
+//                val rate = pair!!.value.toDouble().div(result.count().toDouble())
+//
+//                when(pair.key) {
+//                    1 -> {
+//                        Log.v("data1", "x${x.plus(1).toFloat()}, y${y.plus(1).times(20).toFloat()}, k${pair.key}, r${rate.times(100).toFloat()}, ${pair.value.toDouble()}, ${result.count().toDouble()}")
+//                        yVals1.add(BubbleEntry(x.plus(1).toFloat(), y.plus(1).times(20).toFloat(), rate.times(100).toFloat()))
+//                    }
+//                    2 -> {
+//                        Log.v("data2", "x${x.plus(1).toFloat()}, y${y.plus(1).times(20).toFloat()}, k${pair.key}, r${rate.times(100).toFloat()}, ${pair.value.toDouble()}, ${result.count().toDouble()}")
+//                        yVals2.add(BubbleEntry(x.plus(1).toFloat(), y.plus(1).times(20).toFloat(), rate.times(100).toFloat()))
+//                    }
+//                    3 -> {
+//                        Log.v("data3", "x${x.plus(1).toFloat()}, y${y.plus(1).times(20).toFloat()}, k${pair.key}, r${rate.times(100).toFloat()}, ${pair.value.toDouble()}, ${result.count().toDouble()}")
+//                        yVals3.add(BubbleEntry(x.plus(1).toFloat(), y.plus(1).times(20).toFloat(), rate.times(100).toFloat()))
+//                    }
+//                    4 -> {
+//                        Log.v("data4", "x${x.plus(1).toFloat()}, y${y.plus(1).times(20).toFloat()}, k${pair.key}, r${rate.times(100).toFloat()}, ${pair.value.toDouble()}, ${result.count().toDouble()}")
+//                        yVals4.add(BubbleEntry(x.plus(1).toFloat(), y.plus(1).times(20).toFloat(), rate.times(100).toFloat()))
+//                    }
+//                    else -> {
+//                        Log.v("data5", "x${x.plus(1).toFloat()}, y${y.plus(1).times(20).toFloat()}, k${pair.key}, r${rate.times(100).toFloat()}, ${pair.value.toDouble()}, ${result.count().toDouble()}")
+//                        yVals5.add(BubbleEntry(x.plus(1).toFloat(), y.plus(1).times(20).toFloat(), rate.times(100).toFloat()))
+//                    }
+//                }
+//            }
+//        }
 
         val set1 = BubbleDataSet(yVals1, "DS 12")
         set1.setColor(Color.RED, 130)
@@ -163,7 +161,7 @@ class GraphActivity : PGLActivity(), OnChartValueSelectedListener {
                         + ", DataSet index: " + h.dataSetIndex)
     }
 
-    override fun onNothingSelected() { }
+    override fun onNothingSelected() {}
 
     override fun setTrend(result: TrendForBattle, index: Int) {
         finishCount++
@@ -171,11 +169,11 @@ class GraphActivity : PGLActivity(), OnChartValueSelectedListener {
         result.updateSkills(databaseHelper)
         opponent.member[index].trend = result
 
-        if(result.itemInfo.isEmpty() && result.seikakuInfo.isEmpty() &&
-                result.tokuseiInfo.isEmpty() && result.skillList.isEmpty()){
+        if (result.itemInfo.isEmpty() && result.seikakuInfo.isEmpty() &&
+                result.tokuseiInfo.isEmpty() && result.skillList.isEmpty()) {
             Snackbar.make(chart1, "download failed at $index", Snackbar.LENGTH_SHORT).show()
         }
-        if(finishCount == opponentParty.member.size){
+        if (finishCount == opponentParty.member.size) {
             Snackbar.make(chart1, "download finish", Snackbar.LENGTH_SHORT).show()
 
             val skillAdapter = ArrayAdapter(this, R.layout.my_spinner_item, opponent.member[0].trend.skillNames())

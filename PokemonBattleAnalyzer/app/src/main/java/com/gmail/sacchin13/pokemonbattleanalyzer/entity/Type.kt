@@ -72,6 +72,28 @@ object Type {
         }
     }
 
+    fun zNo(zCrystal: String): Code {
+        return if (zCrystal.contains("ノーマル")) Code.NORMAL
+        else if (zCrystal.contains("ホノオ")) Code.FIRE
+        else if (zCrystal.contains("ミズ")) Code.WATER
+        else if (zCrystal.contains("デンキ")) Code.ELECTRIC
+        else if (zCrystal.contains("クサ")) Code.GRASS
+        else if (zCrystal.contains("コオリ")) Code.ICE
+        else if (zCrystal.contains("カクトウ")) Code.FIGHTING
+        else if (zCrystal.contains("ドク")) Code.POISON
+        else if (zCrystal.contains("ジメン")) Code.GROUND
+        else if (zCrystal.contains("ヒコウ")) Code.FLYING
+        else if (zCrystal.contains("エスパー")) Code.PSYCHIC
+        else if (zCrystal.contains("ムシ")) Code.BUG
+        else if (zCrystal.contains("イワ")) Code.ROCK
+        else if (zCrystal.contains("ゴースト")) Code.GHOST
+        else if (zCrystal.contains("ドラゴン")) Code.DRAGON
+        else if (zCrystal.contains("アク")) Code.DARK
+        else if (zCrystal.contains("ハガネ")) Code.STEEL
+        else if (zCrystal.contains("フェアリー")) Code.FAIRY
+        else Code.UNKNOWN
+    }
+
     fun no(type: Code): Int {
         when (type) {
             Type.Code.NORMAL -> return 0

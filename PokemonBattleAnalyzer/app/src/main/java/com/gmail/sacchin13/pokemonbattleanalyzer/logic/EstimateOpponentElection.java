@@ -1,7 +1,7 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.logic;
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.IndividualPokemon;
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party;
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.IndividualPokemon;
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Party;
 
 public class EstimateOpponentElection {
 

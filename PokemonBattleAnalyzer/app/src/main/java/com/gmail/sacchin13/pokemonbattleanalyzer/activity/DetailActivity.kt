@@ -12,9 +12,9 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.TemporaryStatus
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import kotlinx.android.synthetic.main.activity_detail.*
 import org.jetbrains.anko.onCheckedChange
@@ -148,7 +148,7 @@ class DetailActivity : PGLActivity() {
     }
 
     private fun createPBAPokemonStatus(p: PokemonMasterData, type: Int) {
-        val sss = LinearLayout(this).apply{
+        val sss = LinearLayout(this).apply {
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             orientation = LinearLayout.HORIZONTAL
         }
@@ -163,13 +163,13 @@ class DetailActivity : PGLActivity() {
             MEGA_Y -> util.createImage(p.no + "my", 150f, resources)
             else -> util.createImage(p, 150f, resources)
         }
-        val imageView = ImageView(this).apply{
+        val imageView = ImageView(this).apply {
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
             setImageBitmap(temp)
         }
         sss.addView(imageView)
 
-        val status = TableLayout(this).apply{
+        val status = TableLayout(this).apply {
             layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
             isStretchAllColumns = true
         }
@@ -206,28 +206,28 @@ class DetailActivity : PGLActivity() {
 
         rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         myASpinner.adapter = rankAdapter
-        myASpinner.setSelection(positionToRank(temp.tempAttack))
+        myASpinner.setSelection(rankToIndex(temp.tempAttack))
         myASpinner.onItemSelectedListener = OnRankSelectedListener(0)
         myBSpinner.adapter = rankAdapter
-        myBSpinner.setSelection(positionToRank(temp.tempDefense))
+        myBSpinner.setSelection(rankToIndex(temp.tempDefense))
         myBSpinner.onItemSelectedListener = OnRankSelectedListener(1)
         myCSpinner.adapter = rankAdapter
-        myCSpinner.setSelection(positionToRank(temp.tempSpecialAttack))
+        myCSpinner.setSelection(rankToIndex(temp.tempSpecialAttack))
         myCSpinner.onItemSelectedListener = OnRankSelectedListener(2)
         myDSpinner.adapter = rankAdapter
-        myDSpinner.setSelection(positionToRank(temp.tempSpecialDefense))
+        myDSpinner.setSelection(rankToIndex(temp.tempSpecialDefense))
         myDSpinner.onItemSelectedListener = OnRankSelectedListener(3)
         mySSpinner.adapter = rankAdapter
-        mySSpinner.setSelection(positionToRank(temp.tempSpeed))
+        mySSpinner.setSelection(rankToIndex(temp.tempSpeed))
         mySSpinner.onItemSelectedListener = OnRankSelectedListener(4)
         myHSpinner.adapter = rankAdapter
-        myHSpinner.setSelection(positionToRank(temp.tempHitProbability))
+        myHSpinner.setSelection(rankToIndex(temp.tempHitProbability))
         myHSpinner.onItemSelectedListener = OnRankSelectedListener(5)
         myAVSpinner.adapter = rankAdapter
-        myAVSpinner.setSelection(positionToRank(temp.tempAvoidance))
+        myAVSpinner.setSelection(rankToIndex(temp.tempAvoidance))
         myAVSpinner.onItemSelectedListener = OnRankSelectedListener(6)
         myCRSpinner.adapter = rankAdapter
-        myCRSpinner.setSelection(positionToRank(temp.tempCritical))
+        myCRSpinner.setSelection(rankToIndex(temp.tempCritical))
         myCRSpinner.onItemSelectedListener = OnRankSelectedListener(7)
 
         if (isMine) {
@@ -239,10 +239,10 @@ class DetailActivity : PGLActivity() {
             my_mega_check.onItemSelectedListener = OnMegaSelectedListener()
             myHPBar.setText(temp.tempHpValue.toString())
             myHPBar.setOnEditorActionListener(OnHPEditListener())
-            if(temp.tempMigawari == 1) myMigawari.isChecked = true
-            myMigawari.onCheckedChange { compoundButton, b -> temp.tempMigawari = if(b) 1 else 0 }
-            if(temp.tempItem == 1) myItemUsed.isChecked = true
-            myItemUsed.onCheckedChange { compoundButton, b -> temp.tempItem = if(b) 1 else 0 }
+            if (temp.tempMigawari == 1) myMigawari.isChecked = true
+            myMigawari.onCheckedChange { compoundButton, b -> temp.tempMigawari = if (b) 1 else 0 }
+            if (temp.tempItem == 1) myItemUsed.isChecked = true
+            myItemUsed.onCheckedChange { compoundButton, b -> temp.tempItem = if (b) 1 else 0 }
         } else {
             my_header.visibility = View.GONE
             opponentStatusSpinner.adapter = statusAdapter
@@ -252,10 +252,10 @@ class DetailActivity : PGLActivity() {
             oppo_mega_check.onItemSelectedListener = OnMegaSelectedListener()
             opponentHPBar.progress = temp.tempHpRatio
             opponentHPBar.setOnSeekBarChangeListener(OnHPChangeListener())
-            if(temp.tempMigawari == 1) oppoMigawari.isChecked = true
-            oppoMigawari.onCheckedChange { compoundButton, b -> temp.tempMigawari = if(b) 1 else 0 }
-            if(temp.tempItem == 1) oppoItemUsed.isChecked = true
-            oppoItemUsed.onCheckedChange { compoundButton, b -> temp.tempItem = if(b) 1 else 0 }
+            if (temp.tempMigawari == 1) oppoMigawari.isChecked = true
+            oppoMigawari.onCheckedChange { compoundButton, b -> temp.tempMigawari = if (b) 1 else 0 }
+            if (temp.tempItem == 1) oppoItemUsed.isChecked = true
+            oppoItemUsed.onCheckedChange { compoundButton, b -> temp.tempItem = if (b) 1 else 0 }
         }
     }
 
@@ -274,14 +274,14 @@ class DetailActivity : PGLActivity() {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             when (which) {
-                0 -> temp.tempAttack = rankToPosition(id.toInt())
-                1 -> temp.tempDefense = rankToPosition(id.toInt())
-                2 -> temp.tempSpecialAttack = rankToPosition(id.toInt())
-                3 -> temp.tempSpecialDefense = rankToPosition(id.toInt())
-                4 -> temp.tempSpeed = rankToPosition(id.toInt())
-                5 -> temp.tempHitProbability = rankToPosition(id.toInt())
-                6 -> temp.tempAvoidance = rankToPosition(id.toInt())
-                7 -> temp.tempCritical = rankToPosition(id.toInt())
+                0 -> temp.tempAttack = indexToRank(id.toInt())
+                1 -> temp.tempDefense = indexToRank(id.toInt())
+                2 -> temp.tempSpecialAttack = indexToRank(id.toInt())
+                3 -> temp.tempSpecialDefense = indexToRank(id.toInt())
+                4 -> temp.tempSpeed = indexToRank(id.toInt())
+                5 -> temp.tempHitProbability = indexToRank(id.toInt())
+                6 -> temp.tempAvoidance = indexToRank(id.toInt())
+                7 -> temp.tempCritical = indexToRank(id.toInt())
             }
         }
     }
@@ -321,8 +321,8 @@ class DetailActivity : PGLActivity() {
         }
     }
 
-    fun rankToPosition(rank: Int): Int = rank + 6
-    fun positionToRank(position: Int): Int = position - 6
+    fun rankToIndex(rank: Int): Int = rank + 6
+    fun indexToRank(position: Int): Int = position - 6
 }
 
 

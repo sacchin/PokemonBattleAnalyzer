@@ -58,7 +58,7 @@
     <string name="expected_activity_beat_number">確定数</string>
     <string name="expected_activity_dead">倒される</string>
     <string name="expected_activity_covering">網羅率</string>
-    <string name="expected_activity_order">行動順</string>
+    <string name="expected_activity_order">すばやさ実数値</string>
     <string name="expected_activity_priority">先制技</string>
     <string name="expected_activity_order_ability">特性</string>
     <string name="expected_activity_correction_rate">性格</string>

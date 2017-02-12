@@ -59,37 +59,37 @@ open class Characteristic {
         )
 
         fun no(name: String): Int {
-            return if ("さみしがり".equals(name)) SAMISIGARI
-            else if ("いじっぱり".equals(name)) IJIPPARI
-            else if ("やんちゃ".equals(name)) YANCHA
-            else if ("ゆうかん".equals(name)) YUKAN
-            else if ("ずぶとい".equals(name)) ZUBUTOI
-            else if ("わんぱく".equals(name)) WANPAKU
-            else if ("のうてんき".equals(name)) NOTENKI
-            else if ("のんき".equals(name)) NONKI
-            else if ("ひかえめ".equals(name)) HIKAEME
-            else if ("おっとり".equals(name)) OTTORI
-            else if ("うっかりや".equals(name)) UKKARIYA
-            else if ("れいせい".equals(name)) REISEI
-            else if ("おだやか".equals(name)) ODAYAKA
-            else if ("おとなしい".equals(name)) OTONASI
-            else if ("しんちょう".equals(name)) SINCHO
-            else if ("なまいき".equals(name)) NAMAIKI
-            else if ("おくびょう".equals(name)) OKUBYO
-            else if ("せっかち".equals(name)) SEKKATI
-            else if ("ようき".equals(name)) YOKI
-            else if ("むじゃき".equals(name)) MUJAKI
-            else if ("てれや".equals(name)) TEREYA
-            else if ("がんばりや".equals(name)) GANBAIYA
-            else if ("すなお".equals(name)) SUNAO
-            else if ("きまぐれ".equals(name)) KIMAGURE
-            else if ("まじめ".equals(name)) MAJIME
+            return if ("さみしがり" == name) SAMISIGARI
+            else if ("いじっぱり" == name) IJIPPARI
+            else if ("やんちゃ" == name) YANCHA
+            else if ("ゆうかん" == name) YUKAN
+            else if ("ずぶとい" == name) ZUBUTOI
+            else if ("わんぱく" == name) WANPAKU
+            else if ("のうてんき" == name) NOTENKI
+            else if ("のんき" == name) NONKI
+            else if ("ひかえめ" == name) HIKAEME
+            else if ("おっとり" == name) OTTORI
+            else if ("うっかりや" == name) UKKARIYA
+            else if ("れいせい" == name) REISEI
+            else if ("おだやか" == name) ODAYAKA
+            else if ("おとなしい" == name) OTONASI
+            else if ("しんちょう" == name) SINCHO
+            else if ("なまいき" == name) NAMAIKI
+            else if ("おくびょう" == name) OKUBYO
+            else if ("せっかち" == name) SEKKATI
+            else if ("ようき" == name) YOKI
+            else if ("むじゃき" == name) MUJAKI
+            else if ("てれや" == name) TEREYA
+            else if ("がんばりや" == name) GANBAIYA
+            else if ("すなお" == name) SUNAO
+            else if ("きまぐれ" == name) KIMAGURE
+            else if ("まじめ" == name) MAJIME
             else -1
         }
 
         fun correction(code: String, at: String): Double {
             val index = no(code)
-            if (index < 0){
+            if (index < 0) {
                 Log.e("Characteristic", code + " is not correct")
                 return 1.0
             }

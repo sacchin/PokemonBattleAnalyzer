@@ -1,6 +1,6 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.insert
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Party
 
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper

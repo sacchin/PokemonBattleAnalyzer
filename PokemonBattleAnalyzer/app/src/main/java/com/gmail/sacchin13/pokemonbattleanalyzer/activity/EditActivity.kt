@@ -6,12 +6,14 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonCharacteristic
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.IndividualPokemon
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Party
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Skill
 import kotlinx.android.synthetic.main.activity_edit.*
 import kotlin.properties.Delegates
 
@@ -105,42 +107,23 @@ class EditActivity : AppCompatActivity() {
         skill4Spinner.setSelection(skillAdapter.getPosition(pokemon.skillNo4.jname))
         skill4Spinner.onItemSelectedListener = OnSkillSelectedListener(4, pokemon)
 
-        hSpinner.adapter = ivAdapter
-        hSpinner.setSelection(ivAdapter.getPosition(pokemon.hpIv.toString()))
-        hSpinner.onItemSelectedListener = OnIvSelectedListener(1, pokemon)
-        aSpinner.adapter = ivAdapter
-        aSpinner.setSelection(ivAdapter.getPosition(pokemon.attackIv.toString()))
-        aSpinner.onItemSelectedListener = OnIvSelectedListener(2, pokemon)
-        bSpinner.adapter = ivAdapter
-        bSpinner.setSelection(ivAdapter.getPosition(pokemon.defenseIv.toString()))
-        bSpinner.onItemSelectedListener = OnIvSelectedListener(3, pokemon)
-        cSpinner.adapter = ivAdapter
-        cSpinner.setSelection(ivAdapter.getPosition(pokemon.specialAttackIv.toString()))
-        cSpinner.onItemSelectedListener = OnIvSelectedListener(4, pokemon)
-        dSpinner.adapter = ivAdapter
-        dSpinner.setSelection(ivAdapter.getPosition(pokemon.specialDefenseIv.toString()))
-        dSpinner.onItemSelectedListener = OnIvSelectedListener(5, pokemon)
-        sSpinner.adapter = ivAdapter
-        sSpinner.setSelection(ivAdapter.getPosition(pokemon.speedIv.toString()))
-        sSpinner.onItemSelectedListener = OnIvSelectedListener(6, pokemon)
-
         hEdit.inputType = InputType.TYPE_CLASS_NUMBER
-        hEdit.setText(pokemon.hpEv.toString())
+        hEdit.setText(pokemon.hp.toString())
         hEdit.addTextChangedListener(OnEditText(1, pokemon))
         aEdit.inputType = InputType.TYPE_CLASS_NUMBER
-        aEdit.setText(pokemon.attackEv.toString())
+        aEdit.setText(pokemon.attack.toString())
         aEdit.addTextChangedListener(OnEditText(2, pokemon))
         bEdit.inputType = InputType.TYPE_CLASS_NUMBER
-        bEdit.setText(pokemon.defenseEv.toString())
+        bEdit.setText(pokemon.defense.toString())
         bEdit.addTextChangedListener(OnEditText(3, pokemon))
         cEdit.inputType = InputType.TYPE_CLASS_NUMBER
-        cEdit.setText(pokemon.specialAttackEv.toString())
+        cEdit.setText(pokemon.specialAttack.toString())
         cEdit.addTextChangedListener(OnEditText(4, pokemon))
         dEdit.inputType = InputType.TYPE_CLASS_NUMBER
-        dEdit.setText(pokemon.specialDefenseEv.toString())
+        dEdit.setText(pokemon.specialDefense.toString())
         dEdit.addTextChangedListener(OnEditText(5, pokemon))
         sEdit.inputType = InputType.TYPE_CLASS_NUMBER
-        sEdit.setText(pokemon.speedEv.toString())
+        sEdit.setText(pokemon.speed.toString())
         sEdit.addTextChangedListener(OnEditText(6, pokemon))
     }
 
@@ -193,25 +176,6 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    inner class OnIvSelectedListener(val index: Int, val pokemon: IndividualPokemon) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-        }
-
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            databaseHelper.begin()
-            when (index) {
-                1 -> pokemon.hpIv = iv[position].toInt()
-                2 -> pokemon.attackIv = iv[position].toInt()
-                3 -> pokemon.defenseIv = iv[position].toInt()
-                4 -> pokemon.specialAttackIv = iv[position].toInt()
-                5 -> pokemon.specialDefenseIv = iv[position].toInt()
-                6 -> pokemon.speedIv = iv[position].toInt()
-            }
-            Log.v(pokemon.master.jname, "${pokemon.calcHp(MegaPokemonMasterData.NOT_MEGA)}")
-            databaseHelper.commit()
-        }
-    }
-
     inner class OnEditText(val type: Int, val pokemon: IndividualPokemon) : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
 
@@ -224,15 +188,14 @@ class EditActivity : AppCompatActivity() {
                 val value = Integer.parseInt(ev)
                 databaseHelper.begin()
                 when (type) {
-                    1 -> pokemon.hpEv = value
-                    2 -> pokemon.attackEv = value
-                    3 -> pokemon.defenseEv = value
-                    4 -> pokemon.specialAttackEv = value
-                    5 -> pokemon.specialDefenseEv = value
-                    6 -> pokemon.speedEv = value
+                    1 -> pokemon.hp = value
+                    2 -> pokemon.attack = value
+                    3 -> pokemon.defense = value
+                    4 -> pokemon.specialAttack = value
+                    5 -> pokemon.specialDefense = value
+                    6 -> pokemon.speed = value
                 }
                 databaseHelper.commit()
-                Log.v(pokemon.master.jname, "${pokemon.calcHp(MegaPokemonMasterData.NOT_MEGA)}")
 
             } catch (e: NumberFormatException) {
                 Snackbar.make(member1_text, "数値として不正な値です", Snackbar.LENGTH_SHORT).show()

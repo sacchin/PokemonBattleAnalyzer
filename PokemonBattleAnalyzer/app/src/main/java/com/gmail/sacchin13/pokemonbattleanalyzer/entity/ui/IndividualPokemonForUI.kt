@@ -1,95 +1,90 @@
-package com.gmail.sacchin13.pokemonbattleanalyzer.entity
+package com.gmail.sacchin13.pokemonbattleanalyzer.entity.ui
 
-import io.realm.RealmObject
-import io.realm.annotations.RealmClass
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Ability
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.MegaPokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Type
 import java.util.*
 
-@RealmClass
-open class IndividualPokemon(
+open class IndividualPokemonForUI(
         open var id: Long = -1,
         open var status: Int = UNKNOWN,
         open var item: String = UNSPECIFIED,
         open var characteristic: String = UNSPECIFIED,
         open var ability: String = UNSPECIFIED,
-        open var skillNo1: Skill = Skill(),
-        open var skillNo2: Skill = Skill(),
-        open var skillNo3: Skill = Skill(),
-        open var skillNo4: Skill = Skill(),
-        open var hpEv: Int = UNKNOWN,
-        open var attackEv: Int = UNKNOWN,
-        open var defenseEv: Int = UNKNOWN,
-        open var specialAttackEv: Int = UNKNOWN,
-        open var specialDefenseEv: Int = UNKNOWN,
-        open var speedEv: Int = UNKNOWN,
-        open var hpIv: Int = UNKNOWN,
-        open var attackIv: Int = UNKNOWN,
-        open var defenseIv: Int = UNKNOWN,
-        open var specialAttackIv: Int = UNKNOWN,
-        open var specialDefenseIv: Int = UNKNOWN,
-        open var speedIv: Int = UNKNOWN,
-        open var master: PokemonMasterData = PokemonMasterData()
-) : RealmObject() {
+        open var skillNo1: SkillForUI = SkillForUI(),
+        open var skillNo2: SkillForUI = SkillForUI(),
+        open var skillNo3: SkillForUI = SkillForUI(),
+        open var skillNo4: SkillForUI = SkillForUI(),
+        open var hp: Int = 0,
+        open var attack: Int = 0,
+        open var defense: Int = 0,
+        open var specialAttack: Int = 0,
+        open var specialDefense: Int = 0,
+        open var speed: Int = 0,
+        open var master: PokemonMasterDataForUI = PokemonMasterDataForUI()
+) {
 
     companion object {
         const val UNSPECIFIED = "unspecified"
         const val UNKNOWN = -1
 
-        fun create(id: Long, master: PokemonMasterData): IndividualPokemon {
-            return IndividualPokemon(id, 0, UNSPECIFIED, UNSPECIFIED, UNSPECIFIED, Skill(), Skill(), Skill(), Skill(), 0, 0, 0, 0, 0, 0, 31, 31, 31, 31, 31, 31, master)
+        fun create(id: Long, master: PokemonMasterDataForUI): IndividualPokemonForUI {
+            return IndividualPokemonForUI(id, 0, UNSPECIFIED, UNSPECIFIED, UNSPECIFIED,
+                    SkillForUI(), SkillForUI(), SkillForUI(), SkillForUI(), 0, 0, 0, 0, 0, 0, master)
         }
     }
 
-    fun calcHp(megaType: Int): Int = calcHp(hpEv, megaType)
+    fun calcHp(megaType: Int): Int = calcHp(31, megaType)
     fun calcHp(ev: Int, megaType: Int): Int {
         return when (megaType) {
-            MegaPokemonMasterData.MEGA_X -> master.hpX(hpIv, ev)
-            MegaPokemonMasterData.MEGA_Y -> master.hpY(hpIv, ev)
-            else -> master.hp(hpIv, ev)
+            MegaPokemonMasterData.MEGA_X -> master.hpX(31, ev)
+            MegaPokemonMasterData.MEGA_Y -> master.hpY(31, ev)
+            else -> master.hp(31, ev)
         }
     }
 
-    fun calcAttack(megaType: Int): Int = calcAttack(attackEv, megaType)
+    fun calcAttack(megaType: Int): Int = calcAttack(31, megaType)
     fun calcAttack(ev: Int, megaType: Int): Int {
         return when (megaType) {
-            MegaPokemonMasterData.MEGA_X -> master.attackX(attackIv, ev)
-            MegaPokemonMasterData.MEGA_Y -> master.attackY(attackIv, ev)
-            else -> master.attack(attackIv, ev)
+            MegaPokemonMasterData.MEGA_X -> master.attackX(31, ev)
+            MegaPokemonMasterData.MEGA_Y -> master.attackY(31, ev)
+            else -> master.attack(31, ev)
         }
     }
 
-    fun calcDefense(megaType: Int): Int = calcDefense(defenseEv, megaType)
+    fun calcDefense(megaType: Int): Int = calcDefense(31, megaType)
     fun calcDefense(ev: Int, megaType: Int): Int {
         return when (megaType) {
-            MegaPokemonMasterData.MEGA_X -> master.defenseX(defenseIv, ev)
-            MegaPokemonMasterData.MEGA_Y -> master.defenseY(defenseIv, ev)
-            else -> master.defense(defenseIv, ev)
+            MegaPokemonMasterData.MEGA_X -> master.defenseX(31, ev)
+            MegaPokemonMasterData.MEGA_Y -> master.defenseY(31, ev)
+            else -> master.defense(31, ev)
         }
     }
 
-    fun calcSpecialAttack(megaType: Int): Int = calcSpecialAttack(specialAttackEv, megaType)
+    fun calcSpecialAttack(megaType: Int): Int = calcSpecialAttack(31, megaType)
     fun calcSpecialAttack(ev: Int, megaType: Int): Int {
         return when (megaType) {
-            MegaPokemonMasterData.MEGA_X -> master.specialAttackX(specialAttackIv, ev)
-            MegaPokemonMasterData.MEGA_Y -> master.specialAttackY(specialAttackIv, ev)
-            else -> master.specialAttack(specialAttackIv, ev)
+            MegaPokemonMasterData.MEGA_X -> master.specialAttackX(31, ev)
+            MegaPokemonMasterData.MEGA_Y -> master.specialAttackY(31, ev)
+            else -> master.specialAttack(31, ev)
         }
     }
 
-    fun calcSpecialDefense(megaType: Int): Int = calcSpecialDefense(specialDefenseEv, megaType)
+    fun calcSpecialDefense(megaType: Int): Int = calcSpecialDefense(31, megaType)
     fun calcSpecialDefense(ev: Int, megaType: Int): Int {
         return when (megaType) {
-            MegaPokemonMasterData.MEGA_X -> master.specialDefenseX(specialDefenseIv, ev)
-            MegaPokemonMasterData.MEGA_Y -> master.specialDefenseY(specialDefenseIv, ev)
-            else -> master.specialDefense(specialDefenseIv, ev)
+            MegaPokemonMasterData.MEGA_X -> master.specialDefenseX(31, ev)
+            MegaPokemonMasterData.MEGA_Y -> master.specialDefenseY(31, ev)
+            else -> master.specialDefense(31, ev)
         }
     }
 
-    fun calcSpeed(megaType: Int): Int = calcSpeed(speedEv, megaType)
+    fun calcSpeed(megaType: Int): Int = calcSpeed(31, megaType)
     fun calcSpeed(ev: Int, megaType: Int): Int {
         return when (megaType) {
-            MegaPokemonMasterData.MEGA_X -> master.speedX(speedIv, ev)
-            MegaPokemonMasterData.MEGA_Y -> master.speedY(speedIv, ev)
-            else -> master.speed(speedIv, ev)
+            MegaPokemonMasterData.MEGA_X -> master.speedX(31, ev)
+            MegaPokemonMasterData.MEGA_Y -> master.speedY(31, ev)
+            else -> master.speed(31, ev)
         }
     }
 
