@@ -91,11 +91,11 @@ class BattleCalculator(
         if (mine.skill.category == 2) return result else result.didAttack = true
         Log.e("myAttack", "${mine.skill.jname}(${mine.skill.category}):" + mine.name() + "(${mine.ability()}) vs " + opponent.name() + "(${opponent.ability()})")
 
-        opponent.defenseEffortValue = 252
-        opponent.specialDefenseEffortValue = 252
+        opponent.individualForUI.defenseEv = 252
+        opponent.individualForUI.specialDefenseEv = 252
         val d252 = doSkill(mine, opponent, field, mine.calcCriticalRate(), true, false)
 
-        opponent.hpEffortValue = 252
+        opponent.individualForUI.hpEv = 252
         //H=252, B(or D)=252の場合の確定数
         for ((key, value) in d252) result.updateDefeatTimes(opponent.defeatTimes(key), baseRate.times(value))
 
@@ -104,13 +104,13 @@ class BattleCalculator(
             return result
         }
 
-        opponent.defenseEffortValue = 0
-        opponent.specialDefenseEffortValue = 0
+        opponent.individualForUI.defenseEv = 0
+        opponent.individualForUI.specialDefenseEv = 0
         val d0 = doSkill(mine, opponent, field, mine.calcCriticalRate(), true, false)
         //H=252, B(or D)が0の場合の確定数
         for ((key, value) in d0) result.updateDefeatTimes(opponent.defeatTimes(key), baseRate.times(value))
 
-        opponent.hpEffortValue = 0
+        opponent.individualForUI.hpEv = 0
         //H=0, B(or D)が0の場合の確定数
         for ((key, value) in d0) result.updateDefeatTimes(opponent.defeatTimes(key), baseRate.times(value))
 
@@ -128,21 +128,25 @@ class BattleCalculator(
 
     fun oppoAttack(baseRate: Double, opponent: PokemonForBattle, mine: PokemonForBattle, field: BattleField): BattleResult {
         val result = BattleResult()
+        Log.v("oppoAttack", "${opponent.individualForUI.master.jname}(${opponent.attackRank},${opponent.defenseRank}," +
+                "${opponent.specialAttackRank},${opponent.specialDefenseRank},${opponent.speedRank})")
+        Log.v("oppoAttack", "${mine.individualForUI.master.jname}(${mine.attackRank},${mine.defenseRank}," +
+                "${mine.specialAttackRank},${mine.specialDefenseRank},${mine.speedRank})")
+
 
         for (skill in opponent.trend.skillList) {
             opponent.skill = skill.skill
 
             if (ZSkill.zCrystal(opponent.item)) {
                 if (ZSkill.satisfyZSkill(opponent.item, opponent.skill))
-                    Log.v("oppoAttack", "has ${opponent.item}, calc ${skill.skill.jname}(${skill.skill.power}")
+                //Log.v("oppoAttack", "has ${opponent.item}, calc ${skill.skill.jname}(${skill.skill.power})")
                 else
                     continue
             }
-            Log.v("oppoAttack", "${opponent.item}, ${opponent.ability}, ${opponent.characteristic}")
+            Log.v("oppoAttack", "${skill.skill.jname}(${opponent.item}, ${opponent.ability}, ${opponent.characteristic})")
 
-
-            opponent.attackEffortValue = 0
-            opponent.specialAttackEffortValue = 0
+            opponent.individualForUI.attackEv = 0
+            opponent.individualForUI.specialAttackEv = 0
             val d0 = doSkill(opponent, mine, field, mine.calcCriticalRate(), true, false)
             for ((damage, rate) in d0) result.updateDefeatedTimes(skill.skill.jname, damage, mine.defeatTimes(damage), baseRate.times(rate))
 
@@ -151,8 +155,8 @@ class BattleCalculator(
                 return result
             }
 
-            opponent.attackEffortValue = 252
-            opponent.specialAttackEffortValue = 252
+            opponent.individualForUI.attackEv = 252
+            opponent.individualForUI.specialAttackEv = 252
             val d252 = doSkill(opponent, mine, field, mine.calcCriticalRate(), true, false)
             for ((damage, rate) in d252) result.updateDefeatedTimes(skill.skill.jname, damage, mine.defeatTimes(damage), baseRate.times(rate))
         }
@@ -163,7 +167,7 @@ class BattleCalculator(
     fun doSkill(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField,
                 criticalRate: Double, first: Boolean, damaged: Boolean): MutableMap<Int, Double> {
         if (defenseSide.noEffect(attackSide.skill, attackSide, field)) {
-            Log.v("doSkill", "${attackSide.skill.jname} to ${defenseSide.individualForUI.master.jname} is no effect !")
+            //Log.v("doSkill", "${attackSide.skill.jname} to ${defenseSide.individualForUI.master.jname} is no effect !")
             return mutableMapOf(0 to 1.0)
         }
 
@@ -199,6 +203,10 @@ class BattleCalculator(
                 defenseRankCorrectionA = defenseSide.getSpecialDefenseRankCorrection(true)
                 defenseRankCorrectionB = defenseSide.getSpecialDefenseRankCorrection(false)
             }
+            2 -> {
+                Log.v("doSkill", "${attackSide.skill.jname} is support skill !")
+                return mutableMapOf(0 to 1.0)
+            }
         }
 
         val skillPower = calcSkillPower(attackSide, defenseSide, field, first, damaged)
@@ -228,8 +236,8 @@ class BattleCalculator(
 
         val damageCorrectionA = calcDamageCorrection(attackSide, defenseSide, field, true)
         val damageCorrectionB = calcDamageCorrection(attackSide, defenseSide, field, false)
-        //println("${attackSide.individual.master.jname}(${attackSide.skill.jname}), $attackValue, $attackValueCorrection, $defenseValue, $defenseValueCorrection, $attackRankCorrectionA, " +
-        //       "$defenseRankCorrectionA, $attackRankCorrectionB, $defenseRankCorrectionB, $damageCorrectionA, $damageCorrectionB, $criticalDamage, $damage, $criticalRate, $fieldCorrection, ${levelValue()} * $skillPower * $an / $dn")
+        println("${attackSide.individualForUI.master.jname}(${attackSide.skill.jname}), $attackValue, $attackValueCorrection, $defenseValue, $defenseValueCorrection, $attackRankCorrectionA, " +
+                "$defenseRankCorrectionA, $attackRankCorrectionB, $defenseRankCorrectionB, $damageCorrectionA, $damageCorrectionB, $criticalDamage, $damage, $criticalRate, $fieldCorrection, ${levelValue()} * $skillPower * $an / $dn")
 
         for ((i, value) in randomDamage.withIndex()) {
             var v = value
@@ -578,16 +586,6 @@ class BattleCalculator(
         }
 
         return initValue
-    }
-
-    fun simulateTurn(baseFirst: PokemonForBattle, baseSecond: PokemonForBattle, field: BattleField, h: Int, bd: Int): BattleResult {
-        val result = BattleResult()
-        baseSecond.defenseEffortValue = bd
-        baseSecond.specialDefenseEffortValue = bd
-        val damage = doSkill(baseFirst, baseSecond, field, true, false)
-        baseSecond.hpEffortValue = h
-        for ((key, value) in damage) result.updateDefeatTimes(baseSecond.defeatTimes(key), value)
-        return result
     }
 
     fun doSkill(attackSide: PokemonForBattle, defenseSide: PokemonForBattle, field: BattleField,

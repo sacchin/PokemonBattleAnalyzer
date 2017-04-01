@@ -19,18 +19,12 @@ class PokemonForBattle(
         var characteristic: String,
         var ability: String,
         var skill: SkillForUI,
-        var hpEffortValue: Int,
         var hpRatio: Int,
         var hpValue: Int,
-        var attackEffortValue: Int,
         var attackRank: Int,
-        var defenseEffortValue: Int,
         var defenseRank: Int,
-        var specialAttackEffortValue: Int,
         var specialAttackRank: Int,
-        var specialDefenseEffortValue: Int,
         var specialDefenseRank: Int,
-        var speedEffortValue: Int,
         var speedRank: Int,
         var hitProbabilityRank: Int,
         var avoidanceRank: Int,
@@ -50,8 +44,8 @@ class PokemonForBattle(
         fun opponent(pokemon: () -> IndividualPokemon): PokemonForBattle = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, pokemon.invoke())
 
         fun create(side: Int, individual: IndividualPokemon): PokemonForBattle {
-            return PokemonForBattle(side, UNKNOWN, individual.item, false, individual.characteristic, individual.ability, SkillForUI(), 0, 100, 0,
-                    0, Rank.no(Value.DEFAULT), 0, Rank.no(Value.DEFAULT), 0, Rank.no(Value.DEFAULT), 0, Rank.no(Value.DEFAULT), 0, Rank.no(Value.DEFAULT),
+            return PokemonForBattle(side, UNKNOWN, individual.item, false, individual.characteristic, individual.ability, SkillForUI(), 100, individual.hp,
+                    Rank.no(Value.DEFAULT), Rank.no(Value.DEFAULT), Rank.no(Value.DEFAULT), Rank.no(Value.DEFAULT), Rank.no(Value.DEFAULT),
                     Rank.no(Value.DEFAULT), Rank.no(Value.DEFAULT), Rank.no(Value.DEFAULT), false, MegaPokemonMasterData.NOT_MEGA, individual)
         }
     }
@@ -132,14 +126,14 @@ class PokemonForBattle(
     fun hpValue(): Int {
         when (side) {
             PartyInBattle.MY_SIDE -> return hpValue
-            PartyInBattle.OPPONENT_SIDE -> return individualForUI.calcHp(hpEffortValue, mega).times(hpRatio).div(100.0).toInt()
+            PartyInBattle.OPPONENT_SIDE -> return individualForUI.calcHp(individualForUI.hpEv, mega).times(hpRatio).div(100.0).toInt()
         }
         return 0
     }
 
     fun hpRatio(): Int {
         when (side) {
-            PartyInBattle.MY_SIDE -> return hpValue.times(100.0).div(individualForUI.calcHp(hpEffortValue, mega)).toInt()
+            PartyInBattle.MY_SIDE -> return hpValue.times(100.0).div(individualForUI.calcHp(individualForUI.hpEv, mega)).toInt()
             PartyInBattle.OPPONENT_SIDE -> return hpRatio
         }
         return 0
@@ -337,7 +331,7 @@ class PokemonForBattle(
         val a = if (side == PartyInBattle.MY_SIDE) {
             individualForUI.attack
         } else {
-            individualForUI.calcAttack(attackEffortValue, mega)
+            individualForUI.calcAttack(individualForUI.attackEv, mega)
         }
         return Math.floor(a.times(Characteristic.correction(characteristic, "A")))
     }
@@ -364,7 +358,7 @@ class PokemonForBattle(
         val d = if (side == PartyInBattle.MY_SIDE) {
             individualForUI.defense
         } else {
-            individualForUI.calcDefense(defenseEffortValue, mega)
+            individualForUI.calcDefense(individualForUI.defenseEv, mega)
         }
         return Math.floor(d.times(Characteristic.correction(characteristic, "B")))
     }
@@ -411,7 +405,7 @@ class PokemonForBattle(
         val sa = if (side == PartyInBattle.MY_SIDE) {
             individualForUI.specialAttack
         } else {
-            individualForUI.calcSpecialAttack(specialAttackEffortValue, mega)
+            individualForUI.calcSpecialAttack(individualForUI.specialAttackEv, mega)
         }
         return Math.floor(sa.times(Characteristic.correction(characteristic, "C")))
     }
@@ -438,7 +432,7 @@ class PokemonForBattle(
         val sd = if (side == PartyInBattle.MY_SIDE) {
             individualForUI.specialDefense
         } else {
-            individualForUI.calcSpecialDefense(specialDefenseEffortValue, mega)
+            individualForUI.calcSpecialDefense(individualForUI.specialDefenseEv, mega)
         }
         return Math.floor(sd.times(Characteristic.correction(characteristic, "D")))
     }
@@ -649,7 +643,7 @@ class PokemonForBattle(
 
         var hp = hpValue
         if (side == PartyInBattle.OPPONENT_SIDE) {
-            hp = individualForUI.calcHp(hpEffortValue, mega).times(hpRatio()).div(100.0).toInt()
+            hp = individualForUI.calcHp(individualForUI.hpEv, mega).times(hpRatio()).div(100.0).toInt()
         }
         //println("${hp} - ${damage}"
         return if (hp < damage) {

@@ -17,12 +17,6 @@ class BattleResult {
 
     val prioritySkills = mutableMapOf<String, Double>()
 
-    var speedOccur = mutableMapOf(
-            0 to 0.0, 1 to 0.0, 2 to 0.0, 3 to 0.0,
-            4 to 0.0, 5 to 0.0, 6 to 0.0, 7 to 0.0,
-            8 to 0.0, 9 to 0.0, 10 to 0.0, 11 to 0.0
-    )
-
     val correctionRate = arrayOf(0.0, 0.0, 0.0)
 
     var scarfRate = 0.0
@@ -65,15 +59,14 @@ class BattleResult {
     }
 
     fun blow(baseRate: Double): Boolean {
-        return if (Math.abs(defeatTimes[1]!!.minus(baseRate)) < 0.001) true else false
+        return Math.abs(defeatTimes[1]!!.minus(baseRate)) < 0.001
     }
 
     fun little(): Boolean {
-        return if (Math.abs(defeatTimes[1]!!.minus(0)) < 0.001 &&
+        return Math.abs(defeatTimes[1]!!.minus(0)) < 0.001 &&
                 Math.abs(defeatTimes[2]!!.minus(0)) < 0.001 &&
                 Math.abs(defeatTimes[3]!!.minus(0)) < 0.001 &&
-                Math.abs(defeatTimes[4]!!.minus(0)) < 0.001)
-            true else false
+                Math.abs(defeatTimes[4]!!.minus(0)) < 0.001
     }
 
     fun coverRate(): String {
@@ -96,12 +89,6 @@ class BattleResult {
             temp.addAll(sufferDamage)
             defeatedTimes[skillName] = temp
         }
-
-        for (key in speedOccur.keys) {
-            speedOccur[key] = speedOccur[key]!!.plus(newOne.speedOccur[key]!!)
-        }
-
-        prioritySkills.putAll(newOne.prioritySkills)
     }
 
     fun orderRate(opponent: PokemonForBattle, rate: Double) {

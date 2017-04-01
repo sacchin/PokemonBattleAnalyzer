@@ -22,6 +22,12 @@ open class IndividualPokemon(
         open var specialAttack: Int = 0,
         open var specialDefense: Int = 0,
         open var speed: Int = 0,
+        open var hpEv: Int = 0,
+        open var attackEv: Int = 0,
+        open var defenseEv: Int = 0,
+        open var specialAttackEv: Int = 0,
+        open var specialDefenseEv: Int = 0,
+        open var speedEv: Int = 0,
         open var master: PokemonMasterData = PokemonMasterData()
 ) : RealmObject() {
 
@@ -31,14 +37,15 @@ open class IndividualPokemon(
 
         fun create(id: Long, master: PokemonMasterData): IndividualPokemon {
             return IndividualPokemon(id, 0, UNSPECIFIED, UNSPECIFIED, UNSPECIFIED,
-                    Skill(), Skill(), Skill(), Skill(), 0, 0, 0, 0, 0, 0, master)
+                    Skill(), Skill(), Skill(), Skill(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, master)
         }
     }
 
     fun uiObject(): IndividualPokemonForUI {
         return IndividualPokemonForUI(id, status, item, characteristic, ability,
                 skillNo1.uiObject(), skillNo2.uiObject(), skillNo3.uiObject(), skillNo4.uiObject(),
-                hp, attack, defense, specialAttack, specialDefense, speed, master.uiObject())
+                hp, attack, defense, specialAttack, specialDefense, speed,
+                hpEv, attackEv, defenseEv, specialAttackEv, specialDefenseEv, speedEv, master.uiObject())
     }
 
     val abilities: List<String>

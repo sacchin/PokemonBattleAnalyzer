@@ -60,8 +60,8 @@ class ExpectedActivity : PGLActivity() {
         fun summary(list: MutableList<BattleResult.SufferDamage>): String {
             if (list.sumBy { it -> it.time } == 0) return "効果なし"
 
-            list.forEach {
-                Log.v("summary", "${it.damage}, ${it.time}, ${it.rate}")
+            list.groupBy { it -> "${it.time}確" }.forEach {
+                Log.v("summary", "${it.key}, ${it.value.sumByDouble { it.rate }}")
             }
 
 //            var result = "re: "

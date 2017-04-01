@@ -1,8 +1,10 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity.ui
 
+import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Ability
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.MegaPokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Characteristic
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Type
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.MegaPokemonMasterData
 import java.util.*
 
 open class IndividualPokemonForUI(
@@ -21,6 +23,12 @@ open class IndividualPokemonForUI(
         open var specialAttack: Int = 0,
         open var specialDefense: Int = 0,
         open var speed: Int = 0,
+        open var hpEv: Int = 0,
+        open var attackEv: Int = 0,
+        open var defenseEv: Int = 0,
+        open var specialAttackEv: Int = 0,
+        open var specialDefenseEv: Int = 0,
+        open var speedEv: Int = 0,
         open var master: PokemonMasterDataForUI = PokemonMasterDataForUI()
 ) {
 
@@ -30,7 +38,7 @@ open class IndividualPokemonForUI(
 
         fun create(id: Long, master: PokemonMasterDataForUI): IndividualPokemonForUI {
             return IndividualPokemonForUI(id, 0, UNSPECIFIED, UNSPECIFIED, UNSPECIFIED,
-                    SkillForUI(), SkillForUI(), SkillForUI(), SkillForUI(), 0, 0, 0, 0, 0, 0, master)
+                    SkillForUI(), SkillForUI(), SkillForUI(), SkillForUI(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, master)
         }
     }
 
@@ -162,5 +170,39 @@ open class IndividualPokemonForUI(
             MegaPokemonMasterData.MEGA_Y -> Pair(master.megay!!.type1, master.megay!!.type2)
             else -> Pair(master.type1, master.type2)
         }
+    }
+
+    fun iv(at: String): Int {
+        val cor = Characteristic.correction(characteristic, at)
+
+        Array<Int>(32, { 31 - it }).forEach {
+            when (at) {
+                "H" -> {
+                    Log.v(at, "$hp == ${master.hpFormula(master.h, it, hpEv)}.times($cor).toInt()) return $it")
+                    if (hp == master.hpFormula(master.h, it, hpEv).times(cor).toInt()) return it
+                }
+                "A" -> {
+                    Log.v(at, "$attack == ${master.otherFormula(master.a, it, attackEv)}.times($cor).toInt()) return $it")
+                    if (attack == master.otherFormula(master.a, it, attackEv).times(cor).toInt()) return it
+                }
+                "B" -> {
+                    Log.v(at, "if ($defense == ${master.otherFormula(master.b, it, defenseEv)}.times($cor).toInt()) return $it")
+                    if (defense == master.otherFormula(master.b, it, defenseEv).times(cor).toInt()) return it
+                }
+                "C" -> {
+                    Log.v(at, "if ($specialAttack == ${master.otherFormula(master.c, it, specialAttackEv)}.times($cor).toInt()) return $it")
+                    if (specialAttack == master.otherFormula(master.c, it, specialAttackEv).times(cor).toInt()) return it
+                }
+                "D" -> {
+                    Log.v(at, "if ($specialDefense == ${master.otherFormula(master.d, it, specialDefenseEv)}.times($cor).toInt()) return $it")
+                    if (specialDefense == master.otherFormula(master.d, it, specialDefenseEv).times(cor).toInt()) return it
+                }
+                "S" -> {
+                    Log.v(at, "if ($speed == ${master.otherFormula(master.s, it, speedEv)}.times($cor).toInt()) return $it")
+                    if (speed == master.otherFormula(master.s, it, speedEv).times(cor).toInt()) return it
+                }
+            }
+        }
+        return 0
     }
 }
