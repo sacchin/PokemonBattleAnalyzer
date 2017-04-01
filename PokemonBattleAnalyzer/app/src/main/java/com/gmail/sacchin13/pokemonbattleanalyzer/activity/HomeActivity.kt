@@ -16,9 +16,9 @@ import android.widget.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
 import com.gmail.sacchin13.pokemonbattleanalyzer.GridAdapter
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
-import com.gmail.sacchin13.pokemonbattleanalyzer.Util
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Party
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.insert.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
@@ -31,6 +31,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     val AFFINITY_ACTIVITY_CODE = 1
     val EDIT_ACTIVITY_CODE = 2
     val GRAPH_ACTIVITY_CODE = 3
+    val KP_ACTIVITY_CODE = 4
 
     var serviceStatePreferences: SharedPreferences by Delegates.notNull()
 
@@ -63,23 +64,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         serviceStatePreferences = getSharedPreferences("pokemon", MODE_PRIVATE)
 
         databaseHelper = DatabaseHelper(this)
-        firstLaunch();
+        firstLaunch()
 
         party = Party(System.currentTimeMillis(), "opponent", "opponent")
-
-//        val createMyParty = Button(getActivity())
-//        createMyParty.text = "My Party"
-//        createMyParty.textSize = 10f
-//        createMyParty.setOnClickListener(OnClickCreateNewPartyButton(this, true))
-//
-//        val showAffinity = Button(getActivity())
-//        showAffinity.text = "Show Affinity Complete"
-//        showAffinity.textSize = 10f
-//        showAffinity.setOnClickListener(OnClickCheckAffinityButton(this))
-//
-//        rootView.findViewById(R.id.button).addView(createMyParty)
-//        rootView.findViewById(R.id.button).addView(showAffinity)
-
     }
 
     override fun onBackPressed() {
@@ -95,7 +82,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Snackbar.make(partyLayout, "OK", Snackbar.LENGTH_SHORT).show()
             } else {
-                Snackbar.make(partyLayout, "NG。", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(partyLayout, "NG", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -111,6 +98,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             party.clear()
             partyLayout.removeAllViews()
             party.userName = "none"
+        } else if (id == R.id.nav_showkp) {
+            startKpActivity()
         } else if (id == R.id.nav_graph) {
             startGraphActivity()
         }
@@ -156,6 +145,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         startActivityForResult(intent, GRAPH_ACTIVITY_CODE)
     }
 
+    fun startKpActivity() {
+        val intent = Intent(this, KpActivity().javaClass)
+        startActivityForResult(intent, KP_ACTIVITY_CODE)
+    }
+
     fun startSelectActivity() {
         val intent = Intent(this, SelectActivity().javaClass)
         intent.putExtra("member1", party.member[0].no)
@@ -195,34 +189,15 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         gridView.adapter = adapter
     }
 
-//    fun createFrameLayout(p: PBAPokemon, countMap: Map<String, Int>): FrameLayout {
-//        val fl = FrameLayout(this)
-//        fl.setOnClickListener(OnClickFromList(this, p))
-//
-//        val pokemonImage = Util.createImage(p, 200f, resources)
-//        val pokemonView = ImageView(this)
-//        pokemonView.setImageBitmap(pokemonImage)
-//        fl.addView(pokemonView)
-//
-//        val tv = TextView(this)
-//        val c = countMap[p.rowId.toString()]
-//        if (c != null) {
-//            tv.text = c.toString()
-//        } else {
-//            tv.text = "0"
-//        }
-//        fl.addView(tv)
-//        return fl
-//    }
-
     fun removePokemonFromList(pokemon: PokemonMasterData) {
         //throw UnsupportedOperationException()
     }
 
     fun addPokemonToList(pokemon: PokemonMasterData, image: Bitmap) {
         val index = party.addMember(pokemon)
-        if (index == -1) Snackbar.make(partyLayout, "すでに6体選択しています。", Snackbar.LENGTH_SHORT).show()
-        else {
+        if (index == -1) {
+            Snackbar.make(partyLayout, "すでに6体選択しています。", Snackbar.LENGTH_SHORT).show()
+        } else {
             val localView = ImageView(this)
             localView.setImageBitmap(image)
             localView.setOnClickListener{ removePokemonFromList(pokemon) }

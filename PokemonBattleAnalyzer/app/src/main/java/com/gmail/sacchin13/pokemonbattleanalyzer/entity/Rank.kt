@@ -8,7 +8,11 @@ object Rank {
     enum class Code {
         A, A2, A12, mA, mA2, B, B2, B3, mB, mB2, C, C2, C3, mC, mC2, D, D2, mD, mD2, S, S2, mS, mS2, mP, V, V2, mV, mV2,
         T, AB, mAmB, AC, mAmC, mA2mC2, AD, AS, AS2, AP, mAmCmS, BC, BD, mBmD, mBmDmS, CD, CS, ABP, ABD,
-        ABmS, CDS, C2D2S2, ABCDS, A2mBC2mDS2, UNKNOWN
+        ABmS, CDS, C2D2S2, ABCDS, A2mBC2mDS2, RESET, P, BG, T2, A2B2C2D2S2, UNKNOWN
+    }
+
+    enum class Value {
+        P1, P2, P3, P4, P5, P6, N1, N2, N3, N4, N5, N6, DEFAULT, UNKNOWN
     }
 
     var RANK_TABLE = mapOf<Code, Array<Int>>(
@@ -34,7 +38,7 @@ object Rank {
             Code.S to arrayOf(0, 0, 0, 0, 1, 0, 0, 0),
             Code.S2 to arrayOf(0, 0, 0, 0, 2, 0, 0, 0),
             Code.mS2 to arrayOf(0, 0, 0, 0, -2, 0, 0, 0),
-            Code.mP to arrayOf(0, 0, 0, 0, 0, 0, -1, 0),
+            Code.mP to arrayOf(0, 0, 0, 0, 0, -1, 0, 0),
             Code.V to arrayOf(0, 0, 0, 0, 0, 0, 1, 0),
             Code.V2 to arrayOf(0, 0, 0, 0, 0, 0, 2, 0),
             Code.mV to arrayOf(0, 0, 0, 0, 0, 0, -1, 0),
@@ -58,187 +62,240 @@ object Rank {
             Code.mAmCmS to arrayOf(-1, 0, -1, 0, -1, 0, 0, 0),
             Code.mBmDmS to arrayOf(0, -1, 0, -1, -1, 0, 0, 0),
             Code.A2mBC2mDS2 to arrayOf(2, -1, 2, -1, 2, 0, 0, 0),
+            Code.RESET to arrayOf(0, 0, 0, 0, 0, 0, 0, 0),
+            Code.P to arrayOf(0, 0, 0, 0, 0, 1, 0, 0),
+            Code.BG to arrayOf(0, 1, 0, 0, 0, 0, 0, 0),
+            Code.T to arrayOf(0, 1, 0, 0, 0, 0, 0, 1),
+            Code.T2 to arrayOf(0, 1, 0, 0, 0, 0, 0, 2),
+            Code.A2B2C2D2S2 to arrayOf(2, 2, 2, 2, 2, 0, 0, 0),
             Code.UNKNOWN to arrayOf(0, 0, 0, 0, 0, 0, 0, 0)
     )
 
     fun name(type: Code): String {
-        when (type) {
-            Code.A -> return "A"
-            Code.A2 -> return "A2"
-            Code.A12 -> return "A12"
-            Code.mA -> return "mA"
-            Code.mA2 -> return "mA2"
-            Code.B -> return "B"
-            Code.B2 -> return "B2"
-            Code.B3 -> return "B3"
-            Code.mB -> return "mB"
-            Code.mB2 -> return "mB2"
-            Code.C -> return "C"
-            Code.C2 -> return "C2"
-            Code.C3 -> return "C3"
-            Code.mC -> return "mC"
-            Code.mC2 -> return "mC2"
-            Code.D -> return "D"
-            Code.D2 -> return "D2"
-            Code.mD -> return "mD"
-            Code.mD2 -> return "mD2"
-            Code.S -> return "S"
-            Code.S2 -> return "S2"
-            Code.mS -> return "mS"
-            Code.mS2 -> return "mS2"
-            Code.mP -> return "A"
-            Code.V -> return "A"
-            Code.V2 -> return "A"
-            Code.mV -> return "A"
-            Code.mV2 -> return "A"
-            Code.T -> return "A"
-            Code.AB -> return "A"
-            Code.mAmB -> return "A"
-            Code.AC -> return "A"
-            Code.mAmC -> return "A"
-            Code.mA2mC2 -> return "A"
-            Code.AD -> return "A"
-            Code.AS -> return "A"
-            Code.AS2 -> return "A"
-            Code.AP -> return "A"
-            Code.mAmCmS -> return "A"
-            Code.BC -> return "A"
-            Code.BD -> return "A"
-            Code.mBmD -> return "A"
-            Code.mBmDmS -> return "A"
-            Code.CD -> return "A"
-            Code.CS -> return "A"
-            Code.ABP -> return "A"
-            Code.ABD -> return "A"
-            Code.ABmS -> return "A"
-            Code.CDS -> return "A"
-            Code.C2D2S2 -> return "A"
-            Code.ABCDS -> return "A"
-            Code.A2mBC2mDS2 -> return "A"
-            else -> return "UNKNOWN"
+        return when (type) {
+            Code.A -> "A↑"
+            Code.A2 -> "A2↑"
+            Code.A12 -> "A"
+            Code.mA -> "A↓"
+            Code.mA2 -> "A2↓"
+            Code.B -> "B↑"
+            Code.B2 -> "B2↑"
+            Code.B3 -> "B3↑"
+            Code.mB -> "B↓"
+            Code.mB2 -> "B2↓"
+            Code.C -> "C↑"
+            Code.C2 -> "C2↑"
+            Code.C3 -> "C3↑"
+            Code.mC -> "↓C"
+            Code.mC2 -> "C2↓"
+            Code.D -> "D↑"
+            Code.D2 -> "D2↑"
+            Code.mD -> "↓D"
+            Code.mD2 -> "D2↓"
+            Code.S -> "S↑"
+            Code.S2 -> "S2↑"
+            Code.mS -> "S↓"
+            Code.mS2 -> "S2↓"
+            Code.mP -> "P↓"
+            Code.V -> "V↑"
+            Code.V2 -> "V2↑"
+            Code.mV -> "V↓"
+            Code.mV2 -> "V2↓"
+            Code.T -> "T↑"
+            Code.AB -> "(AB)↑"
+            Code.mAmB -> "(AB)↓"
+            Code.AC -> "(AC)↑"
+            Code.mAmC -> "(AC)↓"
+            Code.mA2mC2 -> "(AC)2↓"
+            Code.AD -> "(AD)↑"
+            Code.AS -> "(AS)↑"
+            Code.AS2 -> "A↑S2↑"
+            Code.AP -> "(AP)↑"
+            Code.mAmCmS -> "(ACS)↓"
+            Code.BC -> "(BC)↑"
+            Code.BD -> "(BD)↑"
+            Code.mBmD -> "(BD)↓"
+            Code.mBmDmS -> "(BDS)↓"
+            Code.CD -> "(CD)↑"
+            Code.CS -> "(CS)↑"
+            Code.ABP -> "(ABP)↑"
+            Code.ABD -> "(ABD)↑"
+            Code.ABmS -> "(AB)↑S↓"
+            Code.CDS -> "(CDS)↑"
+            Code.C2D2S2 -> "(CDS)2↑"
+            Code.ABCDS -> "(ABCDS)↑"
+            Code.A2mBC2mDS2 -> "(ACS)2↑(BD)↓"
+            Code.RESET -> "RESET"
+            Code.P -> "P↑"
+            Code.BG -> "B↑"
+            Code.T2 -> "T2↑"
+            Code.A2B2C2D2S2 -> "(ABCDS)2↑"
+            else -> "UNKNOWN"
         }
     }
 
     fun no(type: Code): Int {
-        when (type) {
-            Code.A -> return 0
-            Code.A2 -> return 1
-            Code.A12 -> return 2
-            Code.mA -> return 3
-            Code.mA2 -> return 4
-            Code.B -> return 5
-            Code.B2 -> return 6
-            Code.B3 -> return 7
-            Code.mB -> return 8
-            Code.mB2 -> return 9
-            Code.C -> return 10
-            Code.C2 -> return 11
-            Code.C3 -> return 12
-            Code.mC -> return 13
-            Code.mC2 -> return 14
-            Code.D -> return 15
-            Code.D2 -> return 16
-            Code.mD -> return 17
-            Code.mD2 -> return 18
-            Code.S -> return 19
-            Code.S2 -> return 20
-            Code.mS -> return 21
-            Code.mS2 -> return 22
-            Code.mP -> return 23
-            Code.V -> return 24
-            Code.V2 -> return 25
-            Code.mV -> return 26
-            Code.mV2 -> return 27
-            Code.T -> return 28
-            Code.AB -> return 29
-            Code.mAmB -> return 30
-            Code.AC -> return 31
-            Code.mAmC -> return 32
-            Code.mA2mC2 -> return 33
-            Code.AD -> return 34
-            Code.AS -> return 35
-            Code.AS2 -> return 36
-            Code.AP -> return 37
-            Code.mAmCmS -> return 38
-            Code.BC -> return 39
-            Code.BD -> return 40
-            Code.mBmD -> return 41
-            Code.mBmDmS -> return 42
-            Code.CD -> return 43
-            Code.CS -> return 44
-            Code.ABP -> return 45
-            Code.ABD -> return 46
-            Code.ABmS -> return 47
-            Code.CDS -> return 48
-            Code.C2D2S2 -> return 49
-            Code.ABCDS -> return 50
-            Code.A2mBC2mDS2 -> return 51
-            else -> return -1
+        return when (type) {
+            Code.A -> 0
+            Code.A2 -> 1
+            Code.A12 -> 2
+            Code.mA -> 3
+            Code.mA2 -> 4
+            Code.B -> 5
+            Code.B2 -> 6
+            Code.B3 -> 7
+            Code.mB -> 8
+            Code.mB2 -> 9
+            Code.C -> 10
+            Code.C2 -> 11
+            Code.C3 -> 12
+            Code.mC -> 13
+            Code.mC2 -> 14
+            Code.D -> 15
+            Code.D2 -> 16
+            Code.mD -> 17
+            Code.mD2 -> 18
+            Code.S -> 19
+            Code.S2 -> 20
+            Code.mS -> 21
+            Code.mS2 -> 22
+            Code.mP -> 23
+            Code.V -> 24
+            Code.V2 -> 25
+            Code.mV -> 26
+            Code.mV2 -> 27
+            Code.T -> 28
+            Code.AB -> 29
+            Code.mAmB -> 30
+            Code.AC -> 31
+            Code.mAmC -> 32
+            Code.mA2mC2 -> 33
+            Code.AD -> 34
+            Code.AS -> 35
+            Code.AS2 -> 36
+            Code.AP -> 37
+            Code.mAmCmS -> 38
+            Code.BC -> 39
+            Code.BD -> 40
+            Code.mBmD -> 41
+            Code.mBmDmS -> 42
+            Code.CD -> 43
+            Code.CS -> 44
+            Code.ABP -> 45
+            Code.ABD -> 46
+            Code.ABmS -> 47
+            Code.CDS -> 48
+            Code.C2D2S2 -> 49
+            Code.ABCDS -> 50
+            Code.A2mBC2mDS2 -> 51
+            Code.RESET -> 52
+            Code.P -> 53
+            Code.BG -> 54
+            Code.T2 -> 55
+            Code.A2B2C2D2S2 -> 56
+            else -> -1
         }
     }
 
     fun code(type: Int): Code {
-        when (type) {
-            0 -> return Code.A
-            1 -> return Code.A2
-            2 -> return Code.A12
-            3 -> return Code.mA
-            4 -> return Code.mA2
-            5 -> return Code.B
-            6 -> return Code.B2
-            7 -> return Code.B3
-            8 -> return Code.mB
-            9 -> return Code.mB2
-            10 -> return Code.C
-            11 -> return Code.C2
-            12 -> return Code.C3
-            13 -> return Code.mC
-            14 -> return Code.mC2
-            15 -> return Code.D
-            16 -> return Code.D2
-            17 -> return Code.mD
-            18 -> return Code.mD2
-            19 -> return Code.S
-            20 -> return Code.S2
-            21 -> return Code.mS
-            22 -> return Code.mS2
-            23 -> return Code.mP
-            24 -> return Code.V
-            25 -> return Code.V2
-            26 -> return Code.mV
-            27 -> return Code.mV2
-            28 -> return Code.T
-            29 -> return Code.AB
-            30 -> return Code.mAmB
-            31 -> return Code.AC
-            32 -> return Code.mAmC
-            33 -> return Code.mA2mC2
-            34 -> return Code.AD
-            35 -> return Code.AS
-            36 -> return Code.AS2
-            37 -> return Code.AP
-            38 -> return Code.mAmCmS
-            39 -> return Code.BC
-            40 -> return Code.BD
-            41 -> return Code.mBmD
-            42 -> return Code.mBmDmS
-            43 -> return Code.CD
-            44 -> return Code.CS
-            45 -> return Code.ABP
-            46 -> return Code.ABD
-            47 -> return Code.ABmS
-            48 -> return Code.CDS
-            49 -> return Code.C2D2S2
-            50 -> return Code.ABCDS
-            51 -> return Code.A2mBC2mDS2
-            else -> return Code.UNKNOWN
+        return when (type) {
+            0 -> Code.A
+            1 -> Code.A2
+            2 -> Code.A12
+            3 -> Code.mA
+            4 -> Code.mA2
+            5 -> Code.B
+            6 -> Code.B2
+            7 -> Code.B3
+            8 -> Code.mB
+            9 -> Code.mB2
+            10 -> Code.C
+            11 -> Code.C2
+            12 -> Code.C3
+            13 -> Code.mC
+            14 -> Code.mC2
+            15 -> Code.D
+            16 -> Code.D2
+            17 -> Code.mD
+            18 -> Code.mD2
+            19 -> Code.S
+            20 -> Code.S2
+            21 -> Code.mS
+            22 -> Code.mS2
+            23 -> Code.mP
+            24 -> Code.V
+            25 -> Code.V2
+            26 -> Code.mV
+            27 -> Code.mV2
+            28 -> Code.T
+            29 -> Code.AB
+            30 -> Code.mAmB
+            31 -> Code.AC
+            32 -> Code.mAmC
+            33 -> Code.mA2mC2
+            34 -> Code.AD
+            35 -> Code.AS
+            36 -> Code.AS2
+            37 -> Code.AP
+            38 -> Code.mAmCmS
+            39 -> Code.BC
+            40 -> Code.BD
+            41 -> Code.mBmD
+            42 -> Code.mBmDmS
+            43 -> Code.CD
+            44 -> Code.CS
+            45 -> Code.ABP
+            46 -> Code.ABD
+            47 -> Code.ABmS
+            48 -> Code.CDS
+            49 -> Code.C2D2S2
+            50 -> Code.ABCDS
+            51 -> Code.A2mBC2mDS2
+            52 -> Code.RESET
+            53 -> Code.P
+            54 -> Code.BG
+            55 -> Code.T2
+            56 -> Code.A2B2C2D2S2
+            else -> Code.UNKNOWN
         }
     }
-//
-//    fun values(): Array<Code> {
-//        return Code.values()
-//    }
-//
+
+    fun no(value: Value): Int {
+        return when (value) {
+            Value.P1 -> 1
+            Value.P2 -> 2
+            Value.P3 -> 3
+            Value.P4 -> 4
+            Value.P5 -> 5
+            Value.P6 -> 6
+            Value.N1 -> -1
+            Value.N2 -> -2
+            Value.N3 -> -3
+            Value.N4 -> -4
+            Value.N5 -> -5
+            Value.N6 -> -6
+            else -> 0
+        }
+    }
+
+    fun value(no: Int): Value {
+        return when (no) {
+            1 -> Value.P1
+            2 -> Value.P2
+            3 -> Value.P3
+            4 -> Value.P4
+            5 -> Value.P5
+            6 -> Value.P6
+            -1 -> Value.N1
+            -2 -> Value.N2
+            -3 -> Value.N3
+            -4 -> Value.N4
+            -5 -> Value.N5
+            -6 -> Value.N6
+            else -> Value.UNKNOWN
+        }
+    }
+
 //    fun calculateAffinity(attackType: Code, p: PokemonMasterData): Double {
 //        if (attackType.equals(Type.Code.UNKNOWN)) return -1.0
 //

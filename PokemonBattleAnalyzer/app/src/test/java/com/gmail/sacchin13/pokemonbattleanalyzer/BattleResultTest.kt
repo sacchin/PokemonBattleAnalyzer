@@ -4,6 +4,10 @@ import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingPokemonSkill
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.IndividualPokemon
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Skill
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.ui.SkillForUI
 import com.squareup.moshi.Moshi
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -84,12 +88,13 @@ class BattleResultTest {
         for (temp in rankingResponse1.rankingPokemonTrend.wazaInfo) {
             if (database.contains(temp.name)) skills1.add(RankingPokemonSkill.create(temp, database[temp.name] as Skill))
         }
-        garura = PokemonForBattle.create(PartyInBattle.MY_SIDE, IndividualPBAPokemon(
+        garura = PokemonForBattle.create(PartyInBattle.MY_SIDE, IndividualPokemon(
                 0, -1, "ガルーラナイト", "いじっぱり", "せいしんりょく",
                 database["ねこだまし"] as Skill, database["いわなだれ"] as Skill, database["みがわり"] as Skill, database["アイアンヘッド"] as Skill,
-                212, 150, 137, 40, 80, 150, PokemonMasterData("115", "ガルーラ", "Kangaskhan", "-", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
-        garura.skill = database["おんがえし"] as Skill
-        garura.skill.power = 200
+                252, 252, 0, 0, 0, 4, //31, 31, 31, 31, 31, 31,
+                PokemonMasterData("115", "ガルーラ", "Kangaskhan", "-", 105, 95, 80, 40, 80, 90, "はやおき", "きもったま", "せいしんりょく", 0, -1, 80.0f)))
+        garura.skill = database["おんがえし"]?.uiObject() ?: SkillForUI()
+        //garura.skill.power = 200
         garura.hpValue = 212
         garura.trend = TrendForBattle.create(rankingResponse1.rankingPokemonTrend)
         garura.trend.skillList = skills1
@@ -105,12 +110,13 @@ class BattleResultTest {
         for (temp in rankingResponse2.rankingPokemonTrend.wazaInfo) {
             if (database.contains(temp.name)) skills2.add(RankingPokemonSkill.create(temp, database[temp.name] as Skill))
         }
-        fireallow = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, IndividualPBAPokemon(
+        fireallow = PokemonForBattle.create(PartyInBattle.OPPONENT_SIDE, IndividualPokemon(
                 0, -1, "ゴツゴツメット", "ずぶとい", "はやてのつばさ",
                 database["はねやすめ"] as Skill, database["おにび"] as Skill, database["みがわり"] as Skill, database["ブレイブバード"] as Skill,
-                0, 0, 0, 0, 0, 0, PokemonMasterData("663", "ファイアロー", "Talonflame", "-", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
+                252, 252, 0, 0, 0, 4, //31, 31, 31, 31, 31, 31,
+                PokemonMasterData("663", "ファイアロー", "Talonflame", "-", 78, 81, 71, 74, 69, 126, "ほのおのからだ", "-", "はやてのつばさ", 1, 9, 24.5f)))
         fireallow.hpRatio = 100
-        fireallow.skill = database["ブレイブバード"] as Skill
+        fireallow.skill = database["ブレイブバード"]?.uiObject() ?: SkillForUI()
         fireallow.trend = TrendForBattle.create(rankingResponse2.rankingPokemonTrend)
         fireallow.trend.skillList = skills2
 
@@ -177,11 +183,11 @@ class BattleResultTest {
 
 //    @Test
 //    fun タイプ別強化アイテムと先攻後攻のテスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon())
 //        attackSide.item = "くろいメガネ"
 //        attackSide.skill = Skill(197, "しっぺがえし", "", 15, 50, 1.0, 0, 10, 0, true, true)
 //
-//        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon())
 //        val field = BattleField()
 //
 //        val result = BattleCalculator.companion.calcSkillPower(attackSide, defenseSide, field, false, false)
@@ -190,11 +196,11 @@ class BattleResultTest {
 //
 //    @Test
 //    fun タイプ半減特性と非ダメージによる威力上昇技のテスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon())
 //        attackSide.item = "ものしりメガネ"
 //        attackSide.skill = Skill(575, "ゆきなだれ", "", 5, 60, 1.0, 0, 10, 0, true, true)
 //
-//        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon())
 //        defenseSide.ability = "あついしぼう"
 //
 //        val field = BattleField()
@@ -205,12 +211,12 @@ class BattleResultTest {
 //
 //    @Test
 //    fun 物理特殊依存アイテムとテクニシャンのテスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon())
 //        attackSide.item = "ちからのハチマキ"
 //        attackSide.ability = "テクニシャン"
 //        attackSide.skill = Skill(553, "マッハパンチ", "", 6, 40, 1.0, 0, 30, 0, true, true)
 //
-//        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon())
 //
 //        val field = BattleField()
 //
@@ -220,12 +226,12 @@ class BattleResultTest {
 //
 //    @Test
 //    fun HP依存技と非ダメージ側の特性のテスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon())
 //        attackSide.ability = "もうか"
 //        attackSide.hpRatio = 29
 //        attackSide.skill = Skill(494, "ブラストバーン", "", 1, 150, 0.9, 1, 5, 0, false, true)
 //
-//        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon())
 //        defenseSide.ability = "かんそうはだ"
 //
 //        val field = BattleField()
@@ -236,11 +242,11 @@ class BattleResultTest {
 //
 //    @Test
 //    fun HP依存技ふんかの正常系テスト() {
-//        val attackSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val attackSide = PokemonForBattle.create(0, IndividualPokemon())
 //        attackSide.hpRatio = 100
 //        attackSide.skill = Skill(440, "ふんか", "", 1, 150, 1.0, 1, 5, 0, false, true)
 //
-//        val defenseSide = PokemonForBattle.create(0, IndividualPBAPokemon())
+//        val defenseSide = PokemonForBattle.create(0, IndividualPokemon())
 //
 //        val field = BattleField()
 //
@@ -275,38 +281,25 @@ class BattleResultTest {
         val result = BattleResult()
 
         fireallow.characteristic = "ようき"
+        fireallow.item = "こだわりスカーフ"
+        fireallow.ability = "いかく"
         result.orderRate(fireallow, 0.2)
 
         fireallow.characteristic = "いじっぱり"
+        fireallow.item = "たべのこし"
+        fireallow.ability = "すいすい"
         result.orderRate(fireallow, 0.5)
 
         fireallow.characteristic = "ゆうかん"
+        fireallow.item = "たべのこし"
+        fireallow.ability = "ようりょくそ"
         result.orderRate(fireallow, 0.3)
 
-        assertEquals(0.15, result.speedOccur[0]!!, 0.1)
-        assertEquals(0.15, result.speedOccur[1]!!, 0.1)
-        assertEquals(0.16666666666666666, result.speedOccur[2]!!, 0.1)
-        assertEquals(0.16666666666666666, result.speedOccur[3]!!, 0.1)
-        assertEquals(0.1, result.speedOccur[4]!!, 0.1)
-        assertEquals(0.0, result.speedOccur[5]!!, 0.1)
-        assertEquals(0.16666666666666666, result.speedOccur[6]!!, 0.1)
-        assertEquals(0.0, result.speedOccur[7]!!, 0.1)
-        assertEquals(0.0, result.speedOccur[8]!!, 0.1)
-        assertEquals(0.1, result.speedOccur[9]!!, 0.1)
-        assertEquals(0.0, result.speedOccur[10]!!, 0.1)
-        assertEquals(0.0, result.speedOccur[11]!!, 0.1)
-//        117
-//        131
-//        146
-//        147
-//        160
-//        197
-//        178
-//        219
-//        240
-//        195
-//        267
-//        293
+        assertEquals(0.3, result.correctionRate[0], 0.001)
+        assertEquals(0.2, result.correctionRate[1], 0.001)
+        assertEquals(0.5, result.correctionRate[2], 0.001)
+        assertEquals(0.2, result.scarfRate, 0.001)
+        assertEquals(0.8, result.orderAbilityRate, 0.001)
     }
 
     @Test
@@ -322,9 +315,9 @@ class BattleResultTest {
         fireallow.characteristic = "ゆうかん"
         result.orderRate(fireallow, 0.3)
 
-        val(label, rate) = result.orderResult(garura, fireallow)
-        assertEquals("4振無補正", label)
-        assertEquals(0.6333333333333333, rate, 0.1)
+//        val (label, rate) = result.orderResult(garura, fireallow, true)
+//        assertEquals("4振無補正", label)
+//        assertEquals(0.6333333333333333, rate, 0.1)
     }
 
 }

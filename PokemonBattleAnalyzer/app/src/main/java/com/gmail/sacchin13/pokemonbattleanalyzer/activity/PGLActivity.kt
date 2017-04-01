@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Party
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Party
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.http.PokemonTrendDownloader
 import kotlin.properties.Delegates
@@ -39,12 +39,11 @@ open class PGLActivity : AppCompatActivity() {
 
     private fun downloadTrend() {
         finishCount = 0
-        for (i in 0..opponentParty.member.size - 1) {
-            if (opponentParty.member[i].no.contains("-")) {
-                PokemonTrendDownloader(opponentParty.member[i].no, i, TrendListener()).execute()
+        for ((i, value) in opponentParty.member.withIndex()) {
+            if (value.no.contains("-")) {
+                PokemonTrendDownloader(value.no, i, TrendListener()).execute()
             } else {
-                val p = opponentParty.member[i].no.toInt()
-                val pokemonNo = "$p-0"
+                val pokemonNo = "${value.no}-0"
                 PokemonTrendDownloader(pokemonNo, i, TrendListener()).execute()
             }
         }

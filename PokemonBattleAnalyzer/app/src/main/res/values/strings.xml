@@ -4,6 +4,8 @@
 
     <string name="navigation_save_as_my">Save as My Party</string>
     <string name="navigation_edit_my_party">Edit My Party</string>
+    <string name="navigation_clear">Clear</string>
+    <string name="navigation_show_kp">Show KP</string>
     <string name="navigation_graph">Graph</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -56,12 +58,47 @@
     <string name="expected_activity_beat_number">確定数</string>
     <string name="expected_activity_dead">倒される</string>
     <string name="expected_activity_covering">網羅率</string>
-    <string name="expected_activity_order">行動順</string>
+    <string name="expected_activity_order">すばやさ実数値</string>
     <string name="expected_activity_priority">先制技</string>
+    <string name="expected_activity_order_ability">特性</string>
+    <string name="expected_activity_correction_rate">性格</string>
+    <string name="expected_activity_scarf_rate">スカーフ</string>
+
+    <string name="expected_activity_weather_sunny">晴</string>
+    <string name="expected_activity_weather_rainy">雨</string>
+    <string name="expected_activity_weather_sandstorm">砂嵐</string>
+    <string name="expected_activity_weather_hailstone">霰</string>
+
+    <string name="expected_activity_room_trick">トリック</string>
+    <string name="expected_activity_room_magic">マジック</string>
+    <string name="expected_activity_room_wander">ワンダー</string>
+
+    <string name="expected_activity_terrain_electric">エレキ</string>
+    <string name="expected_activity_terrain_grass">グラス</string>
+    <string name="expected_activity_terrain_misty">ミスト</string>
+
+    <string name="expected_activity_field_lightScreen">光壁</string>
+    <string name="expected_activity_field_reflect">物壁</string>
+    <string name="expected_activity_field_tailwind">追風</string>
+    <string name="expected_activity_field_stealthRock">隠岩</string>
+    <string name="expected_activity_field_safeGuard">神秘</string>
+    <string name="expected_activity_field_gravity">重力</string>
+    <string name="expected_activity_field_matBlock">畳返</string>
+    <string name="expected_activity_field_spike">撒菱</string>
+    <string name="expected_activity_field_toxicSpike">毒菱</string>
+    <string name="expected_activity_field_stickyWeb">蜘巣</string>
+    <string name="expected_activity_field_mud">泥遊</string>
+    <string name="expected_activity_field_water">水遊</string>
+    <string name="expected_activity_field_luckyChant">急所</string>
+    <string name="expected_activity_field_mist">白霧</string>
+
     <string name="title_activity_login">Sign in</string>
 
     <string name="detail_activity_base">Base Status</string>
-    <string name="detail_activity_happened">Happened</string>
+    <string name="detail_activity_hp">残HP</string>
+    <string name="detail_activity_mega">メガ</string>
+    <string name="detail_activity_migawari">身代</string>
+    <string name="detail_activity_aliminent">状態異常</string>
 
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>

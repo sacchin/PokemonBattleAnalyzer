@@ -13,7 +13,11 @@
         <item
             android:id="@+id/nav_clear"
             android:icon="@drawable/nav_refresh_48"
-            android:title="@string/navigation_edit_my_party" />
+            android:title="@string/navigation_clear" />
+        <item
+            android:id="@+id/nav_showkp"
+            android:icon="@drawable/nav_refresh_48"
+            android:title="@string/navigation_show_kp" />
         <item
             android:id="@+id/nav_graph"
             android:icon="@drawable/nav_refresh_48"

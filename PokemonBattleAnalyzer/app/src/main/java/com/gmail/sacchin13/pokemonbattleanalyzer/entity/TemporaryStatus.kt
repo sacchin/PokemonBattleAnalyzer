@@ -2,37 +2,24 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Rank.Value
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.MegaPokemonMasterData
 
 class TemporaryStatus(
+        var tempItem: Int = 0,
         var tempStatus: Int = StatusAilment.no(StatusAilment.Code.UNKNOWN),
         var tempHpRatio: Int = 100,
         var tempHpValue: Int = 0,
-        var tempAttack: Int = 6,
-        var tempDefense: Int = 6,
-        var tempSpecialAttack: Int = 6,
-        var tempSpecialDefense: Int = 6,
-        var tempSpeed: Int = 6,
-        var tempMega: Int = IndividualPBAPokemon.NOT_MEGA) : Parcelable {
-
-    fun setAttackRank(position: Int) {
-        tempAttack = position
-    }
-
-    fun setDefenseRank(position: Int) {
-        tempDefense = position
-    }
-
-    fun setSpecialAttackRank(position: Int) {
-        tempSpecialAttack = position
-    }
-
-    fun setSpecialDefenseRank(position: Int) {
-        tempSpecialDefense = position
-    }
-
-    fun setSpeedRank(position: Int) {
-        tempSpeed = position
-    }
+        var tempAttack: Int = Rank.no(Value.DEFAULT),
+        var tempDefense: Int = Rank.no(Value.DEFAULT),
+        var tempSpecialAttack: Int = Rank.no(Value.DEFAULT),
+        var tempSpecialDefense: Int = Rank.no(Value.DEFAULT),
+        var tempSpeed: Int = Rank.no(Value.DEFAULT),
+        var tempHitProbability: Int = Rank.no(Value.DEFAULT),
+        var tempAvoidance: Int = Rank.no(Value.DEFAULT),
+        var tempCritical: Int = Rank.no(Value.DEFAULT),
+        var tempMigawari: Int = 0,
+        var tempMega: Int = MegaPokemonMasterData.NOT_MEGA) : Parcelable {
 
     companion object {
         @JvmField
@@ -48,11 +35,13 @@ class TemporaryStatus(
     }
 
     constructor(`in`: Parcel)
-    : this(`in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt()) {
+    : this(`in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(),
+            `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt(), `in`.readInt()) {
     }
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest!!.writeInt(tempStatus)
+        dest!!.writeInt(tempItem)
+        dest.writeInt(tempStatus)
         dest.writeInt(tempHpRatio)
         dest.writeInt(tempHpValue)
         dest.writeInt(tempAttack)
@@ -60,6 +49,10 @@ class TemporaryStatus(
         dest.writeInt(tempSpecialAttack)
         dest.writeInt(tempSpecialDefense)
         dest.writeInt(tempSpeed)
+        dest.writeInt(tempHitProbability)
+        dest.writeInt(tempAvoidance)
+        dest.writeInt(tempCritical)
+        dest.writeInt(tempMigawari)
         dest.writeInt(tempMega)
     }
 
@@ -68,6 +61,7 @@ class TemporaryStatus(
     }
 
     override fun toString(): String {
-        return "${tempStatus}, ${tempHpRatio}, ${tempHpValue}, ${tempAttack}, ${tempDefense}, ${tempSpecialAttack}, ${tempSpecialDefense}, ${tempSpeed}, ${tempMega}"
+        return "${tempStatus}, ${tempHpRatio}, ${tempHpValue}, ${tempAttack}, ${tempDefense}, ${tempSpecialAttack}, " +
+                "${tempSpecialDefense}, ${tempSpeed}, ${tempMega}"
     }
 }

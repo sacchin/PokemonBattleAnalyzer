@@ -1,135 +1,72 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer.entity
 
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.Skill
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import java.text.NumberFormat
 
 class BattleResult {
+
+    class SufferDamage(
+            val damage: Int = 0,
+            val time: Int = 0,
+            val rate: Double = 0.0) {
+    }
 
     var coverRate: Double = 0.0
 
     val prioritySkills = mutableMapOf<String, Double>()
 
-    var speedOccur = mutableMapOf<Int, Double>(
-            0 to 0.0, 1 to 0.0, 2 to 0.0, 3 to 0.0,
-            4 to 0.0, 5 to 0.0, 6 to 0.0, 7 to 0.0,
-            8 to 0.0, 9 to 0.0, 10 to 0.0, 11 to 0.0
-    )
+    val correctionRate = arrayOf(0.0, 0.0, 0.0)
 
-    var defeatedTimes = mutableMapOf<String, MutableMap<Int, Double>>()
+    var scarfRate = 0.0
 
-    var defeatTimes = mutableMapOf<Int, Double>(
+    var orderAbilityRate = 0.0
+
+    var defeatedTimes = mutableMapOf<String, MutableList<SufferDamage>>()
+
+    var didAttack = false
+
+    var defeatTimes = mutableMapOf(
             1 to 0.0, 2 to 0.0, 3 to 0.0, 4 to 0.0, 5 to 0.0
     )
 
-    var mayOccur = mutableMapOf<BattleStatus.Code, Double>(
-            BattleStatus.Code.IMPOSSIBLE to 0.0,
-            BattleStatus.Code.DEPEND_EV to 0.0,
-            BattleStatus.Code.POSSIBLE to 0.0
-    )
-
-    var skillDetail = mutableMapOf<BattleStatus.Code, MutableSet<String>>(
-            BattleStatus.Code.WIN to mutableSetOf<String>(),
-            BattleStatus.Code.DEFEAT to mutableSetOf<String>(),
-            BattleStatus.Code.REVERSE to mutableSetOf<String>(),
-            BattleStatus.Code.OWN_HEAD to mutableSetOf<String>(),
-            BattleStatus.Code.DRAW to mutableSetOf<String>()
-    )
+    var breakMigawari: Int = -1 //-1: not migawari, 0: break migawari, 1: depends on ev, 2: not break
 
     fun updateDefeatTimes(key: Int, value: Double) {
         defeatTimes[key] = defeatTimes[key]!!.plus(value)
     }
 
-    fun updateDefeatedTimes(skillName: String, key: Int, value: Double) {
-        if (defeatedTimes[skillName] == null) {
-            defeatedTimes[skillName] = mutableMapOf(
-                    1 to 0.0, 2 to 0.0, 3 to 0.0, 4 to 0.0, 5 to 0.0
-            )
-        }
+    fun updateDefeatedTimes(skillName: String, damage: Int, time: Int, rate: Double) {
+        val sufferDamage = defeatedTimes[skillName] ?: mutableListOf<SufferDamage>()
+        sufferDamage.add(SufferDamage(damage, time, rate))
+        defeatedTimes[skillName] = sufferDamage
+    }
 
-        val a = defeatedTimes[skillName] as MutableMap<Int, Double>
-        a[key] = a[key]!!.plus(value)
+    fun calcBreakMigawari(checked: Boolean, skillName: String) {
+        if (checked.not() || Skill.migawariSkill(skillName)) {
+            breakMigawari = -1
+        } else if (Math.abs(defeatTimes[5]!!.minus(0.0)) < 0.001) {
+            breakMigawari = 0
+        } else if (Math.abs(defeatTimes[1]!!.minus(0.0)) < 0.001 &&
+                Math.abs(defeatTimes[2]!!.minus(0.0)) < 0.001 &&
+                Math.abs(defeatTimes[3]!!.minus(0.0)) < 0.001 &&
+                Math.abs(defeatTimes[4]!!.minus(0.0)) < 0.001) {
+            breakMigawari = 2
+        } else {
+            breakMigawari = 1
+        }
     }
 
     fun blow(baseRate: Double): Boolean {
-        return if (Math.abs(defeatTimes[1]!!.minus(baseRate)) < 0.001) true else false
+        return Math.abs(defeatTimes[1]!!.minus(baseRate)) < 0.001
     }
 
     fun little(): Boolean {
-        return if (Math.abs(defeatTimes[1]!!.minus(0)) < 0.001 &&
+        return Math.abs(defeatTimes[1]!!.minus(0)) < 0.001 &&
                 Math.abs(defeatTimes[2]!!.minus(0)) < 0.001 &&
                 Math.abs(defeatTimes[3]!!.minus(0)) < 0.001 &&
-                Math.abs(defeatTimes[4]!!.minus(0)) < 0.001)
-            true else false
-    }
-
-    fun updatePossible(rate: Double) {
-        println("-- ${rate}")
-        mayOccur[BattleStatus.Code.POSSIBLE] = mayOccur[BattleStatus.Code.POSSIBLE]!!.plus(rate)
-    }
-
-    fun updateReverseOwnHeadDefeat(first: PokemonForBattle, second: PokemonForBattle, rate: Double) {
-        when (first.side) {
-            PartyInBattle.MY_SIDE -> {
-                mayOccur[BattleStatus.Code.OWN_HEAD] =
-                        mayOccur[BattleStatus.Code.OWN_HEAD]!!.plus(rate)
-                skillDetail[BattleStatus.Code.OWN_HEAD]!!.add(second.skill.jname)
-            }
-            PartyInBattle.OPPONENT_SIDE -> {
-                mayOccur[BattleStatus.Code.REVERSE] =
-                        mayOccur[BattleStatus.Code.REVERSE]!!.plus(rate)
-                skillDetail[BattleStatus.Code.REVERSE]!!.add(second.skill.jname)
-            }
-        }
-    }
-
-    fun updateDraw(rate: Double) {
-        mayOccur[BattleStatus.Code.DRAW] =
-                mayOccur[BattleStatus.Code.DRAW]!!.plus(rate)
-    }
-
-    fun winRate(): String {
-        val value = mayOccur[BattleStatus.Code.WIN]!!.plus(mayOccur[BattleStatus.Code.REVERSE]!!)
-        if (value < 0 || 1 < value) {
-            return "ERROR"
-        } else if (value.minus(0.0) < 0.00001) {
-            return "0%"
-        } else if (value < 0.001) {
-            return "極小"
-        } else {
-            val format = NumberFormat.getInstance()
-            format.maximumFractionDigits = 1
-            return format.format(value.times(100.0)) + "%"
-        }
-    }
-
-    fun loseRate(): String {
-        val value = mayOccur[BattleStatus.Code.DEFEAT]!!.plus(mayOccur[BattleStatus.Code.OWN_HEAD]!!)
-        if (value < 0 || 1 < value) {
-            return "ERROR"
-        } else if (value.minus(0.0) < 0.00001) {
-            return "0%"
-        } else if (value < 0.001) {
-            return "極小"
-        } else {
-            val format = NumberFormat.getInstance()
-            format.maximumFractionDigits = 1
-            return format.format(value.times(100.0)) + "%"
-        }
-    }
-
-    fun drawRate(): String {
-        val value = mayOccur[BattleStatus.Code.DRAW]!!
-        if (value < 0 || 1 < value) {
-            return "ERROR"
-        } else if (value.minus(0.0) < 0.00001) {
-            return "0%"
-        } else if (value < 0.001) {
-            return "極小"
-        } else {
-            val format = NumberFormat.getInstance()
-            format.maximumFractionDigits = 1
-            return format.format(value.times(100.0)) + "%"
-        }
+                Math.abs(defeatTimes[4]!!.minus(0)) < 0.001
     }
 
     fun coverRate(): String {
@@ -146,90 +83,92 @@ class BattleResult {
         }
     }
 
-    fun add(result: BattleResult) {
-        for (key in defeatTimes.keys) {
-            defeatTimes[key] = defeatTimes[key]!!.plus(result.defeatTimes[key]!!)
+    fun add(newOne: BattleResult) {
+        for ((skillName, sufferDamage) in newOne.defeatedTimes) {
+            val temp = defeatedTimes[skillName] ?: mutableListOf<SufferDamage>()
+            temp.addAll(sufferDamage)
+            defeatedTimes[skillName] = temp
         }
-
-        for (temp in result.defeatedTimes) {
-            if (defeatedTimes[temp.key] == null) {
-                defeatedTimes.put(temp.key, temp.value)
-            } else {
-                val r = defeatedTimes[temp.key] as MutableMap<Int, Double>
-                r[1] = r[1]!!.plus(temp.value[1]!!)
-                r[2] = r[2]!!.plus(temp.value[2]!!)
-                r[3] = r[3]!!.plus(temp.value[3]!!)
-                r[4] = r[4]!!.plus(temp.value[4]!!)
-                r[5] = r[5]!!.plus(temp.value[5]!!)
-            }
-        }
-
-        for (key in speedOccur.keys) {
-            speedOccur[key] = speedOccur[key]!!.plus(result.speedOccur[key]!!)
-        }
-
-        prioritySkills.putAll(result.prioritySkills)
     }
 
     fun orderRate(opponent: PokemonForBattle, rate: Double) {
         val type = Characteristic.correction(opponent.characteristic, "S").times(10).toInt()
-        val label = when (type) {
-            9 -> {
-                if (opponent.item.equals("こだわりスカーフ")) {
-                    arrayOf(5)
-                } else {
-                    arrayOf(0, 1)
-                }
-            }
-            10 -> {
-                if (opponent.item.equals("こだわりスカーフ")) {
-                    arrayOf(7, 10)
-                } else {
-                    arrayOf(2, 3, 6)
-                }
-            }
-            11 -> {
-                if (opponent.item.equals("こだわりスカーフ")) {
-                    arrayOf(8, 11)
-                } else {
-                    arrayOf(4, 9)
-                }
-            }
-            else -> arrayOf()
+        when (type) {
+            9 -> correctionRate[0] = correctionRate[0] + rate
+            11 -> correctionRate[1] = correctionRate[1] + rate
+            else -> correctionRate[2] = correctionRate[2] + rate
         }
 
-        for (temp in label) speedOccur[temp] = speedOccur[temp]!!.plus(rate.div(label.size))
+        if (opponent.item == "こだわりスカーフ") scarfRate += rate
+        if (opponent.ability == "すなかき" || opponent.ability == "ようりょくそ"
+                || opponent.ability == "すいすい" || opponent.ability == "ゆきかき") orderAbilityRate += rate
     }
 
-    fun orderResult(mine: PokemonForBattle, opponent: PokemonForBattle): Pair<String, Double> {
-        var sum = 0.0
-        var label = ""
-        for ((index, speed) in opponent.individual.master.speedValues().withIndex()) {
-            if (speed < mine.calcSpeedValue()) {
-                sum += speedOccur[index]!!
-            } else {
-                label = BattleStatus.name(index - 1)
-                break
+    fun prioritySkill(): String {
+        return if (prioritySkills.isEmpty()) {
+            "なし"
+        } else {
+            var t = ""
+            for ((key, value) in prioritySkills) {
+                t += key + " = ${Util.percent(value)}\n"
             }
+            return t
+        }
+    }
+
+    fun orderAbility(): String = if (scarfRate < 0.001) "なし" else Util.percent(orderAbilityRate.times(100.0))
+
+    fun scarfRate(): String = if (scarfRate < 0.001) "なし" else Util.percent(scarfRate.times(100.0))
+
+    fun correctionRate(): String = "すばやさ↓(${Util.percent(correctionRate[0].times(100.0))})\n" +
+            "すばやさ↑(${Util.percent(correctionRate[1].times(100.0))})"
+
+    fun orderResult(mine: PokemonForBattle, opponent: PokemonForBattle,
+                    field: BattleField, myTailWind: Boolean, oppoTailWind: Boolean): String {
+        var before = 0
+        val result = mutableMapOf<String, Int>()
+        val mySpeed = mine.calcSpeedValue(field, myTailWind, false)
+        for ((index, speed) in opponent.speedValues(oppoTailWind).withIndex()) {
+            val label = BattleStatus.name(index)
+
+            if (before < mySpeed && mySpeed < speed) {
+                result.put("mine", mySpeed)
+                result.put(label, speed)
+            } else {
+                result.put(label, speed)
+            }
+
+            before = speed
         }
 
-        return Pair(label, sum)
+        if (before < mySpeed) result.put("mine", mySpeed)
+
+        if (result.isEmpty()) {
+            return "-"
+        } else {
+            var t = ""
+            for ((key, value) in result) {
+                if (key == "mine") t += "---> $value <---\n"
+                else t += "$value($key)\n"
+            }
+            return t
+        }
     }
 
     fun prioritySkill(pokemon: TrendForBattle) {
-        for (ability in pokemon.tokuseiInfo) {
-            for (skill in pokemon.skillList) {
-                var priority = skill.skill.priority
-                var key = skill.skill.jname
+        for ((ranking1, usageRate, name) in pokemon.tokuseiInfo) {
+            for ((ranking, sequenceNumber, skill) in pokemon.skillList) {
+                var priority = skill.priority
+                var key = skill.jname
                 var rate = 1.0
-                if ((ability.name.equals("いたずらごころ") && skill.skill.category == 2) ||
-                        (ability.name.equals("はやてのつばさ") && skill.skill.type.equals(Type.no(Type.Code.FLYING))) ||
-                        (ability.name.equals("ヒーリングシフト"))) {
+                if ((name == "いたずらごころ" && skill.category == 2) ||
+                        (name == "はやてのつばさ" && skill.type == Type.no(Type.Code.FLYING)) ||
+                        (name == "ヒーリングシフト")) {
                     priority += 1
-                    key += ":${ability.name}(${priority})"
-                    rate = ability.usageRate.toDouble()
+                    key += ":$name($priority)"
+                    rate = usageRate.toDouble()
                 } else {
-                    key += "(${priority})"
+                    key += "($priority)"
                 }
                 if (0 < priority) prioritySkills[key] = rate
             }
@@ -238,7 +177,7 @@ class BattleResult {
 
     fun count(): Int {
         var sum = 0
-        for (i in defeatTimes) sum += i.value.toInt()
+        for ((key, value) in defeatTimes) sum += value.toInt()
         return sum
     }
 
@@ -255,4 +194,6 @@ class BattleResult {
                 defeatTimes[4]!!.times(base4).toFloat(),
                 defeatTimes[5]!!.times(base4).toFloat())
     }
+
+
 }

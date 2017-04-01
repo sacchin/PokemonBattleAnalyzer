@@ -12,11 +12,12 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.gmail.sacchin13.pokemonbattleanalyzer.R
-import com.gmail.sacchin13.pokemonbattleanalyzer.Util
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.PokemonMasterData
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.TemporaryStatus
 import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.PokemonMasterData
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import kotlinx.android.synthetic.main.activity_detail.*
+import org.jetbrains.anko.onCheckedChange
 import org.jetbrains.anko.onClick
 import kotlin.properties.Delegates
 
@@ -35,17 +36,14 @@ class DetailActivity : PGLActivity() {
         setContentView(R.layout.activity_detail)
 
         val toolbar = findViewById(R.id.tool_bar) as Toolbar?
-        toolbar!!.title = "Pokemon Battle Tool"
-        toolbar.setTitleTextColor(Color.WHITE)
+        toolbar?.title = "Pokemon Battle Tool"
+        toolbar?.setTitleTextColor(Color.WHITE)
         setSupportActionBar(toolbar)
 
-        val intent = intent
-        if (intent != null) {
-            this.id = intent.getStringExtra("id")
-            this.temp = intent.getParcelableExtra("status")
-            isMine = intent.getBooleanExtra("isMine", false)
-            init()
-        }
+        this.id = intent?.getStringExtra("id") ?: ""
+        this.temp = intent?.getParcelableExtra("status") ?: TemporaryStatus()
+        isMine = intent?.getBooleanExtra("isMine", false) ?: false
+        init()
 
         val resourceId = util.pokemonImageResource[id.split("-")[0]]
         image.setImageResource(resourceId ?: R.drawable.noimage)
@@ -65,10 +63,10 @@ class DetailActivity : PGLActivity() {
 
     fun showMineStatus() {
         var p = myParty.member1
-        if (myParty.member2.master.no.split("-")[0].equals(id)) {
+        if (myParty.member2.master.no.split("-")[0] == id) {
             p = myParty.member2
         }
-        if (myParty.member3.master.no.split("-")[0].equals(id)) {
+        if (myParty.member3.master.no.split("-")[0] == id) {
             p = myParty.member3
         }
 
@@ -86,7 +84,7 @@ class DetailActivity : PGLActivity() {
                 result.tokuseiInfo.isEmpty() && result.skillList.isEmpty()) {
             Snackbar.make(base_layout, "download failed at $index", Snackbar.LENGTH_SHORT).show()
         }
-        if (opponentParty.member[index].no.split("-")[0].equals(id)) {
+        if (opponentParty.member[index].no.split("-")[0] == id) {
             Snackbar.make(base_layout, "download finish", Snackbar.LENGTH_SHORT).show()
             for (key in result.createSkillMap(util)) {
                 skilltable.addView(createTableRow(arrayOf(key.first, key.second), 0, Color.TRANSPARENT, Color.BLACK, 12))
@@ -120,47 +118,61 @@ class DetailActivity : PGLActivity() {
         return row
     }
 
-    fun createTextView(text: String, bgColor: Int, txtColor: Int, txtSize: Int): TextView {
-        val tv = TextView(this)
-        tv.text = text
-        tv.setBackgroundColor(bgColor)
-        tv.setTextColor(txtColor)
-        tv.textSize = txtSize.toFloat()
-        val p = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
-        tv.layoutParams = p
-        return tv
+    fun createTextView(t: String, bgColor: Int, txtColor: Int, txtSize: Int): TextView {
+        return TextView(this).apply {
+            text = t
+            setBackgroundColor(bgColor)
+            setTextColor(txtColor)
+            textSize = txtSize.toFloat()
+            val p = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
+            layoutParams = p
+        }
     }
 
     override fun showParty() {
         var po = myParty.member[0]
-        for (p in myParty.member) if (p.no.equals(id)) po = p
-        for (p in opponentParty.member) if (p.no.equals(id)) po = p
+        for (p in myParty.member) if (p.no == id) po = p
+        for (p in opponentParty.member) if (p.no == id) po = p
 
         statusview.removeAllViews()
         createPBAPokemonStatus(po, NOT_MEGA)
         if (po.megax != null) createPBAPokemonStatus(po, MEGA_X)
         if (po.megay != null) createPBAPokemonStatus(po, MEGA_Y)
+
+        val forms = po.battling()
+        val megaAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, forms)
+        megaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        val megaSpinner = if (isMine) my_mega_check else oppo_mega_check
+        if (forms.size == 1) megaSpinner.visibility = View.GONE else megaSpinner.adapter = megaAdapter
     }
 
     private fun createPBAPokemonStatus(p: PokemonMasterData, type: Int) {
-        val sss = LinearLayout(this)
-        sss.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        sss.orientation = LinearLayout.HORIZONTAL
+        val sss = LinearLayout(this).apply {
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            orientation = LinearLayout.HORIZONTAL
+        }
 
         val temp = when (type) {
             NOT_MEGA -> util.createImage(p, 150f, resources)
-            MEGA_X -> util.createImage(p.no + "mx", 150f, resources)
+            MEGA_X -> when (p.no) {
+                "681" -> util.createImage(R.drawable.n681_1, 150f, resources)
+                "555" -> util.createImage(R.drawable.n555_1, 150f, resources)
+                else -> util.createImage(p.no + "mx", 150f, resources)
+            }
             MEGA_Y -> util.createImage(p.no + "my", 150f, resources)
             else -> util.createImage(p, 150f, resources)
         }
-        val imageView = ImageView(this)
-        imageView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        imageView.setImageBitmap(temp)
+        val imageView = ImageView(this).apply {
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            setImageBitmap(temp)
+        }
         sss.addView(imageView)
 
-        val status = TableLayout(this)
-        status.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
-        status.isStretchAllColumns = true
+        val status = TableLayout(this).apply {
+            layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
+            isStretchAllColumns = true
+        }
 
         val abilities = when (type) {
             NOT_MEGA -> arrayOf(p.ability1, p.ability2, p.abilityd)
@@ -175,8 +187,8 @@ class DetailActivity : PGLActivity() {
 
         val statuses = when (type) {
             NOT_MEGA -> arrayOf(p.h.toString(), p.a.toString(), p.b.toString(), p.c.toString(), p.d.toString(), p.s.toString())
-            MEGA_X -> arrayOf(p.megax!!.h.toString(), p.megax!!.a.toString(), p.megax!!.b.toString(), p.megax!!.c.toString(), p.megax!!.d.toString(), p.megax!!.s.toString())
-            MEGA_Y -> arrayOf(p.megay!!.h.toString(), p.megay!!.a.toString(), p.megay!!.b.toString(), p.megay!!.c.toString(), p.megay!!.d.toString(), p.megay!!.s.toString())
+            MEGA_X -> arrayOf(p.megax?.h.toString(), p.megax?.a.toString(), p.megax?.b.toString(), p.megax?.c.toString(), p.megax?.d.toString(), p.megax?.s.toString())
+            MEGA_Y -> arrayOf(p.megay?.h.toString(), p.megay?.a.toString(), p.megay?.b.toString(), p.megay?.c.toString(), p.megay?.d.toString(), p.megay?.s.toString())
             else -> arrayOf("-", "-", "-", "-", "-")
         }
         status.addView(createTableRow(statuses, 0, Color.TRANSPARENT, Color.BLACK, 18))
@@ -185,74 +197,65 @@ class DetailActivity : PGLActivity() {
     }
 
     fun init() {
-        val statusAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
-        statusAdapter.add("状態異常")
-        statusAdapter.add("やけど")
-        statusAdapter.add("こおり")
-        statusAdapter.add("まひ")
-        statusAdapter.add("どく")
-        statusAdapter.add("もうどく")
-        statusAdapter.add("ねむり")
-        statusAdapter.add("ひんし")
+        val s = arrayOf("状態異常", "やけど", "こおり", "まひ", "どく", "もうどく", "ねむり", "ひんし")
+        val statusAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, s)
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        val rankAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
-        rankAdapter.add("6")
-        rankAdapter.add("5")
-        rankAdapter.add("4")
-        rankAdapter.add("3")
-        rankAdapter.add("2")
-        rankAdapter.add("1")
-        rankAdapter.add("0")
-        rankAdapter.add("-1")
-        rankAdapter.add("-2")
-        rankAdapter.add("-3")
-        rankAdapter.add("-4")
-        rankAdapter.add("-5")
-        rankAdapter.add("-6")
+        val r = arrayOf("6", "5", "4", "3", "2", "1", "0", "-1", "-2", "-3", "-4", "-5", "-6")
+        val rankAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, r)
+
         rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         myASpinner.adapter = rankAdapter
-        myASpinner.setSelection(temp.tempAttack)
+        myASpinner.setSelection(rankToIndex(temp.tempAttack))
         myASpinner.onItemSelectedListener = OnRankSelectedListener(0)
         myBSpinner.adapter = rankAdapter
-        myBSpinner.setSelection(temp.tempDefense)
+        myBSpinner.setSelection(rankToIndex(temp.tempDefense))
         myBSpinner.onItemSelectedListener = OnRankSelectedListener(1)
         myCSpinner.adapter = rankAdapter
-        myCSpinner.setSelection(temp.tempSpecialAttack)
+        myCSpinner.setSelection(rankToIndex(temp.tempSpecialAttack))
         myCSpinner.onItemSelectedListener = OnRankSelectedListener(2)
         myDSpinner.adapter = rankAdapter
-        myDSpinner.setSelection(temp.tempSpecialDefense)
+        myDSpinner.setSelection(rankToIndex(temp.tempSpecialDefense))
         myDSpinner.onItemSelectedListener = OnRankSelectedListener(3)
         mySSpinner.adapter = rankAdapter
-        mySSpinner.setSelection(temp.tempSpeed)
+        mySSpinner.setSelection(rankToIndex(temp.tempSpeed))
         mySSpinner.onItemSelectedListener = OnRankSelectedListener(4)
-
-        val megaAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
-        megaAdapter.add("-")
-        megaAdapter.add("X")
-        megaAdapter.add("Y")
-        megaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        myHSpinner.adapter = rankAdapter
+        myHSpinner.setSelection(rankToIndex(temp.tempHitProbability))
+        myHSpinner.onItemSelectedListener = OnRankSelectedListener(5)
+        myAVSpinner.adapter = rankAdapter
+        myAVSpinner.setSelection(rankToIndex(temp.tempAvoidance))
+        myAVSpinner.onItemSelectedListener = OnRankSelectedListener(6)
+        myCRSpinner.adapter = rankAdapter
+        myCRSpinner.setSelection(rankToIndex(temp.tempCritical))
+        myCRSpinner.onItemSelectedListener = OnRankSelectedListener(7)
 
         if (isMine) {
             oppo_header.visibility = View.GONE
             myStatusSpinner.adapter = statusAdapter
             myStatusSpinner.setSelection(temp.tempStatus)
             myStatusSpinner.onItemSelectedListener = OnStatusSelectedListener()
-            my_mega_check.adapter = megaAdapter
             my_mega_check.setSelection(temp.tempMega)
             my_mega_check.onItemSelectedListener = OnMegaSelectedListener()
             myHPBar.setText(temp.tempHpValue.toString())
             myHPBar.setOnEditorActionListener(OnHPEditListener())
+            if (temp.tempMigawari == 1) myMigawari.isChecked = true
+            myMigawari.onCheckedChange { compoundButton, b -> temp.tempMigawari = if (b) 1 else 0 }
+            if (temp.tempItem == 1) myItemUsed.isChecked = true
+            myItemUsed.onCheckedChange { compoundButton, b -> temp.tempItem = if (b) 1 else 0 }
         } else {
             my_header.visibility = View.GONE
             opponentStatusSpinner.adapter = statusAdapter
             opponentStatusSpinner.setSelection(temp.tempStatus)
             opponentStatusSpinner.onItemSelectedListener = OnStatusSelectedListener()
-            oppo_mega_check.adapter = megaAdapter
             oppo_mega_check.setSelection(temp.tempMega)
             oppo_mega_check.onItemSelectedListener = OnMegaSelectedListener()
             opponentHPBar.progress = temp.tempHpRatio
             opponentHPBar.setOnSeekBarChangeListener(OnHPChangeListener())
+            if (temp.tempMigawari == 1) oppoMigawari.isChecked = true
+            oppoMigawari.onCheckedChange { compoundButton, b -> temp.tempMigawari = if (b) 1 else 0 }
+            if (temp.tempItem == 1) oppoItemUsed.isChecked = true
+            oppoItemUsed.onCheckedChange { compoundButton, b -> temp.tempItem = if (b) 1 else 0 }
         }
     }
 
@@ -271,11 +274,14 @@ class DetailActivity : PGLActivity() {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             when (which) {
-                0 -> temp.setAttackRank(id.toInt())
-                1 -> temp.setDefenseRank(id.toInt())
-                2 -> temp.setSpecialAttackRank(id.toInt())
-                3 -> temp.setSpecialDefenseRank(id.toInt())
-                4 -> temp.setSpeedRank(id.toInt())
+                0 -> temp.tempAttack = indexToRank(id.toInt())
+                1 -> temp.tempDefense = indexToRank(id.toInt())
+                2 -> temp.tempSpecialAttack = indexToRank(id.toInt())
+                3 -> temp.tempSpecialDefense = indexToRank(id.toInt())
+                4 -> temp.tempSpeed = indexToRank(id.toInt())
+                5 -> temp.tempHitProbability = indexToRank(id.toInt())
+                6 -> temp.tempAvoidance = indexToRank(id.toInt())
+                7 -> temp.tempCritical = indexToRank(id.toInt())
             }
         }
     }
@@ -297,7 +303,7 @@ class DetailActivity : PGLActivity() {
         }
 
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            temp.tempHpRatio = seekBar!!.progress
+            temp.tempHpRatio = seekBar?.progress ?: 100
         }
     }
 
@@ -315,6 +321,8 @@ class DetailActivity : PGLActivity() {
         }
     }
 
+    fun rankToIndex(rank: Int): Int = rank + 6
+    fun indexToRank(position: Int): Int = position - 6
 }
 
 

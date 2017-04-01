@@ -2,9 +2,15 @@ package com.gmail.sacchin13.pokemonbattleanalyzer
 
 import android.content.Context
 import android.util.Log
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.*
+import com.gmail.sacchin13.pokemonbattleanalyzer.activity.KpActivity
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Construction
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Rank
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.Type
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.realm.*
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.RealmResults
 import io.realm.Sort
 import java.util.*
 import kotlin.properties.Delegates
@@ -15,7 +21,7 @@ class DatabaseHelper(context: Context) {
 
     init {
         val realmConfig = RealmConfiguration.Builder(context).build()
-        realm = Realm.getInstance(realmConfig);
+        realm = Realm.getInstance(realmConfig)
     }
 
     fun begin() {
@@ -44,6 +50,7 @@ class DatabaseHelper(context: Context) {
             pokemon.c = c
             pokemon.d = d
             pokemon.s = s
+            pokemon.form = form
             pokemon.ability1 = ability1
             pokemon.ability2 = ability2
             pokemon.abilityd = abilityd
@@ -61,15 +68,19 @@ class DatabaseHelper(context: Context) {
         return realm.where(PokemonMasterData().javaClass).equalTo("no", "000").findFirst()
     }
 
+    fun selectPokemonByName(pokemonName: String): PokemonMasterData {
+        val pokemon = realm.where(PokemonMasterData().javaClass).equalTo("jname", pokemonName).findFirst()
+        if (pokemon != null) {
+            return pokemon
+        }
+        return realm.where(PokemonMasterData().javaClass).equalTo("no", "000").findFirst()
+    }
+
     fun selectAllPokemonMasterData(): ArrayList<PokemonMasterData> {
         val pokemonList = realm.where(PokemonMasterData().javaClass).findAllSorted("no", Sort.DESCENDING)
 
         val result = ArrayList<PokemonMasterData>()
-        for (p in pokemonList) {
-            if (util.pokemonImageResource.contains(p.no)) {
-                result.add(p)
-            }
-        }
+        pokemonList.filter { it -> util.pokemonImageResource.contains(it.no) }.map { it -> result.add(it) }
         return result
     }
 
@@ -110,7 +121,24 @@ class DatabaseHelper(context: Context) {
         }
     }
 
-    fun insertMegaPokemonDataX(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, megaType: String) {
+    fun insertZSkillMasterData(id: Int, skillName: String, type: Int, category: Int, name: String, power: Int, rank: Int) {
+        realm.executeTransaction {
+            val skill = realm.createObject(ZSkill::class.java)
+            skill.no = id
+            skill.skillNumber = selectSkillByName(skillName).no
+            skill.jname = name
+            skill.type = type
+            skill.power = power
+            skill.category = category
+            skill.rank = rank
+        }
+    }
+
+    fun insertZSkillMasterData(id: Int, skillName: String, type: Int, category: Int, name: String, power: Int) {
+        insertZSkillMasterData(id, skillName, type, category, name, power, Rank.no(Rank.Code.UNKNOWN))
+    }
+
+    fun insertMegaPokemonDataX(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, type1: Int, type2: Int, ability: String, weight: Float) {
         realm.executeTransaction {
             val megaPokemon = realm.createObject(MegaPokemonMasterData::class.java)
             megaPokemon.pokemonNo = no
@@ -120,15 +148,22 @@ class DatabaseHelper(context: Context) {
             megaPokemon.c = c
             megaPokemon.d = d
             megaPokemon.s = s
+            megaPokemon.type1 = type1
+            megaPokemon.type2 = type2
             megaPokemon.ability = ability
-            megaPokemon.megaType = megaType
+            megaPokemon.weight = weight
+            megaPokemon.megaType = MegaPokemonMasterData.MEGA_X
 
             val master = selectPokemonMasterData(no)
             master.megax = megaPokemon
         }
     }
 
-    fun insertMegaPokemonDataY(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, megaType: String) {
+    fun insertMegaPokemonDataX(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, weight: Float) {
+        insertMegaPokemonDataX(no, h, a, b, c, d, s, Type.no(Type.Code.UNKNOWN), Type.no(Type.Code.UNKNOWN), ability, weight)
+    }
+
+    fun insertMegaPokemonDataY(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, type1: Int, type2: Int, ability: String, weight: Float) {
         realm.executeTransaction {
             val megaPokemon = realm.createObject(MegaPokemonMasterData::class.java)
             megaPokemon.pokemonNo = no
@@ -138,16 +173,51 @@ class DatabaseHelper(context: Context) {
             megaPokemon.c = c
             megaPokemon.d = d
             megaPokemon.s = s
+            megaPokemon.type1 = type1
+            megaPokemon.type2 = type2
             megaPokemon.ability = ability
-            megaPokemon.megaType = megaType
+            megaPokemon.weight = weight
+            megaPokemon.megaType = MegaPokemonMasterData.MEGA_Y
 
             val master = selectPokemonMasterData(no)
             master.megay = megaPokemon
         }
     }
 
+    fun insertMegaPokemonDataY(no: String, h: Int, a: Int, b: Int, c: Int, d: Int, s: Int, ability: String, weight: Float) {
+        insertMegaPokemonDataY(no, h, a, b, c, d, s, Type.no(Type.Code.UNKNOWN), Type.no(Type.Code.UNKNOWN), ability, weight)
+    }
+
+    fun insertConstruction(name: String, type: Construction.Type, list: Array<String>, advantage: Array<String>, warning: String) {
+        realm.executeTransaction {
+
+            val construction = realm.createObject(Construction::class.java)
+            list.map { it ->
+                val pokemon = selectPokemonByName(it)
+                construction.list.add(pokemon)
+            }
+
+            advantage.map { it ->
+                val pokemon = selectPokemonByName(it)
+                construction.advantage.add(pokemon)
+            }
+
+            construction.type = Construction.no(type)
+            construction.name = name
+            construction.warning = warning
+        }
+    }
+
+    fun selectConstruction(): RealmResults<Construction> {
+        return realm.where(Construction().javaClass).findAll()
+    }
+
     fun selectSkillByName(name: String): Skill {
         return realm.where(Skill().javaClass).equalTo("jname", name).findFirst()
+    }
+
+    fun selectZSkill(skillNumber: Int): ZSkill {
+        return realm.where(ZSkill().javaClass).equalTo("skillNumber", skillNumber).findFirst()
     }
 
     fun selectUnknownSkill(): Skill {
@@ -155,7 +225,7 @@ class DatabaseHelper(context: Context) {
     }
 
     fun countIndividualPBAPokemon(): Long {
-        return realm.where(IndividualPBAPokemon().javaClass).count()
+        return realm.where(IndividualPokemon().javaClass).count()
     }
 
     fun insertPartyData(selectedParty: Party?) {
@@ -181,7 +251,7 @@ class DatabaseHelper(context: Context) {
     }
 
     fun insertIndividualPBAPokemon(id: Long, master: PokemonMasterData) {
-        val pokemon = realm.createObject(IndividualPBAPokemon::class.java)
+        val pokemon = realm.createObject(IndividualPokemon::class.java)
         pokemon.id = id
         pokemon.item = ""
         pokemon.characteristic = ""
@@ -193,8 +263,8 @@ class DatabaseHelper(context: Context) {
         pokemon.master = selectPokemonMasterData(master.no)
     }
 
-    fun selectIndividualPBAPokemon(id: Long): IndividualPBAPokemon {
-        return realm.where(IndividualPBAPokemon().javaClass).equalTo("id", id).findFirst()
+    fun selectIndividualPBAPokemon(id: Long): IndividualPokemon {
+        return realm.where(IndividualPokemon().javaClass).equalTo("id", id).findFirst()
     }
 
     fun selectParty(userName: String): Party {
@@ -204,13 +274,11 @@ class DatabaseHelper(context: Context) {
             return Party()
         }
 
-        Log.v("userName", "${party[0].member1}")
-        Log.v("userName", "${party[0].member2}")
-        Log.v("userName", "${party[0].member3}")
-        Log.v("userName", "${party[0].member4}")
-        Log.v("userName", "${party[0].member5}")
-        Log.v("userName", "${party[0].member6}")
         return party[0]
+    }
+
+    fun selectAllParty(activity: KpActivity) {
+        realm.where(Party().javaClass).findAllAsync().addChangeListener { it -> activity.onSelect(it.toList()) }
     }
 
     fun selectAllSkill(): MutableList<Skill> {
@@ -221,100 +289,101 @@ class DatabaseHelper(context: Context) {
     fun selectAllItem(): ArrayList<String> {
         val item = realm.where(ItemMasterData().javaClass).findAllSorted("name", Sort.ASCENDING)
         val list = ArrayList<String>()
-        for (temp in item) {
-            list.add(temp.name)
-        }
+        item.map { it -> list.add(it.name) }
         return list
     }
 
-    fun updateMyParty(){
+    fun updateMyParty() {
         realm.executeTransaction {
             val inserted = selectParty("mine")
-            val skill = selectAllSkill()
 
-            inserted.member1.ability = "いかく"
-            inserted.member1.characteristic = "いじっぱり"
-            inserted.member1.item = "クチートナイト"
-            inserted.member1.skillNo1 = skill[300]//ふいうち
-            inserted.member1.skillNo2 = skill[384]//アイアンヘッド
-            inserted.member1.skillNo3 = skill[157]//じゃれつく
-            inserted.member1.skillNo4 = skill[210]//つるぎのまい
-            inserted.member1.hpValue = 100
-            inserted.member1.attackValue = 100
-            inserted.member1.defenseValue = 100
-            inserted.member1.specialAttackValue = 100
-            inserted.member1.specialDefenseValue = 100
-            inserted.member1.speedValue = 100
+            inserted.member1.ability = "ふゆう"
+            inserted.member1.characteristic = "おくびょう"
+            inserted.member1.item = "いのちのたま"
+            inserted.member1.skillNo1 = selectSkillByName("あくのはどう")
+            inserted.member1.skillNo2 = selectSkillByName("とんぼがえり")
+            inserted.member1.skillNo3 = selectSkillByName("りゅうのはどう")
+            inserted.member1.skillNo4 = selectSkillByName("ほえる")
+            inserted.member1.hp = 189
+            inserted.member1.attack = 104
+            inserted.member1.defense = 110
+            inserted.member1.specialAttack = 177
+            inserted.member1.specialDefense = 110
+            inserted.member1.speed = 130
 
-            inserted.member2.ability = "もうか"
-            inserted.member2.characteristic = "おくびょう"
-            inserted.member2.item = "こだわりスカーフ"
-            inserted.member2.skillNo1 = skill[65]//かえんほうしゃ
-            inserted.member2.skillNo2 = skill[308]//ふんか
-            inserted.member2.skillNo3 = skill[4]//あくのはどう
-            inserted.member2.skillNo4 = skill[353]//めざめるパワー
-            inserted.member2.hpValue = 100
-            inserted.member2.attackValue = 100
-            inserted.member2.defenseValue = 100
-            inserted.member2.specialAttackValue = 100
-            inserted.member2.specialDefenseValue = 100
-            inserted.member2.speedValue = 100
+            inserted.member2.ability = "アナライズ"
+            inserted.member2.characteristic = "おだやか"
+            inserted.member2.item = "こだわりメガネ"
+            inserted.member2.skillNo1 = selectSkillByName("１０まんボルト")
+            inserted.member2.skillNo2 = selectSkillByName("はかいこうせん")
+            inserted.member2.skillNo3 = selectSkillByName("ボルトチェンジ")
+            inserted.member2.skillNo4 = selectSkillByName("ラスターカノン")
+            inserted.member2.hp = 165
+            inserted.member2.attack = 76
+            inserted.member2.defense = 135
+            inserted.member2.specialAttack = 182
+            inserted.member2.specialDefense = 121
+            inserted.member2.speed = 85
 
-            inserted.member3.ability = "がんじょう"
-            inserted.member3.characteristic = "ずぶとい"
-            inserted.member3.item = "ハガネールナイト"
-            inserted.member3.skillNo1 = skill[469]//ステルスロック
-            inserted.member3.skillNo2 = skill[383]//アイアンテール
-            inserted.member3.skillNo3 = skill[470]//ストーンエッジ
-            inserted.member3.skillNo4 = skill[152]//じしん
-            inserted.member3.hpValue = 100
-            inserted.member3.attackValue = 100
-            inserted.member3.defenseValue = 100
-            inserted.member3.specialAttackValue = 100
-            inserted.member3.specialDefenseValue = 100
-            inserted.member3.speedValue = 100
 
-            inserted.member4.ability = "いたずらごころ"
-            inserted.member4.characteristic = "ずぶとい"
+            inserted.member3.ability = "きもったま"
+            inserted.member3.characteristic = "いじっぱり"
+            inserted.member3.item = "ガルーラナイト"
+            inserted.member3.skillNo1 = selectSkillByName("じしん")
+            inserted.member3.skillNo2 = selectSkillByName("ふいうち")
+            inserted.member3.skillNo3 = selectSkillByName("すてみタックル")
+            inserted.member3.skillNo4 = selectSkillByName("いわなだれ")
+            inserted.member3.hp = 212
+            inserted.member3.attack = 161
+            inserted.member3.defense = 101
+            inserted.member3.specialAttack = 53
+            inserted.member3.specialDefense = 95
+            inserted.member3.speed = 110
+
+            inserted.member4.ability = "さいせいりょく"
+            inserted.member4.characteristic = "しんちょう"
             inserted.member4.item = "たべのこし"
-            inserted.member4.skillNo1 = skill[359]//やどりぎのタネ
-            inserted.member4.skillNo2 = skill[334]//みがわり
-            inserted.member4.skillNo3 = skill[325]//ぼうふう
-            inserted.member4.skillNo4 = skill[423]//ギガドレイン
-            inserted.member4.hpValue = 100
-            inserted.member4.attackValue = 100
-            inserted.member4.defenseValue = 100
-            inserted.member4.specialAttackValue = 100
-            inserted.member4.specialDefenseValue = 100
-            inserted.member4.speedValue = 100
+            inserted.member4.skillNo1 = selectSkillByName("トーチカ")
+            inserted.member4.skillNo2 = selectSkillByName("じこさいせい")
+            inserted.member4.skillNo3 = selectSkillByName("まとわりつく")
+            inserted.member4.skillNo4 = selectSkillByName("どくどく")
+            inserted.member4.hp = 157
+            inserted.member4.attack = 80
+            inserted.member4.defense = 204
+            inserted.member4.specialAttack = 65
+            inserted.member4.specialDefense = 179
+            inserted.member4.speed = 52
 
-            inserted.member5.ability = "ダルマモード"
-            inserted.member5.characteristic = "しんちょう"
-            inserted.member5.item = "とつげきチョッキ"
-            inserted.member5.skillNo1 = skill[551]//フレアドライブ
-            inserted.member5.skillNo2 = skill[235]//とんぼがえり
-            inserted.member5.skillNo3 = skill[291]//ばかじから
-            inserted.member5.skillNo4 = skill[152]//じしん
-            inserted.member5.hpValue = 100
-            inserted.member5.attackValue = 100
-            inserted.member5.defenseValue = 100
-            inserted.member5.specialAttackValue = 100
-            inserted.member5.specialDefenseValue = 100
-            inserted.member5.speedValue = 100
 
-            inserted.member6.ability = "おみとおし"
-            inserted.member6.characteristic = "ずぶとい"
-            inserted.member6.item = "ゴツゴツメット"
-            inserted.member6.skillNo1 = skill[37]//いわなだれ
-            inserted.member6.skillNo2 = skill[477]//タネばくだん
-            inserted.member6.skillNo3 = skill[68]//かげうち
-            inserted.member6.skillNo4 = skill[55]//おにび
-            inserted.member6.hpValue = 100
-            inserted.member6.attackValue = 100
-            inserted.member6.defenseValue = 100
-            inserted.member6.specialAttackValue = 100
-            inserted.member6.specialDefenseValue = 100
-            inserted.member6.speedValue = 100
+            inserted.member5.ability = "はやてのつばさ"
+            inserted.member5.characteristic = "いじっぱり"
+            inserted.member5.item = "ヒコウZ"
+            inserted.member5.skillNo1 = selectSkillByName("ブレイブバード")
+            inserted.member5.skillNo2 = selectSkillByName("はねやすめ")
+            inserted.member5.skillNo3 = selectSkillByName("とんぼがえり")
+            inserted.member5.skillNo4 = selectSkillByName("フレアドライブ")
+            inserted.member5.hp = 154
+            inserted.member5.attack = 146
+            inserted.member5.defense = 91
+            inserted.member5.specialAttack = 80
+            inserted.member5.specialDefense = 89
+            inserted.member5.speed = 178
+
+
+            inserted.member6.ability = "さめはだ"
+            inserted.member6.characteristic = "いじっぱり"
+            inserted.member6.item = "こだわりスカーフ"
+            inserted.member6.skillNo1 = selectSkillByName("じしん")
+            inserted.member6.skillNo2 = selectSkillByName("ストーンエッジ")
+            inserted.member6.skillNo3 = selectSkillByName("げきりん")
+            inserted.member6.skillNo4 = selectSkillByName("かえんほうしゃ")
+            inserted.member6.hp = 184
+            inserted.member6.attack = 200
+            inserted.member6.defense = 115
+            inserted.member6.specialAttack = 79
+            inserted.member6.specialDefense = 100
+            inserted.member6.speed = 154
+
         }
     }
 }

@@ -1,22 +1,22 @@
 package com.gmail.sacchin13.pokemonbattleanalyzer
 
-import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.RankingResponse
+import com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl.TrendForBattle
 import com.gmail.sacchin13.pokemonbattleanalyzer.http.PokemonTrendDownloader
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 
 class PokemonTrendDownloaderUnitTest {
 
     @Test
-    @Throws(Exception::class)
-    fun addition_isCorrect() {
-//        PokemonTrendDownloader("", 0, TestListener()).doInBackground()
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun test_isCorrect() {
-        assertEquals(4, (2 + 2).toLong())
+    fun クチートをダウンロードするテスト() {
+        PokemonTrendDownloader("", 0, object : PokemonTrendDownloader.EventListener {
+            override fun onFinish(result: TrendForBattle, index: Int) {
+                for (t in result.itemInfo) println("${t.ranking}: ${t.name}: ${t.usageRate}")
+                for (t in result.wazaInfo) println("${t.ranking}: ${t.name}: ${t.usageRate}")
+                for (t in result.seikakuInfo) println("${t.ranking}: ${t.name}: ${t.usageRate}")
+                for (t in result.tokuseiInfo) println("${t.ranking}: ${t.name}: ${t.usageRate}")
+                assertEquals(4, (2 + 2).toLong())
+            }
+        }).execute()
     }
 }

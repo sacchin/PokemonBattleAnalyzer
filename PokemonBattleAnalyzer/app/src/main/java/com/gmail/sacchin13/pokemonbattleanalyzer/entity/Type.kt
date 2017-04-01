@@ -72,6 +72,28 @@ object Type {
         }
     }
 
+    fun zNo(zCrystal: String): Code {
+        return if (zCrystal.contains("ノーマル")) Code.NORMAL
+        else if (zCrystal.contains("ホノオ")) Code.FIRE
+        else if (zCrystal.contains("ミズ")) Code.WATER
+        else if (zCrystal.contains("デンキ")) Code.ELECTRIC
+        else if (zCrystal.contains("クサ")) Code.GRASS
+        else if (zCrystal.contains("コオリ")) Code.ICE
+        else if (zCrystal.contains("カクトウ")) Code.FIGHTING
+        else if (zCrystal.contains("ドク")) Code.POISON
+        else if (zCrystal.contains("ジメン")) Code.GROUND
+        else if (zCrystal.contains("ヒコウ")) Code.FLYING
+        else if (zCrystal.contains("エスパー")) Code.PSYCHIC
+        else if (zCrystal.contains("ムシ")) Code.BUG
+        else if (zCrystal.contains("イワ")) Code.ROCK
+        else if (zCrystal.contains("ゴースト")) Code.GHOST
+        else if (zCrystal.contains("ドラゴン")) Code.DRAGON
+        else if (zCrystal.contains("アク")) Code.DARK
+        else if (zCrystal.contains("ハガネ")) Code.STEEL
+        else if (zCrystal.contains("フェアリー")) Code.FAIRY
+        else Code.UNKNOWN
+    }
+
     fun no(type: Code): Int {
         when (type) {
             Type.Code.NORMAL -> return 0
@@ -124,19 +146,19 @@ object Type {
         return Code.values()
     }
 
-    fun calculateAffinity(attackType: Code, p: PokemonMasterData): Double {
-        if (attackType.equals(Type.Code.UNKNOWN)) return -1.0
+    fun calculateAffinity(attackType: Code, defenseType1: Code, defenseType2: Code): Double {
+        if (attackType == Type.Code.UNKNOWN || (defenseType1 == Code.UNKNOWN && defenseType2 == Code.UNKNOWN)) return -1.0
 
         val attackNo = no(attackType)
-        val type1 = Type.code(p.type1)
-        val type2 = Type.code(p.type2)
+        val type1 = Type.no(defenseType1)
+        val type2 = Type.no(defenseType2)
 
-        if (type1 != Code.UNKNOWN && type2 == Code.UNKNOWN) {
-            return AFFINITY_TABLE[attackNo][p.type1].toDouble()
-        } else if (type1 == Code.UNKNOWN && type2 != Code.UNKNOWN) {
-            return AFFINITY_TABLE[attackNo][p.type2].toDouble()
+        if (defenseType1 != Code.UNKNOWN && defenseType2 == Code.UNKNOWN) {
+            return AFFINITY_TABLE[attackNo][type1].toDouble()
+        } else if (defenseType1 == Code.UNKNOWN && defenseType2 != Code.UNKNOWN) {
+            return AFFINITY_TABLE[attackNo][type2].toDouble()
         } else {
-            return AFFINITY_TABLE[attackNo][p.type1].times(AFFINITY_TABLE[attackNo][p.type2]).toDouble()
+            return AFFINITY_TABLE[attackNo][type1].times(AFFINITY_TABLE[attackNo][type2]).toDouble()
         }
     }
 }

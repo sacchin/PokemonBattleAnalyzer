@@ -2,7 +2,7 @@ package com.gmail.sacchin13.pokemonbattleanalyzer.entity.pgl
 
 import android.util.Log
 import com.gmail.sacchin13.pokemonbattleanalyzer.DatabaseHelper
-import com.gmail.sacchin13.pokemonbattleanalyzer.Util
+import com.gmail.sacchin13.pokemonbattleanalyzer.util.Util
 
 data class TrendForBattle(
         val seikakuInfo: List<Info>,
@@ -24,9 +24,13 @@ data class TrendForBattle(
     }
 
     fun updateSkills(databaseHelper: DatabaseHelper) {
-        for (temp in 0..(wazaInfo.size - 2)) {
-            if (!wazaInfo[temp].name.equals("null")) {
-                skillList.add(RankingPokemonSkill.create(wazaInfo[temp], databaseHelper.selectSkillByName(wazaInfo[temp].name)))
+        skillList.clear()
+        for (temp in wazaInfo) {
+            val skillName = temp.name ?: "null"
+            if (skillName != "null") {
+                val skill = databaseHelper.selectSkillByName(skillName)
+                skillList.add(RankingPokemonSkill.create(temp, skill))
+                skillList.add(RankingPokemonSkill.create(temp, databaseHelper.selectZSkill(skill.no)))
             }
         }
     }
@@ -46,11 +50,11 @@ data class TrendForBattle(
             return result
         }
         for (w in wazaInfo) {
-            if (w.name.isNullOrEmpty().not() && 1.0 < w.usageRate) {
-                Log.v("createSkillMap", "${w.name}")
-                result.add(Pair(w.name, util.percent(w.usageRate.times(100.0))))
+            if (w.name.isNullOrEmpty().not() && 0.01 < w.usageRate) {
+                Log.v("createSkillMap", "${w.name}:")
+                result.add(Pair(w.name, Util.percent(w.usageRate.times(100.0))))
             } else {
-                Log.v("createSkillMap", "not")
+                Log.v("createSkillMap", "not(${w.usageRate})")
             }
         }
         return result
@@ -63,8 +67,8 @@ data class TrendForBattle(
             return result
         }
         for (w in seikakuInfo) {
-            if (w.name.isNullOrEmpty().not() && 1.0 < w.usageRate) {
-                result.add(Pair(w.name, util.percent(w.usageRate.times(100.0))))
+            if (w.name.isNullOrEmpty().not() && 0.01 < w.usageRate) {
+                result.add(Pair(w.name, Util.percent(w.usageRate.times(100.0))))
             }
         }
         return result
@@ -77,8 +81,8 @@ data class TrendForBattle(
             return result
         }
         for (w in tokuseiInfo) {
-            if (w.name.isNullOrEmpty().not() && 1.0 < w.usageRate) {
-                result.add(Pair(w.name, util.percent(w.usageRate.times(100.0))))
+            if (w.name.isNullOrEmpty().not() && 0.01 < w.usageRate) {
+                result.add(Pair(w.name, Util.percent(w.usageRate.times(100.0))))
             }
         }
         return result
@@ -91,8 +95,8 @@ data class TrendForBattle(
             return result
         }
         for (w in itemInfo) {
-            if (w.name.isNullOrEmpty().not() && 1.0 < w.usageRate) {
-                result.add(Pair(w.name, util.percent(w.usageRate.times(100.0))))
+            if (w.name.isNullOrEmpty().not() && 0.01 < w.usageRate) {
+                result.add(Pair(w.name, Util.percent(w.usageRate.times(100.0))))
             }
         }
         return result
